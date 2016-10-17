@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>提交</title>
+    <script src="js/mui.min.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+</head>
+<body style="font-family : 微软雅黑;">
+	<p></p>
+	<span style="padding-left: 13px;font-size: 25px;">增值税电子普通发票</span>
+	<p></p>
+	<form class="mui-input-group">
+	    <div class="mui-input-row">
+	        <label>发票抬头</label>
+	    <input type="text" class="mui-input-clear" placeholder="请输入发票抬头（必填）">
+	    </div>
+	    <div class="mui-input-row">
+	        <label>纳税人识别号</label>
+	    <input type="text" class="mui-input-clear" placeholder="请输入纳税人识别号">
+	    </div>
+	    <div class="mui-input-row">
+	        <label>地址</label>
+	    <input type="text" class="mui-input-clear" placeholder="请输入地址">
+	    </div>
+	    <div class="mui-input-row">
+	        <label>电话</label>
+	    <input type="text" class="mui-input-clear" placeholder="请输入电话">
+	    </div>
+	    <div class="mui-input-row">
+	        <label>开户行</label>
+	    <input type="text" class="mui-input-clear" placeholder="请输入开户行">
+	    </div>
+	    <div class="mui-input-row">
+	        <label>银行账号</label>
+	    <input type="text" class="mui-input-clear" placeholder="请输入银行账号">
+	    </div>
+	</form>
+	<p></p>
+	<table border="1" style="width: 98%;margin-left: 1%;border:solid 1px #DEDEE3;text-align: center;">
+	<tr style="background-color: #A1A2A4;">
+	  <td>消费内容</td>
+	  <td>可开票金额</td>
+	  <td>税率</td>
+	</tr>
+	<tr>
+	  <td>餐饮服务</td>
+	  <td>10.00元</td>
+	  <td>6%</td>
+	</tr>
+	<tr style="background-color: #DFE0E3;">
+	  <td colspan="3">合计可开票金额<span style="color: #007AFF;font-weight: 900;">10.00</span>元</td>
+	</tr>
+	</table>
+	<p></p>
+	<button id='confirmBtn' type="button" type="button" class="mui-btn mui-btn-primary mui-btn-block">确 认</button>
+	<div id="info">
+	</div>
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item" href="#tabbar-with-chat">
+			<span class="mui-icon mui-icon-chat"></span>
+			<span class="mui-tab-label">帮助</span>
+		</a>
+		<a class="mui-tab-item" href="#tabbar-with-map">
+			<span class="mui-tab-label">泰易电子发票云</span>
+		</a>
+	</nav>
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			//mui初始化
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			var info = document.getElementById("info");
+			
+			document.getElementById("confirmBtn").addEventListener('tap', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('购方名称：上海容津信息技术有限公司  以上信息是否正确，邮箱请填写真实的邮箱，否则将无法收到电子发票邮寄', '信息确认', btnArray, function(e) {
+					if (e.index == 1) {
+						info.innerText = '发票已生成，请在24小时内关注您的邮箱，查收发票文件';
+					} else {
+						info.innerText = '请重新确认'
+					}
+				})
+			});
+			
+		</script>
+</body>
+</html>
