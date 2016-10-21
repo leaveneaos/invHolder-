@@ -23,50 +23,52 @@ import com.rjxx.taxeasy.service.KplsService;
 @RequestMapping("/extractInvoice")
 
 public class FptqController extends BaseController {
-	@Autowired
-	private JylsService jylsService;
-	@Autowired
-	private KplsService kplsService;
-	@Autowired
-	private JyspmxService jyspmxService;
+    @Autowired
+    private JylsService jylsService;
+    @Autowired
+    private KplsService kplsService;
+    @Autowired
+    private JyspmxService jyspmxService;
+
     @RequestMapping
-    public String index(){
-    	return "index.html";
+    public String index() {
+        return "index.html";
     }
 
-	@RequestMapping(value = "/zydc")
-	@ResponseBody
-	public Map Fptq(String tqm, String code) {
-		String sessionCode = (String) session.getAttribute("rand");
-		Map<String, Object> result = new HashMap<String, Object>();
-		if (code != null && sessionCode != null && code.equals(sessionCode)) {
-			Map map = new HashMap<>();
-			map.put("tqm", tqm);
-			Jyls jyls = jylsService.findByTqm(map);
-			if (null!=jyls) {
-				result.put("djh", jyls.getDjh());
-				result.put("clztdm", jyls.getClztdm());
-				Kpls kpls = new Kpls();
-				kpls.setDjh(jyls.getDjh());
-				List<Kpls> list = kplsService.findByDjh(kpls);
-				if (list.size()==0) {
-					result.put("num", "1");
-				}else{
-					String pdfdzs="";
-					for (Kpls kpls2 : list) {
-						pdfdzs+=kpls2.getPdfurl().replace(".pdf", ".jpg")+",";
-					}if (pdfdzs.length()>0) {
-						result.put("pdfdzs", pdfdzs.substring(0,pdfdzs.length()-1));
-					}
-					result.put("num", "2");
-				}
-			}else{
-				result.put("num", "3");
-			}
-		} else {
-			result.put("num", "4");
-		}
-		return result;
-	}
-			
+    @RequestMapping(value = "/zydc")
+    @ResponseBody
+    public Map Fptq(String tqm, String code) {
+        String sessionCode = (String) session.getAttribute("rand");
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (code != null && sessionCode != null && code.equals(sessionCode)) {
+            Map map = new HashMap<>();
+            map.put("tqm", tqm);
+            Jyls jyls = jylsService.findByTqm(map);
+            if (null != jyls) {
+                result.put("djh", jyls.getDjh());
+                result.put("clztdm", jyls.getClztdm());
+                Kpls kpls = new Kpls();
+                kpls.setDjh(jyls.getDjh());
+                List<Kpls> list = kplsService.findByDjh(kpls);
+                if (list.size() == 0) {
+                    result.put("num", "1");
+                } else {
+                    String pdfdzs = "";
+                    for (Kpls kpls2 : list) {
+                        pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+                    }
+                    if (pdfdzs.length() > 0) {
+                        result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                    }
+                    result.put("num", "2");
+                }
+            } else {
+                result.put("num", "3");
+            }
+        } else {
+            result.put("num", "4");
+        }
+        return result;
+    }
+
 }

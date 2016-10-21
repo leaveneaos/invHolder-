@@ -180,21 +180,6 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<webResources>
-						<resource>
-							<directory>${project.basedir}/lib</directory>
-							<targetPath>WEB-INF/lib</targetPath>
-							<includes>
-								<include>**/*.jar</include>
-							</includes>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
 		</plugins>
 
 		<finalName>inv-holder</finalName>
