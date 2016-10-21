@@ -7,8 +7,8 @@
     </settings>
     <typeAliases>
         <typeAlias type="com.rjxx.comm.mybatis.Pagination" alias="pagination"/>
-        <package name="com.rjxx.kpt.vo"/>
-        <package name="com.rjxx.kpt.domains"/>
+         <package name="com.rjxx.taxeasy.vo"/>
+         <package name="com.rjxx.taxeasy.domains"/>
     </typeAliases>
     <plugins>
         <plugin interceptor="com.rjxx.comm.mybatis.PageInterceptor">

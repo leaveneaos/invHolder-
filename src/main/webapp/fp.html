@@ -1,63 +1,77 @@
 <!doctype html>
 <html>
 
-	<head>
-		<meta charset="UTF-8">
-		<title>发票预览</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="css/mui.min.css" rel="stylesheet" />
-	</head>
+<head>
+<meta charset="UTF-8">
+<title>发票预览</title>
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="css/mui.min.css" rel="stylesheet" />
+</head>
 
-	<body>
-		<script src="js/mui.min.js"></script>
-		<div id="zon" >
-			<header class="mui-bar mui-bar-nav">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <h1 class="mui-title">发票预览</h1>
+<body>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			var urlinfo = window.location.href;
+			var len = urlinfo.length;
+			var offset = urlinfo.indexOf("?");
+			var newsidinfo = urlinfo.substr(offset, len)
+			var newsids = newsidinfo.split("=");
+			var pdfdzs = newsids[1].substring(0,newsids[1].indexOf("&"));
+			var djh = newsids[2];
+			var pdfdz = pdfdzs.split(",");
+			 $('#you').attr("href","youxiang.html?djh="+djh);
+			 $('#hk').attr("href","sqhk.html?djh="+djh);
+	         $.each(pdfdz,function(n,value) {  
+	        $("#parentIndustryUL").append("<li class='mui-table-view-cell mui-media mui-col-xs-6' style='width: 100%;'><a href='#'><img class='mui-media-object' src='"+value+"' /></a></li><hr>");	
+	         });
+		})
+		function tiaozhuan(){
+			 window.location.href="index.html";
+		}
+		</script>
+	<div id="zon">
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">发票预览</h1>
 		</header>
 		<div class="mui-content">
-		    <ul class="mui-table-view mui-grid-view">
-
-		        <li class="mui-table-view-cell mui-media mui-col-xs-6" style="width: 100%;">
-		            <a href="#">
-		               <img class="mui-media-object" src="images/2016-10-10_131937.png">
-		            </a>
-		        </li>
-		    </ul>    
+			<ul class="mui-table-view mui-grid-view" id="parentIndustryUL">
+			</ul>
 		</div>
 		<p></p>
-		<div style="width: 100%;    padding-left: 13px;">
+		<div style="width: 100%; padding-left: 13px;">
 			<button type="button" class="mui-btn mui-btn-primary">收藏</button>
-			<button type="button" class="mui-btn mui-btn-warning">邮箱</button>
+			<a id="you" href="#"><button type="button" class="mui-btn mui-btn-warning">邮箱</button></a>
 			<button type="button" class="mui-btn mui-btn-success">微信卡包</button>
-			
-			<button type="button" class="mui-btn mui-btn-royal mui-btn-outlined">我想要纸质发票</button>
+
+			<a id="hk" href="#"><button type="button"   class="mui-btn mui-btn-royal mui-btn-outlined">我想要纸质发票</button></a>
 		</div>
-		</div>
-		<script type="text/javascript">
+	</div>
+	<script type="text/javascript">
 			mui.init();
 			if(mui.os.ios||mui.os.android){
  			} else{
  				document.getElementById("zon").style.width = "640px";
  			}
 			</script>
-		
-	</body>
-	<script src="../js/mui.min.js"></script>
-	<script>
+
+</body>
+<script src="../js/mui.min.js"></script>
+<script>
 		mui.init({
 			swipeBack:true //启用右滑关闭功能
 		});
 	</script>
-	<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item" href="#tabbar-with-chat">
-				<span class="mui-icon mui-icon-home"></span>
-				<span class="mui-tab-label">返回首页</span>
-			</a>
-			<a class="mui-tab-item" href="#tabbar-with-map">
-				<span class="mui-tab-label">泰易电子发票云</span>
-			</a>
-		</nav>
-	</body>
+<!--  <nav class="mui-bar mui-bar-tab">
+	<a  class="mui-tab-item" href="index.html" onclick="tiaozhuan()"><span
+		class="mui-icon mui-icon-home"></span> <span class="mui-tab-label">返回首页</span>
+	</a> <a class="mui-tab-item" href="#tabbar-with-map"> <span
+		class="mui-tab-label">泰易电子发票云</span>
+	</a>
+</nav>  -->
+</body>
 
 </html>
