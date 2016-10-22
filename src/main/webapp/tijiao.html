@@ -49,8 +49,8 @@
 							});
 
 		});
-		function tiaozhuan(){
-			 window.location.href="bangzhu.html";
+		function tiaozhuan() {
+			window.location.href = "bangzhu.html";
 		}
 	</script>
 	<p></p>
@@ -93,93 +93,99 @@
 		</tr>
 	</table>
 	<p></p>
-	<button id='confirmBtn' type="button"
+	<button id='confirmBtn' type="button" onclick="tk()"
 		class="mui-btn mui-btn-primary mui-btn-block">确 认</button>
 	<div id="info"></div>
 	<nav class="mui-bar mui-bar-tab">
-		<a class="mui-tab-item" href="#tabbar-with-chat" onclick="tiaozhuan()"> <span
-			class="mui-icon mui-icon-chat"></span> <span class="mui-tab-label">帮助</span>
+		<a class="mui-tab-item" href="#tabbar-with-chat" onclick="tiaozhuan()">
+			<span class="mui-icon mui-icon-chat"></span> <span
+			class="mui-tab-label">帮助</span>
 		</a> <a class="mui-tab-item" href="#tabbar-with-map"> <span
 			class="mui-tab-label">泰易电子发票云</span>
 		</a>
 	</nav>
 
-	<script src="../js/mui.min.js"></script>
+	<script src="js/mui.min.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		//mui初始化
 		mui.init({
 			swipeBack : true
 		//启用右滑关闭功能
 		});
-		var info = document.getElementById("info");
-		document.getElementById("confirmBtn").addEventListener(
+		function tk(){
+			var info = document.getElementById("info");
+			var fptt = $('#fptt').val();
+			var firm;
+			var title;
+			if (null == fptt || "" == fptt) {
+				var btnArray = [ '是' ];
+				firm = "请输入发票抬头!";
+				title = "提示"
+			} else {
+				firm = "发票抬头:" + fptt + ";";
+				var nsrsbh = $('#nsrsbh').val();
+				var dz = $('#dz').val();
+				var dh = $('#dh').val();
+				var khh = $('#khh').val();
+				var yhzh = $('#yhzh').val();
+				var btnArray = [ '否', '是' ];
+				if (null != nsrsbh && "" != nsrsbh) {
+					firm += "纳税人识别号:" + nsrsbh + ";";
+				}
+				if (null != dz && "" != dz) {
+					firm += "地址:" + dz + ";";
+				}
+				if (null != dh && "" != dh) {
+					firm += "电话:" + dh + ";";
+				}
+				if (null != khh && "" != khh) {
+					firm += "开户行:" + khh + ";";
+				}
+				if (null != yhzh && "" != yhzh) {
+					firm += "银行账号:" + yhzh + "。";
+				}
+				title = "信息确认"
+			}
+			mui.confirm(firm, title, btnArray, function(e) {
+		 		if (e.index == 1) {
+					document.getElementById("confirmBtn").setAttribute(
+							"disabled", true);
+					$.post("tijiao/fpxx", {
+						"fptt" : fptt,
+						"nsrsbh" : nsrsbh,
+						"dz" : dz,
+						"dh" : dh,
+						"khh" : khh,
+						"yhzh" : yhzh,
+						"djh" : djh
+					}, function(data) {
+						if (data.msg == 1) {
+							info.innerText = '发票正在开具中,请等待片刻!';
+						} else if (data.msg == 2) {
+							info.innerText = '发票正在开具中,请等待片刻!';
+						}
+						fpzt();
+					});
+
+				} else {
+					info.innerText = '请重新确认';
+				} 
+			})
+			}
+
+/* 		document.getElementById("confirmBtn").addEventListener(
 				'tap',
 				function() {
-					var fptt = $('#fptt').val();
-					var firm;
-					var title;
-					if (null == fptt || "" == fptt) {
-						var btnArray = [ '是' ];
-						firm = "请输入发票抬头!";
-						title = "提示"
-					} else {
-						firm = "发票抬头:" + fptt + ";";
-						var nsrsbh = $('#nsrsbh').val();
-						var dz = $('#dz').val();
-						var dh = $('#dh').val();
-						var khh = $('#khh').val();
-						var yhzh = $('#yhzh').val();
-						var btnArray = [ '否', '是' ];
-						if (null != nsrsbh && "" != nsrsbh) {
-							firm += "纳税人识别号:" + nsrsbh + ";";
-						}
-						if (null != dz && "" != dz) {
-							firm += "地址:" + dz + ";";
-						}
-						if (null != dh && "" != dh) {
-							firm += "电话:" + dh + ";";
-						}
-						if (null != khh && "" != khh) {
-							firm += "开户行:" + khh + ";";
-						}
-						if (null != yhzh && "" != yhzh) {
-							firm += "银行账号:" + yhzh + "。";
-						}
-						title = "信息确认"
-					}
-
-					mui.confirm(firm, title, btnArray, function(e) {
-						if (e.index == 1) {
-							document.getElementById("confirmBtn").setAttribute(
-									"disabled", true);
-							$.post("tijiao/fpxx", {
-								"fptt" : fptt,
-								"nsrsbh" : nsrsbh,
-								"dz" : dz,
-								"dh" : dh,
-								"khh" : khh,
-								"yhzh" : yhzh,
-								"djh" : djh
-							}, function(data) {
-								fpzt();
-								if (data.msg == 1) {
-									info.innerText = '发票正在开具中,请等待片刻!';
-								} else if (data.msg == 2) {
-									info.innerText = '发票正在开具中,请等待片刻!';
-								}
-							});
-
-						} else {
-							info.innerText = '请重新确认'
-						}
-					})
-				});
+			
+				}); */
+		
 		function fpzt() {
 			$.post("tijiao/fpzt", {
 				"djh" : djh
 			}, function(data) {
 				if (data.msg) {
-					window.location.href = "fp.html?pdfdzs=" + data.pdfdzs+"&djh="+djh;
+					window.location.href = "fp.html?pdfdzs=" + data.pdfdzs
+							+ "&djh=" + djh;
 				} else {
 					setTimeout("fpzt()", 3000);
 				}

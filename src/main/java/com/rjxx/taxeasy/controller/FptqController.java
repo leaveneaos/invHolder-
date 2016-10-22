@@ -20,7 +20,7 @@ import com.rjxx.taxeasy.service.JyspmxService;
 import com.rjxx.taxeasy.service.KplsService;
 
 @Controller
-@RequestMapping("/extractInvoice")
+@RequestMapping("/extractInvoice/zydc")
 
 public class FptqController extends BaseController {
     @Autowired
@@ -32,7 +32,7 @@ public class FptqController extends BaseController {
 
     @RequestMapping
     public String index() {
-        return "index.html";
+        return "index";
     }
 
     @RequestMapping(value = "/zydc")
