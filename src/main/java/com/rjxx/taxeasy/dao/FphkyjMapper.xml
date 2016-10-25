@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rjxx.taxeasy.dao.FphkyjMapper">
+
+    <select id="findOneByParams" parameterType="map" resultType="fphkyj">
+        select * from t_fphkyj where 1 = 1
+        <if test="orderBy != null">
+            order by #{orderBy}
+        </if>
+         <if test="djh != null and djh != ''">
+            and djh = #{djh}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findAllByParams" parameterType="map" resultType="fphkyj">
+        select * from t_fphkyj where yxbz = '1'
+        <if test="orderBy != null">
+            order by #{orderBy}
+        </if>
+    </select>
+
+    <select id="findByPage" parameterType="pagination" resultType="fphkyj">
+        select * from t_fphkyj where yxbz = '1'
+        <if test="params.orderBy != null">
+            order by #{params.orderBy}
+        </if>
+    </select>
+
+</mapper>
+

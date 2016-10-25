@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>提交</title>
+<script src="js/mui.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<link href="css/mui.min.css" rel="stylesheet" />
+<script type="text/javascript" charset="utf-8">
+	mui.init();
+</script>
+</head>
+<body style="font-family: 微软雅黑;">
+	<script type="text/javascript">
+		var djh;
+		$(function() {
+			var urlinfo = window.location.href; //获取当前页面的url
+			var len = urlinfo.length;//获取url的长度
+			var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+			var newsidinfo = urlinfo.substr(offset, len)//取出参数字符串 这里会获得类似“id=1”这样的字符串
+			var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+			djh = newsids[1];//得到参数值
+			var newsname = newsids[0];//得到参数名字
+			$
+					.post(
+							"tijiao/hqmx",
+							{
+								"djh" : djh
+							},
+							function(data) {
+								var mxList = data.mxList;
+								var zje = 0.00;
+								$.each(mxList, function(n, value) {
+									zje += value.jshj;
+									$("#tab").append(
+											"<tr><td>" + value.spmc
+													+ "</td><td>"
+													+ value.jshj.toFixed(2)
+													+ "</td><td>" + value.spsl
+													* 100 + "%" + "</td></tr>")
+								});
+								$("#tab")
+										.append(
+												"<tr style='background-color: #DFE0E3;'><td colspan='3'>合计可开票金额<span style='color: #007AFF; font-weight: 900;'>"
+														+ zje.toFixed(2)
+														+ "</span>元</td></tr>");
+							});
+
+		});
+		function tiaozhuan() {
+			window.location.href = "bangzhu.html";
+		}
+	</script>
+	<p></p>
+	<span style="padding-left: 13px; font-size: 25px;">增值税电子普通发票</span>
+	<p></p>
+	<form class="mui-input-group" action="tijiao/fpxx" method="post">
+		<div class="mui-input-row">
+			<label>发票抬头</label> <input type="text" class="mui-input-clear"
+				required="required" maxlength="50" name="fptt" id="fptt"
+				placeholder="请输入发票抬头（必填）">
+		</div>
+		<div class="mui-input-row">
+			<label>纳税人识别号</label> <input type="text" class="mui-input-clear"
+				id="nsrsbh" maxlength="18" name="nsrsbh" placeholder="请输入纳税人识别号">
+		</div>
+		<div class="mui-input-row">
+			<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
+				maxlength="100" name="dz" placeholder="请输入地址">
+		</div>
+		<div class="mui-input-row">
+			<label>电话</label> <input type="text" class="mui-input-clear" id="dh"
+				maxlength="30" name="dh" placeholder="请输入电话">
+		</div>
+		<div class="mui-input-row">
+			<label>开户行</label> <input type="text" class="mui-input-clear"
+				id="khh" maxlength="50" name="khh" placeholder="请输入开户行">
+		</div>
+		<div class="mui-input-row">
+			<label>银行账号</label> <input type="text" class="mui-input-clear"
+				id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
+		</div>
+	</form>
+	<p></p>
+	<table border="1" id="tab"
+		style="width: 98%; margin-left: 1%; border: solid 1px #DEDEE3; text-align: center;">
+		<tr style="background-color: #A1A2A4;">
+			<td>消费内容</td>
+			<td>可开票金额</td>
+			<td>税率</td>
+		</tr>
+	</table>
+	<p></p>
+	<button id='confirmBtn' type="button" onclick="tk()"
+		class="mui-btn mui-btn-primary mui-btn-block">确 认</button>
+	<div id="info"></div>
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item" href="#tabbar-with-chat" onclick="tiaozhuan()">
+			<span class="mui-icon mui-icon-chat"></span> <span
+			class="mui-tab-label">帮助</span>
+		</a> <a class="mui-tab-item" href="#tabbar-with-map"> <span
+			class="mui-tab-label">泰易电子发票云</span>
+		</a>
+	</nav>
+
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		//mui初始化
+		mui.init({
+			swipeBack : true
+		//启用右滑关闭功能
+		});
+		function tk(){
+			var info = document.getElementById("info");
+			var fptt = $('#fptt').val();
+			var firm;
+			var title;
+			if (null == fptt || "" == fptt) {
+				var btnArray = [ '是' ];
+				firm = "请输入发票抬头!";
+				title = "提示"
+			} else {
+				firm = "发票抬头:" + fptt + ";";
+				var nsrsbh = $('#nsrsbh').val();
+				var dz = $('#dz').val();
+				var dh = $('#dh').val();
+				var khh = $('#khh').val();
+				var yhzh = $('#yhzh').val();
+				var btnArray = [ '否', '是' ];
+				if (null != nsrsbh && "" != nsrsbh) {
+					firm += "纳税人识别号:" + nsrsbh + ";";
+				}
+				if (null != dz && "" != dz) {
+					firm += "地址:" + dz + ";";
+				}
+				if (null != dh && "" != dh) {
+					firm += "电话:" + dh + ";";
+				}
+				if (null != khh && "" != khh) {
+					firm += "开户行:" + khh + ";";
+				}
+				if (null != yhzh && "" != yhzh) {
+					firm += "银行账号:" + yhzh + "。";
+				}
+				title = "信息确认"
+			}
+			mui.confirm(firm, title, btnArray, function(e) {
+		 		if (e.index == 1) {
+					document.getElementById("confirmBtn").setAttribute(
+							"disabled", true);
+					$.post("tijiao/fpxx", {
+						"fptt" : fptt,
+						"nsrsbh" : nsrsbh,
+						"dz" : dz,
+						"dh" : dh,
+						"khh" : khh,
+						"yhzh" : yhzh,
+						"djh" : djh
+					}, function(data) {
+						if (data.msg == 1) {
+							info.innerText = '发票正在开具中,请等待片刻!';
+						} else if (data.msg == 2) {
+							info.innerText = '发票正在开具中,请等待片刻!';
+						}
+						fpzt();
+					});
+
+				} else {
+					info.innerText = '请重新确认';
+				} 
+			})
+			}
+
+/* 		document.getElementById("confirmBtn").addEventListener(
+				'tap',
+				function() {
+			
+				}); */
+		
+		function fpzt() {
+			$.post("tijiao/fpzt", {
+				"djh" : djh
+			}, function(data) {
+				if (data.msg) {
+					window.location.href = "fp.html?pdfdzs=" + data.pdfdzs
+							+ "&djh=" + djh;
+				} else {
+					setTimeout("fpzt()", 3000);
+				}
+			});
+		}
+	</script>
+</body>
+</html>
