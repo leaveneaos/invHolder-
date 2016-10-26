@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rjxx.comm.utils.MailUtil;
-import com.rjxx.comm.utils.ReadProperties;
 import com.rjxx.taxeasy.domains.Fphkyj;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Jyspmx;
