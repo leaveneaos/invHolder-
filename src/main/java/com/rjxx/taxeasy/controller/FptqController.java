@@ -32,7 +32,7 @@ public class FptqController extends BaseController {
 
     @RequestMapping
     public String index() {
-        return "index";
+        return "zydc";
     }
 
     @RequestMapping(value = "/zydc")
