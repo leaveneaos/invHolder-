@@ -9,10 +9,10 @@ import java.util.Properties;
  */
 public class ReadProperties {
 	public static String read(String s) throws IOException{
-		URL url =Thread.currentThread().getContextClassLoader().getResource("url.properties");
+		URL url =Thread.currentThread().getContextClassLoader().getResource("application.properties");
 		Properties p = new Properties(); 
 		p.load(url.openStream());		
-		String rs = (String) p.get(s); 					
+		String rs = (String) p.get(s); 
 		return rs; 
 	}	
 }

@@ -4,7 +4,7 @@
 <mapper namespace="com.rjxx.taxeasy.dao.WxkbMapper">
 
     <select id="findOneByParams" parameterType="map" resultType="wxkb">
-        select * from t_wxkb where yxbz = '1'
+        select * from t_wxkb where 1 = 1
         <if test="orderBy != null">
             order by #{orderBy}
         </if>
@@ -12,7 +12,7 @@
     </select>
 
     <select id="findAllByParams" parameterType="map" resultType="wxkb">
-        select * from t_wxkb where yxbz = '1'
+        select * from t_wxkb where 1 = 1 
         <if test="orderBy != null">
             order by #{orderBy}
         </if>

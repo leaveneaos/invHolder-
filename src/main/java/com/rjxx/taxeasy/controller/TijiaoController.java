@@ -258,6 +258,8 @@ public class TijiaoController {
 			} else {
 				result.put("bz", "1");
 			}
+		}else{
+			result.put("bz", "0");
 		}
 		result.put("msg", true);
 		return result;

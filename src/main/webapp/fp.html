@@ -197,7 +197,7 @@
 		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
 		<a id="you" href="#"><button type="button" onclick="sckj()"
 				class="mui-btn mui-btn-warning">邮箱</button></a>
-		<button type="button" class="mui-btn mui-btn-success">微信卡包</button>
+		<button onclick="sckj()" type="button" class="mui-btn mui-btn-success">微信卡包</button>
 
 		<!-- <a id="hk" href="#"><button type="button"
 				class="mui-btn mui-btn-royal mui-btn-outlined">我想要纸质发票</button></a> -->
@@ -205,7 +205,9 @@
 	<p></p>
 	<script src="js/mui.min.js"></script>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/wxkb.js"></script>
 	<script type="text/javascript">
+	var buffer;
 		$(function() {
 			var urlinfo = window.location.href;
 			var len = urlinfo.length;
@@ -241,23 +243,29 @@
 					if (data.msg) {
 						if (data.bz == 1) {
 							//生成卡卷
+							cjkj();
 						} else if (data.bz == 0) {
 							//重新获取accessToken
 							access_token();
 							//保存获取到的accessToken
-							$.ajax({
-								url : 'tijiao/wxkb',
-								data : {"accessToken":access_token,"expires_in":expires_in},
-								type : 'post',
-								success : function(data) {
-									if (!data.msg) {
-										alert("保存新accessToken失败");
-									}
+							if(null!=access_token&&null!=expires_in){
+								$.ajax({
+									url : 'tijiao/wxkb',
+									data : {"accessToken":access_token,"expires_in":expires_in},
+									type : 'post',
+									success : function(data) {
+										if (!data.msg) {
+											alert("保存新accessToken失败");
+										}
 
-								}
-							});
-							//生成卡卷
-							cjkj();
+									}
+								});
+								//生成卡卷
+								cjkj();
+							}else{
+								alert("获取微信access_token失败!")
+							}
+					
 						}
 					}
 				}
@@ -286,10 +294,10 @@
 	</div> -->
 	<script type="text/javascript">
 		mui.init();
-		if (mui.os.ios || mui.os.android) {
+/* 		if (mui.os.ios || mui.os.android) {
 		} else {
 			document.getElementById("zon").style.width = "640px";
-		}
+		} */
 	</script>
 
 </body>
