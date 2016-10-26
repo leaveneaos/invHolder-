@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,7 +38,16 @@ public class TijiaoController {
 	private JylsService jylsService;
 	@Autowired
 	private KplsService kplsService;
-
+	@Value("${emailHost}")
+	private  String emailHost;
+	@Value("${emailUserName}")
+	private  String emailUserName;
+	@Value("${emailPwd}")
+	private  String emailPwd;
+	@Value("${emailForm}")
+	private  String emailForm;
+	@Value("${emailTitle}")
+	private static String emailTitle;
 	@RequestMapping(value = "/hqmx")
 	@ResponseBody
 	public Map hqmx(String djh) {
@@ -80,6 +90,7 @@ public class TijiaoController {
 	@ResponseBody
 	public Map fpzt(String djh) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		
 		Map params = new HashMap<>();
 		params.put("djh", djh);
 		result.put("djh", djh);
@@ -163,15 +174,15 @@ public class TijiaoController {
 	 * @param gsdm
 	 * @throws Exception
 	 */
-	public static void sendMail(String ddh, String email, List<String> pdfUrlList, String gsdm) throws Exception {
+	public void sendMail(String ddh, String email, List<String> pdfUrlList, String gsdm) throws Exception {
 		MailUtil sendmail = new MailUtil();
-		sendmail.setHost(ReadProperties.read("emailHost"));
-		sendmail.setUserName(ReadProperties.read("emailUserName"));
-		sendmail.setPassWord(ReadProperties.read("emailPwd"));
+		sendmail.setHost(emailHost);
+		sendmail.setUserName(emailUserName);
+		sendmail.setPassWord(emailPwd);
 		sendmail.setTo(email);
 
-		sendmail.setFrom(ReadProperties.read("emailForm"));
-		sendmail.setSubject(ReadProperties.read("emailTitle"));
+		sendmail.setFrom(emailForm);
+		sendmail.setSubject(emailTitle);
 		sendmail.setContent(getAFMailContent(ddh, pdfUrlList, gsdm));
 		// TODO 这里需要根据邮件摸板内容进行调整。
 
@@ -265,4 +276,5 @@ public class TijiaoController {
 		return result;
 
 	}
+
 }
