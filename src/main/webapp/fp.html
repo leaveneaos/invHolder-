@@ -247,33 +247,10 @@
 				data : {},
 				type : 'post',
 				success : function(data) {
-					if (data.msg) {
-						if (data.bz == 1) {
-							//生成卡卷
-							cjkj();
-						} else if (data.bz == 0) {
-							//重新获取accessToken
-							access_token();
-							//保存获取到的accessToken
-							if(null!=access_token&&null!=expires_in){
-								$.ajax({
-									url : 'tijiao/wxkb',
-									data : {"accessToken":access_token,"expires_in":expires_in},
-									type : 'post',
-									success : function(data) {
-										if (!data.msg) {
-											alert("保存新accessToken失败");
-										}
-
-									}
-								});
-								//生成卡卷
-								cjkj();
-							}else{
-								alert("获取微信access_token失败!")
-							}
-					
-						}
+					if (data.success) {
+						alert(data.card_id)
+					}else{
+						alert(data.msg);
 					}
 				}
 			});

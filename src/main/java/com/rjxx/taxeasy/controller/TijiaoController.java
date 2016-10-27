@@ -1,17 +1,36 @@
 package com.rjxx.taxeasy.controller;
 
+import java.io.ObjectOutputStream.PutField;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.concurrent.SuccessCallback;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.rjxx.comm.utils.MailUtil;
 import com.rjxx.taxeasy.domains.Fphkyj;
 import com.rjxx.taxeasy.domains.Jyls;
@@ -38,15 +57,20 @@ public class TijiaoController {
 	@Autowired
 	private KplsService kplsService;
 	@Value("${emailHost}")
-	private  String emailHost;
+	private String emailHost;
 	@Value("${emailUserName}")
-	private  String emailUserName;
+	private String emailUserName;
 	@Value("${emailPwd}")
-	private  String emailPwd;
+	private String emailPwd;
 	@Value("${emailForm}")
-	private  String emailForm;
+	private String emailForm;
 	@Value("${emailTitle}")
 	private static String emailTitle;
+	public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
+																							// url
+	public static final String APP_ID = "wx9abc729e2b4637ee";
+	public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
+
 	@RequestMapping(value = "/hqmx")
 	@ResponseBody
 	public Map hqmx(String djh) {
@@ -89,7 +113,7 @@ public class TijiaoController {
 	@ResponseBody
 	public Map fpzt(String djh) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+
 		Map params = new HashMap<>();
 		params.put("djh", djh);
 		result.put("djh", djh);
@@ -264,16 +288,126 @@ public class TijiaoController {
 			Date current = new Date();
 			long interval = (current.getTime() - old.getTime()) / 1000;
 			if (interval > Long.parseLong(wxkb.getExpiresIn())) {
-				result.put("bz", "0");
+			return	hqtk(GET_TOKEN_URL, APP_ID, SECRET);
 			} else {
-				result.put("bz", "1");
+				return sckj(wxkb.getAccessToken());
 			}
-		}else{
-			result.put("bz", "0");
+		} else {
+			return	hqtk(GET_TOKEN_URL, APP_ID, SECRET);
 		}
-		result.put("msg", true);
-		return result;
-
 	}
 
+	public Map hqtk(String apiurl, String appid, String secret) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		// 获取token
+		String turl = String.format("%s?grant_type=client_credential&appid=%s&secret=%s", apiurl, appid, secret);
+		HttpClient client = new DefaultHttpClient();
+		HttpGet get = new HttpGet(turl);
+		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
+		try {
+			HttpResponse res = client.execute(get);
+			String responseContent = null; // 响应内容
+			HttpEntity entity = res.getEntity();
+			responseContent = EntityUtils.toString(entity, "UTF-8");
+			Map map = jsonparer.readValue(responseContent, Map.class);
+			// 将json字符串转换为json对象
+			if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				if (map.get("errcode") != null) {// 错误时微信会返回错误码等信息，{"errcode":40013,"errmsg":"invalid
+													// appid"}
+					result.put("success", false);
+					result.put("msg", "获取微信token失败,错误代码为" + map.get("errcode"));
+					return result;
+				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
+					Wxkb wxkb = new Wxkb();
+					wxkb.setAccessToken((String) map.get("access_token"));
+					wxkb.setExpiresIn((String) map.get("expires_in"));
+					wxkb.setScsj(new Date());
+					wxkbService.save(wxkb);
+					Map map2 = this.sckj((String) map.get("access_token"));
+					if ((boolean) map2.get("success")) {
+						result.put("card_id", map.get("card_id"));
+						return result;
+					}else{
+						result.put("success", false);
+						result.put("msg", (String)map.get("msg")+"错误代码"+(String)map.get("errcode")+"错误信息"+ (String)map.get("errmsg"));
+						return result;
+					}
+					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// 关闭连接 ,释放资源
+			client.getConnectionManager().shutdown();
+		}
+		return result;
+	}
+
+	public Map sckj(String token) {
+		HttpClient client = new DefaultHttpClient();
+		Map map = new HashMap<>();
+		try{
+		String url = "https://api.weixin.qq.com/card/create?access_token=" + token;
+		HttpPost httpPost = new HttpPost(url);
+		ObjectMapper mapper = new ObjectMapper();	
+		Map<Object,Object> date_info = new HashMap<>();
+		date_info.put("type","DATE_TYPE_FIX_TIME_RANGE");
+		date_info.put("begin_timestamp",1397577600);
+		date_info.put("end_timestamp",1422724261);
+		Map<Object,Object> sku = new HashMap<>();
+		sku.put("quantity", 10000000);
+		Map<Object,Object> base_info = new HashMap<>();
+		base_info.put("logo_url", "http://mmbiz.qpic.cn/mmbiz_png/SGSA3AKjmxdJREpvW9kv6ERMHyUmT4NbWbEHK5p3naVquws5mrL04Bq7zibtTL8d9iccKcZdOf1OYPibKzDib2rDsw/0");
+		base_info.put("brand_name", "电子发票");
+		base_info.put("code_type", "CODE_TYPE_TEXT");
+		base_info.put("title", "电子发票");
+		base_info.put("sub_title", "电子发票");
+		base_info.put("color", "Color010");
+		base_info.put("notice", "使用时向服务员出示此券");
+		base_info.put("service_phone", "020-88888888");
+		base_info.put("description", "描述");
+		base_info.put("date_info", date_info);
+		base_info.put("sku", sku);
+		base_info.put("get_limit", 3);
+		base_info.put("use_custom_code", false);
+		base_info.put("bind_openid", false);
+		base_info.put("can_share", true);
+		base_info.put("can_give_friend", true);
+		base_info.put("center_title", "顶部居中按钮");
+		base_info.put("center_sub_title", "按钮下方的wording");
+		base_info.put("center_url", "www.baidu.com");
+		base_info.put("custom_url_name", "立即使用");
+		base_info.put("custom_url", "http://www.qq.com");
+		base_info.put("custom_url_sub_title", "6个汉字tips");
+		base_info.put("promotion_url_name", "更多优惠");
+		base_info.put("promotion_url",  "http://www.qq.com");
+		base_info.put("source", "大众点评");
+		Map<Object, Object> groupon = new HashMap<>();
+		groupon.put("base_info", base_info);
+		groupon.put("deal_detail", "电子发票");
+		Map<Object, Object> card = new HashMap<>();
+		card.put("card_type", "GROUPON");
+		card.put("groupon", groupon);
+		String json = mapper.writeValueAsString(card);
+		StringEntity se = new StringEntity(json);
+		se.setContentType("text/json");
+        se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+        httpPost.setEntity(se);
+        HttpResponse response=client.execute(httpPost);
+		HttpEntity entity = response.getEntity();
+		String responseContent = EntityUtils.toString(entity, "UTF-8");
+		ObjectMapper jsonparer = new ObjectMapper();
+		map = jsonparer.readValue(responseContent, Map.class);
+		}catch(Exception e){
+			map.put("success", false);
+			map.put("msg","生成卡卷错误!");
+			e.printStackTrace();
+			return map;
+		}finally{
+			client.getConnectionManager().shutdown();
+		}
+		map.put("success", true);
+		return map;
+	}
 }
