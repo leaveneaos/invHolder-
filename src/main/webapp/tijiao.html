@@ -16,36 +16,53 @@
 	<script type="text/javascript">
 		var djh;
 		$(function() {
-			var urlinfo = window.location.href; //获取当前页面的url
-			var len = urlinfo.length;//获取url的长度
-			var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
-			var newsidinfo = urlinfo.substr(offset, len)//取出参数字符串 这里会获得类似“id=1”这样的字符串
-			var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
-			djh = newsids[1];//得到参数值
-			var newsname = newsids[0];//得到参数名字
 			$
 					.post(
-							"tijiao/hqmx",
-							{
-								"djh" : djh
-							},
+							"tijiao/tjsession",
+							{},
 							function(data) {
-								var mxList = data.mxList;
-								var zje = 0.00;
-								$.each(mxList, function(n, value) {
-									zje += value.jshj;
-									$("#tab").append(
-											"<tr><td>" + value.spmc
-													+ "</td><td>"
-													+ value.jshj.toFixed(2)
-													+ "</td><td>" + value.spsl
-													* 100 + "%" + "</td></tr>")
-								});
-								$("#tab")
-										.append(
-												"<tr style='background-color: #DFE0E3;'><td colspan='3'>合计可开票金额<span style='color: #007AFF; font-weight: 900;'>"
-														+ zje.toFixed(2)
-														+ "</span>元</td></tr>");
+								djh = data.djh;
+								if (djh != null && djh != "") {
+									$
+											.post(
+													"tijiao/hqmx",
+													{
+														"djh" : djh
+													},
+													function(data) {
+														var mxList = data.mxList;
+														var zje = 0.00;
+														$
+																.each(
+																		mxList,
+																		function(
+																				n,
+																				value) {
+																			zje += value.jshj;
+																			$(
+																					"#tab")
+																					.append(
+																							"<tr><td>"
+																									+ value.spmc
+																									+ "</td><td>"
+																									+ value.jshj
+																											.toFixed(2)
+																									+ "</td><td>"
+																									+ value.spsl
+																									* 100
+																									+ "%"
+																									+ "</td></tr>")
+																		});
+														$("#tab")
+																.append(
+																		"<tr style='background-color: #DFE0E3;'><td colspan='3'>合计可开票金额<span style='color: #007AFF; font-weight: 900;'>"
+																				+ zje
+																						.toFixed(2)
+																				+ "</span>元</td></tr>");
+													});
+								}else{
+									window.location.href = "extractInvoice/zydc";
+								}
 							});
 
 		});
@@ -96,12 +113,13 @@
 	<button id='confirmBtn' type="button" onclick="tk()"
 		class="mui-btn mui-btn-primary mui-btn-block">确 认</button>
 	<div id="info"></div>
-	<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;">
-		<div style="max-width: 800px;margin: 0 auto;">
-			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%;float: right;text-align: right;">遇到问题?</div>
+	<div
+		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;">遇到问题?</div>
 		</div>
-		<div style="text-align: center;font-size: 1mm;">技术支持：上海容津信息技术有限公司</div>
+		<div style="text-align: center; font-size: 1mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 
 	<script src="js/mui.min.js"></script>
@@ -111,7 +129,7 @@
 			swipeBack : true
 		//启用右滑关闭功能
 		});
-		function tk(){
+		function tk() {
 			var info = document.getElementById("info");
 			var fptt = $('#fptt').val();
 			var firm;
@@ -146,7 +164,7 @@
 				title = "信息确认"
 			}
 			mui.confirm(firm, title, btnArray, function(e) {
-		 		if (e.index == 1) {
+				if (e.index == 1) {
 					document.getElementById("confirmBtn").setAttribute(
 							"disabled", true);
 					$.post("tijiao/fpxx", {
@@ -168,16 +186,16 @@
 
 				} else {
 					info.innerText = '请重新确认';
-				} 
+				}
 			})
-			}
+		}
 
-/* 		document.getElementById("confirmBtn").addEventListener(
-				'tap',
-				function() {
-			
-				}); */
+		/* 		document.getElementById("confirmBtn").addEventListener(
+		 'tap',
+		 function() {
 		
+		 }); */
+
 		function fpzt() {
 			$.post("tijiao/fpzt", {
 				"djh" : djh

@@ -193,7 +193,7 @@
 		</div>
 	</div>
 	<p></p>
-	<div style="width: 100%; padding-left: 13px; float: left;">
+	<div style="width: 100%; padding-left: 13px; float: left; margin-bottom: 50px;">
 		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
 		<a id="you" href="#"><button type="button"
 				class="mui-btn mui-btn-warning">邮箱</button></a>
@@ -214,29 +214,37 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/wxkb.js"></script>
 	<script type="text/javascript">
-	var buffer;
+	var djh;
+	var fdfdz;
 		$(function() {
-			var urlinfo = window.location.href;
-			var len = urlinfo.length;
-			var offset = urlinfo.indexOf("?");
-			var newsidinfo = urlinfo.substr(offset, len)
-			var newsids = newsidinfo.split("=");
-			var pdfdzs = newsids[1].substring(0, newsids[1].indexOf("&"));
-			var djh = newsids[2];
-			var pdfdz = pdfdzs.split(",");
-			$('#you').attr("href", "youxiang.html?djh=" + djh);
-			$('#hk').attr("href", "sqhk.html?djh=" + djh);
 			$
-					.each(
-							pdfdz,
-							function(n, value) {
-								$("#parentIndustryUL")
-										.append(
-												"<div style='width: 33%;float: left;'><img src='"
-														+ value
-														+ "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+			.post(
+					"tijiao/fpsession",
+					{},
+					function(data) {
+						djh = data .djh;
+						console.info(djh);
+						var pdfdzs = data .pdfdz
+						if (djh != null && djh != "") {
+							pdfdz = pdfdzs.split(",");
+							$
+							.each(
+									pdfdz,
+									function(n, value) {
+										$("#parentIndustryUL")
+												.append(
+														"<div style='width: 33%;float: left;'><img src='"
+																+ value
+																+ "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
 
-							});
+									});
+						}else {
+							window.location.href = "extractInvoice/zydc";
+						}
+					})
+			$('#you').attr("href", "youxiang.html");
+			$('#hk').attr("href", "sqhk.html");
+
 		})
 		function tiaozhuan() {
 			window.location.href = "index.html";
@@ -248,7 +256,8 @@
 				type : 'post',
 				success : function(data) {
 					if (data.success) {
-						alert(data.card_id)
+						//alert(data.card_id)
+						window.location.href=data.show_qrcode_url;
 					}else{
 						alert(data.msg);
 					}

@@ -47,11 +47,12 @@ public class FptqController extends BaseController {
             if (null != jyls) {
                 result.put("djh", jyls.getDjh());
                 result.put("clztdm", jyls.getClztdm());
+                request.getSession().setAttribute("djh", jyls.getDjh());
                 Kpls kpls = new Kpls();
                 kpls.setDjh(jyls.getDjh());
                 List<Kpls> list = kplsService.findByDjh(kpls);
                 if (list.size() == 0) {
-                    result.put("num", "1");
+                    result.put("num", "1");              
                 } else {
                     String pdfdzs = "";
                     for (Kpls kpls2 : list) {
@@ -59,6 +60,7 @@ public class FptqController extends BaseController {
                     }
                     if (pdfdzs.length() > 0) {
                         result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                        request.getSession().setAttribute("pdfdzs",  pdfdzs.substring(0, pdfdzs.length() - 1));
                     }
                     result.put("num", "2");
                 }
