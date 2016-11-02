@@ -51,7 +51,7 @@ public class FptqController extends BaseController {
                 Kpls kpls = new Kpls();
                 kpls.setDjh(jyls.getDjh());
                 List<Kpls> list = kplsService.findByDjh(kpls);
-                if (list.size() == 0) {
+                if (list.size() == 0||null==list.get(0).getFpdm()||"".equals(list.get(0).getFpdm())) {
                     result.put("num", "1");              
                 } else {
                     String pdfdzs = "";
