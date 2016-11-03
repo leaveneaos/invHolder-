@@ -1,9 +1,11 @@
 package com.rjxx.taxeasy.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpRequest;
 import org.hibernate.loader.custom.Return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +17,11 @@ import com.rjxx.comm.web.BaseController;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Jyspmx;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.domains.Tqjl;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.JyspmxService;
 import com.rjxx.taxeasy.service.KplsService;
+import com.rjxx.taxeasy.service.TqjlService;
 
 @Controller
 @RequestMapping("/extractInvoice/zydc")
@@ -29,7 +33,8 @@ public class FptqController extends BaseController {
     private KplsService kplsService;
     @Autowired
     private JyspmxService jyspmxService;
-
+    @Autowired
+    private TqjlService tqjlService;
     @RequestMapping
     public String index() {
         return "zydc";
@@ -63,6 +68,14 @@ public class FptqController extends BaseController {
                         request.getSession().setAttribute("pdfdzs",  pdfdzs.substring(0, pdfdzs.length() - 1));
                     }
                     result.put("num", "2");
+                    Tqjl tqjl = new Tqjl();
+                    tqjl.setDjh(String.valueOf(jyls.getDjh()));
+                    tqjl.setTqsj(new Date());
+                    String visiterIP=request.getRemoteAddr();//访问者IP  
+                    tqjl.setIp(visiterIP);
+                    String llqxx =request.getHeader("User-Agent");
+                    tqjl.setLlqxx(llqxx);
+                    tqjlService.save(tqjl);
                 }
             } else {
                 result.put("num", "3");
