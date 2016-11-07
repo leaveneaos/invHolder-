@@ -58,11 +58,39 @@ public class FptqController extends BaseController {
                 List<Kpls> list = kplsService.findByDjh(kpls);
                 if (list.size() == 0||null==list.get(0).getFpdm()||"".equals(list.get(0).getFpdm())) {
                     result.put("num", "1");              
-                } else {
+                }
+                else {
                     String pdfdzs = "";
+                    boolean falg = false;
+                    String msg="";
                     for (Kpls kpls2 : list) {
+                    	if (kpls2.getFpztdm().equals("01")) {
+                    		msg="您提取的发票存在部分红冲情况!";
+							falg=true;
+							break;
+						}
+                    	if (kpls2.getFpztdm().equals("02")) {
+                    		msg="您提取的发票含有已红冲发票!";
+							falg=true;
+							break;
+						}
+                    	if (kpls2.getFpztdm().equals("03")) {
+                    		msg="您提取的发票含有已换开发票!";
+							falg=true;
+							break;
+						}
+                    	if (kpls2.getFpztdm().equals("05")) {
+                    		msg="您提取的发票开具失败!";
+							falg=true;
+							break;
+						}
                         pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
                     }
+                    if (falg) {
+                    	 result.put("num", "5");
+                    	 result.put("msg", msg);
+                    	 return result;
+					}
                     if (pdfdzs.length() > 0) {
                         result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
                         request.getSession().setAttribute("pdfdzs",  pdfdzs.substring(0, pdfdzs.length() - 1));
