@@ -406,7 +406,8 @@ public class Kpls  implements Serializable {
  */ 
 @Column(name="yxbz")
 	protected String yxbz;
-
+@Column(name="fpztdm")
+protected String fpztdm;
 
 	public Integer getKplsh(){
 		return kplsh;
@@ -918,6 +919,14 @@ public class Kpls  implements Serializable {
 
 	public void setYxbz(String yxbz){
 		this.yxbz=yxbz;
+	}
+
+	public String getFpztdm() {
+		return fpztdm;
+	}
+
+	public void setFpztdm(String fpztdm) {
+		this.fpztdm = fpztdm;
 	}
 
 }
