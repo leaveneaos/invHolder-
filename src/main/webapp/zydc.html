@@ -48,6 +48,13 @@
 							});
 						} else if (data.num == 4) {
 							$('#cwts').html("验证码输入错误");
+						}else if(data.num == 5){
+							btnArray = [ '确定' ];
+							firm = data.msg;
+							title = "提示";
+							mui.confirm(firm, title, btnArray, function(e) {
+
+							});
 						}
 					});
 		}
