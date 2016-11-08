@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <!--标准mui.css-->
-<link rel="stylesheet" href="../css/mui.min.css">
+<link rel="stylesheet" href="css/mui.min.css">
 <!--App自定义的css-->
 	<style type="text/css">
 			.mui-preview-image.mui-fullscreen {
@@ -207,14 +207,14 @@
 	<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;">
 		<div style="max-width: 800px;margin: 0 auto;">
 			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
+			<div style="width: 30%;float: right;text-align: right;"><a href="bangzhu.html">遇到问题?</a></div>
 		</div>
 		<div style="text-align: center;font-size: 1mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 	<p></p>
-	<script src="../js/mui.min.js"></script>
-	<script type="text/javascript" src="../js/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/wxkb.js"></script>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/wxkb.js"></script>
 	<script type="text/javascript">
 	var djh;
 	var fdfdz;
@@ -225,7 +225,6 @@
 					{},
 					function(data) {
 						djh = data .djh;
-						console.info(djh);
 						var pdfdzs = data .pdfdz
 						if (djh != null && djh != "") {
 							pdfdz = pdfdzs.split(",");
@@ -296,9 +295,9 @@
 	</script>
 
 </body>
-<script src="../js/mui.min.js"></script>
-<script src="../js/mui.zoom.js"></script>
-<script src="../js/mui.previewimage.js"></script>
+<script src="js/mui.min.js"></script>
+<script src="js/mui.zoom.js"></script>
+<script src="js/mui.previewimage.js"></script>
 <script>
 	mui.previewImage();
 </script>
