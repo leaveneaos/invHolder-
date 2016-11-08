@@ -85,7 +85,7 @@ public class SmtqController extends BaseController {
 		map.put("ddh",ddh);
 		Smtq smtq1 = smtqService.findOneByParams(map);
 		if (null!=smtq1&&smtq1.getFpzt().equals("07")) {
-			return "smtq/smtq3";
+			  return "redirect:dzfp_sqj/smtq3"; 
 		}
 		if (null!=smtq1&&smtq1.getFpzt().equals("04")) {
 			 Map map2 = new HashMap<>();
@@ -139,9 +139,13 @@ public class SmtqController extends BaseController {
 		}
 		return "smtq/smtq1";
 	}
-	 @RequestMapping(value = "/tztz")
+	 @RequestMapping(value = "/smtq3")
 	 public String tztz(){
-		 return "smtq/fp"; 
+		 return "smtq/smtq3"; 
+	 }
+	 @RequestMapping(value = "/smtq2")
+	 public String smtq2(){
+		 return "smtq/smtq2"; 
 	 }
     @RequestMapping(value = "/getSmsj")
     @ResponseBody
