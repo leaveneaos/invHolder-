@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <!--标准mui.css-->
-<link rel="stylesheet" href="css/mui.min.css">
+<link rel="stylesheet" href="../css/mui.min.css">
 <!--App自定义的css-->
 	<style type="text/css">
 			.mui-preview-image.mui-fullscreen {
@@ -197,6 +197,8 @@
 		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
 		<a id="you" href="#"><button type="button"
 				class="mui-btn mui-btn-warning">邮箱</button></a>
+		<a id="fpj" href="#"><button type="button"
+				class="mui-btn mui-btn-warning">发票夹</button></a>
 	<!-- 	<button onclick="sckj()" type="button" class="mui-btn mui-btn-success">微信卡包</button> -->
 
 		<!-- <a id="hk" href="#"><button type="button"
@@ -207,23 +209,22 @@
 			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
 			<div style="width: 30%;float: right;text-align: right;"><a href="bangzhu.html">遇到问题?</a></div>
 		</div>
-		<div style="text-align: center;font-size: 1mm;">技术支持：上海容津信息技术有限公司</div>
+		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 	<p></p>
-	<script src="js/mui.min.js"></script>
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-		<script type="text/javascript" src="js/wxkb.js"></script>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/wxkb.js"></script>
 	<script type="text/javascript">
 	var djh;
 	var fdfdz;
 		$(function() {
 			$
 			.post(
-					"tijiao/fpsession",
+					"../tijiao/fpsession",
 					{},
 					function(data) {
 						djh = data .djh;
-						console.info(djh);
 						var pdfdzs = data .pdfdz
 						if (djh != null && djh != "") {
 							pdfdz = pdfdzs.split(",");
@@ -239,15 +240,15 @@
 
 									});
 						}else {
-							window.location.href = "extractInvoice/zydc";
+							window.location.href = "../smtq/demo.html";
 						}
 					})
-			$('#you').attr("href", "youxiang.html");
-			$('#hk').attr("href", "sqhk.html");
+			$('#you').attr("href", "../youxiang.html");
+			//$('#hk').attr("href", "sqhk.html");
 
 		})
 		function tiaozhuan() {
-			window.location.href = "index.html";
+			window.location.href = "../zydc.html";
 		}
 		function sckj() {
 			$.ajax({
@@ -294,9 +295,9 @@
 	</script>
 
 </body>
-<script src="js/mui.min.js"></script>
-<script src="js/mui.zoom.js"></script>
-<script src="js/mui.previewimage.js"></script>
+<script src="../js/mui.min.js"></script>
+<script src="../js/mui.zoom.js"></script>
+<script src="../js/mui.previewimage.js"></script>
 <script>
 	mui.previewImage();
 </script>

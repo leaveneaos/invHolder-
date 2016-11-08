@@ -130,13 +130,17 @@ public class SmtqController extends BaseController {
               String llqxx =request.getHeader("User-Agent");
               tqjl.setLlqxx(llqxx);
               tqjlService.save(tqjl);
-			return "smtq/fp";
+              return "redirect:dzfp_sqj/fp"; 
 		}
 		return "smtq/smtq1";
 	}
 	 @RequestMapping(value = "/smtq3")
 	 public String tztz(){
 		 return "smtq/smtq3"; 
+	 }
+	 @RequestMapping(value = "/demo")
+	 public String demo(){
+		 return "smtq/demo"; 
 	 }
 	 @RequestMapping(value = "/smtq2")
 	 public String smtq2(){
@@ -149,6 +153,10 @@ public class SmtqController extends BaseController {
 	 @RequestMapping(value = "/yxxg")
 	 public String yxxg(){
 		 return "smtq/xgyx"; 
+	 }
+	 @RequestMapping(value = "/fp")
+	 public String fp(){
+		 return "fp"; 
 	 }
     @RequestMapping(value = "/getSmsj")
     @ResponseBody
