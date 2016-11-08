@@ -30,6 +30,9 @@
         <if test="tqm != null and tqm != ''">
             and tqm = #{tqm}
         </if>
+        <if test="ddh != null and ddh != ''">
+            and ddh = #{ddh}
+        </if>
         limit 1 
     </select>
 </mapper>

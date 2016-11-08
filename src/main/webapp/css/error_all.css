@@ -88,7 +88,7 @@ body, button, input, select, textarea {
 	float:left;
 	width:160px;
 	height:151px;
-	background:url('error.png') 0 0 no-repeat
+	background:url('../images/error.png') 0 0 no-repeat
 }
 .module-error .info {
 	margin-left:182px;

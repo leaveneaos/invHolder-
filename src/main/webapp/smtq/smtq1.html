@@ -9,9 +9,9 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 		<!--标准mui.css-->
-		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="css/mui.min.css">
 		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+		<link rel="stylesheet" type="text/css" href="css/app.css"/>
 		<style>
 			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
 		        margin-top: 0;
@@ -33,6 +33,23 @@
 	</head>
 
 	<body>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript">
+	$(function() {
+		$
+		.post(
+				"dzfp_sqj/getSmsj",
+				{},
+				function(data) {
+					$('#orderNo').html(data.orderNo);
+					$('#orderTime').html(data.orderTime);
+					$('#price').html(data.price);
+				})
+	})
+	function tk(){
+		window.location.href = "smtq/smtq2.html";
+	}
+	</script>
 		<header class="mui-bar mui-bar-nav">
 		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		    <h1 class="mui-title">信息确认</h1>
@@ -44,7 +61,7 @@
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
 		                    <h4 class="mui-ellipsis">订单号</h4>
-		                    <h5>25689564</h5>
+		                    <h5 id="orderNo"></h5>
 		                    
 		                </div>
 		                <!--<div class="mui-table-cell mui-col-xs-2 mui-text-right">
@@ -56,13 +73,13 @@
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
 		                    <h4 class="mui-ellipsis-2">交易日期</h4>
-		                    <h5>2016年10月30日</h5>
+		                    <h5 id="orderTime"></h5>
 		                    
 		                </div>
 		                
 		            </div>
 		        </li>
-		        <li class="mui-table-view-cell">
+		 <!--        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
 		                    <h4 class="mui-ellipsis-2">交易时间</h4>
@@ -71,12 +88,12 @@
 		                </div>
 		                
 		            </div>
-		        </li>
+		        </li> -->
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
 		                    <h4 class="mui-ellipsis-2">订单金额</h4>
-		                    <h5>2563.00元</h5>
+		                    <h5 id="price"></h5>
 		                   
 		                </div>
 		            </div>
@@ -85,13 +102,12 @@
 		    </ul>
 		</div>
 		<button id='confirmBtn' type="button" onclick="tk()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;margin-top: 15px;">确认</button>
-		<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;z-index: 99;">
+	</body>
+	<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;z-index: 99;">
 		<div style="max-width: 800px;margin: 0 auto;">
 			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
 			<div style="width: 30%;float: right;text-align: right;"><a href="bangzhu.html">遇到问题?</a></div>
 		</div>
 		<div style="text-align: center;font-size: 1mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
-	</body>
-	
 </html>
