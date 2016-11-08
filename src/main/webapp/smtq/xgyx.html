@@ -8,39 +8,25 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<link rel="stylesheet" href="css/mui.min.css">
-<script src="js/mui.min.js"></script>
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script src="js/app.js"></script>
+<link rel="stylesheet" href="../css/mui.min.css">
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!-- <script src="../js/app.js"></script> -->
 </head>
 <body>
 	<script type="text/javascript">
-	var djh;
-		$(function() {
-			$
-			.post(
-					"tijiao/yxsession",
-					{},
-					function(data) {
-						djh = data.djh;
-						if(null==djh||""==djh){
-							 window.location.href="demo.html"; 
-						}
-					})
-		})
 		function fpfs() {
 			var youxiang = $('#username').val();
 			if (null == youxiang || "" == youxiang) {
 				$('#cwxx').html("请输入邮箱!");
 			} else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 					.test(youxiang)) {
-				$('#cwxx').html("正在发送,请关注您的邮箱!");
-				$.post("tijiao/yxfs", {
-					"yx" : youxiang,
-					"djh" : djh
+			//	$('#cwxx').html("正在发送,请关注您的邮箱!");
+				$.post("../dzfp_sqj/xgyx", {
+					"yx" : youxiang
 				}, function(data) {
 					if(data.msg){
-						 window.location.href="tishi2.html"; 
+						$('#cwxx').html("修改成功!"); 
 					}
 				});
 			} else {
@@ -53,7 +39,7 @@
 	</script>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		<h1 class="mui-title">发送到邮箱</h1>
+		<h1 class="mui-title">输入邮箱</h1>
 	</header>
 	<div class="mui-content">
 
@@ -68,7 +54,7 @@
 		<p id="cwxx" style="color: red;"></p>
 	</div>
 	<button type="button" onclick="fpfs()"
-		class="mui-btn mui-btn-primary mui-btn-block">发送</button>
+		class="mui-btn mui-btn-primary mui-btn-block">保存</button>
 	<!--<div
 		style="margin-top: 20px; text-align: left; width: 90%; margin-left: 5%;">
 		感谢您对“泰易电子发票”的支持，您的行为不仅促使了我司的规范化运营，大幅度降低了经营成本，同时为 人类的环保计划做出了伟大的贡献。<br />

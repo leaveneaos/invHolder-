@@ -86,8 +86,25 @@ public class SmtqController extends BaseController {
 		Smtq smtq1 = smtqService.findOneByParams(map);
 		if (null!=smtq1&&smtq1.getFpzt().equals("07")) {
 			  return "redirect:dzfp_sqj/smtq3"; 
-		}
-		if (null!=smtq1&&smtq1.getFpzt().equals("04")) {
+		}else if (null!=smtq1&&smtq1.getFpzt().equals("06")) {
+			request.getSession().setAttribute("msg", "您提取的发票已重新开具!");
+	    	  return "smtq/demo";
+		}else if (null!=smtq1&&smtq1.getFpzt().equals("05")) {
+			request.getSession().setAttribute("msg", "您提取的发票开具失败!");
+			  return "smtq/demo";
+		}else if (null!=smtq1&&smtq1.getFpzt().equals("04")) {
+			request.getSession().setAttribute("msg", "您提取的发票正在开具!");
+			  return "smtq/demo";
+		}else if (null!=smtq1&&smtq1.getFpzt().equals("03")) {
+			request.getSession().setAttribute("msg", "您提取的发票已换开!");
+			  return "smtq/demo";
+		}else if (null!=smtq1&&smtq1.getFpzt().equals("02")) {
+			request.getSession().setAttribute("msg", "您提取的发票已红冲!");
+			  return "smtq/demo";
+		}else if (null!=smtq1&&smtq1.getFpzt().equals("01")) {
+			request.getSession().setAttribute("msg", "您提取的发票已部分红冲!");
+			  return "smtq/demo";
+		}else if (null!=smtq1&&smtq1.getFpzt().equals("00")) {
 			 Map map2 = new HashMap<>();
 	         map.put("ddh", ddh);
 	         Jyls jyls = jylsService.findByTqm(map);
@@ -98,31 +115,9 @@ public class SmtqController extends BaseController {
               boolean falg = false;
               String msg="";
               for (Kpls kpls2 : list) {
-              	if (kpls2.getFpztdm().equals("01")) {
-              		msg="您提取的发票存在部分红冲情况!";
-						falg=true;
-						break;
-					}
-              	if (kpls2.getFpztdm().equals("02")) {
-              		msg="您提取的发票含有已红冲发票!";
-						falg=true;
-						break;
-					}
-              	if (kpls2.getFpztdm().equals("03")) {
-              		msg="您提取的发票含有已换开发票!";
-						falg=true;
-						break;
-					}
-              	if (kpls2.getFpztdm().equals("05")) {
-              		msg="您提取的发票开具失败!";
-						falg=true;
-						break;
-					}
                   pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
               }
-              if (falg) {
-            	  return "smtq/demo";
-				}
+           
               if (pdfdzs.length() > 0) {
             	  request.getSession().setAttribute("djh", jyls.getDjh());
                   request.getSession().setAttribute("pdfdzs",  pdfdzs.substring(0, pdfdzs.length() - 1));
@@ -147,6 +142,14 @@ public class SmtqController extends BaseController {
 	 public String smtq2(){
 		 return "smtq/smtq2"; 
 	 }
+	 @RequestMapping(value = "/bangzhu")
+	 public String bangzhu(){
+		 return "bangzhu"; 
+	 }
+	 @RequestMapping(value = "/yxxg")
+	 public String yxxg(){
+		 return "smtq/xgyx"; 
+	 }
     @RequestMapping(value = "/getSmsj")
     @ResponseBody
 	public Map getSmsj(){
@@ -154,6 +157,18 @@ public class SmtqController extends BaseController {
 		result.put("orderNo", request.getSession().getAttribute("orderNo"));
 		result.put("orderTime", request.getSession().getAttribute("orderTime"));
 		result.put("price", request.getSession().getAttribute("price"));
+		return result;
+	}
+    @RequestMapping(value = "/xgyx")
+    @ResponseBody
+	public Map xgyx(String yx){
+    	Map<String, Object> result = new HashMap<String, Object>();
+    	Map params = new HashMap<>();
+    	params.put("ddh", (String) request.getSession().getAttribute("orderNo"));
+    	Smtq smtq = smtqService.findOneByParams(params);
+    	smtq.setYx(yx);
+    	smtqService.save(smtq);
+    	result.put("num", "1");
 		return result;
 	}
     @RequestMapping(value = "/save")
@@ -201,6 +216,13 @@ public class SmtqController extends BaseController {
     public Map getZje(){
     	Map<String , Object> result = new HashMap<>();
     	result.put("zje", request.getSession().getAttribute("price"));
+    	return result;
+    }
+    @RequestMapping(value ="/getmsg")
+    @ResponseBody
+    public Map getMsg(){
+    	Map<String , Object> result = new HashMap<>();
+    	result.put("msg", request.getSession().getAttribute("msg"));
     	return result;
     }
 	@RequestMapping(value = "/fpsession")

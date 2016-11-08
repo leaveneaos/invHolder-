@@ -278,6 +278,7 @@ public class TijiaoController extends BaseController{
 	public Map yxsession(){
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("djh", request.getSession().getAttribute("djh"));
+		request.getSession().setAttribute("msg", "session过期!");
 		return result;
 	}
 	@RequestMapping(value = "/fpsession")

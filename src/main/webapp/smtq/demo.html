@@ -5,6 +5,21 @@
 <link rel="stylesheet" type="text/css" href="css/error_all.css?t=201303212934">
 </head>
 <body class="error-404">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	$
+	.post(
+			"dzfp_sqj/getmsg",
+			{},
+			function(data) {
+				if(null!=data){
+					$('#msg').html("");
+					$('#msg').html(data.msg);
+				}
+				})
+			})
+</script>
 <div id="doc_main">
 	
 	<section class="bd clearfix">
@@ -14,7 +29,7 @@
 				<div class="info">
 					<h3 class="title"><b></b>提示</h3>
 					<div class="reason">
-						<p>访问的url不合法!</p>
+						<p id="msg">访问的session过期或者url不合法!</p>
 					</div>
 				</div>
 			</div>
