@@ -84,7 +84,7 @@ function getRefresh() {
 function getUserMsg() {
 	$.ajax({
 		async : false,
-		url : '../pjj/getUserMsg',
+		url : 'pjj/getUserMsg',
 		data : {
 
 			"access_token" : access_token,
