@@ -77,8 +77,8 @@ public class PjjController extends BaseController {
 	public Map getKhjy() {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> params = new HashMap<>();
-		String unionid = (String) session.getAttribute("unionid");
-		params.put("unionid", unionid);
+		String openid = (String) session.getAttribute("openid");
+		params.put("unionid", openid);
 		List<FpjVo> list = fpjService.findAllByParam(params);
 		List<Kpls> kps = null;
 		Kpls kpls = new Kpls();
@@ -197,11 +197,11 @@ public class PjjController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/getUnionid")
+	@RequestMapping(value = "/getOpenid")
 	@ResponseBody
 	public Map getUnionid() {
 		Map<String, Object> result = new HashMap<>();
-		String unionid = (String) session.getAttribute("unionid");
+		String unionid = (String) session.getAttribute("openid");
 		if (unionid != null) {
 			result.put("success", true);
 		} else {

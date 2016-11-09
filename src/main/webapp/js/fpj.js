@@ -5,10 +5,11 @@ var refresh_token;
 
 function init(){
 	$.ajax({
-		url : 'pjj/getUnionid',
+		url : '../pjj/getOpenid',
 		method : 'post',
 		success : function(data) {
 			if (data.success) {
+				alert('111111');
 				getJy();
 			}else{
 				window.location.href = "pjj/error";
@@ -118,6 +119,7 @@ function getJy() {
 					if (data.fps) {
 						for (var i = 0; i < data.fps.length; i++) {
 							var val = data.fps[i];
+							alert('222222');
 							$("#all")
 									.append(
 											'<li class="mui-table-view-cell mui-media">'
