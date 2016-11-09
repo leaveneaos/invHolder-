@@ -97,6 +97,7 @@ function getUserMsg() {
 		method : 'post',
 		success : function(data) {
 			if (data.success) {
+				alert(data.openid);
 			} else {
 				alert(data.msg);
 				return;

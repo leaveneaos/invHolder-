@@ -258,11 +258,12 @@
 					getToken(code);
 // 					getRefresh();
 					if (openid != null) {
-						getUserMsg();
+// 						getUserMsg();
+						alert('444444');
 							$.ajax({
 								url : '../pjj/saveFpj',
 								data : {
-									"unionid" : openid
+									"openid" : openid
 								},
 								method : 'post',
 								success : function(data) {
