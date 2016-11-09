@@ -386,7 +386,7 @@ public class PjjController extends BaseController {
 	public Map getUserMsg(String openid, String access_token) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + access_token + 
+		String turl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + 
 				"&openid=" + openid + "&lang=zh_CN";
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
@@ -405,8 +405,8 @@ public class PjjController extends BaseController {
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					map.put("success", true);
-					logger.info("unionid" + map.get("unionid"));
-					session.setAttribute("unionid", map.get("unionid"));
+					logger.info("unionid" + map.get("openid"));
+					session.setAttribute("unionid", map.get("openid"));
 					return map;
 				}
 			}
