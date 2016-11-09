@@ -258,12 +258,12 @@
 					getToken(code);
 // 					getRefresh();
 					if (openid != null) {
-// 						getUserMsg();
-						alert('444444');
+						getUserMsg();
+						if (unionid != null) {
 							$.ajax({
 								url : '../pjj/saveFpj',
 								data : {
-									"openid" : openid
+									"unionid" : unionid
 								},
 								method : 'post',
 								success : function(data) {
@@ -280,6 +280,7 @@
 									}
 								}
 							});
+						}
 					}
 				} else {
 					alert('未得到授权');

@@ -165,7 +165,7 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/saveFpj")
 	@ResponseBody
-	public Map save(String openid) {
+	public Map save(String unionid) {
 		Map<String, Object> result = new HashMap<>();
 		Integer djh = (Integer) session.getAttribute("djh");
 		if (djh == null) {
@@ -174,7 +174,7 @@ public class PjjController extends BaseController {
 		}
 		Map<String, Object> params = new HashMap<>();
 		params.put("djh", djh);
-		params.put("unionid", openid);
+		params.put("unionid", unionid);
 		Fpj fpj = fpjService.findOneByParams(params);
 		if (fpj != null) {
 			result.put("nopeat", true);
@@ -183,7 +183,7 @@ public class PjjController extends BaseController {
 		}
 		fpj = new Fpj();
 		fpj.setDjh(djh);
-		fpj.setUnionid(openid);
+		fpj.setUnionid(unionid);
 		fpj.setYxbz("1");
 		fpj.setLrsj(new Date());
 		fpj.setXgsj(new Date());
@@ -197,11 +197,11 @@ public class PjjController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/getOpenid")
+	@RequestMapping(value = "/getUnionid")
 	@ResponseBody
 	public Map getUnionid() {
 		Map<String, Object> result = new HashMap<>();
-		String unionid = (String) session.getAttribute("Openid");
+		String unionid = (String) session.getAttribute("unionid");
 		if (unionid != null) {
 			result.put("success", true);
 		} else {
@@ -311,7 +311,6 @@ public class PjjController extends BaseController {
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					session.setAttribute("access_token", map.get("access_token"));
-					session.setAttribute("openid", map.get("openid"));
 					map.put("success", true);
 					return map;
 				}
@@ -406,8 +405,9 @@ public class PjjController extends BaseController {
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					map.put("success", true);
-					logger.info("openid:" + map.get("openid"));
-					session.setAttribute("openid", map.get("openid"));
+					logger.info("unionid" + map.get("unionid"));
+					logger.info("openid" + map.get("openid"));
+					session.setAttribute("unionid", map.get("unionid"));
 					return map;
 				}
 			}

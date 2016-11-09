@@ -97,6 +97,7 @@ function getUserMsg() {
 		method : 'post',
 		success : function(data) {
 			if (data.success) {
+				alert('444444');
 				alert(data.openid);
 			} else {
 				alert(data.msg);
