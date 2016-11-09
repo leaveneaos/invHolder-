@@ -35,22 +35,21 @@ import com.rjxx.taxeasy.vo.FpjVo;
 @Controller
 @RequestMapping("/pjj")
 public class PjjController extends BaseController {
-	
+
 	public static final String APP_ID = "wx9abc729e2b4637ee";
-	
+
 	public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
 
 	public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
-	
+
 	@Autowired
 	private FpjService fpjService;
-	
+
 	@Autowired
 	private KplsService kplsService;
-	
-	@Autowired 
+
+	@Autowired
 	private JylsService jylsService;
-	
 
 	@Value("${emailHost}")
 	private String emailHost;
@@ -62,22 +61,23 @@ public class PjjController extends BaseController {
 	private String emailForm;
 	@Value("${emailTitle}")
 	private static String emailTitle;
-	
-    @RequestMapping
-    public String index() {
-        return "pjj/index";
-    }
 
-    /**
-     * 获取交易信息
-     * @return
-     */
+	@RequestMapping
+	public String index() {
+		return "pjj/index";
+	}
+
+	/**
+	 * 获取交易信息
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/getKhjy")
 	@ResponseBody
-	public Map getKhjy(){
+	public Map getKhjy() {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> params = new HashMap<>();
-		String unionid = (String)session.getAttribute("unionid");
+		String unionid = (String) session.getAttribute("unionid");
 		params.put("unionid", unionid);
 		List<FpjVo> list = fpjService.findAllByParam(params);
 		List<Kpls> kps = null;
@@ -96,11 +96,12 @@ public class PjjController extends BaseController {
 
 	/**
 	 * 获取发票信息
+	 * 
 	 * @param djh
 	 * @return
 	 */
-    @RequestMapping(value = "/saveFp")
-	public String getFp(Integer djh){
+	@RequestMapping(value = "/saveFp")
+	public String getFp(Integer djh) {
 		Map<String, Object> params = new HashMap<>();
 		if (djh == null) {
 			djh = -1;
@@ -116,90 +117,94 @@ public class PjjController extends BaseController {
 		session.setAttribute("fps", list);
 		return "pjj/imageviewer";
 	}
-    
-    /**
-     * 发票预览
-     * @return
-     */
-    @RequestMapping(value = "/getFp")
-	@ResponseBody
-	public Map getFp(){
-    	Map<String, Object> result = new HashMap<>();
-    	result.put("fps", session.getAttribute("fps"));
-    	return result;
-    }
 
-    /**
-     * 跳转到邮箱页面
-     * @return
-     */
-    @RequestMapping(value = "/youxiong")
-    public String youxiong(){
-    	return "pjj/youxiang";
-    }
-    
-    /**
-     * 跳转到首页
-     */
-    @RequestMapping(value = "/first")
-    public String back() {
-        return "pjj/index";
-    }
-    
-    /**
-     * 跳转到错误页面
-     */
-    @RequestMapping(value = "/error")
-    public String error() {
-        return "redirect:/smtq/demo.html";
-    }
-
-    /**
-     * 添加到发票夹
-     * @param unionid
-     * @return
-     */
-    @RequestMapping(value = "/saveFpj")
+	/**
+	 * 发票预览
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getFp")
 	@ResponseBody
-    public Map save(String unionid){
+	public Map getFp() {
 		Map<String, Object> result = new HashMap<>();
-    	Integer djh = (Integer)session.getAttribute("djh");
-    	if (djh == null) {
+		result.put("fps", session.getAttribute("fps"));
+		return result;
+	}
+
+	/**
+	 * 跳转到邮箱页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/youxiong")
+	public String youxiong() {
+		return "pjj/youxiang";
+	}
+
+	/**
+	 * 跳转到首页
+	 */
+	@RequestMapping(value = "/first")
+	public String back() {
+		return "pjj/index";
+	}
+
+	/**
+	 * 跳转到错误页面
+	 */
+	@RequestMapping(value = "/error")
+	public String error() {
+		return "redirect:/smtq/demo.html";
+	}
+
+	/**
+	 * 添加到发票夹
+	 * 
+	 * @param unionid
+	 * @return
+	 */
+	@RequestMapping(value = "/saveFpj")
+	@ResponseBody
+	public Map save(String unionid) {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		if (djh == null) {
 			result.put("error", true);
 			return result;
 		}
-    	Map<String, Object> params = new HashMap<>();
-    	params.put("djh", djh);
-    	params.put("unionid", unionid);
-    	Fpj fpj = fpjService.findOneByParams(params);
-    	if (fpj != null) {
-    		result.put("nopeat", true);
-    		result.put("msg", "该订单已添加发票夹");
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		params.put("unionid", unionid);
+		Fpj fpj = fpjService.findOneByParams(params);
+		if (fpj != null) {
+			result.put("nopeat", true);
+			result.put("msg", "该订单已添加发票夹");
 			return result;
 		}
-    	fpj = new Fpj();
-    	fpj.setDjh(djh);
-    	fpj.setUnionid(unionid);
-    	fpj.setYxbz("1");
-    	fpj.setLrsj(new Date());
-    	fpj.setXgsj(new Date());
+		fpj = new Fpj();
+		fpj.setDjh(djh);
+		fpj.setUnionid(unionid);
+		fpj.setYxbz("1");
+		fpj.setLrsj(new Date());
+		fpj.setXgsj(new Date());
 		fpjService.save(fpj);
 		result.put("success", true);
 		return result;
-    }
+	}
 
-    /**
-     * 判断unionID是否存在
-     * @return
-     */
+	/**
+	 * 判断unionID是否存在
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/getUnionid")
 	@ResponseBody
-	public Map getUnionid(){
+	public Map getUnionid() {
 		Map<String, Object> result = new HashMap<>();
-		String unionid = (String)session.getAttribute("unionid");
+		String unionid = (String) session.getAttribute("unionid");
 		if (unionid != null) {
 			result.put("success", true);
-		}else{
+		} else {
 			result.put("success", false);
 		}
 		return result;
@@ -207,16 +212,17 @@ public class PjjController extends BaseController {
 
 	/**
 	 * 判断access_token是否存在
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/CheckToken")
 	@ResponseBody
-	public Map CheckToken(){
+	public Map CheckToken() {
 		Map<String, Object> result = new HashMap<>();
-		String access_token = (String)session.getAttribute("access_token");
+		String access_token = (String) session.getAttribute("access_token");
 		if (access_token != null) {
 			result.put("success", true);
-		}else{
+		} else {
 			result.put("success", false);
 		}
 		return result;
@@ -224,15 +230,16 @@ public class PjjController extends BaseController {
 
 	/**
 	 * 发送邮件
+	 * 
 	 * @param yx
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/sendEmail")
 	@ResponseBody
-	public Map sendMail(String yx) throws Exception{
+	public Map sendMail(String yx) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
-		Integer djh = (Integer)session.getAttribute("djh");
+		Integer djh = (Integer) session.getAttribute("djh");
 		if (djh == null) {
 			result.put("success", false);
 			result.put("msg", "会话已过期");
@@ -254,22 +261,26 @@ public class PjjController extends BaseController {
 		result.put("success", flag);
 		return result;
 	}
-	
+
 	/**
 	 * 获取授权code
+	 * 
 	 * @param apiUrl
 	 * @param appId
 	 * @param url
 	 * @return
 	 */
-	public Map getCode(String apiUrl, String appId, String url){
+	public Map getCode(String apiUrl, String appId, String url) {
 		Map<String, Object> result = new HashMap<>();
-		String codeUrl = String.format("%s?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect", apiUrl, appId, url);
+		String codeUrl = String.format(
+				"%s?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect",
+				apiUrl, appId, url);
 		return result;
 	}
 
 	/**
 	 * 获取access_token
+	 * 
 	 * @param apiurl
 	 * @param appid
 	 * @param code
@@ -280,9 +291,9 @@ public class PjjController extends BaseController {
 	public Map hqtk(String apiurl, String appid, String code) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+APP_ID
-				+"&secret="+SECRET+"&code="+code+"&grant_type=authorization_code";
-		//https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
+		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret=" + SECRET
+				+ "&code=" + code + "&grant_type=authorization_code";
+		// https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
 		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
@@ -317,6 +328,7 @@ public class PjjController extends BaseController {
 
 	/**
 	 * 刷新access_token
+	 * 
 	 * @param apiurl
 	 * @param appid
 	 * @param code
@@ -325,10 +337,11 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/getRefresh")
 	@ResponseBody
-	public Map getRefresh(String apiurl, String appid, String code, String refresh_token){
+	public Map getRefresh(String apiurl, String appid, String code, String refresh_token) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = String.format("%s?grant_type=refresh_token&appid=%s&refresh_token=%s", apiurl, APP_ID, refresh_token);
+		String turl = String.format("%s?grant_type=refresh_token&appid=%s&refresh_token=%s", apiurl, APP_ID,
+				refresh_token);
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
 		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
@@ -362,6 +375,7 @@ public class PjjController extends BaseController {
 
 	/**
 	 * 获取微信用户信息
+	 * 
 	 * @param apiurl
 	 * @param openid
 	 * @param access_token
@@ -369,10 +383,11 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/getUserMsg")
 	@ResponseBody
-	public Map getUserMsg(String apiurl,String openid, String access_token){
+	public Map getUserMsg(String openid, String access_token) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = String.format("%s?access_token=%s&openid=%s&lang=zh_CN", apiurl, access_token, openid);
+		String turl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + 
+				"&openid=" + openid + "&lang=zh_CN";
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
 		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
@@ -386,10 +401,11 @@ public class PjjController extends BaseController {
 			if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				if (map.get("errcode") != null) {// 错误时微信会返回错误码等信息，{"errcode":40013,"errmsg":"invalid
 					result.put("success", false);
-					result.put("msg", "获取微信token失败,错误代码为" + map.get("errcode"));
+					result.put("msg", "获取微信用户信息失败,错误代码为" + map.get("errcode"));
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					map.put("success", true);
+					logger.info("unionid" + map.get("unionid"));
 					session.setAttribute("unionid", map.get("unionid"));
 					return map;
 				}
@@ -404,9 +420,10 @@ public class PjjController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 生成邮件内容
+	 * 
 	 * @param ddh
 	 * @param pdfUrlList
 	 * @param gsdm
