@@ -9,7 +9,6 @@ function init(){
 		method : 'post',
 		success : function(data) {
 			if (data.success) {
-				alert('111111');
 				getJy();
 			}else{
 				window.location.href = "pjj/error";
@@ -116,6 +115,7 @@ function getJy() {
 				url : '../pjj/getKhjy',
 				method : 'post',
 				success : function(data) {
+					alert('33333');
 					if (data.fps) {
 						for (var i = 0; i < data.fps.length; i++) {
 							var val = data.fps[i];
