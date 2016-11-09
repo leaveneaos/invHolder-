@@ -37,7 +37,6 @@ function getToken(code) {
 		method : 'post',
 		success : function(data) {
 			if (data.success) {
-				alert(data.access_token);
 				openid = data.openid;
 				access_token = data.access_token;
 				expires_in = data.expires_in;
@@ -98,7 +97,7 @@ function getUserMsg() {
 		method : 'post',
 		success : function(data) {
 			if (data.success) {
-				alert('成功');
+				alert(data.unionid);
 			} else {
 				alert(data.msg);
 				return;

@@ -268,11 +268,14 @@
 								method : 'post',
 								success : function(data) {
 									if (data.success) {
+										alert('111111');
 										window.location.href = "../pjj/index";
 									}
 									else if (data.nopeat) {
+										alert('222222');
 										window.location.href = "../pjj/index";
 									} else {
+										alert('333333');
 										window.location.href = "../smtq/demo.html";
 									}
 								}
