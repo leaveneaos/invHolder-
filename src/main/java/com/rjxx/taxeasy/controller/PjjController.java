@@ -165,7 +165,7 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/saveFpj")
 	@ResponseBody
-	public Map save(String unionid) {
+	public Map save(String openid) {
 		Map<String, Object> result = new HashMap<>();
 		Integer djh = (Integer) session.getAttribute("djh");
 		if (djh == null) {
@@ -174,7 +174,7 @@ public class PjjController extends BaseController {
 		}
 		Map<String, Object> params = new HashMap<>();
 		params.put("djh", djh);
-		params.put("unionid", unionid);
+		params.put("unionid", openid);
 		Fpj fpj = fpjService.findOneByParams(params);
 		if (fpj != null) {
 			result.put("nopeat", true);
@@ -183,7 +183,7 @@ public class PjjController extends BaseController {
 		}
 		fpj = new Fpj();
 		fpj.setDjh(djh);
-		fpj.setUnionid(unionid);
+		fpj.setUnionid(openid);
 		fpj.setYxbz("1");
 		fpj.setLrsj(new Date());
 		fpj.setXgsj(new Date());
@@ -311,6 +311,7 @@ public class PjjController extends BaseController {
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					session.setAttribute("access_token", map.get("access_token"));
+					session.setAttribute("openid", map.get("openid"));
 					map.put("success", true);
 					return map;
 				}
@@ -408,6 +409,7 @@ public class PjjController extends BaseController {
 					logger.info("unionid" + map.get("unionid"));
 					logger.info("openid" + map.get("openid"));
 					session.setAttribute("unionid", map.get("unionid"));
+					session.setAttribute("openid", map.get("openid"));
 					return map;
 				}
 			}
