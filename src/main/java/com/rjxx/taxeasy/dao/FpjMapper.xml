@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rjxx.taxeasy.dao.FpjMapper">
+
+    <select id="findOneByParams" parameterType="map" resultType="fpj">
+        select * from t_fpj where yxbz = '1'
+        <if test="djh != null">
+            and djh = #{djh}
+        </if>
+        <if test="unionid != null">
+            and unionid = #{unionid}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findAllByParams" parameterType="map" resultType="fpj">
+        select * from t_fpj where yxbz = '1'
+        <if test="orderBy != null">
+            order by #{orderBy}
+        </if>
+    </select>
+
+    <select id="findByPage" parameterType="pagination" resultType="fpj">
+        select * from t_fpj where yxbz = '1'
+        <if test="params.orderBy != null">
+            order by #{params.orderBy}
+        </if>
+    </select>
+    
+     <select id="findAllByParam" parameterType="map" resultType="fpjvo">
+        select a.djh, a.gfmc, a.jylssj, a.jshj, c.ztbz
+		from t_jyls a left join t_fpj b on a.djh=b.djh
+		right join t_ckhk c ON a.djh=c.djh where a.yxbz='1' 
+		and b.yxbz='1' and c.yxbz='1' and a.clztdm='91'
+		<if test="unionid != null">
+            b.unionid = #{unionid}
+        </if>
+        order by b.id desc
+       
+    </select>
+    
+
+</mapper>
+

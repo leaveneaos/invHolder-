@@ -10,37 +10,25 @@
 
 <link rel="stylesheet" href="../css/mui.min.css">
 <script src="../js/mui.min.js"></script>
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script src="../js/app.js"></script>
+<script src="../js/jquery.min.js"></script>
 </head>
 <body>
 	<script type="text/javascript">
 	var djh;
-		$(function() {
-			$
-			.post(
-					"tijiao/yxsession",
-					{},
-					function(data) {
-						djh = data.djh;
-						if(null==djh||""==djh){
-							 window.location.href="extractInvoice/zydc"; 
-						}
-					})
-		})
 		function fpfs() {
-			var youxiang = $('#username').val();
+			var youxiang = $('#youxiang').val();
 			if (null == youxiang || "" == youxiang) {
 				$('#cwxx').html("请输入邮箱!");
 			} else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 					.test(youxiang)) {
-				$('#cwxx').html("正在发送,请关注您的邮箱!");
-				$.post("tijiao/yxfs", {
-					"yx" : youxiang,
-					"djh" : djh
+				$('#cwxx').html("正在发送...");
+				$.post("sendEmail", {
+					"yx" : youxiang
 				}, function(data) {
-					if(data.msg){
-						 window.location.href="tishi2.html"; 
+					if(data.success){
+						 $('#cwxx').html("发送成功,请关注您的邮箱!");
+					}else{
+						 window.location.href="index.html";
 					}
 				});
 			} else {
@@ -60,15 +48,14 @@
 		<div class="mui-content-padded" style="margin: 5px;">
 			<form class="mui-input-group">
 				<div class="mui-input-row">
-					<label>邮箱</label> <input type="text" id="username"
+					<label>邮箱</label> <input type="text" id="youxiang"
 						placeholder="请输入您的邮箱">
 				</div>
 			</form>
 		</div>
 		<p id="cwxx" style="color: red;"></p>
 	</div>
-	<button type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 46%;margin-left: 3%;float: left;">取消</button>
-		<button type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 46%;margin-right: 3%;float: right;background-color: #007AFF;border: 1px solid #007AFF;">发送</button>
+		<button type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block" style="float: right;background-color: #007AFF;border: 1px solid #007AFF;">发送</button>
 	<!--<div
 		style="margin-top: 20px; text-align: left; width: 90%; margin-left: 5%;">
 		感谢您对“泰易电子发票”的支持，您的行为不仅促使了我司的规范化运营，大幅度降低了经营成本，同时为 人类的环保计划做出了伟大的贡献。<br />
@@ -82,9 +69,9 @@
 	<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;">
 		<div style="max-width: 800px;margin: 0 auto;">
 			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%;float: right;text-align: right;">遇到问题?</div>
+			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
 		</div>
-		<div style="text-align: center;font-size: 1mm;">技术支持：上海容津信息技术有限公司</div>
+		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 </body>
 </html>

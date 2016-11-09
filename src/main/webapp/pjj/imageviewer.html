@@ -171,7 +171,7 @@
 			<h1 class="mui-title">全部发票</h1>
 		</header>
 		<div class="mui-content">
-			<div class="mui-content-padded">
+			<div id="parentIndustryUL" class="mui-content-padded">
 				<div style="width: 33%;float: left;">
 					<img src="../images/2016-10-10_131937.png" data-preview-src="" data-preview-group="1" style="width: 100%;"/>
 				</div>
@@ -187,29 +187,63 @@
 		</div>
 		
 		<nav class="mui-bar mui-bar-tab">
-  <a class="mui-tab-item mui-active" href="#tabbar">
-		<span class="mui-icon mui-icon-email"></span>
-		<span class="mui-tab-label">邮件</span>
-	</a>
-	<a class="mui-tab-item" href="#tabbar-with-chat">
-		<span class="mui-icon mui-icon-compose"></span>
-		<span class="mui-tab-label">重开</span>
-	</a>
-	<a class="mui-tab-item" href="#tabbar-with-sms">
-		<span class="mui-icon mui-icon-paperclip"></span>
-		<span class="mui-tab-label">纸质发票</span>
-	</a>
-	<a class="mui-tab-item" href="#tabbar-with-map">
-		<span class="mui-icon mui-icon-redo"></span>
-		<span class="mui-tab-label">移动到</span>
-	</a>
-</nav>
+			<a id="email" class="mui-tab-item mui-active" href="#tabbar-with-chat">
+				<span class="mui-icon mui-icon-email"></span>
+				<span class="mui-tab-label">邮件</span>
+			</a>
+<!-- 	<a class="mui-tab-item" href="#tabbar-with-chat"> -->
+<!-- 		<span class="mui-icon mui-icon-compose"></span> -->
+<!-- 		<span class="mui-tab-label">重开</span> -->
+<!-- 	</a> -->
+<!-- 	<a class="mui-tab-item" href="#tabbar-with-sms"> -->
+<!-- 		<span class="mui-icon mui-icon-paperclip"></span> -->
+<!-- 		<span class="mui-tab-label">纸质发票</span> -->
+<!-- 	</a> -->
+<!-- 	<a class="mui-tab-item" href="#tabbar-with-map"> -->
+<!-- 		<span class="mui-icon mui-icon-redo"></span> -->
+<!-- 		<span class="mui-tab-label">移动到</span> -->
+<!-- 	</a> -->
+		</nav>
 	</body>
 	<script src="../js/mui.min.js"></script>
+	<script src="../js/jquery.min.js"></script>
 	<script src="../js/mui.zoom.js"></script>
 	<script src="../js/mui.previewimage.js"></script>
+	<script src="../js/fpj.js"></script>
 	<script>
 		mui.previewImage();
+	</script>
+	<script type="text/javascript">
+		$(function(){
+			$
+			.ajax({
+				async : false,
+				url : '../pjj/getFp',
+				method : 'post',
+				success : function(data) {
+					if (data.fps) {
+						for (var i = 0; i < data.fps.length; i++) {
+							var val = data.fps[i];
+							$("#parentIndustryUL")
+									.append(
+											'<div style="width: 33%;float: left;"><img src="'+val.pdfurl+'" data-preview-src="" data-preview-group="1" style="width: 100%;"/></div>');
+						}
+					}else{
+						alert('没有您要查询的发票');
+					}
+				},
+				error : function(data) {
+					alert(data.errcode + data.errmsg);
+				}
+			});
+			
+			$('#email').click(function(){
+				window.location.href='../pjj/youxiong';
+			});
+			
+// 			$('#email').attr("href", "youxiang.html");
+// 			$('#hk').attr("href", "sqhk.html");
+		});
 	</script>
 
 </html>
