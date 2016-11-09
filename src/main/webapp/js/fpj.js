@@ -28,7 +28,7 @@ function getCode() {
 function getToken(code) {
 	$.ajax({
 		async : false,
-		url : 'pjj/getToken',
+		url : '../pjj/getToken',
 		data : {
 			"appid" : 'wx9abc729e2b4637ee',
 			"apiurl" : 'https://api.weixin.qq.com/sns/oauth2/access_token',
@@ -84,7 +84,7 @@ function getRefresh() {
 function getUserMsg() {
 	$.ajax({
 		async : false,
-		url : 'pjj/getUserMsg',
+		url : '../pjj/getUserMsg',
 		data : {
 
 			"access_token" : access_token,
