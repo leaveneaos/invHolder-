@@ -197,11 +197,11 @@ public class PjjController extends BaseController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/getUnionid")
+	@RequestMapping(value = "/getOpenid")
 	@ResponseBody
 	public Map getUnionid() {
 		Map<String, Object> result = new HashMap<>();
-		String unionid = (String) session.getAttribute("unionid");
+		String unionid = (String) session.getAttribute("Openid");
 		if (unionid != null) {
 			result.put("success", true);
 		} else {
@@ -311,6 +311,7 @@ public class PjjController extends BaseController {
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					session.setAttribute("access_token", map.get("access_token"));
+					session.setAttribute("openid", map.get("openid"));
 					map.put("success", true);
 					return map;
 				}
@@ -405,7 +406,7 @@ public class PjjController extends BaseController {
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					map.put("success", true);
-					logger.info("unionid" + map.get("openid"));
+					logger.info("openid:" + map.get("openid"));
 					session.setAttribute("unionid", map.get("openid"));
 					return map;
 				}

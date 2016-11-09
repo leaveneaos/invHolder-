@@ -259,11 +259,10 @@
 // 					getRefresh();
 					if (openid != null) {
 						getUserMsg();
-						if (unionid != null) {
 							$.ajax({
 								url : '../pjj/saveFpj',
 								data : {
-									"unionid" : unionid
+									"unionid" : openid
 								},
 								method : 'post',
 								success : function(data) {
@@ -280,7 +279,6 @@
 									}
 								}
 							});
-						}
 					}
 				} else {
 					alert('未得到授权');
