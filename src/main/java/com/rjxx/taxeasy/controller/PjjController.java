@@ -386,7 +386,7 @@ public class PjjController extends BaseController {
 	public Map getUserMsg(String openid, String access_token) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + 
+		String turl = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + access_token + 
 				"&openid=" + openid + "&lang=zh_CN";
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
