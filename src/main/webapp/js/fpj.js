@@ -22,7 +22,7 @@ function init(){
 
 // 用户同意授权，获取code
 function getCode() {
-	window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxfd8a87be91984480&redirect_uri=http://fpj.datarj.com/dzfp_sqj/fp&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+	window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/dzfp_sqj/fp&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
 }
 // 通过code换取网页授权access_token
 function getToken(code) {
@@ -30,7 +30,7 @@ function getToken(code) {
 		async : false,
 		url : 'pjj/getToken',
 		data : {
-			"appid" : 'wxfd8a87be91984480',
+			"appid" : 'wx9abc729e2b4637ee',
 			"apiurl" : 'https://api.weixin.qq.com/sns/oauth2/access_token',
 			"code" : code
 		},
@@ -57,7 +57,7 @@ function getRefresh() {
 		async : false,
 		url : '../pjj/getRefresh',
 		data : {
-			"appid" : 'wxfd8a87be91984480',
+			"appid" : 'wx9abc729e2b4637ee',
 			"apiurl" : 'https://api.weixin.qq.com/sns/oauth2/refresh_token',
 			"grant_type" : 'refresh_token',
 			"refresh_token" : refresh_token

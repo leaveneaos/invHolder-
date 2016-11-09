@@ -36,11 +36,11 @@ import com.rjxx.taxeasy.vo.FpjVo;
 @RequestMapping("/pjj")
 public class PjjController extends BaseController {
 	
-	public static final String APP_ID = "wxfd8a87be91984480";
+	public static final String APP_ID = "wx9abc729e2b4637ee";
 	
 	public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
 
-	public static final String SECRET = "c14a1f54c4013b60c70f92c2b2d4681e";
+	public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 	
 	@Autowired
 	private FpjService fpjService;
@@ -280,7 +280,7 @@ public class PjjController extends BaseController {
 	public Map hqtk(String apiurl, String appid, String code) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+appid
+		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+APP_ID
 				+"&secret="+SECRET+"&code="+code+"&grant_type=authorization_code";
 		//https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 		HttpClient client = new DefaultHttpClient();
@@ -328,7 +328,7 @@ public class PjjController extends BaseController {
 	public Map getRefresh(String apiurl, String appid, String code, String refresh_token){
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = String.format("%s?grant_type=refresh_token&appid=%s&refresh_token=%s", apiurl, appid, refresh_token);
+		String turl = String.format("%s?grant_type=refresh_token&appid=%s&refresh_token=%s", apiurl, APP_ID, refresh_token);
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
 		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
