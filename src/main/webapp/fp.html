@@ -261,19 +261,19 @@
 						getUserMsg();
 // 						if (unionid != null) {
 							$.ajax({
-								url : 'pjj/saveFpj',
+								url : '../pjj/saveFpj',
 								data : {
 									"openid" : openid
 								},
 								method : 'post',
 								success : function(data) {
 									if (data.success) {
-										window.location.href = "pjj/first";
+										window.location.href = "../pjj/first";
 									}
 									else if (data.nopeat) {
-										window.location.href = "pjj/first";
+										window.location.href = "../pjj/first";
 									} else {
-										window.location.href = "smtq/demo.html";
+										window.location.href = "../pjj/error";
 									}
 								}
 							});
@@ -288,7 +288,7 @@
 			$('#fpj').click(function() {
 				var flag = false;
 				$.ajax({
-					url : 'pjj/getOpenid',
+					url : '../pjj/getOpenid',
 					method : 'post',
 					success : function(data) {
 						if (data.success) {
