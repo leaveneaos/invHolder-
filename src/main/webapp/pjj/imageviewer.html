@@ -126,14 +126,14 @@
 				transition: transform 0.5s ease, opacity 0.5s ease;
 			}
 			.mui-bar-nav ~ .mui-content {
-				padding-top: 44px;
-			}
-			.mui-bar-footer ~ .mui-content {
-				padding-bottom: 44px;
-			}
-			.mui-bar-tab ~ .mui-content {
-				padding-bottom: 50px;
-			}
+		        padding-top: 44px;
+		    }
+		    .mui-bar-footer ~ .mui-content {
+		        padding-bottom: 44px;
+		    }
+		    .mui-bar-tab ~ .mui-content {
+		        padding-bottom: 50px;
+		    }
 
 			
 			@-webkit-keyframes fadeIn {
@@ -198,7 +198,7 @@
 		</div>
 		
 		<nav class="mui-bar mui-bar-tab">
-			<a id="email" class="mui-tab-item mui-active" href="#tabbar-with-chat">
+			<a id="email" class="mui-tab-item mui-active">
 				<span class="mui-icon mui-icon-email"></span>
 				<span class="mui-tab-label">邮件</span>
 			</a>
@@ -248,10 +248,17 @@
 				}
 			});
 			
-			$('#email').click(function(){
-				window.location.href='youxiang.html';
-			});
+// 			$('#email').click(function(){
+// 				window.location.href='youxiang.html';
+// 			});
 			
+			document.getElementById('email').addEventListener('tap', function() {
+			  //打开关于页面
+			  mui.openWindow({
+			    url: 'youxiang.html', 
+			    id:'youxiang.html'
+			  });
+			});
 // 			$('#email').attr("href", "youxiang.html");
 // 			$('#hk').attr("href", "sqhk.html");
 		});
