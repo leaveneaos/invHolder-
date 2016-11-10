@@ -83,9 +83,6 @@ public class PjjController extends BaseController {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> params = new HashMap<>();
 		String openid = (String) session.getAttribute("openid");
-		if (openid == null) {
-			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
-		}
 		params.put("unionid", openid);
 		List<FpjVo> list = fpjService.findAllByParam(params);
 		List<Kpls> kps = null;
