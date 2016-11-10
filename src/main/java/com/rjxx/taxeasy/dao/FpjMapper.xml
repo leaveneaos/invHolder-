@@ -30,11 +30,11 @@
     
      <select id="findAllByParam" parameterType="map" resultType="fpjvo">
         select a.djh, a.gfmc, a.jylssj, a.jshj, c.ztbz
-		from t_jyls a left join t_fpj b on a.djh=b.djh
-		right join t_ckhk c ON a.djh=c.djh where a.yxbz='1' 
-		and b.yxbz='1' and c.yxbz='1' and a.clztdm='91'
+		from t_jyls a right join t_fpj b on a.djh=b.djh
+		left join t_ckhk c ON a.djh=c.djh where a.yxbz='1' 
+		and b.yxbz='1' and a.clztdm='91'
 		<if test="unionid != null">
-            b.unionid = #{unionid}
+            and b.unionid = #{unionid}
         </if>
         order by b.id desc
        

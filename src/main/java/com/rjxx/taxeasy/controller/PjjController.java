@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.comm.utils.MailUtil;
 import com.rjxx.comm.web.BaseController;
+import com.rjxx.taxeasy.domains.Ckhk;
 import com.rjxx.taxeasy.domains.Fpj;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.service.CkhkService;
 import com.rjxx.taxeasy.service.FpjService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.KplsService;
@@ -50,6 +52,9 @@ public class PjjController extends BaseController {
 
 	@Autowired
 	private JylsService jylsService;
+	
+	@Autowired
+	private CkhkService ckhkService;
 
 	@Value("${emailHost}")
 	private String emailHost;
@@ -78,6 +83,9 @@ public class PjjController extends BaseController {
 		Map<String, Object> result = new HashMap<>();
 		Map<String, Object> params = new HashMap<>();
 		String openid = (String) session.getAttribute("openid");
+		if (openid == null) {
+			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
+		}
 		params.put("unionid", openid);
 		List<FpjVo> list = fpjService.findAllByParam(params);
 		List<Kpls> kps = null;
@@ -110,12 +118,12 @@ public class PjjController extends BaseController {
 		List<Kpls> list = kplsService.findAllByParams(params);
 		for (Kpls kpls : list) {
 			if (kpls.getPdfurl() != null && !"".equals(kpls.getPdfurl())) {
-				kpls.getPdfurl().replace(".pdf", ".jpg");
+				kpls.setPdfurl(kpls.getPdfurl().replace(".pdf", ".jpg"));;
 			}
 		}
 		session.setAttribute("djh", djh);
 		session.setAttribute("fps", list);
-		return "pjj/imageviewer";
+		return "redirect:/pjj/imageviewer.html";
 	}
 
 	/**
@@ -138,7 +146,7 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/youxiong")
 	public String youxiong() {
-		return "pjj/youxiang";
+		return "redirect:/pjj/youxiang.html";
 	}
 
 	/**
@@ -146,7 +154,7 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/first")
 	public String back() {
-		return "pjj/index";
+		return "redirect:/pjj/index.html";
 	}
 
 	/**
@@ -247,6 +255,21 @@ public class PjjController extends BaseController {
 		}
 		Map<String, Object> params = new HashMap<>();
 		params.put("djh", djh);
+		Ckhk ckhk = ckhkService.findOneByParams(params);
+		if (ckhk != null && ckhk.getZtbz().equals("2") && ckhk.getZtbz().equals("5")) {
+			if (ckhk.getZtbz().equals("0")) {
+				result.put("msg", "发票重开审核中，不能发送");
+			}else if (ckhk.getZtbz().equals("1")) {
+				result.put("msg", "发票已重开，不能发送");
+			}else if (ckhk.getZtbz().equals("3")) {
+				result.put("msg", "发票换开审核中，不能发送");
+			}else if (ckhk.getZtbz().equals("4")) {
+				result.put("msg", "发票已换开，不能发送");
+			}
+
+			result.put("success", false);
+			return result;
+		}
 		boolean flag = false;
 		Jyls jyls = jylsService.findOneByParams(params);
 		List<Kpls> kplsList = kplsService.findAllByParams(params);

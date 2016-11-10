@@ -5,8 +5,8 @@
 
     <select id="findOneByParams" parameterType="map" resultType="ckhk">
         select * from t_ckhk where yxbz = '1'
-        <if test="orderBy != null">
-            order by #{orderBy}
+        <if test="djh != null">
+            and djh = #{djh}
         </if>
         limit 1
     </select>

@@ -11,7 +11,7 @@ function init(){
 			if (data.success) {
 				getJy();
 			}else{
-				window.location.href = "pjj/error";
+				window.location.href = "../pjj/error";
 			}
 		},
 		error : function(data) {
@@ -115,11 +115,9 @@ function getJy() {
 				url : '../pjj/getKhjy',
 				method : 'post',
 				success : function(data) {
-					alert('33333');
 					if (data.fps) {
 						for (var i = 0; i < data.fps.length; i++) {
 							var val = data.fps[i];
-							alert('222222');
 							$("#all")
 									.append(
 											'<li class="mui-table-view-cell mui-media">'
@@ -147,5 +145,5 @@ function getJy() {
 
 // 获取交易流水所开发票
 function getFp(val) {
-	window.location.href = '../pjj/getFp?djh=' + val;
+	window.location.href = '../pjj/saveFp?djh=' + val;
 }

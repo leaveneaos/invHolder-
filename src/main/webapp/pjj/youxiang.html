@@ -28,7 +28,8 @@
 					if(data.success){
 						 $('#cwxx').html("发送成功,请关注您的邮箱!");
 					}else{
-						 window.location.href="index.html";
+						 alert(data.msg);
+						 window.location.href="../pjj/first";
 					}
 				});
 			} else {
