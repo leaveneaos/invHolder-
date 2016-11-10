@@ -257,6 +257,7 @@
 				if (code != "rjxx") {
 					getToken(code);
 // 					getRefresh();
+					alert('111111');
 					if (openid != null) {
 						getUserMsg();
 // 						if (unionid != null) {
@@ -267,12 +268,15 @@
 								},
 								method : 'post',
 								success : function(data) {
+									alert('222222');
 									if (data.success) {
+										alert('333333');
 										window.location.href = "../pjj/first";
-									}
-									else if (data.nopeat) {
+									}else if (data.nopeat) {
+										alert('444444');
 										window.location.href = "../pjj/first";
 									} else {
+										alert('555555');
 										window.location.href = "../pjj/error";
 									}
 								}
