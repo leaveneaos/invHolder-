@@ -22,7 +22,7 @@ function init(){
 
 // 用户同意授权，获取code
 function getCode() {
-	window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/dzfp_sqj/fp&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
+	window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
 }
 // 通过code换取网页授权access_token
 function getToken(code) {
