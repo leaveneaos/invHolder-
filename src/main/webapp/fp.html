@@ -248,7 +248,6 @@
 			//$('#hk').attr("href", "sqhk.html");
 			
 			var urlinfo = window.location.href; //获取当前页面的url
-			alert(urlinfo);
 			if (urlinfo.indexOf('code') > -1) {
 				var len = urlinfo.length;//获取url的长度
 				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
@@ -258,7 +257,6 @@
 				if (code != "rjxx") {
 					getToken(code);
 // 					getRefresh();
-					alert('111111');
 					if (openid != null) {
 						getUserMsg();
 // 						if (unionid != null) {
@@ -269,15 +267,11 @@
 								},
 								method : 'post',
 								success : function(data) {
-									alert('222222');
 									if (data.success) {
-										alert('333333');
 										window.location.href = "../pjj/first";
 									}else if (data.nopeat) {
-										alert('444444');
 										window.location.href = "../pjj/first";
 									} else {
-										alert('555555');
 										window.location.href = "../pjj/error";
 									}
 								}
