@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <!--标准mui.css-->
-<link rel="stylesheet" href="../css/mui.min.css">
+<link rel="stylesheet" href="css/mui.min.css">
 <!--App自定义的css-->
 	<style type="text/css">
 			.mui-preview-image.mui-fullscreen {
@@ -212,17 +212,17 @@
 		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 	<p></p>
-	<script src="../js/mui.min.js"></script>
-	<script type="text/javascript" src="../js/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/wxkb.js"></script>
-		<script type="text/javascript" src="../js/fpj.js"></script>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/wxkb.js"></script>
+		<script type="text/javascript" src="js/fpj.js"></script>
 	<script type="text/javascript">
 	var djh;
 	var fdfdz;
 		$(function() {
 			$
 			.post(
-					"../tijiao/fpsession",
+					"tijiao/fpsession",
 					{},
 					function(data) {
 						djh = data .djh;
@@ -241,10 +241,10 @@
 
 									});
 						}else {
-							window.location.href = "../smtq/demo.html";
+							window.location.href = "smtq/demo.html";
 						}
 					})
-			$('#you').attr("href", "../youxiang.html");
+			$('#you').attr("href", "youxiang.html");
 			//$('#hk').attr("href", "sqhk.html");
 			
 			var urlinfo = window.location.href; //获取当前页面的url
@@ -261,19 +261,19 @@
 						getUserMsg();
 // 						if (unionid != null) {
 							$.ajax({
-								url : '../pjj/saveFpj',
+								url : 'pjj/saveFpj',
 								data : {
 									"openid" : openid
 								},
 								method : 'post',
 								success : function(data) {
 									if (data.success) {
-										window.location.href = "../pjj/first";
+										window.location.href = "pjj/first";
 									}
 									else if (data.nopeat) {
-										window.location.href = "../pjj/first";
+										window.location.href = "pjj/first";
 									} else {
-										window.location.href = "../smtq/demo.html";
+										window.location.href = "smtq/demo.html";
 									}
 								}
 							});
@@ -288,7 +288,7 @@
 			$('#fpj').click(function() {
 				var flag = false;
 				$.ajax({
-					url : '../pjj/getOpenid',
+					url : 'pjj/getOpenid',
 					method : 'post',
 					success : function(data) {
 						if (data.success) {
@@ -302,7 +302,7 @@
 
 		})
 		function tiaozhuan() {
-			window.location.href = "../zydc.html";
+			window.location.href = "zydc.html";
 		}
 		function sckj() {
 			$.ajax({
@@ -349,9 +349,9 @@
 	</script>
 
 </body>
-<script src="../js/mui.min.js"></script>
-<script src="../js/mui.zoom.js"></script>
-<script src="../js/mui.previewimage.js"></script>
+<script src="js/mui.min.js"></script>
+<script src="js/mui.zoom.js"></script>
+<script src="js/mui.previewimage.js"></script>
 <script>
 	mui.previewImage();
 </script>

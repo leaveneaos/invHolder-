@@ -60,22 +60,27 @@ public class SmtqController extends BaseController {
 		params.put("gsdm", "sqj");
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
 		if (null==gsxx) {
-			return "smtq/demo";
+			request.getSession().setAttribute("msg", "请重新扫描!");
+			return "redirect:/smtq/demo.html";
 		}
 		dbs+="key="+gsxx.getSecretKey();
 		String key1 = MD5Util.generatePassword(dbs);
 
 		if (!sign.equals(key1.toLowerCase())) {
-			return "smtq/demo";
+			request.getSession().setAttribute("msg", "请重新扫描!");
+			return "redirect:/smtq/demo.html";
 		}
 		if (null==orderNo||"".equals(orderNo)) {
-			return "smtq/demo";
+			request.getSession().setAttribute("msg", "请重新扫描!");
+			return "redirect:/smtq/demo.html";
 		}
 		if (null==orderTime||"".equals(orderTime)) {
-			return "smtq/demo";
+			request.getSession().setAttribute("msg", "请重新扫描!");
+			return "redirect:/smtq/demo.html";
 		}
 		if (null==price||"".equals(price)) {
-			return "smtq/demo";
+			request.getSession().setAttribute("msg", "请重新扫描!");
+			return "redirect:/smtq/demo.html";
 		}
 		request.getSession().setAttribute("orderNo", orderNo);
 		request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime)));
@@ -88,22 +93,22 @@ public class SmtqController extends BaseController {
 			  return "redirect:dzfp_sqj/smtq3"; 
 		}else if (null!=smtq1&&smtq1.getFpzt().equals("06")) {
 			request.getSession().setAttribute("msg", "您提取的发票已重新开具!");
-	    	  return "smtq/demo";
+			   return "redirect:/smtq/demo.html";
 		}else if (null!=smtq1&&smtq1.getFpzt().equals("05")) {
 			request.getSession().setAttribute("msg", "您提取的发票开具失败!");
-			  return "smtq/demo";
+			return "redirect:/smtq/demo.html";
 		}else if (null!=smtq1&&smtq1.getFpzt().equals("04")) {
-			request.getSession().setAttribute("msg", "您提取的发票正在开具!");
-			  return "smtq/demo";
+			request.getSession().setAttribute("msg", "您提取的发票正在开具,请稍后再次扫描!");
+			return "redirect:/smtq/demo.html";
 		}else if (null!=smtq1&&smtq1.getFpzt().equals("03")) {
 			request.getSession().setAttribute("msg", "您提取的发票已换开!");
-			  return "smtq/demo";
+			return "redirect:/smtq/demo.html";
 		}else if (null!=smtq1&&smtq1.getFpzt().equals("02")) {
 			request.getSession().setAttribute("msg", "您提取的发票已红冲!");
-			  return "smtq/demo";
+			return "redirect:/smtq/demo.html";
 		}else if (null!=smtq1&&smtq1.getFpzt().equals("01")) {
 			request.getSession().setAttribute("msg", "您提取的发票已部分红冲!");
-			  return "smtq/demo";
+			return "redirect:/smtq/demo.html";
 		}else if (null!=smtq1&&smtq1.getFpzt().equals("00")) {
 			 Map map2 = new HashMap<>();
 	         map.put("ddh", ddh);
@@ -130,33 +135,33 @@ public class SmtqController extends BaseController {
               String llqxx =request.getHeader("User-Agent");
               tqjl.setLlqxx(llqxx);
               tqjlService.save(tqjl);
-              return "redirect:dzfp_sqj/fp"; 
+              return "redirect:/fp.html"; 
 		}
-		return "smtq/smtq1";
+		 return "redirect:/smtq/smtq1.html"; 
 	}
 	 @RequestMapping(value = "/smtq3")
 	 public String tztz(){
-		 return "smtq/smtq3"; 
+		 return "redirect:/smtq/smtq3.html"; 
 	 }
 	 @RequestMapping(value = "/demo")
 	 public String demo(){
-		 return "smtq/demo"; 
+		 return "redirect:/smtq/demo.html"; 
 	 }
 	 @RequestMapping(value = "/smtq2")
 	 public String smtq2(){
-		 return "smtq/smtq2"; 
+		 return "redirect:/smtq/smtq2.html"; 
 	 }
 	 @RequestMapping(value = "/bangzhu")
 	 public String bangzhu(){
-		 return "bangzhu"; 
+		 return "redirect:/bangzhu.html"; 
 	 }
 	 @RequestMapping(value = "/yxxg")
 	 public String yxxg(){
-		 return "smtq/xgyx"; 
+		 return "redirect:/smtq/xgyx.html"; 
 	 }
 	 @RequestMapping(value = "/fp")
 	 public String fp(){
-		 return "fp"; 
+		 return "redirect:/fp.html"; 
 	 }
     @RequestMapping(value = "/getSmsj")
     @ResponseBody
