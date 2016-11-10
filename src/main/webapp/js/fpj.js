@@ -11,7 +11,7 @@ function init(){
 			if (data.success) {
 				getJy();
 			}else{
-				window.location.href = "../pjj/error";
+				window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
 			}
 		},
 		error : function(data) {
@@ -134,7 +134,7 @@ function getJy() {
 													+ '</p></div></a></li>');
 						}
 					} else {
-						alert('没有您要查询的交易');
+						alert('没有您要查询的发票信息');
 					}
 				},
 				error : function(data) {
