@@ -115,9 +115,7 @@ function getJy() {
 				url : '../pjj/getKhjy',
 				method : 'post',
 				success : function(data) {
-					alert('555555');
 					if (data.fps && data.fps.length > 0) {
-						alert('666666');
 						for (var i = 0; i < data.fps.length; i++) {
 							var val = data.fps[i];
 							$("#all")
