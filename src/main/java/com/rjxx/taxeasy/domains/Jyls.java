@@ -302,7 +302,8 @@ public class Jyls  implements Serializable {
 @Column(name="tqm")
 	protected String tqm;
 
-
+@Column(name="skpid")
+protected int skpid;
 	public Integer getDjh(){
 		return djh;
 	}
@@ -670,6 +671,17 @@ public class Jyls  implements Serializable {
 	public void setTqm(String tqm){
 		this.tqm=tqm;
 	}
+
+	public int getSkpid() {
+		return skpid;
+	}
+
+	public void setSkpid(int skpid) {
+		this.skpid = skpid;
+	}
+
+
+	
 
 }
 

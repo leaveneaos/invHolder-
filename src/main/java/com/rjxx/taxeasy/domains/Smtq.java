@@ -50,6 +50,8 @@ public class Smtq  implements Serializable {
 
 @Column(name="khhzh")
 	protected String khhzh;
+@Column(name="kpddm")
+protected String kpddm;
 
 @Column(name="yx")
 	protected String yx;
@@ -192,6 +194,14 @@ protected String fpzt;
 
 	public void setGsdm(String gsdm) {
 		this.gsdm = gsdm;
+	}
+
+	public String getKpddm() {
+		return kpddm;
+	}
+
+	public void setKpddm(String kpddm) {
+		this.kpddm = kpddm;
 	}
 	
 	

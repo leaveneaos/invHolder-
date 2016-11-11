@@ -35,11 +35,13 @@ import com.rjxx.taxeasy.domains.Fphkyj;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Jyspmx;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.domains.Tqjl;
 import com.rjxx.taxeasy.domains.Wxkb;
 import com.rjxx.taxeasy.service.FphkyjService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.JyspmxService;
 import com.rjxx.taxeasy.service.KplsService;
+import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.taxeasy.service.WxkbService;
 
 @Controller
@@ -47,6 +49,8 @@ import com.rjxx.taxeasy.service.WxkbService;
 public class TijiaoController extends BaseController{
 	@Autowired
 	private JyspmxService jyspmxService;
+    @Autowired
+    private TqjlService tqjlService;
 	@Autowired
 	private WxkbService wxkbService;
 	@Autowired
@@ -228,7 +232,14 @@ public class TijiaoController extends BaseController{
 		// 20xx年x月x日
 
 		sendmail.sendMail();
-
+		 Tqjl tqjl = new Tqjl();
+         tqjl.setDjh((String) request.getSession().getAttribute("djh"));
+         tqjl.setTqsj(new Date());
+         String visiterIP=request.getRemoteAddr();//访问者IP  
+         tqjl.setIp(visiterIP);
+         String llqxx =request.getHeader("User-Agent");
+         tqjl.setLlqxx(llqxx);
+         tqjlService.save(tqjl);
 		Thread.sleep(5000);
 	}
 

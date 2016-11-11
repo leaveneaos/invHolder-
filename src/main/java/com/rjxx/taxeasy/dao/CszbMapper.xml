@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rjxx.taxeasy.dao.CszbMapper">
+
+    <select id="findOneByParams" parameterType="map" resultType="cszb">
+        select * from t_cszb where yxbz = '1'
+        <if test="orderBy != null">
+            order by #{orderBy}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findAllByParams" parameterType="map" resultType="cszb">
+    	select * from t_cszb where yxbz = '1' and gsdm = #{gsdm}
+		<if test="xfid != null and xfid != ''">
+			and xfid = #{xfid}
+		</if>
+		<if test="kpdid != null and kpdid != ''">
+			and kpdid = #{kpdid}
+		</if>
+		<if test="csid != null and csid != ''">
+			and csid = #{csid}
+		</if>
+    </select>
+
+    <select id="findByPage" parameterType="pagination" resultType="cszb">
+        select * from t_cszb where yxbz = '1'
+        <if test="params.orderBy != null">
+            order by #{params.orderBy}
+        </if>
+    </select>
+
+</mapper>
+

@@ -5,9 +5,9 @@
 <meta name="viewport"
 	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 <title>输入提取码</title>
-<script src="../js/mui.min.js"></script>
-<link href="../css/mui.min.css" rel="stylesheet" />
-<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="js/mui.min.js"></script>
+<link href="css/mui.min.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8">
 	mui.init();
 </script>
@@ -15,20 +15,20 @@
 <body style="font-family: 微软雅黑;" id="index">
 	<script type="text/javascript">
 		function loadimage() {
-			document.getElementById("randImage").src = "../image.jsp?"
+			document.getElementById("randImage").src = "image.jsp?"
 					+ Math.random();
 		}
 		function tiqu() {
 			var tqm = $('#tqm').val();
 			var code = $('#code').val();
-			$.post("zydc/zydc", {
+			$.post("extractInvoice/zydc/zydc", {
 				"tqm" : tqm,
 				"code" : code
 			},
 					function(data) {
 						if (data.num == 1) {
 							if (data.clztdm == "00") {
-								window.location.href = "../tijiao.html";
+								window.location.href = "tijiao.html";
 							} else {
 								btnArray = [ '确定' ];
 								firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
@@ -38,7 +38,7 @@
 								});
 							}
 						} else if (data.num == 2) {
-							window.location.href = "../dzfp_sqj/fp";
+							window.location.href = "fp.html";
 						} else if (data.num == 3) {
 							btnArray = [ '确定' ];
 							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
@@ -59,12 +59,12 @@
 					});
 		}
 		function tiaozhuan() {
-			window.location.href = "../bangzhu.html";
+			window.location.href = "bangzhu.html";
 		}
 	</script>
 	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
 		<div>
-			<img src="../images/1-2_02.png" alt="" style="width: 100%;" />
+			<img src="images/1-2_02.png" alt="" style="width: 100%;" />
 		</div>
 		<p></p>
 		<div style="padding: 0px 15px;">
@@ -80,7 +80,7 @@
 			<div class="mui-input-row">
 				<input style="width: 60%; float: left; height: 100%;" type="text"
 					id="code" name="code" placeholder="请输入右侧验证码"> <img
-					src="../image.jsp" name="randImage" id="randImage"
+					src="image.jsp" name="randImage" id="randImage"
 					onclick="loadimage()"
 					style="width: 100px; height: 50px; margin-left: 7%;" />
 			</div>
@@ -103,7 +103,7 @@
 		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
 		<div style="max-width: 800px; margin: 0 auto;">
 			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%; float: right; text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
+			<div style="width: 30%; float: right; text-align: right;"><a href="bangzhu.html">遇到问题?</a></div>
 		</div>
 		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>

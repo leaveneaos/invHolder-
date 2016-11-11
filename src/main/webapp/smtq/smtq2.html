@@ -109,8 +109,8 @@
 						"yx" :yx,
 						"sj" : sj
 					}, function(data) {
-						if (data.msg == 1) {
-							window.location.href = "../dzfp_sqj";
+						if (data.failure) {
+							info.innerText = data.xx;
 						} else if (data.msg == 2) {
 							window.location.href = "../dzfp_sqj/smtq3";
 						}

@@ -140,6 +140,8 @@ public class Jyspmx  implements Serializable {
  */ 
 @Column(name="xgry")
 	protected Integer xgry;
+@Column(name="skpid")
+protected Integer skpid;
 
 /**
  * 公司代码
@@ -314,6 +316,14 @@ public class Jyspmx  implements Serializable {
 
 	public void setGsdm(String gsdm){
 		this.gsdm=gsdm;
+	}
+
+	public Integer getSkpid() {
+		return skpid;
+	}
+
+	public void setSkpid(Integer skpid) {
+		this.skpid = skpid;
 	}
 
 }

@@ -37,7 +37,7 @@ public class FptqController extends BaseController {
     private TqjlService tqjlService;
     @RequestMapping
     public String index() {
-        return "zydc";
+    	 return "redirect:/zydc.html"; 
     }
 
     @RequestMapping(value = "/zydc")

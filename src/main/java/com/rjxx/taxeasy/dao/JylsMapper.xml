@@ -33,6 +33,9 @@
         <if test="ddh != null and ddh != ''">
             and ddh = #{ddh}
         </if>
+        <if test="gsdm != null and gsdm != ''">
+            and gsdm = #{gsdm}
+        </if>
         limit 1 
     </select>
 </mapper>
