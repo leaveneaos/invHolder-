@@ -25,7 +25,7 @@
 				$.post("../dzfp_sqj/xgyx", {
 					"yx" : youxiang
 				}, function(data) {
-					if(data.msg){
+					if(data.num==1){
 						$('#cwxx').html("修改成功!"); 
 					}
 				});
