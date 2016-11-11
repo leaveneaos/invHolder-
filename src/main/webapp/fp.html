@@ -193,17 +193,29 @@
 		</div>
 	</div>
 	<p></p>
-	<div style="width: 100%; padding-left: 13px; float: left; margin-bottom: 50px;">
+	<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a id="you" href="../smtq/xgyx.html" class="mui-navigate-right">
+						邮箱
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a id="fpj" href="ewm.html" class="mui-navigate-right">
+						添加到发票夹
+					</a>
+				</li>
+			</ul>
+	<!--<div style="width: 100%; padding-left: 13px; float: left; margin-bottom: 50px;">-->
 		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
-		<a id="you" href="#"><button type="button"
+		<!--<a id="you" href="#"><button type="button"
 				class="mui-btn mui-btn-warning">邮箱</button></a>
 		<a id="fpj" href="#"><button type="button" id="fpj1" 
-				class="mui-btn mui-btn-warning">发票夹</button></a>
+				class="mui-btn mui-btn-warning">发票夹</button></a>-->
 	<!-- 	<button onclick="sckj()" type="button" class="mui-btn mui-btn-success">微信卡包</button> -->
 
 		<!-- <a id="hk" href="#"><button type="button"
 				class="mui-btn mui-btn-royal mui-btn-outlined">我想要纸质发票</button></a> -->
-	</div>
+	<!--</div>-->
 		<div
 		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
 		<div style="max-width: 800px; margin: 0 auto;">
@@ -236,7 +248,7 @@
 									function(n, value) {
 										$("#parentIndustryUL")
 												.append(
-														"<div style='width: 33%;float: left;'><img src='"
+														"<div style='width: 100%;float: left;'><img src='"
 																+ value
 																+ "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
 
@@ -320,28 +332,28 @@
 // 				});
 			});
 
-			$('#fpj1').click(function() {
-				if (openid == null) {
-					getCode();
-				}else{
-					$.ajax({
-						url : '../pjj/saveFpj',
-						data : {
-							"openid" : openid
-						},
-						method : 'post',
-						success : function(data) {
-							if (data.success) {
-								window.location.href = "../pjj/first";
-							}else if (data.nopeat) {
-								window.location.href = "../pjj/first";
-							} else {
-								window.location.href = "../pjj/first";
-							}
-						}
-					});
-				}
-			});
+//			$('#fpj1').click(function() {
+//				if (openid == null) {
+//					getCode();
+//				}else{
+//					$.ajax({
+//						url : '../pjj/saveFpj',
+//						data : {
+//							"openid" : openid
+//						},
+//						method : 'post',
+//						success : function(data) {
+//							if (data.success) {
+//								window.location.href = "../pjj/first";
+//							}else if (data.nopeat) {
+//								window.location.href = "../pjj/first";
+//							} else {
+//								window.location.href = "../pjj/first";
+//							}
+//						}
+//					});
+//				}
+//			});
 
 		})
 		function tiaozhuan() {
