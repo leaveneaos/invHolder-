@@ -24,7 +24,7 @@
 					function(data) {
 						djh = data.djh;
 						if(null==djh||""==djh){
-							 window.location.href="demo.html"; 
+							 window.location.href="demo.html?time="+new Date(); 
 						}
 					})
 		})
@@ -40,7 +40,7 @@
 					"djh" : djh
 				}, function(data) {
 					if(data.msg){
-						 window.location.href="tishi2.html"; 
+						 window.location.href="tishi2.html?time="+new Date(); 
 					}
 				});
 			} else {
@@ -48,7 +48,7 @@
 			}
 		}
 		function tiaozhuan(){
-			 window.location.href="index.html";
+			 window.location.href="index.html?time="+new Date();
 		}
 	</script>
 	<header class="mui-bar mui-bar-nav">

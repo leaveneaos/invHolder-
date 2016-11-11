@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +37,11 @@ public class FptqController extends BaseController {
     @Autowired
     private TqjlService tqjlService;
     @RequestMapping
-    public String index() {
-    	 return "redirect:/zydc.html"; 
+    @ResponseBody
+    public String index() throws IOException {
+    	response.sendRedirect(request.getContextPath() +"/zydc.html?_t=" + System.currentTimeMillis());
+    	return null;
+//    	 return "redirect:/zydc.html"; 
     }
 
     @RequestMapping(value = "/zydc")

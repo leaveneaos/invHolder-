@@ -68,7 +68,8 @@ public class SmtqController extends BaseController{
 	@Autowired
 	private JyspmxService jyspmxService;
 	@RequestMapping
-	public String index() throws Exception {
+	@ResponseBody
+	public void index() throws Exception {
 		String str = request.getParameter("q");
 		byte[] bt = null;
 		try {
@@ -88,30 +89,30 @@ public class SmtqController extends BaseController{
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
 		if (null==gsxx) {
 			request.getSession().setAttribute("msg", "公司信息不正确!");
-			return "redirect:/smtq/demo.html";
+			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
 		}
 		dbs+="key="+gsxx.getSecretKey();
 		String key1 = MD5Util.generatePassword(dbs);
 
 		if (!sign.equals(key1.toLowerCase())) {
 			request.getSession().setAttribute("msg", "秘钥不匹配!");
-			return "redirect:/smtq/demo.html";
+			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
 		}
 		if (null==orderNo||"".equals(orderNo)) {
 			request.getSession().setAttribute("msg", "未包含流水号!");
-			return "redirect:/smtq/demo.html";
+			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
 		}
 		if (null==sn||"".equals(sn)) {
 			request.getSession().setAttribute("msg", "未包含门店信息!");
-			return "redirect:/smtq/demo.html";
+			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
 		}
 		if (null==orderTime||"".equals(orderTime)) {
 			request.getSession().setAttribute("msg", "未包含流水时间!");
-			return "redirect:/smtq/demo.html";
+			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
 		}
 		if (null==price||"".equals(price)) {
 			request.getSession().setAttribute("msg", "未包含金额!");
-			return "redirect:/smtq/demo.html";
+			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
 		}
 		request.getSession().setAttribute("orderNo", orderNo);
 		request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime)));
@@ -146,42 +147,48 @@ public class SmtqController extends BaseController{
 		              String llqxx =request.getHeader("User-Agent");
 		              tqjl.setLlqxx(llqxx);
 		              tqjlService.save(tqjl);
-		              return "redirect:/fp.html"; 
+		  			  response.sendRedirect(request.getContextPath() +"/fp.html?_t=" + System.currentTimeMillis());
 				}else{
 					  request.getSession().setAttribute("clztdm", jyls.getClztdm());
 				}
 			}
-			  return "redirect:dzfp_sqj/smtq3"; 
+			  response.sendRedirect("dzfp_sqj/smtq3");
 		}
 		} catch (IOException e) {
 			request.getSession().setAttribute("msg", e.getMessage());
-			return "redirect:/smtq/demo.html";
+			response.sendRedirect(request.getContextPath() +"/smtq/smtq1.html?_t=" + System.currentTimeMillis());
 		}
-		 return "redirect:/smtq/smtq1.html"; 
+		response.sendRedirect(request.getContextPath() +"/smtq/smtq1.html?_t=" + System.currentTimeMillis());
 	}
 	 @RequestMapping(value = "/smtq3")
-	 public String tztz(){
-		 return "redirect:/smtq/smtq3.html"; 
+	 @ResponseBody
+	 public void tztz() throws IOException{
+		 response.sendRedirect(request.getContextPath() +"/smtq/smtq3.html?_t=" + System.currentTimeMillis());
 	 }
 	 @RequestMapping(value = "/demo")
-	 public String demo(){
-		 return "redirect:/smtq/demo.html"; 
+	 @ResponseBody
+	 public void demo() throws IOException{
+		 response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis()); 
 	 }
 	 @RequestMapping(value = "/smtq2")
-	 public String smtq2(){
-		 return "redirect:/smtq/smtq2.html"; 
+	 @ResponseBody
+	 public void smtq2() throws IOException{
+		 response.sendRedirect(request.getContextPath() +"/smtq/smtq2.html?_t=" + System.currentTimeMillis());
 	 }
 	 @RequestMapping(value = "/bangzhu")
-	 public String bangzhu(){
-		 return "redirect:/bangzhu.html"; 
+	 @ResponseBody
+	 public void bangzhu() throws IOException{
+		 response.sendRedirect(request.getContextPath() +"/smtq/smtq2.html?_t=" + System.currentTimeMillis());
 	 }
 	 @RequestMapping(value = "/yxxg")
-	 public String yxxg(){
-		 return "redirect:/smtq/xgyx.html"; 
+	 @ResponseBody
+	 public void yxxg() throws IOException{
+		 response.sendRedirect(request.getContextPath() +"/smtq/xgyx.html?_t=" + System.currentTimeMillis());
 	 }
 	 @RequestMapping(value = "/fp")
-	 public String fp(){
-		 return "redirect:/fp.html"; 
+	 @ResponseBody
+	 public void fp() throws IOException{
+		 response.sendRedirect(request.getContextPath() +"/fp.html?_t=" + System.currentTimeMillis());
 	 }
     @RequestMapping(value = "/getSmsj")
     @ResponseBody

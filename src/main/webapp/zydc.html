@@ -28,7 +28,7 @@
 					function(data) {
 						if (data.num == 1) {
 							if (data.clztdm == "00") {
-								window.location.href = "tijiao.html";
+								window.location.href = "tijiao.html?time="+new Date();
 							} else {
 								btnArray = [ '确定' ];
 								firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
@@ -38,7 +38,7 @@
 								});
 							}
 						} else if (data.num == 2) {
-							window.location.href = "fp.html";
+							window.location.href = "fp.html?time="+new Date();
 						} else if (data.num == 3) {
 							btnArray = [ '确定' ];
 							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
@@ -59,7 +59,7 @@
 					});
 		}
 		function tiaozhuan() {
-			window.location.href = "bangzhu.html";
+			window.location.href = "bangzhu.html?time="+new Date();
 		}
 	</script>
 	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">

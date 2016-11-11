@@ -64,7 +64,7 @@
 					"lxdh" : lxdh
 				}, function(data) {
 					if(data.msg){
-						 window.location.href="tishi1.html"; 
+						 window.location.href="tishi1.html?time="+new Date(); 
 					}else{
 						if(data.sh==0){
 							$('#cwts').html("您已经提交过申请!");	
@@ -79,7 +79,7 @@
 			}
 		}
 	function tiaozhuan(){
-		 window.location.href="index.html";
+		 window.location.href="index.html?time="+new Date();
 	}
 	</script>
 	<header class="mui-bar mui-bar-nav">

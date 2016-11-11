@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,8 +75,9 @@ public class PjjController extends BaseController {
 	private static String emailTitle;
 
 	@RequestMapping
-	public String index() {
-		return "pjj/index";
+	@ResponseBody
+	public void index() throws IOException {
+    	response.sendRedirect(request.getContextPath() +"/pjj/index.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
@@ -110,9 +112,11 @@ public class PjjController extends BaseController {
 	 * 
 	 * @param djh
 	 * @return
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/saveFp")
-	public String getFp(Integer djh) {
+	@ResponseBody
+	public void getFp(Integer djh) throws IOException {
 		Map<String, Object> params = new HashMap<>();
 		if (djh == null) {
 			djh = -1;
@@ -126,7 +130,7 @@ public class PjjController extends BaseController {
 		}
 		session.setAttribute("djh", djh);
 		session.setAttribute("fps", list);
-		return "redirect:/pjj/imageviewer.html";
+    	response.sendRedirect(request.getContextPath() +"/pjj/imageviewer.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
@@ -146,26 +150,32 @@ public class PjjController extends BaseController {
 	 * 跳转到邮箱页面
 	 * 
 	 * @return
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/youxiong")
-	public String youxiong() {
-		return "redirect:/pjj/youxiang.html";
+	@ResponseBody
+	public void youxiong() throws IOException {
+    	response.sendRedirect(request.getContextPath() +"/pjj/youxiang.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
 	 * 跳转到首页
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/first")
-	public String back() {
-		return "redirect:/pjj/index.html";
+	@ResponseBody
+	public void back() throws IOException {
+    	response.sendRedirect(request.getContextPath() +"/pjj/index.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
 	 * 跳转到错误页面
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/error")
-	public String error() {
-		return "redirect:/smtq/demo.html";
+	@ResponseBody
+	public void error() throws IOException {
+    	response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
