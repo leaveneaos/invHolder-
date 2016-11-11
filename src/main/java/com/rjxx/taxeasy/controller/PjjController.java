@@ -17,6 +17,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,10 +28,12 @@ import com.rjxx.taxeasy.domains.Ckhk;
 import com.rjxx.taxeasy.domains.Fpj;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.domains.Tqjl;
 import com.rjxx.taxeasy.service.CkhkService;
 import com.rjxx.taxeasy.service.FpjService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.KplsService;
+import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.taxeasy.vo.FpjVo;
 
 @SuppressWarnings("deprecation")
@@ -55,6 +58,9 @@ public class PjjController extends BaseController {
 	
 	@Autowired
 	private CkhkService ckhkService;
+	
+	@Autowired
+	private TqjlService tqjlService;
 
 	@Value("${emailHost}")
 	private String emailHost;
@@ -170,6 +176,7 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/saveFpj")
 	@ResponseBody
+	@Transactional
 	public Map save(String openid) {
 		Map<String, Object> result = new HashMap<>();
 		Integer djh = (Integer) session.getAttribute("djh");
@@ -193,6 +200,14 @@ public class PjjController extends BaseController {
 		fpj.setLrsj(new Date());
 		fpj.setXgsj(new Date());
 		fpjService.save(fpj);
+		Tqjl tqjl = new Tqjl();
+        tqjl.setDjh(String.valueOf(djh));
+        tqjl.setTqsj(new Date());
+        String visiterIP=request.getRemoteAddr();//访问者IP  
+        tqjl.setIp(visiterIP);
+        String llqxx =request.getHeader("User-Agent");
+        tqjl.setLlqxx(llqxx);
+        tqjlService.save(tqjl);
 		result.put("success", true);
 		return result;
 	}
@@ -242,6 +257,7 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/sendEmail")
 	@ResponseBody
+	@Transactional
 	public Map sendMail(String yx) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Integer djh = (Integer) session.getAttribute("djh");
@@ -278,6 +294,14 @@ public class PjjController extends BaseController {
 			sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc());
 			flag = true;
 		}
+		Tqjl tqjl = new Tqjl();
+        tqjl.setDjh(String.valueOf(jyls.getDjh()));
+        tqjl.setTqsj(new Date());
+        String visiterIP=request.getRemoteAddr();//访问者IP  
+        tqjl.setIp(visiterIP);
+        String llqxx =request.getHeader("User-Agent");
+        tqjl.setLlqxx(llqxx);
+        tqjlService.save(tqjl);
 		result.put("success", flag);
 		return result;
 	}
