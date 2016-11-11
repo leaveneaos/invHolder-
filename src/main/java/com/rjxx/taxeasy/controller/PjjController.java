@@ -200,7 +200,7 @@ public class PjjController extends BaseController {
 		Fpj fpj = fpjService.findOneByParams(params);
 		if (fpj != null) {
 			result.put("nopeat", true);
-			result.put("msg", "该订单已添加发票夹");
+			result.put("msg", "发票已收藏到发票夹");
 			return result;
 		}
 		fpj = new Fpj();
