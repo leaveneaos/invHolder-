@@ -177,8 +177,8 @@
 	</header>
 	<div class="mui-content">
 		<div id=parentIndustryUL class="mui-content-padded">
-<!-- 
-			 				<div style="width: 33%;float: left;">
+ 
+			 				<!--<div style="width: 33%;float: left;">
 					<img src="images/yuantiao.jpg" data-preview-src="" data-preview-group="1" style="width: 100%;"/>
 				</div>
 				
@@ -193,25 +193,25 @@
 		</div>
 	</div>
 	<p></p>
-
+	
 	<div style="width: 100%; float: left; margin-bottom: 50px;">
 		<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
-					<a id="you" href="../smtq/xgyx.html" class="mui-navigate-right">
-						邮箱
+					<a id="you"  class="mui-navigate-right">
+						发送到邮箱邮箱
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a id="fpj"class="mui-navigate-right">
+					<a id="fpj"  class="mui-navigate-right">
 						添加到发票夹
 					</a>
 				</li>
 			</ul>
-		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> 
+		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
 		<!--<a id="you" href="#"><button type="button"
 				class="mui-btn mui-btn-warning">邮箱</button></a>
 		<a id="fpj" href="#"><button type="button" id="fpj1" 
-				class="mui-btn mui-btn-warning">发票夹</button></a>
+				class="mui-btn mui-btn-warning">发票夹</button></a>-->
 	<!-- 	<button onclick="sckj()" type="button" class="mui-btn mui-btn-success">微信卡包</button> -->
 
 		<!-- <a id="hk" href="#"><button type="button"
@@ -221,7 +221,7 @@
 		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
 		<div style="max-width: 800px; margin: 0 auto;">
 			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%; float: right; text-align: right;"><a href="bangzhu.html">遇到问题?</a></div>
+			<div style="width: 30%; float: right; text-align: right;"><a id="abc" href="">遇到问题?</a></div>
 		</div>
 		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
@@ -258,7 +258,8 @@
 							window.location.href = "smtq/demo.html";
 						}
 					})
-			$('#you').attr("href", "youxiang.html");
+//			$('#you').attr("href", "youxiang.html");
+//			$('#abc').attr("href", "bangzhu.html");
 			//$('#hk').attr("href", "sqhk.html");
 			
 			var urlinfo = window.location.href; //获取当前页面的url
@@ -298,6 +299,12 @@
 					return;
 				}
 			}
+			$('#you').click(function() {
+				window.location.href = "youxiang.html";
+			});
+			$('#abc').click(function() {
+				window.location.href = "bangzhu.html";
+			});
 
 			$('#fpj').click(function() {
 				if (openid == null) {
@@ -408,7 +415,9 @@
 <script src="js/mui.min.js"></script>
 <script src="js/mui.zoom.js"></script>
 <script src="js/mui.previewimage.js"></script>
-
+<script>
+	mui.previewImage();
+</script>
 <!--<script src="../js/mui.min.js"></script>
 <script>
 		mui.init({
