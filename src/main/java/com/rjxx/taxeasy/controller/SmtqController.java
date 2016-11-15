@@ -42,11 +42,9 @@ import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.taxeasy.service.XfService;
 import com.rjxx.taxeasy.service.YhService;
 
-
-
 @Controller
 @RequestMapping("/dzfp_sqj")
-public class SmtqController extends BaseController{
+public class SmtqController extends BaseController {
 
 	@Autowired
 	private GsxxService gsxxservice;
@@ -68,154 +66,168 @@ public class SmtqController extends BaseController{
 	private YhService yhService;
 	@Autowired
 	private JyspmxService jyspmxService;
+
 	@RequestMapping
 	@ResponseBody
 	public void index() throws Exception {
 		try {
-		String str = request.getParameter("q");
-		  byte[] bytes = Base64.decodeBase64(str);
-          String csc = new String(bytes);
-		String[] cssz = csc.split("&");
-		String orderNo = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
-		String orderTime = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
-		String price = cssz[2].substring(cssz[2].lastIndexOf("=") + 1);
-		String sn = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
-		String sign = cssz[4].substring(cssz[4].lastIndexOf("=") + 1);
-		String dbs = csc.substring(0,csc.lastIndexOf("&")+1);
-		Map params = new HashMap<>();
-		params.put("gsdm", "sqj");
-		Gsxx gsxx = gsxxservice.findOneByParams(params);
-		if (null==gsxx) {
-			request.getSession().setAttribute("msg", "公司信息不正确!");
-			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
-		}
-		dbs+="key="+gsxx.getSecretKey();
-		String key1 = MD5Util.generatePassword(dbs);
-
-		if (!sign.equals(key1.toLowerCase())) {
-			request.getSession().setAttribute("msg", "秘钥不匹配!");
-			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
-		}
-		if (null==orderNo||"".equals(orderNo)) {
-			request.getSession().setAttribute("msg", "未包含流水号!");
-			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
-		}
-		if (null==sn||"".equals(sn)) {
-			request.getSession().setAttribute("msg", "未包含门店信息!");
-			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
-		}
-		if (null==orderTime||"".equals(orderTime)) {
-			request.getSession().setAttribute("msg", "未包含流水时间!");
-			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
-		}
-		if (null==price||"".equals(price)) {
-			request.getSession().setAttribute("msg", "未包含金额!");
-			response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
-		}
-		request.getSession().setAttribute("orderNo", orderNo);
-		request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime)));
-		request.getSession().setAttribute("price", price);
-		request.getSession().setAttribute("sn", sn);
-    	String ddh = (String) request.getSession().getAttribute("orderNo"); 
-		Map map = new HashMap<>();
-		map.put("ddh",ddh);
-		Smtq smtq1 = smtqService.findOneByParams(map);
-		if (null!=smtq1&&null!=smtq1.getId()) {
-			  Jyls jyls = jylsService.findByTqm(map);
-			  if (null!=jyls&&null!=jyls.getClztdm()) {
-				if ("91".equals(jyls.getClztdm())) {
-					Kpls kpls = new Kpls();
-		              kpls.setDjh(jyls.getDjh());
-		              List<Kpls> list = kplsService.findByDjh(kpls);
-		              String pdfdzs = "";
-		              boolean falg = false;
-		              String msg="";
-		              for (Kpls kpls2 : list) {
-		                  pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
-		              }
-		              if (pdfdzs.length() > 0) {
-		            	  request.getSession().setAttribute("djh", jyls.getDjh());
-		                  request.getSession().setAttribute("pdfdzs",  pdfdzs.substring(0, pdfdzs.length() - 1));
-		              }
-		              Tqjl tqjl = new Tqjl();
-		              tqjl.setDjh(String.valueOf(jyls.getDjh()));
-		              tqjl.setTqsj(new Date());
-		              String visiterIP=request.getRemoteAddr();//访问者IP  
-		              tqjl.setIp(visiterIP);
-		              String llqxx =request.getHeader("User-Agent");
-		              tqjl.setLlqxx(llqxx);
-		              tqjlService.save(tqjl);
-		  			  response.sendRedirect(request.getContextPath() +"/fp.html?_t=" + System.currentTimeMillis());
-				}else{
-					  request.getSession().setAttribute("clztdm", jyls.getClztdm());
-				}
+			String str = request.getParameter("q");
+			byte[] bytes = Base64.decodeBase64(str);
+			String csc = new String(bytes);
+			String[] cssz = csc.split("&");
+			String orderNo = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
+			String orderTime = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
+			String price = cssz[2].substring(cssz[2].lastIndexOf("=") + 1);
+			String sn = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
+			String sign = cssz[4].substring(cssz[4].lastIndexOf("=") + 1);
+			String dbs = csc.substring(0, csc.lastIndexOf("&") + 1);
+			Map params = new HashMap<>();
+			params.put("gsdm", "sqj");
+			Gsxx gsxx = gsxxservice.findOneByParams(params);
+			if (null == gsxx) {
+				request.getSession().setAttribute("msg", "公司信息不正确!");
+				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 			}
-			  response.sendRedirect("dzfp_sqj/smtq3");
-		}
+			dbs += "key=" + gsxx.getSecretKey();
+			String key1 = MD5Util.generatePassword(dbs);
+
+			if (!sign.equals(key1.toLowerCase())) {
+				request.getSession().setAttribute("msg", "秘钥不匹配!");
+				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			}
+			if (null == orderNo || "".equals(orderNo)) {
+				request.getSession().setAttribute("msg", "未包含流水号!");
+				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			}
+			if (null == sn || "".equals(sn)) {
+				request.getSession().setAttribute("msg", "未包含门店信息!");
+				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			}
+			if (null == orderTime || "".equals(orderTime)) {
+				request.getSession().setAttribute("msg", "未包含流水时间!");
+				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			}
+			if (null == price || "".equals(price)) {
+				request.getSession().setAttribute("msg", "未包含金额!");
+				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			}
+			request.getSession().setAttribute("orderNo", orderNo);
+			request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+					.format(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime)));
+			request.getSession().setAttribute("price", price);
+			request.getSession().setAttribute("sn", sn);
+			String ddh = (String) request.getSession().getAttribute("orderNo");
+			Map map = new HashMap<>();
+			map.put("ddh", ddh);
+			Smtq smtq1 = smtqService.findOneByParams(map);
+			if (null != smtq1 && null != smtq1.getId()) {
+				Jyls jyls = jylsService.findByTqm(map);
+				if (null != jyls && null != jyls.getClztdm()) {
+					if ("91".equals(jyls.getClztdm())) {
+						Kpls kpls = new Kpls();
+						kpls.setDjh(jyls.getDjh());
+						List<Kpls> list = kplsService.findByDjh(kpls);
+						String pdfdzs = "";
+						boolean falg = false;
+						String msg = "";
+						for (Kpls kpls2 : list) {
+							pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+						}
+						if (pdfdzs.length() > 0) {
+							request.getSession().setAttribute("djh", jyls.getDjh());
+							request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+						}
+						Tqjl tqjl = new Tqjl();
+						tqjl.setDjh(String.valueOf(jyls.getDjh()));
+						tqjl.setTqsj(new Date());
+						String visiterIP = request.getRemoteAddr();// 访问者IP
+						tqjl.setIp(visiterIP);
+						String llqxx = request.getHeader("User-Agent");
+						tqjl.setLlqxx(llqxx);
+						tqjlService.save(tqjl);
+						response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+					} else {
+						request.getSession().setAttribute("clztdm", jyls.getClztdm());
+					}
+				}
+				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
+			} else {
+				response.sendRedirect(request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
+			}
 		} catch (IOException e) {
 			request.getSession().setAttribute("msg", e.getMessage());
-			response.sendRedirect(request.getContextPath() +"/smtq/smtq1.html?_t=" + System.currentTimeMillis());
+			response.sendRedirect(request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
 		}
-		response.sendRedirect(request.getContextPath() +"/smtq/smtq1.html?_t=" + System.currentTimeMillis());
+
 	}
-	 @RequestMapping(value = "/smtq3")
-	 @ResponseBody
-	 public void tztz() throws IOException{
-		 response.sendRedirect(request.getContextPath() +"/smtq/smtq3.html?_t=" + System.currentTimeMillis());
-	 }
-	 @RequestMapping(value = "/demo")
-	 @ResponseBody
-	 public void demo() throws IOException{
-		 response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis()); 
-	 }
-	 @RequestMapping(value = "/smtq2")
-	 @ResponseBody
-	 public void smtq2() throws IOException{
-		 response.sendRedirect(request.getContextPath() +"/smtq/smtq2.html?_t=" + System.currentTimeMillis());
-	 }
-	 @RequestMapping(value = "/bangzhu")
-	 @ResponseBody
-	 public void bangzhu() throws IOException{
-		 response.sendRedirect(request.getContextPath() +"/smtq/smtq2.html?_t=" + System.currentTimeMillis());
-	 }
-	 @RequestMapping(value = "/yxxg")
-	 @ResponseBody
-	 public void yxxg() throws IOException{
-		 response.sendRedirect(request.getContextPath() +"/smtq/xgyx.html?_t=" + System.currentTimeMillis());
-	 }
-	 @RequestMapping(value = "/fp")
-	 @ResponseBody
-	 public void fp() throws IOException{
-		 response.sendRedirect(request.getContextPath() +"/fp.html?_t=" + System.currentTimeMillis());
-	 }
-    @RequestMapping(value = "/getSmsj")
-    @ResponseBody
-	public Map getSmsj(){
-    	Map<String, Object> result = new HashMap<String, Object>();
+
+	@RequestMapping(value = "/smtq3")
+	@ResponseBody
+	public void tztz() throws IOException {
+		response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
+	}
+
+	@RequestMapping(value = "/demo")
+	@ResponseBody
+	public void demo() throws IOException {
+		response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+	}
+
+	@RequestMapping(value = "/smtq2")
+	@ResponseBody
+	public void smtq2() throws IOException {
+		response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
+	}
+
+	@RequestMapping(value = "/bangzhu")
+	@ResponseBody
+	public void bangzhu() throws IOException {
+		response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
+	}
+
+	@RequestMapping(value = "/yxxg")
+	@ResponseBody
+	public void yxxg() throws IOException {
+		response.sendRedirect(request.getContextPath() + "/smtq/xgyx.html?_t=" + System.currentTimeMillis());
+	}
+
+	@RequestMapping(value = "/fp")
+	@ResponseBody
+	public void fp() throws IOException {
+		response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+	}
+
+	@RequestMapping(value = "/getSmsj")
+	@ResponseBody
+	public Map getSmsj() {
+		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("orderNo", request.getSession().getAttribute("orderNo"));
 		result.put("orderTime", request.getSession().getAttribute("orderTime"));
 		result.put("price", request.getSession().getAttribute("price"));
 		return result;
 	}
-    @RequestMapping(value = "/xgyx")
-    @ResponseBody
-	public Map xgyx(String yx){
-    	Map<String, Object> result = new HashMap<String, Object>();
-    	Map params = new HashMap<>();
-    	params.put("ddh", (String) request.getSession().getAttribute("orderNo"));
-    	Smtq smtq = smtqService.findOneByParams(params);
-    	smtq.setYx(yx);
-    	smtqService.save(smtq);
-    	result.put("num", "1");
+
+	@RequestMapping(value = "/xgyx")
+	@ResponseBody
+	public Map xgyx(String yx) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map params = new HashMap<>();
+		params.put("ddh", (String) request.getSession().getAttribute("orderNo"));
+		Smtq smtq = smtqService.findOneByParams(params);
+		smtq.setYx(yx);
+		smtqService.save(smtq);
+		result.put("num", "1");
 		return result;
 	}
-    @RequestMapping(value = "/save")
-    @ResponseBody
-    @Transactional
-    public Map save(String fptt,String nsrsbh,String dz,String dh,String khh,String khhzh,String yx,String sj) throws Exception{
-    	Map<String , Object> result = new HashMap<>();
-    	String ddh = (String) request.getSession().getAttribute("orderNo"); 
-    	if ("".equals(ddh)) {
+
+	@RequestMapping(value = "/save")
+	@ResponseBody
+	@Transactional
+	public Map save(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh, String yx, String sj)
+			throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		String ddh = (String) request.getSession().getAttribute("orderNo");
+		if ("".equals(ddh)) {
 			result.put("msg", "1");
 			return result;
 		}
@@ -223,17 +235,18 @@ public class SmtqController extends BaseController{
 		params.put("gsdm", "sqj");
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
 		Map map = new HashMap<>();
-		map.put("ddh",ddh);
+		map.put("ddh", ddh);
 		Smtq smtq1 = smtqService.findOneByParams(map);
 		Smtq smtq;
-		if (null!=smtq1) {
-			 smtq = smtq1;
-		}else{
-			smtq = new Smtq();	
+		if (null != smtq1) {
+			smtq = smtq1;
+		} else {
+			smtq = new Smtq();
 		}
 		smtq.setDdh((String) request.getSession().getAttribute("orderNo"));
 		smtq.setKpddm((String) request.getSession().getAttribute("sn"));
-		smtq.setJylssj(new SimpleDateFormat("yyyyMMddHHmmss").parse((String) request.getSession().getAttribute("orderTime")));
+		smtq.setJylssj(
+				new SimpleDateFormat("yyyyMMddHHmmss").parse((String) request.getSession().getAttribute("orderTime")));
 		smtq.setZje(Double.parseDouble((String) request.getSession().getAttribute("price")));
 		smtq.setGfmc(fptt);
 		smtq.setNsrsbh(nsrsbh);
@@ -249,14 +262,14 @@ public class SmtqController extends BaseController{
 		smtq.setLrsj(new Date());
 		smtqService.save(smtq);
 		Cszb cszb = this.getCszb("sqj", null, null, "sflxkp");
-		if (null!=cszb&&"是".equals(cszb.getCsz())) {
-			Map map2  = new HashMap<>();
+		if (null != cszb && "是".equals(cszb.getCsz())) {
+			Map map2 = new HashMap<>();
 			map2.put("gsdm", "sqj");
 			map2.put("kpddm", (String) request.getSession().getAttribute("sn"));
 			Skp skp = skpService.findOneByParams(map2);
-			if (null!=skp&&!"".equals(skp.getXfid())) {
+			if (null != skp && !"".equals(skp.getXfid())) {
 				Xf xf = xfService.findOne(skp.getXfid());
-				if (null!=xf) {
+				if (null != xf) {
 					Jyls jyls = new Jyls();
 					jyls.setClztdm("01");
 					jyls.setDdh((String) request.getSession().getAttribute("orderNo"));
@@ -330,11 +343,11 @@ public class SmtqController extends BaseController{
 					jyspmx.setDjh(jyls.getDjh());
 					jyspmx.setJshj(Double.parseDouble((String) request.getSession().getAttribute("price")));
 					jyspmxService.save(jyspmx);
-				}else {
+				} else {
 					result.put("failure", true);
 					result.put("xx", "离线开票失败,无销方信息");
 				}
-			}else {
+			} else {
 				result.put("failure", true);
 				result.put("xx", "离线开票失败,无税控盘信息");
 			}
@@ -342,64 +355,70 @@ public class SmtqController extends BaseController{
 		result.put("failure", false);
 		result.put("msg", "2");
 		return result;
-    }
-    @RequestMapping(value ="/getZje")
-    @ResponseBody
-    public Map getZje(){
-    	Map<String , Object> result = new HashMap<>();
-    	result.put("zje", request.getSession().getAttribute("price"));
-    	return result;
-    }
-    @RequestMapping(value ="/getmsg")
-    @ResponseBody
-    public Map getMsg(){
-    	Map<String , Object> result = new HashMap<>();
-    	result.put("msg", request.getSession().getAttribute("msg"));
-    	result.put("clztdm", request.getSession().getAttribute("clztdm"));
-    	return result;
-    }
+	}
+
+	@RequestMapping(value = "/getZje")
+	@ResponseBody
+	public Map getZje() {
+		Map<String, Object> result = new HashMap<>();
+		result.put("zje", request.getSession().getAttribute("price"));
+		return result;
+	}
+
+	@RequestMapping(value = "/getmsg")
+	@ResponseBody
+	public Map getMsg() {
+		Map<String, Object> result = new HashMap<>();
+		result.put("msg", request.getSession().getAttribute("msg"));
+		result.put("clztdm", request.getSession().getAttribute("clztdm"));
+		return result;
+	}
+
 	@RequestMapping(value = "/fpsession")
 	@ResponseBody
-	public Map fpsession(){
+	public Map fpsession() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("djh", request.getSession().getAttribute("djh"));
 		result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
 		return result;
 	}
-	public Cszb getCszb(String gsdm,Integer xfid,Integer kpdid,String csm){
+
+	public Cszb getCszb(String gsdm, Integer xfid, Integer kpdid, String csm) {
 		Map params = new HashMap<>();
 		params.put("gsdm", gsdm);
 		params.put("xfid", xfid);
 		params.put("kpdid", kpdid);
 		params.put("csm", csm);
-		List<Cszb> list = new ArrayList<>(); 
+		List<Cszb> list = new ArrayList<>();
 		list = cszbService.findAllByParams(params);
-		if (list.size()==1) {
-		return list.get(0);
-		}else if (list.size()==0) {
+		if (list.size() == 1) {
+			return list.get(0);
+		} else if (list.size() == 0) {
 			return new Cszb();
-		}else{
+		} else {
 			return list.get(0);
 		}
 	}
+
 	/*
 	 * 定时获取流水状态
-	 * */
-	public void getJylsxx(){
-	     Runnable runnable = new Runnable() {  
-	            public void run() {  
-	            	 Map map2 = new HashMap<>();
-	            	String ddh = (String) request.getSession().getAttribute("orderNo"); 
-	    	         map2.put("ddh", ddh);
-	    	         Jyls jyls = jylsService.findByTqm(map2);
-	    	         if (null!=jyls) {
-						
-					}
-	            }  
-	        }; 
-	        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-	        service.scheduleAtFixedRate(runnable, 10, 1, TimeUnit.SECONDS); 
+	 */
+	public void getJylsxx() {
+		Runnable runnable = new Runnable() {
+			public void run() {
+				Map map2 = new HashMap<>();
+				String ddh = (String) request.getSession().getAttribute("orderNo");
+				map2.put("ddh", ddh);
+				Jyls jyls = jylsService.findByTqm(map2);
+				if (null != jyls) {
+
+				}
+			}
+		};
+		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+		service.scheduleAtFixedRate(runnable, 10, 1, TimeUnit.SECONDS);
 	}
+
 	public static void main(String[] args) {
 		String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
 		byte[] bt = null;
@@ -412,6 +431,5 @@ public class SmtqController extends BaseController{
 		String csc = new String(bt);
 		System.out.println(csc);
 	}
-
 
 }
