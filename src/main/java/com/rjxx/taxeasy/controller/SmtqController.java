@@ -112,6 +112,7 @@ public class SmtqController extends BaseController {
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 			}
 			request.getSession().setAttribute("orderNo", orderNo);
+			request.getSession().setAttribute("orderTime1", orderTime);
 			request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 					.format(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime)));
 			request.getSession().setAttribute("price", price);
@@ -246,12 +247,12 @@ public class SmtqController extends BaseController {
 		smtq.setDdh((String) request.getSession().getAttribute("orderNo"));
 		smtq.setKpddm((String) request.getSession().getAttribute("sn"));
 		smtq.setJylssj(
-				new SimpleDateFormat("yyyyMMddHHmmss").parse((String) request.getSession().getAttribute("orderTime")));
+				new SimpleDateFormat("yyyyMMddHHmmss").parse((String) request.getSession().getAttribute("orderTime1")));
 		smtq.setZje(Double.parseDouble((String) request.getSession().getAttribute("price")));
 		smtq.setGfmc(fptt);
 		smtq.setNsrsbh(nsrsbh);
 		smtq.setDz(dz);
-		smtq.setDh(ddh);
+		smtq.setDh(dh);
 		smtq.setKhh(khh);
 		smtq.setKhhzh(khhzh);
 		smtq.setYx(yx);
