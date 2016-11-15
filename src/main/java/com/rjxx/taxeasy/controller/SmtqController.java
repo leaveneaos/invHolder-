@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.rjxx.comm.utils.AESUtils;
 import com.rjxx.comm.utils.MD5Util;
 import com.rjxx.comm.utils.StringUtils;
 import com.rjxx.comm.web.BaseController;
