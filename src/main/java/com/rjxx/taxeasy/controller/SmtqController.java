@@ -11,13 +11,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rjxx.comm.utils.AESUtils;
 import com.rjxx.comm.utils.MD5Util;
 import com.rjxx.comm.utils.StringUtils;
 import com.rjxx.comm.web.BaseController;
@@ -41,6 +42,7 @@ import com.rjxx.taxeasy.service.SmtqService;
 import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.taxeasy.service.XfService;
 import com.rjxx.taxeasy.service.YhService;
+
 
 
 @Controller
@@ -70,13 +72,10 @@ public class SmtqController extends BaseController{
 	@RequestMapping
 	@ResponseBody
 	public void index() throws Exception {
-		String str = request.getParameter("q");
-		byte[] bt = null;
 		try {
-			sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-			bt = decoder.decodeBuffer(str);
-		
-		String csc = new String(bt);
+		String str = request.getParameter("q");
+		  byte[] bytes = Base64.decodeBase64(str);
+          String csc = new String(bytes);
 		String[] cssz = csc.split("&");
 		String orderNo = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
 		String orderTime = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
