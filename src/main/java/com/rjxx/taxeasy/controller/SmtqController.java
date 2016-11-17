@@ -111,6 +111,20 @@ public class SmtqController extends BaseController {
 				request.getSession().setAttribute("msg", "未包含金额!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 			}
+			Map map2 = new HashMap<>();
+			map2.put("gsdm", "sqj");
+			map2.put("kpddm", (String) request.getSession().getAttribute("sn"));
+			Skp skp = skpService.findOneByParams(map2);
+			if(null!=skp){
+				Xf xf = xfService.findOne(skp.getXfid());
+				if (null==xf) {
+					request.getSession().setAttribute("msg", "未查询到销方!");
+					response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				}
+			}else{
+				request.getSession().setAttribute("msg", "未查询到门店号!");
+				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			}
 			request.getSession().setAttribute("orderNo", orderNo);
 			request.getSession().setAttribute("orderTime1", orderTime);
 			request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -120,26 +134,21 @@ public class SmtqController extends BaseController {
 			String ddh = (String) request.getSession().getAttribute("orderNo");
 			Map map = new HashMap<>();
 			map.put("ddh", ddh);
+			map.put("gsdm", "sqj");
 			Smtq smtq1 = smtqService.findOneByParams(map);
 			if (null != smtq1 && null != smtq1.getId()) {
-				Jyls jyls = jylsService.findByTqm(map);
-				if (null != jyls && null != jyls.getClztdm()) {
-					if ("91".equals(jyls.getClztdm())) {
-						Kpls kpls = new Kpls();
-						kpls.setDjh(jyls.getDjh());
-						List<Kpls> list = kplsService.findByDjh(kpls);
+				List<Kpls> list= jylsService.findByTqm(map);
+				if (list.size()>0) {
 						String pdfdzs = "";
-						boolean falg = false;
-						String msg = "";
 						for (Kpls kpls2 : list) {
 							pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
 						}
 						if (pdfdzs.length() > 0) {
-							request.getSession().setAttribute("djh", jyls.getDjh());
+							request.getSession().setAttribute("djh", list.get(0).getDjh());
 							request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
 						}
 						Tqjl tqjl = new Tqjl();
-						tqjl.setDjh(String.valueOf(jyls.getDjh()));
+						tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
 						tqjl.setTqsj(new Date());
 						String visiterIP = request.getRemoteAddr();// 访问者IP
 						tqjl.setIp(visiterIP);
@@ -147,9 +156,6 @@ public class SmtqController extends BaseController {
 						tqjl.setLlqxx(llqxx);
 						tqjlService.save(tqjl);
 						response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
-					} else {
-						request.getSession().setAttribute("clztdm", jyls.getClztdm());
-					}
 				}
 				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
 			} else {
@@ -157,7 +163,7 @@ public class SmtqController extends BaseController {
 			}
 		} catch (IOException e) {
 			request.getSession().setAttribute("msg", e.getMessage());
-			response.sendRedirect(request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
+			response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 		}
 
 	}
@@ -205,6 +211,7 @@ public class SmtqController extends BaseController {
 		result.put("orderNo", request.getSession().getAttribute("orderNo"));
 		result.put("orderTime", request.getSession().getAttribute("orderTime"));
 		result.put("price", request.getSession().getAttribute("price"));
+		result.put("sn", request.getSession().getAttribute("sn"));
 		return result;
 	}
 
@@ -272,7 +279,7 @@ public class SmtqController extends BaseController {
 				Xf xf = xfService.findOne(skp.getXfid());
 				if (null != xf) {
 					Jyls jyls = new Jyls();
-					jyls.setClztdm("01");
+					jyls.setClztdm("03");
 					jyls.setDdh((String) request.getSession().getAttribute("orderNo"));
 					jyls.setGfsh(nsrsbh);
 
@@ -284,7 +291,7 @@ public class SmtqController extends BaseController {
 					jyls.setGfemail(yx);
 					jyls.setGfdz(dz);
 					String tqm = (String) request.getSession().getAttribute("orderNo");
-					if (StringUtils.isNotBlank(tqm)) {
+/*					if (StringUtils.isNotBlank(tqm)) {
 						Map params2 = new HashMap<>();
 						params2.put("gsdm", "sqj");
 						params2.put("tqm", tqm);
@@ -294,15 +301,18 @@ public class SmtqController extends BaseController {
 							result.put("xx", "离线开票失败,提取码已经存在");
 							return result;
 						}
-					}
+					}*/
 					jyls.setTqm(tqm);
 					jyls.setJylsh("SQJ" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
 					jyls.setJshj(Double.parseDouble((String) request.getSession().getAttribute("price")));
 					jyls.setYkpjshj(0.00);
 					jyls.setHsbz("1");
-					jyls.setXfid(xf.getId());
+				/*	jyls.setXfid(xf.getId());
 					jyls.setXfsh(xf.getXfsh());
-					jyls.setXfmc(xf.getXfmc());
+					jyls.setXfmc(xf.getXfmc());*/
+					jyls.setXfid(331);
+					jyls.setXfmc("上海百旺测试盘");
+					jyls.setXfsh("91310101MA1FW0008P");
 					jyls.setLrsj(new Date());
 					jyls.setXgsj(new Date());
 					jyls.setJylssj(new Date());
@@ -320,7 +330,7 @@ public class SmtqController extends BaseController {
 					jyls.setSkr(xf.getSkr());
 					jyls.setSsyf(new SimpleDateFormat("yyyyMM").format(new Date()));
 					Map map3 = new HashMap<>();
-					map3.put("gsdm", "sqj");
+					map3.put("gsdm", "zydc");
 					Yh yh = yhService.findOneByParams(map3);
 					jyls.setLrry(yh.getId());
 					jyls.setXgry(yh.getId());
@@ -344,6 +354,8 @@ public class SmtqController extends BaseController {
 					jyspmx.setDjh(jyls.getDjh());
 					jyspmx.setJshj(Double.parseDouble((String) request.getSession().getAttribute("price")));
 					jyspmxService.save(jyspmx);
+					smtq.setFpzt("08");
+					smtqService.save(smtq);
 				} else {
 					result.put("failure", true);
 					result.put("xx", "离线开票失败,无销方信息");
@@ -399,25 +411,6 @@ public class SmtqController extends BaseController {
 		} else {
 			return list.get(0);
 		}
-	}
-
-	/*
-	 * 定时获取流水状态
-	 */
-	public void getJylsxx() {
-		Runnable runnable = new Runnable() {
-			public void run() {
-				Map map2 = new HashMap<>();
-				String ddh = (String) request.getSession().getAttribute("orderNo");
-				map2.put("ddh", ddh);
-				Jyls jyls = jylsService.findByTqm(map2);
-				if (null != jyls) {
-
-				}
-			}
-		};
-		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-		service.scheduleAtFixedRate(runnable, 10, 1, TimeUnit.SECONDS);
 	}
 
 	public static void main(String[] args) {

@@ -4,6 +4,8 @@ import com.rjxx.comm.mybatis.Pagination;
 import com.rjxx.taxeasy.dao.JylsJpaDao;
 import com.rjxx.taxeasy.dao.JylsMapper;
 import com.rjxx.taxeasy.domains.Jyls;
+import com.rjxx.taxeasy.domains.Kpls;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +52,7 @@ public class JylsService {
         return jylsMapper.findByPage(pagination);
     }
    
-    public Jyls findByTqm(Map params){
+    public List<Kpls> findByTqm(Map params){
     	 return jylsMapper.findByTqm(params);
     }
 

@@ -25,18 +25,17 @@
         </if>
     </select>
 	
-	 <select id="findByTqm" parameterType="map" resultType="jyls">
-        select * from t_jyls where yxbz = '1'
+	 <select id="findByTqm" parameterType="map" resultType="kpls">
+        select b.* from t_jyls a, t_kpls b where a.yxbz = '1' AND a.clztdm = '91' AND a.djh = b.djh AND b.fpztdm = '00' AND b.fpczlxdm = '11' AND b.pdfurl IS NOT NULL AND b.pdfurl &lt;&gt;'' 
         <if test="tqm != null and tqm != ''">
-            and tqm = #{tqm}
+            and a.tqm = #{tqm}
         </if>
         <if test="ddh != null and ddh != ''">
-            and ddh = #{ddh}
+            and a.ddh = #{ddh}
         </if>
         <if test="gsdm != null and gsdm != ''">
-            and gsdm = #{gsdm}
+            and a.gsdm = #{gsdm}
         </if>
-        limit 1 
     </select>
 </mapper>
 

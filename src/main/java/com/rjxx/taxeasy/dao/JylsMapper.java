@@ -3,6 +3,7 @@ package com.rjxx.taxeasy.dao;
 import com.rjxx.comm.mybatis.MybatisRepository;
 import com.rjxx.comm.mybatis.Pagination;
 import com.rjxx.taxeasy.domains.Jyls;
+import com.rjxx.taxeasy.domains.Kpls;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,6 @@ public interface JylsMapper {
 
     public List<Jyls> findByPage(Pagination pagination);
 
-    public Jyls findByTqm(Map params);
+    public  List<Kpls> findByTqm(Map params);
 }
 
