@@ -57,6 +57,7 @@ public class FptqController extends BaseController {
 			List<Kpls> list = jylsService.findByTqm(map);
 			if (list.size() > 0) {
 				String pdfdzs = "";
+				request.getSession().setAttribute("djh", list.get(0).getDjh());
 				for (Kpls kpls2 : list) {
 					pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
 				}
@@ -68,14 +69,21 @@ public class FptqController extends BaseController {
 				Tqjl tqjl = new Tqjl();
 				tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
 				tqjl.setTqsj(new Date());
-				String visiterIP = request.getRemoteAddr();// 访问者IP
+				String visiterIP;
+				  if (request.getHeader("x-forwarded-for") == null) {
+					visiterIP = request.getRemoteAddr();// 访问者IP
+					  }else {
+						  visiterIP = request.getRemoteAddr();// 访问者IP
+					}
 				tqjl.setIp(visiterIP);
 				String llqxx = request.getHeader("User-Agent");
 				tqjl.setLlqxx(llqxx);
 				tqjlService.save(tqjl);
+			}else {
+				result.put("num", "3");
 			}
 		} else {
-			result.put("num", "3");
+			result.put("num", "4");
 		}
 		return result;
 	}
