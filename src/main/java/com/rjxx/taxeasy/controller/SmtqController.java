@@ -7,9 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,13 +112,14 @@ public class SmtqController extends BaseController {
 			map2.put("gsdm", "sqj");
 			map2.put("kpddm", (String) request.getSession().getAttribute("sn"));
 			Skp skp = skpService.findOneByParams(map2);
-			if(null!=skp){
+			if (null != skp) {
 				Xf xf = xfService.findOne(skp.getXfid());
-				if (null==xf) {
+				if (null == xf) {
 					request.getSession().setAttribute("msg", "未查询到销方!");
-					response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+					response.sendRedirect(
+							request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 				}
-			}else{
+			} else {
 				request.getSession().setAttribute("msg", "未查询到门店号!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 			}
@@ -137,25 +135,30 @@ public class SmtqController extends BaseController {
 			map.put("gsdm", "sqj");
 			Smtq smtq1 = smtqService.findOneByParams(map);
 			if (null != smtq1 && null != smtq1.getId()) {
-				List<Kpls> list= jylsService.findByTqm(map);
-				if (list.size()>0) {
-						String pdfdzs = "";
-						for (Kpls kpls2 : list) {
-							pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
-						}
-						if (pdfdzs.length() > 0) {
-							request.getSession().setAttribute("djh", list.get(0).getDjh());
-							request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-						}
-						Tqjl tqjl = new Tqjl();
-						tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
-						tqjl.setTqsj(new Date());
-						String visiterIP = request.getRemoteAddr();// 访问者IP
-						tqjl.setIp(visiterIP);
-						String llqxx = request.getHeader("User-Agent");
-						tqjl.setLlqxx(llqxx);
-						tqjlService.save(tqjl);
-						response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+				List<Kpls> list = jylsService.findByTqm(map);
+				if (list.size() > 0) {
+					String pdfdzs = "";
+					for (Kpls kpls2 : list) {
+						pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+					}
+					if (pdfdzs.length() > 0) {
+						request.getSession().setAttribute("djh", list.get(0).getDjh());
+						request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+					}
+					Tqjl tqjl = new Tqjl();
+					tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+					tqjl.setTqsj(new Date());
+					String visiterIP;
+					if (request.getHeader("x-forwarded-for") == null) {
+						visiterIP = request.getRemoteAddr();// 访问者IP
+					}else{
+						visiterIP = request.getRemoteAddr();// 访问者IP				
+					}
+					tqjl.setIp(visiterIP);
+					String llqxx = request.getHeader("User-Agent");
+					tqjl.setLlqxx(llqxx);
+					tqjlService.save(tqjl);
+					response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
 				}
 				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
 			} else {
@@ -291,28 +294,24 @@ public class SmtqController extends BaseController {
 					jyls.setGfemail(yx);
 					jyls.setGfdz(dz);
 					String tqm = (String) request.getSession().getAttribute("orderNo");
-/*					if (StringUtils.isNotBlank(tqm)) {
-						Map params2 = new HashMap<>();
-						params2.put("gsdm", "sqj");
-						params2.put("tqm", tqm);
-						Jyls tmp = jylsService.findByTqm(params2);
-						if (tmp != null) {
-							result.put("failure", true);
-							result.put("xx", "离线开票失败,提取码已经存在");
-							return result;
-						}
-					}*/
+					/*
+					 * if (StringUtils.isNotBlank(tqm)) { Map params2 = new
+					 * HashMap<>(); params2.put("gsdm", "sqj");
+					 * params2.put("tqm", tqm); Jyls tmp =
+					 * jylsService.findByTqm(params2); if (tmp != null) {
+					 * result.put("failure", true); result.put("xx",
+					 * "离线开票失败,提取码已经存在"); return result; } }
+					 */
 					jyls.setTqm(tqm);
 					jyls.setJylsh("SQJ" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
 					jyls.setJshj(Double.parseDouble((String) request.getSession().getAttribute("price")));
 					jyls.setYkpjshj(0.00);
 					jyls.setHsbz("1");
-				/*	jyls.setXfid(xf.getId());
+					jyls.setXfid(xf.getId()); jyls.setXfsh(xf.getXfsh());
+					jyls.setXfmc(xf.getXfmc());
+					//jyls.setXfid(331);
+					//jyls.setXfmc("上海百旺测试盘");
 					jyls.setXfsh(xf.getXfsh());
-					jyls.setXfmc(xf.getXfmc());*/
-					jyls.setXfid(331);
-					jyls.setXfmc("上海百旺测试盘");
-					jyls.setXfsh("91310101MA1FW0008P");
 					jyls.setLrsj(new Date());
 					jyls.setXgsj(new Date());
 					jyls.setJylssj(new Date());
