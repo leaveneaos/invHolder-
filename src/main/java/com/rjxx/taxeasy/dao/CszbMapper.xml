@@ -12,15 +12,15 @@
     </select>
 
     <select id="findAllByParams" parameterType="map" resultType="cszb">
-    	select * from t_cszb where yxbz = '1' and gsdm = #{gsdm}
+		select * from t_cszb a,t_csb b where a.csid = b.id and a.yxbz='1' and b.yxbz='1' and gsdm = #{gsdm}
 		<if test="xfid != null and xfid != ''">
-			and xfid = #{xfid}
+			and a.xfid = #{xfid}
 		</if>
 		<if test="kpdid != null and kpdid != ''">
-			and kpdid = #{kpdid}
+			and a.kpdid = #{kpdid}
 		</if>
-		<if test="csid != null and csid != ''">
-			and csid = #{csid}
+		<if test="csm != null and csm != ''">
+			and b.csm = #{csm}
 		</if>
     </select>
 
