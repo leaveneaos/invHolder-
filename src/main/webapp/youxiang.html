@@ -26,17 +26,19 @@
 					var trs = "";
 					$.each(data.yx, function(n, value) {
 					
-						trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this.value)' class='mui-navigate-right'>发送到:"+value.email+"</a></li>";
+						trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this)' class='mui-navigate-right'>发送到:"+value.email+"</a></li>";
 					});
 					trs+="<div class='mui-input-row'><label>新邮箱</label> <input type='email' id='username' placeholder='请输入您的邮箱'></div>"
 					$('#yxform').append(trs);
 				}
 			})
 		})
-		function fpfs1(value){
+		function fpfs1(va){
 			$('#cwxx').html("正在发送,请关注您的邮箱!");
+			var te =  $(va).html();
+			var yx =te.substring(te.lastIndexOf(":")+1)
 			$.post("tijiao/yxfs", {
-				"yx" : value,
+				"yx" : yx,
 				"djh" : djh
 			},
 					function(data) {
