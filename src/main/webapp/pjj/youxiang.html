@@ -14,7 +14,41 @@
 </head>
 <body>
 	<script type="text/javascript">
-	var djh;
+		var djh;
+		$(function() {
+			$
+					.post(
+							"../tijiao/yxsession",
+							{},
+							function(data) {
+								if (null != data.yx) {
+									var trs = "";
+									$
+											.each(
+													data.yx,
+													function(n, value) {
+
+														trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this.value)' class='mui-navigate-right'>发送到:"
+																+ value.email
+																+ "</a></li>";
+													});
+									trs += "<div class='mui-input-row'><label>新邮箱</label> <input type='email' id='username' placeholder='请输入您的邮箱'></div>"
+									$('#yxform').append(trs);
+								}
+							})
+
+		})
+		function fpfs1(value) {
+			$('#cwxx').html("正在发送,请关注您的邮箱!");
+			$.post("tijiao/yxfs", {
+				"yx" : value,
+				"djh" : djh
+			}, function(data) {
+				if (data.msg) {
+					window.location.href = "tishi2.html?time=" + new Date();
+				}
+			});
+		}
 		function fpfs() {
 			var youxiang = $('#youxiang').val();
 			if (null == youxiang || "" == youxiang) {
@@ -25,19 +59,19 @@
 				$.post("sendEmail", {
 					"yx" : youxiang
 				}, function(data) {
-					if(data.success){
-						 $('#cwxx').html("发送成功,请关注您的邮箱!");
-					}else{
-						 alert(data.msg);
-						 window.location.href="../pjj/first";
+					if (data.success) {
+						$('#cwxx').html("发送成功,请关注您的邮箱!");
+					} else {
+						alert(data.msg);
+						window.location.href = "../pjj/first";
 					}
 				});
 			} else {
 				$('#cwxx').html("请输入正确的邮箱格式!");
 			}
 		}
-		function tiaozhuan(){
-			 window.location.href="index.html";
+		function tiaozhuan() {
+			window.location.href = "index.html";
 		}
 	</script>
 	<header class="mui-bar mui-bar-nav">
@@ -56,7 +90,9 @@
 		</div>
 		<p id="cwxx" style="color: red;"></p>
 	</div>
-		<button type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;margin-top: 15px;">发送</button>
+	<button type="button" onclick="fpfs()"
+		class="mui-btn mui-btn-primary mui-btn-block"
+		style="width: 96%; margin-left: 2%; margin-top: 15px;">发送</button>
 	<!--<div
 		style="margin-top: 20px; text-align: left; width: 90%; margin-left: 5%;">
 		感谢您对“泰易电子发票”的支持，您的行为不仅促使了我司的规范化运营，大幅度降低了经营成本，同时为 人类的环保计划做出了伟大的贡献。<br />
@@ -67,12 +103,15 @@
 		泰易发票夹，您身边的发票管理专家
 
 	</div>-->
-	<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;">
-		<div style="max-width: 800px;margin: 0 auto;">
-			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
+	<div
+		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a href="../bangzhu.html">遇到问题?</a>
+			</div>
 		</div>
-		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 </body>
 </html>

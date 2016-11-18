@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rjxx.taxeasy.dao.SpfyxMapper">
+
+    <select id="findOneByParams" parameterType="map" resultType="spfyx">
+        select * from t_spfyx where yxbz = '1'
+         <if test="djh != null and djh != ''">
+           and djh = #{djh}
+        </if>
+        <if test="yx != null and yx != ''">
+           and email = #{yx}
+        </if>
+        limit 1
+    </select>
+
+    <select id="findAllByParams" parameterType="map" resultType="spfyx">
+        select * from t_spfyx where yxbz = '1'
+        <if test="djh != null and djh != ''">
+           and djh = #{djh}
+        </if>
+        <if test="yx != null and yx != ''">
+           and email = #{yx}
+        </if>
+         order by lrsj desc
+        limit 5
+    </select>
+
+    <select id="findByPage" parameterType="pagination" resultType="spfyx">
+        select * from t_spfyx where yxbz = '1'
+        <if test="params.orderBy != null">
+            order by #{params.orderBy}
+        </if>
+    </select>
+
+</mapper>
+

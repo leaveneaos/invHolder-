@@ -35,12 +35,14 @@ import com.rjxx.taxeasy.domains.Fphkyj;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Jyspmx;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.domains.Spfyx;
 import com.rjxx.taxeasy.domains.Tqjl;
 import com.rjxx.taxeasy.domains.Wxkb;
 import com.rjxx.taxeasy.service.FphkyjService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.JyspmxService;
 import com.rjxx.taxeasy.service.KplsService;
+import com.rjxx.taxeasy.service.SpfyxService;
 import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.taxeasy.service.WxkbService;
 
@@ -59,6 +61,8 @@ public class TijiaoController extends BaseController{
 	private JylsService jylsService;
 	@Autowired
 	private KplsService kplsService;
+	@Autowired
+	private SpfyxService spfyxService;
 	@Value("${emailHost}")
 	private String emailHost;
 	@Value("${emailUserName}")
@@ -146,6 +150,16 @@ public class TijiaoController extends BaseController{
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map params = new HashMap<>();
 		params.put("djh", djh);
+		params.put("yx", yx);
+		Spfyx spfyx = spfyxService.findOneByParams(params);
+		if (null==spfyx) {
+			spfyx=new Spfyx();
+			spfyx.setEmail(yx);
+			spfyx.setYxbz("1");
+			spfyx.setLrsj(new Date());
+			spfyx.setDjh(Integer.valueOf(djh));
+			spfyxService.save(spfyx);
+		}
 		boolean flag = false;
 		Jyls jyls = jylsService.findOneByParams(params);
 		List<Kpls> kplsList = kplsService.findAllByParams(params);
@@ -233,7 +247,7 @@ public class TijiaoController extends BaseController{
 
 		sendmail.sendMail();
 		 Tqjl tqjl = new Tqjl();
-         tqjl.setDjh((String) request.getSession().getAttribute("djh"));
+         tqjl.setDjh(String.valueOf( request.getSession().getAttribute("djh")));
          tqjl.setTqsj(new Date());
          String visiterIP=request.getRemoteAddr();//访问者IP  
          tqjl.setIp(visiterIP);
@@ -289,6 +303,12 @@ public class TijiaoController extends BaseController{
 	public Map yxsession(){
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("djh", request.getSession().getAttribute("djh"));
+		if (null!=request.getSession().getAttribute("djh")) {
+			Map params = new HashMap<>();
+			params.put("djh", String.valueOf(request.getSession().getAttribute("djh")));
+			List<Spfyx> list = spfyxService.findAllByParams(params);
+			result.put("yx", list);
+		}
 		request.getSession().setAttribute("msg", "请重新扫描二维码");
 		return result;
 	}
@@ -298,6 +318,7 @@ public class TijiaoController extends BaseController{
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("djh", request.getSession().getAttribute("djh"));
 		result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
+		request.getSession().setAttribute("msg", "请重新扫描二维码");
 		return result;
 	}
 	@RequestMapping(value = "/wxkb")
