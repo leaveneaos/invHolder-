@@ -246,14 +246,27 @@ public class TijiaoController extends BaseController{
 		// 20xx年x月x日
 
 		sendmail.sendMail();
-		 Tqjl tqjl = new Tqjl();
+		Tqjl tqjl = new Tqjl();
+		tqjl.setDjh(String.valueOf(request.getSession().getAttribute("djh")));
+		tqjl.setTqsj(new Date());
+		String visiterIP;
+		  if (request.getHeader("x-forwarded-for") == null) {
+			visiterIP = request.getRemoteAddr();// 访问者IP
+			  }else {
+				  visiterIP = request.getRemoteAddr();// 访问者IP
+			}
+		tqjl.setIp(visiterIP);
+		String llqxx = request.getHeader("User-Agent");
+		tqjl.setLlqxx(llqxx);
+		tqjlService.save(tqjl);
+		/* Tqjl tqjl = new Tqjl();
          tqjl.setDjh(String.valueOf( request.getSession().getAttribute("djh")));
          tqjl.setTqsj(new Date());
          String visiterIP=request.getRemoteAddr();//访问者IP  
          tqjl.setIp(visiterIP);
          String llqxx =request.getHeader("User-Agent");
          tqjl.setLlqxx(llqxx);
-         tqjlService.save(tqjl);
+         tqjlService.save(tqjl);*/
 		Thread.sleep(5000);
 	}
 

@@ -155,6 +155,7 @@ public class SmtqController extends BaseController {
 						visiterIP = request.getRemoteAddr();// 访问者IP				
 					}
 					tqjl.setIp(visiterIP);
+					tqjl.setJlly("1");
 					String llqxx = request.getHeader("User-Agent");
 					tqjl.setLlqxx(llqxx);
 					tqjlService.save(tqjl);

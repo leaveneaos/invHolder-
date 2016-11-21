@@ -32,7 +32,8 @@ public class Tqjl  implements Serializable {
 
 @Column(name="ip")
 	protected String ip;
-
+@Column(name="jlly")
+protected String jlly;
 /**
  * 浏览器信息
  */ 
@@ -78,6 +79,14 @@ public class Tqjl  implements Serializable {
 
 	public void setLlqxx(String llqxx){
 		this.llqxx=llqxx;
+	}
+
+	public String getJlly() {
+		return jlly;
+	}
+
+	public void setJlly(String jlly) {
+		this.jlly = jlly;
 	}
 
 }

@@ -68,6 +68,7 @@ public class FptqController extends BaseController {
 				result.put("num", "2");
 				Tqjl tqjl = new Tqjl();
 				tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+				tqjl.setJlly("1");
 				tqjl.setTqsj(new Date());
 				String visiterIP;
 				  if (request.getHeader("x-forwarded-for") == null) {
