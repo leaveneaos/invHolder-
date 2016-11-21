@@ -151,15 +151,7 @@ public class TijiaoController extends BaseController{
 		Map params = new HashMap<>();
 		params.put("djh", djh);
 		params.put("yx", yx);
-		Spfyx spfyx = spfyxService.findOneByParams(params);
-		if (null==spfyx) {
-			spfyx=new Spfyx();
-			spfyx.setEmail(yx);
-			spfyx.setYxbz("1");
-			spfyx.setLrsj(new Date());
-			spfyx.setDjh(Integer.valueOf(djh));
-			spfyxService.save(spfyx);
-		}
+
 		boolean flag = false;
 		Jyls jyls = jylsService.findOneByParams(params);
 		List<Kpls> kplsList = kplsService.findAllByParams(params);
@@ -168,8 +160,23 @@ public class TijiaoController extends BaseController{
 			pdfUrlList.add(kpls.getPdfurl());
 		}
 		if (kplsList.size() > 0) {
-			sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc());
-			flag = true;
+			try {
+				sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc());
+				Spfyx spfyx = spfyxService.findOneByParams(params);
+				if (null==spfyx) {
+					spfyx=new Spfyx();
+					spfyx.setEmail(yx);
+					spfyx.setYxbz("1");
+					spfyx.setLrsj(new Date());
+					spfyx.setDjh(Integer.valueOf(djh));
+					spfyxService.save(spfyx);
+				}
+				flag = true;
+			} catch (Exception e) {
+				flag = false;
+			}
+		
+			
 		}
 		result.put("msg", flag);
 		return result;
@@ -258,6 +265,7 @@ public class TijiaoController extends BaseController{
 		tqjl.setIp(visiterIP);
 		String llqxx = request.getHeader("User-Agent");
 		tqjl.setLlqxx(llqxx);
+		tqjl.setJlly("2");
 		tqjlService.save(tqjl);
 		/* Tqjl tqjl = new Tqjl();
          tqjl.setDjh(String.valueOf( request.getSession().getAttribute("djh")));
