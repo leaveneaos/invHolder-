@@ -27,56 +27,26 @@
 </head>
 <body>
 
-	<div class="mui-input-row mui-search">
-		<input type="search" class="mui-input-clear" placeholder="">
-	</div>
+<!-- 	<div class="mui-input-row mui-search"> -->
+<!-- 		<input type="search" class="mui-input-clear" placeholder=""> -->
+<!-- 	</div> -->
 
 
 	<div class="mui-content">
 		<div style="padding: 10px 10px;">
 			<div id="segmentedControl" class="mui-segmented-control">
-				<a class="mui-control-item mui-active" href="#item1"> 全部发票 </a> 
-<!-- 				<a class="mui-control-item" href="#item2"> 餐饮 </a>  -->
+				<a id="all1" class="mui-control-item mui-active" href="#item1"> 全部发票 </a> 
+				<a id="food" class="mui-control-item" href="#item1"> 餐饮 </a> 
 <!-- 				<a class="mui-control-item" href="#item3"> 按日期 </a> -->
 			</div>
 		</div>
 		<div>
-			<div id="item1" class="mui-control-content mui-active">
-				<div id="scroll" class="mui-scroll-wrapper">
+			<div id="item1" class="mui-slider-item mui-control-content mui-active">
+				<div id="div1" class="mui-scroll-wrapper" style="height: 300px">
 					<div class="mui-scroll" style="margin-bottom: 50px;">
-						<ul class="mui-table-view mui-table-view-chevron" id="all">
-<!-- 							<li class="mui-table-view-cell mui-media"> -->
-<!-- 							<a class="mui-navigate-right"> <img -->
-<!-- 									class="mui-media-object mui-pull-left" -->
-<!-- 									src="images/LOGO-01.png"> -->
-<!-- 									<div class="mui-media-body" style="font-size: 15px;"> -->
-<!-- 										发票抬头：上海容津信息技术有限公司1 -->
-<!-- 										<p class='mui-ellipsis'>开票金额：2000.00元</p> -->
-<!-- 										<p class='mui-ellipsis'>开票时间：2016年11月1日</p> -->
-<!-- 									</div> -->
-<!-- 							</a></li> -->
-
-<!-- 							<li class="mui-table-view-cell mui-media"><a -->
-<!-- 								class='mui-navigate-right' href="javascript:;"> <img -->
-<!-- 									class="mui-media-object mui-pull-left" -->
-<!-- 									src="images/U4244P654DT20111130183036.png"> -->
-<!-- 									<div class="mui-media-body" style="font-size: 15px;"> -->
-<!-- 										发票抬头：上海中原地产1 -->
-<!-- 										<p class='mui-ellipsis'>开票金额：50000.00元</p> -->
-<!-- 										<p class='mui-ellipsis'>开票时间：2016年11月1日</p> -->
-<!-- 									</div> -->
-<!-- 							</a></li> -->
-<!-- 							<li class="mui-table-view-cell mui-media"><a -->
-<!-- 								class="mui-navigate-right"> <img -->
-<!-- 									class="mui-media-object mui-pull-left" -->
-<!-- 									src="images/2016-10-10_131937.png"> -->
-<!-- 									<div class="mui-media-body" style="font-size: 15px;"> -->
-<!-- 										发票抬头：发票样式1 -->
-<!-- 										<p class='mui-ellipsis'>开票金额：2000.00元</p> -->
-<!-- 										<p class='mui-ellipsis'>开票时间：2016年11月1日</p> -->
-<!-- 									</div> -->
-<!-- 							</a></li> -->
-						</ul>
+							<ul class="mui-table-view mui-table-view-chevron" id="all">
+						
+							</ul>
 					</div>
 				</div>
 			</div>
@@ -155,15 +125,21 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/fpj.js"></script>
 	<script>
+		var page = 1;
+		var flag = false;
 		mui.init({
 			swipeBack : true
 		//启用右滑关闭功能
 		});
 		(function($) {
-			$('#scroll').scroll({
-				indicators : true
-			//是否显示滚动条
-			});
+            mui('.mui-scroll-wrapper').scroll({
+                deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+            });
+			mui('#div1').scroll({
+ 				scrollY: true, //是否竖向滚动
+                indicators: true //是否显示滚动条
+            });
+			
 			var segmentedControl = document.getElementById('segmentedControl');
 			$('.mui-input-group')
 					.on(
@@ -187,6 +163,52 @@
 								}
 							});
 		})(mui);
+		
+// 		mui.init({
+// 		  pullRefresh : {
+// 		    container:"#all",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+// 		    down : {
+// 		      height:50,//可选,默认50.触发下拉刷新拖动距离,
+// 		      auto: true,//可选,默认false.自动下拉刷新一次
+// 		      contentdown : "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+// 		      contentover : "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+// 		      contentrefresh : "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+// 		      callback :function(){//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+// 		      	mui('#all').pullRefresh().endPulldownToRefresh();
+// 		      } 
+// 		    }
+// 		  }
+// 		});
+		mui.init({
+		  pullRefresh : {
+		    container:"#div1",//待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+		    up : {
+      		  height:50,//可选.默认50.触发上拉加载拖动距离
+		      auto:true,//可选,默认false.自动上拉加载一次
+		      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+		      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+		      callback :function(){//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+		      	$.ajax({
+					url : '../pjj/getOpenid',
+					method : 'post',
+					success : function(data) {
+						if (data.success) {
+							getJy();
+							page = page + 1;
+							mui('#div1').pullRefresh().endPullupToRefresh(flag);
+						}else{
+							window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+						}
+					},
+					error : function(data) {
+						alert(data.errcode + data.errmsg);
+					}
+				});
+		      } 
+		    }
+		  }
+		});
+		
 	</script>
 	<div
 		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB; z-index: 99;">
@@ -200,8 +222,21 @@
 	</div>
 </body>
 <script type="text/javascript">
+		var gsdm = null;
 		$(function(){
-			 init();
+			$("#all").on('tap', 'a', function (event) {
+				getFp($(this).attr("value"));
+			});
+			$("#all1").on('tap', function (event) {
+				page = 1;
+				gsdm = null;
+				getJy();
+			});
+			$("#food").on('tap', function (event) {
+				page = 1;
+				gsdm = "sqj";
+				getJy();
+			});
 		})
 	</script>
 

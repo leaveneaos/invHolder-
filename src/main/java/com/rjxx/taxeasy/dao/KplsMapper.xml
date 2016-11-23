@@ -37,5 +37,13 @@
              and djh = #{djh}
         </if>
     </select>
+   
+   <update id="updateFpczlx" parameterType="map">
+        update t_kpls set fpztdm = #{fpztdm} where kplsh = #{kplsh} 
+   </update>
+   <!-- 红冲查询相差月份 -->
+   <select id="selectMonth" parameterType="map" resultType="fpcxvo">
+       select djh,xfsh,TIMESTAMPDIFF(MONTH,kprq,now()) xcyf from t_kpls where kplsh = #{kplsh}
+   </select>
 </mapper>
 

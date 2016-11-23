@@ -28,7 +28,7 @@
 													data.yx,
 													function(n, value) {
 
-														trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this.value)' class='mui-navigate-right'>发送到:"
+														trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this)' class='mui-navigate-right'>发送到:"
 																+ value.email
 																+ "</a></li>";
 													});
@@ -38,19 +38,24 @@
 							})
 
 		})
-		function fpfs1(value) {
+		function fpfs1(val) {
 			$('#cwxx').html("正在发送,请关注您的邮箱!");
-			$.post("tijiao/yxfs", {
-				"yx" : value,
-				"djh" : djh
+			var te =  $(val).html();
+			var yx =te.substring(te.lastIndexOf(":")+1);
+			$.post("sendEmail", {
+				"yx" : yx
 			}, function(data) {
-				if (data.msg) {
-					window.location.href = "tishi2.html?time=" + new Date();
+				if (data.success) {
+					window.location.href = "../tishi2.html?_t=" + new Date().getTime();
+				} else {
+					//alert(data.msg);
+					window.location.href = "../pjj/first";
 				}
 			});
 		}
 		function fpfs() {
-			var youxiang = $('#youxiang').val();
+			$('#send').attr("disabled","true");
+			var youxiang = $('#username').val();
 			if (null == youxiang || "" == youxiang) {
 				$('#cwxx').html("请输入邮箱!");
 			} else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
@@ -59,19 +64,20 @@
 				$.post("sendEmail", {
 					"yx" : youxiang
 				}, function(data) {
+					$('#send').attr("disabled","false");
 					if (data.success) {
-						$('#cwxx').html("发送成功,请关注您的邮箱!");
+						window.location.href = "../tishi2.html?_t=" + new Date().getTime();
+					}else if (data.error){
+						$('#cwxx').html("邮箱地址不存在，请重新输入...");
+						$('#send').attr("disabled",false);
 					} else {
-						alert(data.msg);
+						//alert(data.msg);
 						window.location.href = "../pjj/first";
 					}
 				});
 			} else {
 				$('#cwxx').html("请输入正确的邮箱格式!");
 			}
-		}
-		function tiaozhuan() {
-			window.location.href = "index.html";
 		}
 	</script>
 	<header class="mui-bar mui-bar-nav">
@@ -81,16 +87,13 @@
 	<div class="mui-content">
 
 		<div class="mui-content-padded" style="margin: 5px;">
-			<form class="mui-input-group">
-				<div class="mui-input-row">
-					<label>邮箱</label> <input type="text" id="youxiang"
-						placeholder="请输入您的邮箱">
-				</div>
+			<form class="mui-input-group" id="yxform">
+				
 			</form>
 		</div>
 		<p id="cwxx" style="color: red;"></p>
 	</div>
-	<button type="button" onclick="fpfs()"
+	<button type="button" id="send" onclick="fpfs()"
 		class="mui-btn mui-btn-primary mui-btn-block"
 		style="width: 96%; margin-left: 2%; margin-top: 15px;">发送</button>
 	<!--<div

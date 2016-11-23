@@ -10,6 +10,7 @@ import com.rjxx.comm.mybatis.Pagination;
 import com.rjxx.taxeasy.dao.KplsJpaDao;
 import com.rjxx.taxeasy.dao.KplsMapper;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.vo.Fpcxvo;
 
 /**
  * 由GenJavaCode类自动生成
@@ -53,6 +54,14 @@ public class KplsService {
     
     public List<Kpls> findByDjh(Kpls kpls){
     	return kplsMapper.findByDjh(kpls);
+    }
+    //红冲后更新发票状态
+    public void updateFpczlx(Map params){
+    	kplsMapper.updateFpczlx(params);
+    }
+    //红冲·查询相差月份
+    public Fpcxvo selectMonth(Map params){
+    	return kplsMapper.selectMonth(params);
     }
 
 }

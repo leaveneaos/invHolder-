@@ -17,7 +17,7 @@ public class GenEntityMysql {
 
     private String packageOutPath = "com.rjxx.taxeasy.domains";//指定实体生成所在包的路径
     private String authorName = "ZhangBing";//作者名字
-    private String tablename = "privilege_types";//表名
+    private String tablename = "t_zzfpqp";//表名
     private String tableComment = null;//表注释
     private String javaFilePath = "./";
     private String[] colnames; // 列名数组

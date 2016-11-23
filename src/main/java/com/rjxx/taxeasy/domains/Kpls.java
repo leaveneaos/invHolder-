@@ -402,6 +402,12 @@ public class Kpls  implements Serializable {
 	protected String printflag;
 
 /**
+ * 税控盘id
+ */ 
+@Column(name="skpid")
+	protected Integer skpid;
+
+/**
  * 有效标志：0，无效；1，有效
  */ 
 @Column(name="yxbz")
@@ -927,6 +933,14 @@ protected String fpztdm;
 
 	public void setFpztdm(String fpztdm) {
 		this.fpztdm = fpztdm;
+	}
+
+	public Integer getSkpid() {
+		return skpid;
+	}
+
+	public void setSkpid(Integer skpid) {
+		this.skpid = skpid;
 	}
 
 }

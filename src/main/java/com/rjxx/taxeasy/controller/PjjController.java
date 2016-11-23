@@ -1,12 +1,17 @@
 package com.rjxx.taxeasy.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.mail.SendFailedException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,18 +28,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjxx.comm.mybatis.Pagination;
 import com.rjxx.comm.utils.MailUtil;
 import com.rjxx.comm.web.BaseController;
 import com.rjxx.taxeasy.domains.Ckhk;
+import com.rjxx.taxeasy.domains.Cszb;
+import com.rjxx.taxeasy.domains.Dzfplog;
 import com.rjxx.taxeasy.domains.Fpj;
 import com.rjxx.taxeasy.domains.Jyls;
+import com.rjxx.taxeasy.domains.Jyspmx;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.domains.Skp;
+import com.rjxx.taxeasy.domains.Spfyx;
 import com.rjxx.taxeasy.domains.Tqjl;
+import com.rjxx.taxeasy.domains.Zzfpqp;
 import com.rjxx.taxeasy.service.CkhkService;
+import com.rjxx.taxeasy.service.CszbService;
+import com.rjxx.taxeasy.service.DzfplogService;
 import com.rjxx.taxeasy.service.FpjService;
 import com.rjxx.taxeasy.service.JylsService;
+import com.rjxx.taxeasy.service.JyspmxService;
 import com.rjxx.taxeasy.service.KplsService;
+import com.rjxx.taxeasy.service.SkpService;
+import com.rjxx.taxeasy.service.SpfyxService;
 import com.rjxx.taxeasy.service.TqjlService;
+import com.rjxx.taxeasy.service.ZzfpqpService;
+import com.rjxx.taxeasy.vo.Fpcxvo;
 import com.rjxx.taxeasy.vo.FpjVo;
 
 @SuppressWarnings("deprecation")
@@ -56,12 +75,30 @@ public class PjjController extends BaseController {
 
 	@Autowired
 	private JylsService jylsService;
-	
+
 	@Autowired
 	private CkhkService ckhkService;
-	
+
 	@Autowired
 	private TqjlService tqjlService;
+
+	@Autowired
+	private JyspmxService jyspmxService;
+
+	@Autowired
+	private CszbService cszbService;
+
+	@Autowired
+	private DzfplogService dzfplogService;
+
+	@Autowired
+	private ZzfpqpService zzfpService;
+
+	@Autowired
+	private SkpService skpService;
+	
+	@Autowired
+	private SpfyxService spfyxService;
 
 	@Value("${emailHost}")
 	private String emailHost;
@@ -77,7 +114,7 @@ public class PjjController extends BaseController {
 	@RequestMapping
 	@ResponseBody
 	public void index() throws IOException {
-    	response.sendRedirect(request.getContextPath() +"/pjj/index.html?_t=" + System.currentTimeMillis());
+		response.sendRedirect(request.getContextPath() + "/pjj/index.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
@@ -87,12 +124,38 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/getKhjy")
 	@ResponseBody
-	public Map getKhjy() {
+	public Map getKhjy(String gsdm, Integer rows, Integer page) {
 		Map<String, Object> result = new HashMap<>();
-		Map<String, Object> params = new HashMap<>();
+		Pagination pagination = new Pagination<>();
+		if (rows == null) {
+			rows = 10;
+		}
+		if (page == null) {
+			page = 1;
+		}
+		pagination.setPageNo(page);
+		pagination.setPageSize(rows);
+		String[] gsdms = null;
+		List<String> gsdmList = null;
+		if (gsdm != null && !"".equals(gsdm)) {
+			if (gsdm.contains(",")) {
+				gsdms = gsdm.split(",");
+			}else{
+				gsdms = new String[]{gsdm};
+			}
+			gsdmList = new ArrayList<>();
+			for (String str : gsdms) {
+				gsdmList.add(str);
+			}
+		}
 		String openid = (String) session.getAttribute("openid");
-		params.put("unionid", openid);
-		List<FpjVo> list = fpjService.findAllByParam(params);
+//		if (openid == null) {
+//			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
+//			session.setAttribute("openid", openid);
+//		}
+		pagination.addParam("unionid", openid);
+		pagination.addParam("gsdm", gsdmList);
+		List<FpjVo> list = fpjService.findByPage(pagination);
 		List<Kpls> kps = null;
 		Kpls kpls = new Kpls();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -112,7 +175,7 @@ public class PjjController extends BaseController {
 	 * 
 	 * @param djh
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/saveFp")
 	@ResponseBody
@@ -125,12 +188,420 @@ public class PjjController extends BaseController {
 		List<Kpls> list = kplsService.findAllByParams(params);
 		for (Kpls kpls : list) {
 			if (kpls.getPdfurl() != null && !"".equals(kpls.getPdfurl())) {
-				kpls.setPdfurl(kpls.getPdfurl().replace(".pdf", ".jpg"));;
+				kpls.setPdfurl(kpls.getPdfurl().replace(".pdf", ".jpg"));
 			}
 		}
 		session.setAttribute("djh", djh);
 		session.setAttribute("fps", list);
-    	response.sendRedirect(request.getContextPath() +"/pjj/imageviewer.html?_t=" + System.currentTimeMillis());
+		response.sendRedirect(request.getContextPath() + "/pjj/imageviewer.html?_t=" + System.currentTimeMillis());
+	}
+
+	/**
+	 * 根据单据号获取重开换开信息
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getCkhk")
+	@ResponseBody
+	public Map getCkhk(Integer djh){
+		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Ckhk ckhk = ckhkService.findOneByParams(params);
+		result.put("ckhk", ckhk);
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 根据单据号获取订单信息
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getJyls")
+	@ResponseBody
+	public Map getJyls() {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		if (djh == null) {
+			result.put("none", true);
+			return result;
+		}
+		Jyls jyls = jylsService.findOne(djh);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+		result.put("orderNo", jyls.getDdh());
+		result.put("price", jyls.getJshj());
+		result.put("orderTime", sdf.format(jyls.getJylssj()));
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 根据单据号获取订单详情
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/getJy")
+	@ResponseBody
+	public Map getJy() {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		if (djh == null) {
+			result.put("none", true);
+			return result;
+		}
+		Jyls jyls = jylsService.findOne(djh);
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		List<Jyspmx> mxList = jyspmxService.findAllByParams(params);
+		result.put("jyls", jyls);
+		result.put("mx", mxList);
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 重开保存发票抬头
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/save")
+	@ResponseBody
+	public Map saveTt(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh, String yx,
+			String sj) {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		String openid = (String) session.getAttribute("openid");
+		if (djh == null || openid == null) {
+			result.put("none", true);
+			return result;
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Jyls jyls = jylsService.findOne(djh);
+		Cszb cs = getCszb(jyls.getGsdm(), jyls.getXfid(), jyls.getSkpid(), "sfzcck");
+		if (cs != null && "否".equals(cs.getCsz())) {
+			result.put("success", false);
+			result.put("msg", "不支持重开");
+			return result;
+		}
+		Ckhk ckhk = ckhkService.findOneByParams(params);
+		if (ckhk != null) {
+			result.put("repeat", true);
+			return result;
+		}
+		ckhk = new Ckhk();
+		ckhk.setDjh(djh);
+		ckhk.setUnionid(openid);
+		ckhk.setGfsh(nsrsbh);
+		ckhk.setGfmc(fptt);
+		ckhk.setGfdz(dz);
+		ckhk.setGfdh(dh);
+		ckhk.setGfyh(khh);
+		ckhk.setGfyhzh(khhzh);
+		ckhk.setYxbz("1");
+		ckhk.setGfyx(yx);
+		ckhk.setGfsj(sj);
+		ckhk.setZtbz("0");
+		ckhk.setSqsj(new Date());
+		ckhkService.save(ckhk);
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 保存重开发票原因
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/update")
+	@ResponseBody
+	public Map update(String chk1, String chk2, String texterea) {
+		Map<String, Object> result = new HashMap<>();
+
+		Integer djh = (Integer) session.getAttribute("djh");
+		String openid = (String) session.getAttribute("openid");
+		if (djh == null || openid == null) {
+			result.put("none", true);
+			return result;
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Ckhk ckhk = ckhkService.findOneByParams(params);
+		if (chk2.equals("true")) {
+			ckhk.setCkhkyy("发票报销不了");
+		}
+		if (chk1.equals("true")) {
+			ckhk.setCkhkyy("发票抬头写错了");
+		}
+		if (texterea != null) {
+			ckhk.setCkhkyy(texterea);
+		}
+		Jyls jyls = jylsService.findOne(djh);
+		Cszb cs = getCszb(jyls.getGsdm(), jyls.getXfid(), jyls.getSkpid(), "sfcksh");
+		if (cs != null && "否".equals(cs.getCsz())) {
+			Kpls kpls = new Kpls();
+			kpls.setDjh(djh);
+			List<Kpls> list = kplsService.findByDjh(kpls);
+			params = new HashMap<>();
+			params.put("kplsh", list.get(0).getKplsh());
+			Fpcxvo cxvo = kplsService.selectMonth(params);
+			if (cxvo != null) {
+				if (cxvo.getXcyf() != null && cxvo.getXcyf() > 6) {
+					result.put("success", false);
+					result.put("msg", "超过开票日期6个月，不能重开！");
+					return result;
+				}
+			}
+		}
+		ckhkService.save(ckhk);
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 修改重开邮箱
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/updateYx")
+	@ResponseBody
+	public Map updateYx(String yx) {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		String openid = (String) session.getAttribute("openid");
+		if (djh == null || openid == null) {
+			result.put("none", true);
+			return result;
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Ckhk ckhk = ckhkService.findOneByParams(params);
+		ckhk.setGfyx(yx);
+		ckhkService.save(ckhk);
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 换开
+	 * 
+	 * @param chk1
+	 * @param chk2
+	 * @param texterea
+	 * @return
+	 */
+	@RequestMapping(value = "/hk")
+	@ResponseBody
+	@Transactional
+	public Map hk(String chk1, String chk2, String texterea) {
+		Map<String, Object> result = new HashMap<>();
+
+		Integer djh = (Integer) session.getAttribute("djh");
+		String openid = (String) session.getAttribute("openid");
+		if (djh == null || openid == null) {
+			result.put("none", true);
+			return result;
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Jyls jyls = jylsService.findOne(djh);
+		Cszb cs = getCszb(jyls.getGsdm(), jyls.getXfid(), jyls.getSkpid(), "sfzchk");
+		if (cs != null && "是".equals(cs.getCsz())) {
+			Kpls kpls = new Kpls();
+			kpls.setDjh(djh);
+			List<Kpls> list = kplsService.findByDjh(kpls);
+			params = new HashMap<>();
+			params.put("kplsh", list.get(0).getKplsh());
+			Fpcxvo cxvo = kplsService.selectMonth(params);
+			if (cxvo != null) {
+				if (cxvo.getXcyf() != null && cxvo.getXcyf() > 6) {
+					result.put("success", false);
+					result.put("msg", "超过开票日期6个月，不能换开！");
+					return result;
+				} else {
+					params.put("djh", djh);
+					Ckhk hk = ckhkService.findOneByParams(params);
+					if (hk != null && !"3".equals(hk.getZtbz())) {
+						result.put("success", false);
+						result.put("msg", "发票已处理或正在处理...");
+						return result;
+					} else if (hk == null) {
+						hk = new Ckhk();
+						hk.setZtbz("3");
+						hk.setYxbz("1");
+						hk.setDjh(djh);
+						hk.setUnionid(openid);
+					}
+
+					if (chk2.equals("true")) {
+						hk.setCkhkyy("不了解电子发票");
+					}
+					if (chk1.equals("true")) {
+						hk.setCkhkyy("公司不支持电子发票报销");
+					}
+					if (texterea != null) {
+						hk.setCkhkyy(texterea);
+					}
+					hk.setSqsj(new Date());
+					ckhkService.save(hk);
+					cs = getCszb(jyls.getGsdm(), jyls.getXfid(), jyls.getSkpid(), "sfhksh");
+					if (cs != null && "否".equals(cs.getCsz())) {
+
+					}
+					result.put("success", true);
+				}
+			}
+		} else {
+			result.put("success", false);
+			result.put("msg", "不支持换开！");
+		}
+
+		return result;
+	}
+
+	/**
+	 * 保存邮寄信息
+	 * 
+	 * @param chk1
+	 * @param chk2
+	 * @param texterea
+	 * @return
+	 */
+	@RequestMapping(value = "/saveYjxx")
+	@ResponseBody
+	public Map saveYjxx(String sjr, String dwmc, String yjdz, String yb, String lxdh) {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		if (djh == null) {
+			result.put("none", true);
+			return result;
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Jyls jyls = jylsService.findOne(djh);
+		Cszb cs = getCszb(jyls.getGsdm(), jyls.getXfid(), jyls.getSkpid(), "sfzcyj");
+		if ((cs != null && "否".equals(cs.getCsz())) || cs == null) {
+			result.put("success", false);
+			result.put("msg", "不支持邮寄！");
+			return result;
+		}
+		Zzfpqp zzfp = zzfpService.findOneByParams(params);
+		if (zzfp != null) {
+			result.put("repeat", true);
+			return result;
+		}
+		zzfp = new Zzfpqp();
+		zzfp.setDjh(djh);
+		zzfp.setSjr(sjr);
+		zzfp.setDwmc(dwmc);
+		zzfp.setSjdz(yjdz);
+		zzfp.setYb(yb);
+		zzfp.setLxdh(lxdh);
+		zzfp.setYxbz("1");
+		zzfp.setQpfs("0");
+		zzfpService.save(zzfp);
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 保存自提信息
+	 * 
+	 * @param chk1
+	 * @param chk2
+	 * @param texterea
+	 * @return
+	 */
+	@RequestMapping(value = "/saveZtxx")
+	@ResponseBody
+	public Map saveZtxx(String divdm, String divqssj, String divjssj) throws ParseException {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		if (djh == null) {
+			result.put("none", true);
+			return result;
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Jyls jyls = jylsService.findOne(djh);
+		Cszb cs = getCszb(jyls.getGsdm(), jyls.getXfid(), jyls.getSkpid(), "sfzczt");
+		if ((cs != null && "否".equals(cs.getCsz())) || cs == null) {
+			result.put("success", false);
+			result.put("msg", "不支持自提！");
+			return result;
+		}
+		Zzfpqp zzfp = zzfpService.findOneByParams(params);
+		if (zzfp != null) {
+			result.put("repeat", true);
+			return result;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Integer month1 = Integer.valueOf(divqssj.substring(0, divqssj.indexOf("月")));
+		Integer month2 = Integer.valueOf(divjssj.substring(0, divjssj.indexOf("月")));
+		Integer day1 = Integer.valueOf(divqssj.substring(divqssj.indexOf("月") + 1, divqssj.indexOf("日")));
+		Integer day2 = Integer.valueOf(divjssj.substring(divjssj.indexOf("月") + 1, divjssj.indexOf("日")));
+		if (month1 > month2 && ((month1 - month2) > 6)) {
+			divqssj = new Date().getYear() + 1900 + divqssj;
+			divjssj = new Date().getYear() + 1901 + divjssj;
+		} else {
+			divqssj = new Date().getYear() + 1900 + divqssj;
+			divjssj = new Date().getYear() + 1900 + divjssj;
+		}
+		if (month1 < 10) {
+			divqssj = divqssj.replace(month1 + "月", "0" + month1 + "月");
+		}
+		if (month2 < 10) {
+			divjssj = divjssj.replace(month2 + "月", "0" + month2 + "月");
+		}
+		divqssj = divqssj.replace("月", "");
+		divqssj = divqssj.replace("日", "");
+		divjssj = divjssj.replace("月", "");
+		divjssj = divjssj.replace("日", "");
+		Date date1 = sdf.parse(divqssj);
+		Date date2 = sdf.parse(divjssj);
+		if (date1.getTime() > date2.getTime()) {
+			result.put("success", false);
+			result.put("msg", "起始日期大于结束日期");
+			return result;
+		}
+		zzfp = new Zzfpqp();
+		zzfp.setDjh(djh);
+		zzfp.setZtdm(divdm);
+		zzfp.setQssj(divqssj);
+		zzfp.setJssj(divjssj);
+		zzfp.setQpfs("1");
+		zzfpService.save(zzfp);
+		result.put("success", true);
+		return result;
+	}
+
+	/**
+	 * 获取可自提的开票点
+	 * 
+	 * @param chk1
+	 * @param chk2
+	 * @param texterea
+	 * @return
+	 */
+	@RequestMapping(value = "/getKpd")
+	@ResponseBody
+	public Map getKpd() {
+		Map<String, Object> result = new HashMap<>();
+		Integer djh = (Integer) session.getAttribute("djh");
+		if (djh == null) {
+			result.put("none", true);
+			return result;
+		}
+		Map<String, Object> params = new HashMap<>();
+		params.put("djh", djh);
+		Jyls jyls = jylsService.findOne(djh);
+		params.put("xfid", jyls.getXfid());
+		params.put("xfsh", jyls.getXfsh());
+		List<Skp> list = skpService.getKpd(params);
+		result.put("kpds", list);
+		result.put("success", true);
+		return result;
 	}
 
 	/**
@@ -150,32 +621,34 @@ public class PjjController extends BaseController {
 	 * 跳转到邮箱页面
 	 * 
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/youxiong")
 	@ResponseBody
 	public void youxiong() throws IOException {
-    	response.sendRedirect(request.getContextPath() +"/pjj/youxiang.html?_t=" + System.currentTimeMillis());
+		response.sendRedirect(request.getContextPath() + "/pjj/youxiang.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
 	 * 跳转到首页
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/first")
 	@ResponseBody
 	public void back() throws IOException {
-    	response.sendRedirect(request.getContextPath() +"/pjj/index.html?_t=" + System.currentTimeMillis());
+		response.sendRedirect(request.getContextPath() + "/pjj/index.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
 	 * 跳转到错误页面
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/error")
 	@ResponseBody
 	public void error() throws IOException {
-    	response.sendRedirect(request.getContextPath() +"/smtq/demo.html?_t=" + System.currentTimeMillis());
+		response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 	}
 
 	/**
@@ -211,13 +684,20 @@ public class PjjController extends BaseController {
 		fpj.setXgsj(new Date());
 		fpjService.save(fpj);
 		Tqjl tqjl = new Tqjl();
-        tqjl.setDjh(String.valueOf(djh));
-        tqjl.setTqsj(new Date());
-        String visiterIP=request.getRemoteAddr();//访问者IP  
-        tqjl.setIp(visiterIP);
-        String llqxx =request.getHeader("User-Agent");
-        tqjl.setLlqxx(llqxx);
-        tqjlService.save(tqjl);
+		tqjl.setDjh(String.valueOf(djh));
+		tqjl.setTqsj(new Date());
+		String visiterIP;
+		if (request.getHeader("x-forwarded-for") == null) {
+			visiterIP = request.getRemoteAddr();// 访问者IP
+		} else {
+			visiterIP = request.getRemoteAddr();// 访问者IP
+		}
+
+		tqjl.setIp(visiterIP);
+		String llqxx = request.getHeader("User-Agent");
+		tqjl.setLlqxx(llqxx);
+		tqjl.setJlly("3");
+		tqjlService.save(tqjl);
 		result.put("success", true);
 		return result;
 	}
@@ -229,10 +709,13 @@ public class PjjController extends BaseController {
 	 */
 	@RequestMapping(value = "/getOpenid")
 	@ResponseBody
-	public Map getUnionid() {
+	public Map getOpenid() {
 		Map<String, Object> result = new HashMap<>();
-		String unionid = (String) session.getAttribute("openid");
-		if (unionid != null) {
+		String openid = (String) session.getAttribute("openid");
+//		if (openid == null) {
+//			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
+//		}
+		if (openid != null) {
 			result.put("success", true);
 		} else {
 			result.put("success", false);
@@ -272,7 +755,7 @@ public class PjjController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Integer djh = (Integer) session.getAttribute("djh");
 		if (djh == null) {
-			result.put("success", false);
+			result.put("none", true);
 			result.put("msg", "会话已过期");
 			return result;
 		}
@@ -282,11 +765,11 @@ public class PjjController extends BaseController {
 		if (ckhk != null && ckhk.getZtbz().equals("2") && ckhk.getZtbz().equals("5")) {
 			if (ckhk.getZtbz().equals("0")) {
 				result.put("msg", "发票重开审核中，不能发送");
-			}else if (ckhk.getZtbz().equals("1")) {
+			} else if (ckhk.getZtbz().equals("1")) {
 				result.put("msg", "发票已重开，不能发送");
-			}else if (ckhk.getZtbz().equals("3")) {
+			} else if (ckhk.getZtbz().equals("3")) {
 				result.put("msg", "发票换开审核中，不能发送");
-			}else if (ckhk.getZtbz().equals("4")) {
+			} else if (ckhk.getZtbz().equals("4")) {
 				result.put("msg", "发票已换开，不能发送");
 			}
 
@@ -294,26 +777,77 @@ public class PjjController extends BaseController {
 			return result;
 		}
 		boolean flag = false;
-		Jyls jyls = jylsService.findOneByParams(params);
-		List<Kpls> kplsList = kplsService.findAllByParams(params);
-		List<String> pdfUrlList = new ArrayList<>();
-		for (Kpls kpls : kplsList) {
-			pdfUrlList.add(kpls.getPdfurl());
+		try {
+			Jyls jyls = jylsService.findOneByParams(params);
+			List<Kpls> kplsList = kplsService.findAllByParams(params);
+			List<String> pdfUrlList = new ArrayList<>();
+			for (Kpls kpls : kplsList) {
+				pdfUrlList.add(kpls.getPdfurl());
+			}
+			if (kplsList.size() > 0) {
+				sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc());
+				flag = true;
+			}
+			Tqjl tqjl = new Tqjl();
+			tqjl.setDjh(String.valueOf(jyls.getDjh()));
+			tqjl.setTqsj(new Date());
+			String visiterIP;
+			if (request.getHeader("x-forwarded-for") == null) {
+				visiterIP = request.getRemoteAddr();// 访问者IP
+			} else {
+				visiterIP = request.getRemoteAddr();// 访问者IP
+			}
+
+			tqjl.setIp(visiterIP);
+			String llqxx = request.getHeader("User-Agent");
+			tqjl.setLlqxx(llqxx);
+			tqjl.setJlly("2");
+			tqjlService.save(tqjl);
+			params = new HashMap<>();
+			params.put("djh", djh);
+			params.put("yx", yx);
+			Spfyx spfyx = spfyxService.findOneByParams(params);
+			if (null==spfyx) {
+				spfyx=new Spfyx();
+				spfyx.setEmail(yx);
+				spfyx.setYxbz("1");
+				spfyx.setLrsj(new Date());
+				spfyx.setDjh(Integer.valueOf(djh));
+				spfyxService.save(spfyx);
+				result.put("success", flag);
+			}
+		} catch (SendFailedException e) {
+			e.printStackTrace();
+			result.put("error", true);
 		}
-		if (kplsList.size() > 0) {
-			sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc());
-			flag = true;
-		}
-		Tqjl tqjl = new Tqjl();
-        tqjl.setDjh(String.valueOf(jyls.getDjh()));
-        tqjl.setTqsj(new Date());
-        String visiterIP=request.getRemoteAddr();//访问者IP  
-        tqjl.setIp(visiterIP);
-        String llqxx =request.getHeader("User-Agent");
-        tqjl.setLlqxx(llqxx);
-        tqjlService.save(tqjl);
-		result.put("success", flag);
+
 		return result;
+	}
+
+	/**
+	 * 获取参数设置信息
+	 * 
+	 * @param gsdm
+	 * @param xfid
+	 * @param kpdid
+	 * @param csm
+	 * @return
+	 */
+	public Cszb getCszb(String gsdm, Integer xfid, Integer kpdid, String csm) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("gsdm", gsdm);
+		params.put("xfid", xfid);
+		params.put("kpdid", kpdid);
+		params.put("csm", csm);
+		List<Cszb> list = new ArrayList<>();
+		list = cszbService.findAllByParams(params);
+		if (list.size() == 1) {
+			return list.get(0);
+		} else if (list.size() == 0) {
+			return new Cszb();
+		} else {
+			return list.get(0);
+		}
 	}
 
 	/**
@@ -441,8 +975,8 @@ public class PjjController extends BaseController {
 	public Map getUserMsg(String openid, String access_token) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 获取token
-		String turl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + 
-				"&openid=" + openid + "&lang=zh_CN";
+		String turl = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openid
+				+ "&lang=zh_CN";
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
 		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象

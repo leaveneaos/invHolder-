@@ -49,6 +49,10 @@ public class SkpService {
     public List<Skp> findByPage(Pagination pagination) {
         return skpMapper.findByPage(pagination);
     }
+    
+    public List<Skp> getKpd(Map params){
+    	return skpMapper.getKpd(params);
+    }
 
 }
 

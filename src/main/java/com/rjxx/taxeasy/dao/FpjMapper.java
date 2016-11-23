@@ -24,7 +24,7 @@ public interface FpjMapper {
     
     public List<FpjVo> findAllByParam(Map params);
 
-    public List<Fpj> findByPage(Pagination pagination);
+    public List<FpjVo> findByPage(Pagination pagination);
 
 }
 

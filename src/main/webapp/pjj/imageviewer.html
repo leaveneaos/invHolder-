@@ -202,18 +202,18 @@
 				<span class="mui-icon mui-icon-email"></span>
 				<span class="mui-tab-label">邮件</span>
 			</a>
-<!-- 	<a class="mui-tab-item" href="#tabbar-with-chat"> -->
-<!-- 		<span class="mui-icon mui-icon-compose"></span> -->
-<!-- 		<span class="mui-tab-label">重开</span> -->
-<!-- 	</a> -->
-<!-- 	<a class="mui-tab-item" href="#tabbar-with-sms"> -->
-<!-- 		<span class="mui-icon mui-icon-paperclip"></span> -->
-<!-- 		<span class="mui-tab-label">纸质发票</span> -->
-<!-- 	</a> -->
-<!-- 	<a class="mui-tab-item" href="#tabbar-with-map"> -->
-<!-- 		<span class="mui-icon mui-icon-redo"></span> -->
-<!-- 		<span class="mui-tab-label">移动到</span> -->
-<!-- 	</a> -->
+<!-- 			<a id="chongkai" class="mui-tab-item" href="#tabbar-with-chat"> -->
+<!-- 				<span class="mui-icon mui-icon-compose"></span> -->
+<!-- 				<span class="mui-tab-label">重开</span> -->
+<!-- 			</a> -->
+<!-- 			<a id="huankai" class="mui-tab-item" href="#tabbar-with-sms"> -->
+<!-- 				<span class="mui-icon mui-icon-paperclip"></span> -->
+<!-- 				<span class="mui-tab-label">纸质发票</span> -->
+<!-- 			</a> -->
+<!-- 			<a class="mui-tab-item" href="#tabbar-with-map"> -->
+<!-- 				<span class="mui-icon mui-icon-redo"></span> -->
+<!-- 				<span class="mui-tab-label">移动到</span> -->
+<!-- 			</a> -->
 		</nav>
 	</body>
 	<script src="../js/mui.min.js"></script>
@@ -228,7 +228,6 @@
 		$(function(){
 			$
 			.ajax({
-				async : false,
 				url : '../pjj/getFp',
 				method : 'post',
 				success : function(data) {
@@ -240,7 +239,7 @@
 											'<div style="width: 100%;float: left;"><img src="'+val.pdfurl+'" data-preview-src="" data-preview-group="1" style="width: 100%;"/></div>');
 						}
 					}else{
-						alert('没有您要查询的发票');
+						window.location.href="../pjj/error";
 					}
 				},
 				error : function(data) {
@@ -257,6 +256,22 @@
 			  mui.openWindow({
 			    url: 'youxiang.html', 
 			    id:'youxiang.html'
+			  });
+			});
+			
+			document.getElementById('chongkai').addEventListener('tap', function() {
+			  //打开关于页面
+			  mui.openWindow({
+			    url: 'information.html',
+			    id:'information.html'
+			  });
+			});
+			
+			document.getElementById('huankai').addEventListener('tap', function() {
+			  //打开关于页面
+			  mui.openWindow({
+			    url: 'change.html', 
+			    id:'change.html'
 			  });
 			});
 // 			$('#email').attr("href", "youxiang.html");

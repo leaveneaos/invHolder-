@@ -283,10 +283,11 @@
 								method : 'post',
 								success : function(data) {
 									if (data.success) {
-										window.location.href = "../pjj/first";
+										mui.confirm("收藏成功", "提示", [ '是' ], function(e) {
+											window.location.href = "../sccg.html?_t="+new Date().getTime();
+										});
 									}else if (data.nopeat) {
-										alert(data.msg);
-										window.location.href = "../pjj/first";
+										window.location.href = "../sccg.html?_t="+new Date().getTime();
 									} else {
 										window.location.href = "../pjj/first";
 									}

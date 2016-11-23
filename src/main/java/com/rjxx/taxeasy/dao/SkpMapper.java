@@ -23,5 +23,7 @@ public interface SkpMapper {
 
     public List<Skp> findByPage(Pagination pagination);
 
+    public List<Skp> getKpd(Map params);
+
 }
 

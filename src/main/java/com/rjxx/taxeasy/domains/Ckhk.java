@@ -6,6 +6,8 @@ import com.rjxx.comm.json.JsonDateFormat;
 import com.rjxx.comm.json.JsonDatetimeFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
+import java.util.Date;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 /**
  * t_ckhk 实体类
@@ -73,6 +75,18 @@ public class Ckhk  implements Serializable {
 	protected String gfyhzh;
 
 /**
+ * 邮箱
+ */ 
+@Column(name="gfyx")
+	protected String gfyx;
+
+/**
+ * 手机
+ */ 
+@Column(name="gfsj")
+	protected String gfsj;
+
+/**
  * 有效标志：0，无效；1，有效
  */ 
 @Column(name="yxbz")
@@ -95,6 +109,12 @@ public class Ckhk  implements Serializable {
  */ 
 @Column(name="ckbtgyy")
 	protected String ckbtgyy;
+
+/**
+ * 申请时间
+ */ 
+@Column(name="sqsj")
+	protected Date sqsj;
 
 
 	public Integer getId(){
@@ -199,6 +219,30 @@ public class Ckhk  implements Serializable {
 
 	public void setCkbtgyy(String ckbtgyy){
 		this.ckbtgyy=ckbtgyy;
+	}
+
+	public String getGfyx() {
+		return gfyx;
+	}
+
+	public void setGfyx(String gfyx) {
+		this.gfyx = gfyx;
+	}
+
+	public String getGfsj() {
+		return gfsj;
+	}
+
+	public void setGfsj(String gfsj) {
+		this.gfsj = gfsj;
+	}
+
+	public Date getSqsj() {
+		return sqsj;
+	}
+
+	public void setSqsj(Date sqsj) {
+		this.sqsj = sqsj;
 	}
 
 }

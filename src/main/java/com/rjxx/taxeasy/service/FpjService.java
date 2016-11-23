@@ -52,7 +52,7 @@ public class FpjService {
         return fpjMapper.findAllByParam(params);
     }
 
-    public List<Fpj> findByPage(Pagination pagination) {
+    public List<FpjVo> findByPage(Pagination pagination) {
         return fpjMapper.findByPage(pagination);
     }
 

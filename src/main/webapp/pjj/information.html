@@ -50,7 +50,7 @@
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
 		                    <h4 class="mui-ellipsis">订单号</h4>
-		                    <h5>25689564</h5>
+		                    <h5 id="orderNo"></h5>
 		                    
 		                </div>
 		                <!--<div class="mui-table-cell mui-col-xs-2 mui-text-right">
@@ -62,27 +62,27 @@
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
 		                    <h4 class="mui-ellipsis-2">交易日期</h4>
-		                    <h5>2016年10月30日</h5>
+		                    <h5 id="orderTime"></h5>
 		                    
 		                </div>
 		                
 		            </div>
 		        </li>
-		        <li class="mui-table-view-cell">
-		            <div class="mui-table">
-		                <div class="mui-table-cell mui-col-xs-10">
-		                    <h4 class="mui-ellipsis-2">交易时间</h4>
-		                    <h5>12：25</h5>
+<!-- 		        <li class="mui-table-view-cell"> -->
+<!-- 		            <div class="mui-table"> -->
+<!-- 		                <div class="mui-table-cell mui-col-xs-10"> -->
+<!-- 		                    <h4 class="mui-ellipsis-2">交易时间</h4> -->
+<!-- 		                    <h5>12：25</h5> -->
 		                    
-		                </div>
+<!-- 		                </div> -->
 		                
-		            </div>
-		        </li>
+<!-- 		            </div> -->
+<!-- 		        </li> -->
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
 		                    <h4 class="mui-ellipsis-2">订单金额</h4>
-		                    <h5>2563.00元</h5>
+		                    <h5 id="price">元</h5>
 		                   
 		                </div>
 		            </div>
@@ -100,4 +100,29 @@
 	</div>
 	</body>
 	
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$.ajax({
+				url : '../pjj/getJyls',
+				method : 'post',
+				success : function(data) {
+					if (data.success) {
+						$('#orderNo').html(data.orderNo);
+						$('#orderTime').html(data.orderTime);
+						$('#price').html(data.price);
+					}else{
+						window.location.href = "../pjj/error";
+					}
+				},
+				error : function(data) {
+					alert(data.errcode + data.errmsg);
+				}
+			});
+		})
+		
+		function tk(){
+			window.location.href = "purchaser.html?time="+new Date();
+		}
+	</script>
 </html>

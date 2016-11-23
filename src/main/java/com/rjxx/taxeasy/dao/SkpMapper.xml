@@ -28,5 +28,18 @@
         </if>
     </select>
 
+    <select id="getKpd" parameterType="map" resultType="skp">
+        select * from t_skp where yxbz = '1' 
+		and id in (select kpdid from t_cszb where yxbz='1' and csz='是' and
+		kpdid in (SELECT id FROM t_skp WHERE yxbz='1'
+ 		<if test="xfid != null">
+ 			and xfid = #{xfid}
+ 		</if>
+ 		<if test="xfsh != null">
+ 			and xfid = (select min(id) from t_xf where xfsh=#{xfsh} and yxbz='1')
+ 		</if>
+ 		))
+    </select>     
+
 </mapper>
 

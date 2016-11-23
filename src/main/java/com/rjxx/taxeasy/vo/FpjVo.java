@@ -19,6 +19,10 @@ public class FpjVo implements Serializable {
 	protected String ztbz;
 	
 	protected String kprq;
+	
+	protected String ckbtgyy;
+	
+	protected String gsdm;
 
 	public Integer getDjh() {
 		return djh;
@@ -66,5 +70,21 @@ public class FpjVo implements Serializable {
 
 	public void setKprq(String kprq) {
 		this.kprq = kprq;
+	}
+
+	public String getCkbtgyy() {
+		return ckbtgyy;
+	}
+
+	public void setCkbtgyy(String ckbtgyy) {
+		this.ckbtgyy = ckbtgyy;
+	}
+
+	public String getGsdm() {
+		return gsdm;
+	}
+
+	public void setGsdm(String gsdm) {
+		this.gsdm = gsdm;
 	}
 }
