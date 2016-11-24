@@ -114,7 +114,7 @@ public class SmtqController extends BaseController {
 			}
 			Map map2 = new HashMap<>();
 			map2.put("gsdm", "sqj");
-			map2.put("kpddm", (String) request.getSession().getAttribute("sn"));
+			map2.put("kpddm", sn);
 			Skp skp = skpService.findOneByParams(map2);
 			if (null != skp) {
 				Xf xf = xfService.findOne(skp.getXfid());
