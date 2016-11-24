@@ -520,7 +520,7 @@ public class SmtqController extends BaseController {
 			Xf xf = xfService.findOne(skp.getXfid());
 			if (null != xf) {
 				Jyls jyls = new Jyls();
-				jyls.setClztdm("04");
+				jyls.setClztdm("03");
 				jyls.setDdh(jyxx.getOrderNo());
 				jyls.setGfsh(nsrsbh);
 
