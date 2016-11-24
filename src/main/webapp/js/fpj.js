@@ -115,7 +115,7 @@ function getJy() {
 				method : 'post',
 				data : {
 					
-					"rows" : 7,
+					"rows" : 10,
 					"page" : page,
 					"gsdm" : gsdm
 		

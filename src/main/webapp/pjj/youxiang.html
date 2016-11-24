@@ -65,12 +65,10 @@
 				$.post("sendEmail", {
 					"yx" : youxiang
 				}, function(data) {
-					$('#send').attr("disabled",false);
 					if (data.success) {
 						window.location.href = "../tishi2.html?_t=" + new Date().getTime();
 					}else if (data.error){
 						$('#cwxx').html("邮箱地址不存在，请重新输入...");
-						$('#send').attr("disabled",false);
 					} else {
 						//alert(data.msg);
 						window.location.href = "../pjj/first";
@@ -78,6 +76,7 @@
 				});
 			} else {
 				$('#cwxx').html("请输入正确的邮箱格式!");
+				$('#send').attr("disabled",false);
 			}
 		}
 	</script>
