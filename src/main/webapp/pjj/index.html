@@ -23,6 +23,11 @@
 	height: auto !important;
 	height: 400px;
 }
+.mui-table-view .mui-media-object {
+    height: 62px;
+    line-height: 62px;
+    max-width: 75px;
+}
 </style>
 </head>
 <body>
@@ -36,14 +41,14 @@
 		<div style="padding: 10px 10px;">
 			<div id="segmentedControl" class="mui-segmented-control">
 				<a id="all1" class="mui-control-item mui-active" href="#item1"> 全部发票 </a> 
+				<a id="house" class="mui-control-item" href="#item1"> 房地产 </a>
 				<a id="food" class="mui-control-item" href="#item1"> 餐饮 </a> 
-<!-- 				<a class="mui-control-item" href="#item3"> 按日期 </a> -->
 			</div>
 		</div>
 		<div>
 			<div id="item1" class="mui-slider-item mui-control-content mui-active">
-				<div id="div1" class="mui-scroll-wrapper" style="height: 300px">
-					<div class="mui-scroll" style="margin-bottom: 50px;">
+				<div id="div1" class="mui-scroll-wrapper" style="margin-bottom: 50px;height: 400px;">
+					<div class="mui-scroll" style="">
 							<ul class="mui-table-view mui-table-view-chevron" id="all">
 						
 							</ul>
@@ -126,7 +131,7 @@
 	<script src="../js/fpj.js"></script>
 	<script>
 		var page = 1;
-		var flag = false;
+		var bool = false;
 		mui.init({
 			swipeBack : true
 		//启用右滑关闭功能
@@ -136,7 +141,6 @@
                 deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
             });
 			mui('#div1').scroll({
- 				scrollY: true, //是否竖向滚动
                 indicators: true //是否显示滚动条
             });
 			
@@ -186,7 +190,7 @@
       		  height:50,//可选.默认50.触发上拉加载拖动距离
 		      auto:true,//可选,默认false.自动上拉加载一次
 		      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
-		      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+// 		      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
 		      callback :function(){//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 		      	$.ajax({
 					url : '../pjj/getOpenid',
@@ -194,11 +198,10 @@
 					success : function(data) {
 						if (data.success) {
 							getJy();
-							page = page + 1;
-							mui('#div1').pullRefresh().endPullupToRefresh(flag);
 						}else{
 							window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
 						}
+						mui('#div1').pullRefresh().endPullupToRefresh(bool);
 					},
 					error : function(data) {
 						alert(data.errcode + data.errmsg);
@@ -231,11 +234,19 @@
 				page = 1;
 				gsdm = null;
 				getJy();
+				mui('#div1').pullRefresh().refresh(true);
 			});
 			$("#food").on('tap', function (event) {
 				page = 1;
 				gsdm = "sqj";
 				getJy();
+				mui('#div1').pullRefresh().refresh(true);
+			});
+			$("#house").on('tap', function (event) {
+				page = 1;
+				gsdm = "zydc";
+				getJy();
+				mui('#div1').pullRefresh().refresh(true);
 			});
 		})
 	</script>

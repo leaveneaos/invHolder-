@@ -54,17 +54,18 @@
 			});
 		}
 		function fpfs() {
-			$('#send').attr("disabled","true");
+			$('#send').attr("disabled",true);
 			var youxiang = $('#username').val();
 			if (null == youxiang || "" == youxiang) {
 				$('#cwxx').html("请输入邮箱!");
+				$('#send').attr("disabled",false);
 			} else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 					.test(youxiang)) {
 				$('#cwxx').html("正在发送...");
 				$.post("sendEmail", {
 					"yx" : youxiang
 				}, function(data) {
-					$('#send').attr("disabled","false");
+					$('#send').attr("disabled",false);
 					if (data.success) {
 						window.location.href = "../tishi2.html?_t=" + new Date().getTime();
 					}else if (data.error){

@@ -125,7 +125,7 @@ function getJy() {
 						$("#all").children("li").remove();
 					}
 					if (data.fps && data.fps.length > 0) {
-						flag = true;
+						bool = false;
 						for (var i = 0; i < data.fps.length; i++) {
 							var val = data.fps[i];
 							var zt = val.ztbz;
@@ -176,13 +176,14 @@ function getJy() {
 							
 						}
 					} else if (!data.fps && page == 1) {
-						flag = false;
+						bool = true;
 						mui.confirm("没有您要查询的发票", "提示", [ '是' ], function(e) {
 							
 						});
 					}else{
-						flag = false;
+						bool = true;
 					}
+					page = page + 1;
 				},
 				error : function(data) {
 					alert(data.errcode + data.errmsg);

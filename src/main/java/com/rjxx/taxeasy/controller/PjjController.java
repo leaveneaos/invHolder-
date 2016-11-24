@@ -814,8 +814,8 @@ public class PjjController extends BaseController {
 				spfyx.setLrsj(new Date());
 				spfyx.setDjh(Integer.valueOf(djh));
 				spfyxService.save(spfyx);
-				result.put("success", flag);
 			}
+			result.put("success", flag);
 		} catch (SendFailedException e) {
 			e.printStackTrace();
 			result.put("error", true);
