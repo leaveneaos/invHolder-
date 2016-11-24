@@ -8,6 +8,12 @@
         <if test="djh != null and djh != ''">
             and djh = #{djh}
         </if>
+         <if test="gsdm != null and gsdm != ''">
+            and gsdm = #{gsdm}
+        </if>
+         <if test="tqm != null and tqm != ''">
+            and tqm = #{tqm}
+        </if>
         limit 1
     </select>
 

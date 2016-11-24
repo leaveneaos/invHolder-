@@ -23,14 +23,8 @@
 							function(data) {
 								djh = data.djh;
 								if (djh != null && djh != "") {
-									$
-											.post(
-													"tijiao/hqmx",
-													{
-														"djh" : djh
-													},
-													function(data) {
-														var mxList = data.mxList;
+									$("#tab").append("<tr><td>餐饮费</td><td>"+data.zje+"</td><td>6%</td></tr>")	
+				/* 										var mxList = data.mxList;
 														var zje = 0.00;
 														$
 																.each(
@@ -58,13 +52,11 @@
 																		"<tr style='background-color: #DFE0E3;'><td colspan='3'>合计可开票金额<span style='color: #007AFF; font-weight: 900;'>"
 																				+ zje
 																						.toFixed(2)
-																				+ "</span>元</td></tr>");
-													});
+																				+ "</span>元</td></tr>"); */
 								}else{
-									window.location.href = "extractInvoice/zydc";
+									window.location.href = "smtq/demo.html?time="+new Date();
 								}
-							});
-
+							})
 		});
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time="+new Date();
@@ -75,7 +67,7 @@
 	<p></p>
 	<form class="mui-input-group" action="tijiao/fpxx" method="post">
 		<div class="mui-input-row">
-			<label>发票抬头</label> <input type="text" class="mui-input-clear"
+			<label><font color="red">*</font>发票抬头</label> <input type="text" class="mui-input-clear"
 				required="required" maxlength="50" name="fptt" id="fptt"
 				placeholder="请输入发票抬头（必填）">
 		</div>
@@ -111,24 +103,22 @@
 	</table>
 	<p></p>
 	<button id='confirmBtn' type="button" onclick="tk()"
-		class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;">确 认</button>
-		<div id="info" style="margin-bottom: 80px;color: red;margin-left: 2%;"></div>
+		class="mui-btn mui-btn-primary mui-btn-block"
+		style="width: 96%; margin-left: 2%;">确 认</button>
+	<div id="info"
+		style="margin-bottom: 80px; color: red; margin-left: 2%;"></div>
 	<div
 		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
 		<div style="max-width: 800px; margin: 0 auto;">
 			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%; float: right; text-align: right;"><a href="bangzhu.html">遇到问题?</a></div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a href="bangzhu.html">遇到问题?</a>
+			</div>
 		</div>
 		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 
-	<script src="js/mui.min.js"></script>
 	<script type="text/javascript" charset="utf-8">
-		//mui初始化
-		mui.init({
-			swipeBack : true
-		//启用右滑关闭功能
-		});
 		function tk() {
 			var info = document.getElementById("info");
 			var fptt = $('#fptt').val();
@@ -165,9 +155,8 @@
 			}
 			mui.confirm(firm, title, btnArray, function(e) {
 				if (e.index == 1) {
-					document.getElementById("confirmBtn").setAttribute(
-							"disabled", true);
-					$.post("tijiao/fpxx", {
+	 				$("#confirmBtn").attr({"disabled":"disabled"});
+					$.post("dzfp_sqj/saveLs", {
 						"fptt" : fptt,
 						"nsrsbh" : nsrsbh,
 						"dz" : dz,
@@ -176,13 +165,18 @@
 						"yhzh" : yhzh,
 						"djh" : djh
 					}, function(data) {
-						if (data.msg == 1) {
-							info.innerText = '发票正在开具中,请等待片刻!';
-						} else if (data.msg == 2) {
-							info.innerText = '发票正在开具中,请等待片刻!';
+						if (data.msg==1) {
+							info.innerText = '正在处理您的请求,请等待片刻!';
+							fpzt();
+						}else{
+							btnArray = [ '确定' ];
+							firm = data.msg;
+							title = "提示";
+							mui.confirm(firm, title, btnArray, function(e) {
+
+							});
 						}
-						fpzt();
-					});
+					}); 
 
 				} else {
 					info.innerText = '请重新确认';
@@ -196,13 +190,13 @@
 		
 		 }); */
 
-		function fpzt() {
+ 		function fpzt() {
 			$.post("tijiao/fpzt", {
 				"djh" : djh
 			}, function(data) {
 				if (data.msg) {
 					window.location.href = "dzfp_sqj/fp";
-				} else {
+				}else{
 					setTimeout("fpzt()", 3000);
 				}
 			});

@@ -14,11 +14,10 @@ $(function() {
 			{},
 			function(data) {
 				if(null!=data){
-					$('#msg').html("");
-					$('#msg').html(data.msg);
-					if("undefined"!=typeof(data.clztdm)){
-						$('#clztdm').val(data.clztdm)
-					}			
+					if(null!=data.msg&&""!=data.msg){
+						$('#msg').html("");
+						$('#msg').html(data.msg);
+					}		
 				}
 				})
 			})

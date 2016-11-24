@@ -34,6 +34,7 @@ import com.rjxx.comm.web.BaseController;
 import com.rjxx.taxeasy.domains.Fphkyj;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Jyspmx;
+import com.rjxx.taxeasy.domains.Jyxx;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Spfyx;
 import com.rjxx.taxeasy.domains.Tqjl;
@@ -123,22 +124,46 @@ public class TijiaoController extends BaseController{
 	@ResponseBody
 	public Map fpzt(String djh) {
 		Map<String, Object> result = new HashMap<String, Object>();
-
-		Map params = new HashMap<>();
-		params.put("djh", djh);
-		result.put("djh", djh);
-		Jyls jyls = jylsService.findOneByParams(params);
-		if ("91".equals(jyls.getClztdm())) {
-			List<Kpls> kplsList = kplsService.findAllByParams(params);
+		Map map = new HashMap<>();
+		map.put("djh", djh);
+		map.put("gsdm", "sqj");
+		Jyls jyls = jylsService.findOneByParams(map);
+		Map kpmap = new HashMap<>();
+		if (null==jyls) {
+			result.put("msg", false);
+			return result;
+		}else{
+			kpmap.put("tqm", jyls.getTqm());
+			kpmap.put("gsdm", "sqj");
+		}
+		List<Kpls> list = jylsService.findByTqm(kpmap);
+		if (list.size() > 0) {
 			String pdfdzs = "";
-			for (Kpls kpls2 : kplsList) {
+			request.getSession().setAttribute("djh", list.get(0).getDjh());
+			for (Kpls kpls2 : list) {
 				pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
 			}
 			if (pdfdzs.length() > 0) {
 				result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+				request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
 			}
+			result.put("num", "2");
+			Tqjl tqjl = new Tqjl();
+			tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+			tqjl.setJlly("1");
+			tqjl.setTqsj(new Date());
+			String visiterIP;
+			if (request.getHeader("x-forwarded-for") == null) {
+				visiterIP = request.getRemoteAddr();// 访问者IP
+			} else {
+				visiterIP = request.getRemoteAddr();// 访问者IP
+			}
+			tqjl.setIp(visiterIP);
+			String llqxx = request.getHeader("User-Agent");
+			tqjl.setLlqxx(llqxx);
+			tqjlService.save(tqjl);
 			result.put("msg", true);
-		} else {
+		}else {
 			result.put("msg", false);
 		}
 		return result;
@@ -317,6 +342,7 @@ public class TijiaoController extends BaseController{
 	public Map tjsession(){
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("djh", request.getSession().getAttribute("djh"));
+		result.put("zje", request.getSession().getAttribute("zje"));
 		return result;
 	}
 	@RequestMapping(value = "/yxsession")
