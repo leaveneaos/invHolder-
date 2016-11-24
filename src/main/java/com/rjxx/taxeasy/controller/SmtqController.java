@@ -22,6 +22,7 @@ import com.rjxx.taxeasy.domains.Cszb;
 import com.rjxx.taxeasy.domains.Gsxx;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Jyspmx;
+import com.rjxx.taxeasy.domains.Jyxx;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Skp;
 import com.rjxx.taxeasy.domains.Smtq;
@@ -32,6 +33,7 @@ import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.JyspmxService;
+import com.rjxx.taxeasy.service.JyxxService;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.service.SkpService;
 import com.rjxx.taxeasy.service.SmtqService;
@@ -61,6 +63,8 @@ public class SmtqController extends BaseController {
 	private XfService xfService;
 	@Autowired
 	private YhService yhService;
+	@Autowired
+	private JyxxService jyxxservice;
 	@Autowired
 	private JyspmxService jyspmxService;
 
@@ -151,8 +155,8 @@ public class SmtqController extends BaseController {
 					String visiterIP;
 					if (request.getHeader("x-forwarded-for") == null) {
 						visiterIP = request.getRemoteAddr();// 访问者IP
-					}else{
-						visiterIP = request.getRemoteAddr();// 访问者IP				
+					} else {
+						visiterIP = request.getRemoteAddr();// 访问者IP
 					}
 					tqjl.setIp(visiterIP);
 					tqjl.setJlly("1");
@@ -308,10 +312,11 @@ public class SmtqController extends BaseController {
 					jyls.setJshj(Double.parseDouble((String) request.getSession().getAttribute("price")));
 					jyls.setYkpjshj(0.00);
 					jyls.setHsbz("1");
-					jyls.setXfid(xf.getId()); jyls.setXfsh(xf.getXfsh());
+					jyls.setXfid(xf.getId());
+					jyls.setXfsh(xf.getXfsh());
 					jyls.setXfmc(xf.getXfmc());
-					//jyls.setXfid(331);
-					//jyls.setXfmc("上海百旺测试盘");
+					// jyls.setXfid(331);
+					// jyls.setXfmc("上海百旺测试盘");
 					jyls.setXfsh(xf.getXfsh());
 					jyls.setLrsj(new Date());
 					jyls.setXgsj(new Date());
@@ -426,4 +431,173 @@ public class SmtqController extends BaseController {
 		System.out.println(csc);
 	}
 
+	// 食其家 采用提取码提取方式
+	// 跳转到sqj提取码提取页面
+	@RequestMapping(value = "/tqmtq")
+	public void tqmtq() throws Exception {
+		response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
+	}
+	// 校验提取码是否正确
+	@RequestMapping(value = "/tqyz")
+	@ResponseBody
+	public Map<String, Object> tqyz(String tqm, String code) {
+		String sessionCode = (String) session.getAttribute("rand");
+		Map<String, Object> result = new HashMap<String, Object>();
+		if (code != null && sessionCode != null && code.equals(sessionCode)) {
+			Map map = new HashMap<>();
+			map.put("tqm", tqm);
+			map.put("gsdm", "sqj");
+			Jyxx jyxx = jyxxservice.findOneByParams(map);
+			Jyls jyls = jylsService.findOneByParams(map);
+			List<Kpls> list = jylsService.findByTqm(map);
+			if (list.size() > 0) {
+				String pdfdzs = "";
+				request.getSession().setAttribute("djh", list.get(0).getDjh());
+				for (Kpls kpls2 : list) {
+					pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+				}
+				if (pdfdzs.length() > 0) {
+					result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+					request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+				}
+				result.put("num", "2");
+				Tqjl tqjl = new Tqjl();
+				tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+				tqjl.setJlly("1");
+				tqjl.setTqsj(new Date());
+				String visiterIP;
+				if (request.getHeader("x-forwarded-for") == null) {
+					visiterIP = request.getRemoteAddr();// 访问者IP
+				} else {
+					visiterIP = request.getRemoteAddr();// 访问者IP
+				}
+				tqjl.setIp(visiterIP);
+				String llqxx = request.getHeader("User-Agent");
+				tqjl.setLlqxx(llqxx);
+				tqjlService.save(tqjl);
+			}else if (null!=jyls&&null!=jyls.getDjh()) {
+				result.put("num", "6");
+			} else if (null != jyxx && null != jyxx.getId()) {
+				request.getSession().setAttribute("djh", jyxx.getOrderNo());
+				request.getSession().setAttribute("zje", jyxx.getPrice());
+				result.put("num", "5");
+			} else {
+				result.put("num", "3");
+			}
+		} else {
+			result.put("num", "4");
+		}
+		return result;
+	}
+
+	// 获取购方信息,保存到交易流水
+	@RequestMapping(value = "/saveLs")
+	@ResponseBody
+	@Transactional
+	public Map<String, Object> saveLs(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh,
+			String yx, String sj) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String djh = String.valueOf(request.getSession().getAttribute("djh"));
+		if (null == djh || "".equals(djh)) {
+			result.put("msg", "1");
+			return result;
+		}
+		Map map = new HashMap<>();
+		map.put("tqm", djh);
+		map.put("gsdm", "sqj");
+		Jyxx jyxx = jyxxservice.findOneByParams(map);
+		Jyls jyls1 = jylsService.findOneByParams(map);
+		if (null!=jyls1&&null!=jyls1.getDjh()) {
+			result.put("msg", "该单据号已提交过申请!");
+			return result;
+		}
+		Map map2 = new HashMap<>();
+		map2.put("gsdm", "sqj");
+		map2.put("kpddm", jyxx.getStoreNo());
+		Skp skp = skpService.findOneByParams(map2);
+		if (null != skp && !"".equals(skp.getXfid())) {
+			Xf xf = xfService.findOne(skp.getXfid());
+			if (null != xf) {
+				Jyls jyls = new Jyls();
+				jyls.setClztdm("04");
+				jyls.setDdh(jyxx.getOrderNo());
+				jyls.setGfsh(nsrsbh);
+
+				jyls.setGfmc(fptt);
+				jyls.setGfyh(khh);
+				jyls.setGfyhzh(khhzh);
+				jyls.setGflxr("");
+				jyls.setBz("");
+				jyls.setGfemail(yx);
+				jyls.setGfdz(dz);
+				String tqm = jyxx.getOrderNo();
+				/*
+				 * if (StringUtils.isNotBlank(tqm)) { Map params2 = new
+				 * HashMap<>(); params2.put("gsdm", "sqj"); params2.put("tqm",
+				 * tqm); Jyls tmp = jylsService.findByTqm(params2); if (tmp !=
+				 * null) { result.put("failure", true); result.put("xx",
+				 * "离线开票失败,提取码已经存在"); return result; } }
+				 */
+				jyls.setTqm(tqm);
+				jyls.setJylsh("SQJ" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
+				jyls.setJshj(jyxx.getPrice());
+				jyls.setYkpjshj(0.00);
+				jyls.setHsbz("1");
+				jyls.setXfid(xf.getId());
+				jyls.setXfsh(xf.getXfsh());
+				jyls.setXfmc(xf.getXfmc());
+				// jyls.setXfid(331);
+				// jyls.setXfmc("上海百旺测试盘");
+				jyls.setXfsh(xf.getXfsh());
+				jyls.setLrsj(new Date());
+				jyls.setXgsj(new Date());
+				jyls.setJylssj(new Date());
+				jyls.setFpzldm("12");
+				jyls.setFpczlxdm("11");
+				jyls.setXfyh(xf.getXfyh());
+				jyls.setXfyhzh(xf.getXfyhzh());
+				jyls.setXfdz(xf.getXfdz());
+				jyls.setXfdh(xf.getXfdh());
+				if (StringUtils.isNotBlank(jyls.getGfemail())) {
+					jyls.setSffsyj("1");
+				}
+				jyls.setKpr(xf.getKpr());
+				jyls.setFhr(xf.getFhr());
+				jyls.setSkr(xf.getSkr());
+				jyls.setSsyf(new SimpleDateFormat("yyyyMM").format(new Date()));
+				Map map3 = new HashMap<>();
+				map3.put("gsdm", "sqj");
+				Yh yh = yhService.findOneByParams(map3);
+				jyls.setLrry(yh.getId());
+				jyls.setXgry(yh.getId());
+				jyls.setYxbz("1");
+				jyls.setGsdm("sqj");
+				jyls.setSkpid(skp.getId());
+				Jyspmx jyspmx = new Jyspmx();
+				jyspmx.setSpmxxh(1);
+				jyspmx.setFphxz("0");
+				jyspmx.setSpmc("餐饮费");
+				jyspmx.setSpdm("1010101070000000000");
+				jyspmx.setSpje(jyxx.getPrice());
+				jyspmx.setSpsl(0.06);
+				jyspmx.setLrsj(new Date());
+				jyspmx.setXgsj(new Date());
+				jyspmx.setLrry(yh.getId());
+				jyspmx.setXgry(yh.getId());
+				jyspmx.setGsdm("sqj");
+				jyspmx.setSkpid(skp.getId());
+				jylsService.save(jyls);
+				jyspmx.setDjh(jyls.getDjh());
+				jyspmx.setJshj(jyxx.getPrice());
+				jyspmxService.save(jyspmx);
+				result.put("msg", "1");
+			}else{
+				result.put("msg", "门店号为查询到销方!");
+			}
+			
+		}else{
+			result.put("msg", "未查询到门店号!");
+		}
+		return result;
+	}
 }
