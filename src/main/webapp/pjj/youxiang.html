@@ -65,6 +65,7 @@
 				$.post("sendEmail", {
 					"yx" : youxiang
 				}, function(data) {
+					$('#send').attr("disabled",false);
 					if (data.success) {
 						window.location.href = "../tishi2.html?_t=" + new Date().getTime();
 					}else if (data.error){
