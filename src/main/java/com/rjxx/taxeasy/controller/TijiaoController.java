@@ -285,7 +285,7 @@ public class TijiaoController extends BaseController{
 		  if (request.getHeader("x-forwarded-for") == null) {
 			visiterIP = request.getRemoteAddr();// 访问者IP
 			  }else {
-				  visiterIP = request.getRemoteAddr();// 访问者IP
+				  visiterIP = request.getHeader("x-forwarded-for");
 			}
 		tqjl.setIp(visiterIP);
 		String llqxx = request.getHeader("User-Agent");
