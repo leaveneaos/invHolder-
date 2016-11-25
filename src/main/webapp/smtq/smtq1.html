@@ -32,7 +32,8 @@
 		</style>
 	</head>
 
-	<body>
+	<body style="font-family: 微软雅黑;background-image: url(../images/2016-11-25_143009.png); background-repeat:no-repeat ;background-size:100% 100%; 
+background-attachment: fixed;">
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
 	$(function() {
@@ -51,13 +52,28 @@
 		window.location.href = "../dzfp_sqj/smtq2";
 	}
 	</script>
-		<header class="mui-bar mui-bar-nav">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <h1 class="mui-title">信息确认</h1>
-		</header>
-		<div class="mui-content">
-			
-		    <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+		<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
+		<div>
+			<img src="../images/sqj1.png" alt="" style="width: 100%;" />
+		</div>
+		<div style="width: 96%;margin: 0 auto;">
+			<div style="width: 100%;margin-bottom: 15px;">
+				<h4 class="mui-ellipsis" style="color: #D1AC38;">订单号</h4>
+		        <h5 id="orderNo" style="color: #FFFFFF;"></h5>
+			</div>
+			<div style="width: 100%;margin-bottom: 15px;">
+				<h4 class="mui-ellipsis" style="color: #D1AC38;">门店编号</h4>
+		        <h5 id="sn" style="color: #FFFFFF;"></h5>
+			</div>
+			<div style="width: 100%;margin-bottom: 15px;">
+				<h4 class="mui-ellipsis" style="color: #D1AC38;">交易日期</h4>
+		        <h5 id="orderTime" style="color: #FFFFFF;"></h5>
+			</div>
+			<div style="width: 100%;margin-bottom: 15px;">
+				<h4 class="mui-ellipsis" style="color: #D1AC38;">订单金额</h4>
+		        <h5 id="price" style="color: #FFFFFF;"></h5>
+			</div>
+		    <!--<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
@@ -65,9 +81,7 @@
 		                    <h5 id="orderNo"></h5>
 		                    
 		                </div>
-		                <!--<div class="mui-table-cell mui-col-xs-2 mui-text-right">
-		                    <span class="mui-h5">12:25</span>
-		                </div>-->
+		                
 		            </div>
 		        </li>
 		        <li class="mui-table-view-cell">
@@ -88,16 +102,7 @@
 		                
 		            </div>
 		        </li>
-		 <!--        <li class="mui-table-view-cell">
-		            <div class="mui-table">
-		                <div class="mui-table-cell mui-col-xs-10">
-		                    <h4 class="mui-ellipsis-2">交易时间</h4>
-		                    <h5>12：25</h5>
-		                    
-		                </div>
-		                
-		            </div>
-		        </li> -->
+		 
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
@@ -108,11 +113,12 @@
 		            </div>
 		        </li>
 		        
-		    </ul>
+		    </ul>-->
 		</div>
 		<button id='confirmBtn' type="button" onclick="tk()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;margin-top: 15px;">确认</button>
+		</div>
 	</body>
-	<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;z-index: 99;">
+	<div style="position:fixed;bottom:0;width: 100%;z-index: 99;color: #EEEEEE;">
 		<div style="max-width: 800px;margin: 0 auto;">
 			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
 			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
