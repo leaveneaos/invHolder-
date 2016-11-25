@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -690,7 +688,7 @@ public class PjjController extends BaseController {
 		if (request.getHeader("x-forwarded-for") == null) {
 			visiterIP = request.getRemoteAddr();// 访问者IP
 		} else {
-			visiterIP = request.getRemoteAddr();// 访问者IP
+			visiterIP = request.getHeader("x-forwarded-for");// 访问者IP
 		}
 
 		tqjl.setIp(visiterIP);
@@ -795,7 +793,7 @@ public class PjjController extends BaseController {
 			if (request.getHeader("x-forwarded-for") == null) {
 				visiterIP = request.getRemoteAddr();// 访问者IP
 			} else {
-				visiterIP = request.getRemoteAddr();// 访问者IP
+				visiterIP = request.getHeader("x-forwarded-for");// 访问者IP
 			}
 
 			tqjl.setIp(visiterIP);
