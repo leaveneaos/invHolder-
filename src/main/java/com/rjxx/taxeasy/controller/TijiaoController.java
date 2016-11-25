@@ -125,7 +125,7 @@ public class TijiaoController extends BaseController{
 	public Map fpzt(String djh) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map map = new HashMap<>();
-		map.put("djh", djh);
+		map.put("tqm", djh);
 		map.put("gsdm", "sqj");
 		Jyls jyls = jylsService.findOneByParams(map);
 		Map kpmap = new HashMap<>();
