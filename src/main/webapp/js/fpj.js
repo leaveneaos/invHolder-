@@ -168,11 +168,7 @@ function getJy() {
 									+ '</p>'
 							}
 							str += '</div></a></li>';
-							if (gsdm == "sqj") {
-								$("#all1").append(str);
-							}else{
-								$("#all").append(str);
-							}
+							$("#all").append(str);
 							
 						}
 					} else if (!data.fps && page == 1) {
