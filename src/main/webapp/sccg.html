@@ -42,7 +42,7 @@
 				<p></p>
 			</div>
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
+				<li id="grfpj" class="mui-table-view-cell">
 					<a class="mui-navigate-right">
 						进入"发票夹"
 					</a>
@@ -58,10 +58,21 @@
 		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
 	</body>
-	<script src="../js/mui.min.js"></script>
+	<script src="js/mui.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/mui.zoom.js"></script>
+	<script src="js/mui.previewimage.js"></script>
 	<!--<script>
 		mui.init({
 			swipeBack:true //启用右滑关闭功能
 		});
 	</script>-->
+	<script type="text/javascript">
+		$(function(){
+			$('#grfpj').click(function(){
+				window.location.href='pjj/index.html?_t=' + new Date().getTime();
+			});
+			
+		})
+	</script>
 </html>

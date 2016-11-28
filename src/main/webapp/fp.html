@@ -283,9 +283,7 @@
 								method : 'post',
 								success : function(data) {
 									if (data.success) {
-										mui.confirm("收藏成功", "提示", [ '是' ], function(e) {
-											window.location.href = "../sccg.html?_t="+new Date().getTime();
-										});
+										window.location.href = "../sccg.html?_t="+new Date().getTime();
 									}else if (data.nopeat) {
 										window.location.href = "../sccg.html?_t="+new Date().getTime();
 									} else {
