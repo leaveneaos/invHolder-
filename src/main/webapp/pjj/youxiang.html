@@ -23,15 +23,15 @@
 							function(data) {
 								if (null != data.yx) {
 									var trs = "";
-									$
-											.each(
-													data.yx,
-													function(n, value) {
+// 									$
+// 											.each(
+// 													data.yx,
+// 													function(n, value) {
 
-														trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this)' class='mui-navigate-right'>发送到:"
-																+ value.email
-																+ "</a></li>";
-													});
+// 														trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this)' class='mui-navigate-right'>发送到:"
+// 																+ value.email
+// 																+ "</a></li>";
+// 													});
 									trs += "<div class='mui-input-row'><label>新邮箱</label> <input type='email' id='username' placeholder='请输入您的邮箱'></div>"
 									$('#yxform').append(trs);
 								}
