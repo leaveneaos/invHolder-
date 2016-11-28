@@ -438,6 +438,13 @@ public class SmtqController extends BaseController {
 	public void tqmtq() throws Exception {
 		response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
 	}
+	// 食其家 寿司采用提取码提取方式
+	// 跳转到sqj提取码提取页面
+	@RequestMapping(value = "/tqmsstq")
+	@ResponseBody
+	public void tqmsstq() throws Exception {
+		response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());
+	}
 	// 校验提取码是否正确
 	@RequestMapping(value = "/tqyz")
 	@ResponseBody
