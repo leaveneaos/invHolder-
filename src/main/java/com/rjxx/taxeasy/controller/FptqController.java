@@ -6,22 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpRequest;
-import org.hibernate.loader.custom.Return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rjxx.comm.web.BaseController;
-import com.rjxx.taxeasy.domains.Jyls;
-import com.rjxx.taxeasy.domains.Jyspmx;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Tqjl;
 import com.rjxx.taxeasy.service.JylsService;
-import com.rjxx.taxeasy.service.JyspmxService;
-import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.service.TqjlService;
 
 @Controller
@@ -30,10 +23,6 @@ import com.rjxx.taxeasy.service.TqjlService;
 public class FptqController extends BaseController {
 	@Autowired
 	private JylsService jylsService;
-	@Autowired
-	private KplsService kplsService;
-	@Autowired
-	private JyspmxService jyspmxService;
 	@Autowired
 	private TqjlService tqjlService;
 

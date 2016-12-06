@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.rjxx.comm.utils.MD5Util;
-import com.rjxx.comm.utils.StringUtils;
 import com.rjxx.comm.web.BaseController;
 import com.rjxx.taxeasy.domains.Cszb;
 import com.rjxx.taxeasy.domains.Gsxx;
@@ -40,6 +38,8 @@ import com.rjxx.taxeasy.service.SmtqService;
 import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.taxeasy.service.XfService;
 import com.rjxx.taxeasy.service.YhService;
+import com.rjxx.utils.MD5Util;
+import com.rjxx.utils.StringUtils;
 
 @Controller
 @RequestMapping("/dzfp_sqj")
@@ -327,7 +327,8 @@ public class SmtqController extends BaseController {
 					jyls.setXfyhzh(xf.getXfyhzh());
 					jyls.setXfdz(xf.getXfdz());
 					jyls.setXfdh(xf.getXfdh());
-					if (StringUtils.isNotBlank(jyls.getGfemail())) {
+					if (StringUtils.
+							isNotBlank(jyls.getGfemail())) {
 						jyls.setSffsyj("1");
 					}
 					jyls.setKpr(xf.getKpr());
@@ -456,7 +457,7 @@ public class SmtqController extends BaseController {
 			map.put("tqm", tqm);
 			map.put("gsdm", "sqj");
 			Jyxx jyxx = jyxxservice.findOneByParams(map);
-			Jyls jyls = jylsService.findOneByParams(map);
+			Jyls jyls = jylsService.findOne(map);
 			List<Kpls> list = jylsService.findByTqm(map);
 			if (list.size() > 0) {
 				String pdfdzs = "";
@@ -514,7 +515,7 @@ public class SmtqController extends BaseController {
 		map.put("tqm", djh);
 		map.put("gsdm", "sqj");
 		Jyxx jyxx = jyxxservice.findOneByParams(map);
-		Jyls jyls1 = jylsService.findOneByParams(map);
+		Jyls jyls1 = jylsService.findOne(map);
 		if (null!=jyls1&&null!=jyls1.getDjh()) {
 			result.put("msg", "该单据号已提交过申请!");
 			return result;

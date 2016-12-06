@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjxx.comm.utils.MailUtil;
 import com.rjxx.comm.web.BaseController;
 import com.rjxx.taxeasy.domains.Fphkyj;
 import com.rjxx.taxeasy.domains.Jyls;
@@ -46,6 +45,7 @@ import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.service.SpfyxService;
 import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.taxeasy.service.WxkbService;
+import com.rjxx.utils.MailUtil;
 
 @Controller
 @RequestMapping("/tijiao")
@@ -92,7 +92,7 @@ public class TijiaoController extends BaseController{
 			return result;
 		}
 		params.put("djh", djh);
-		List<Jyspmx> mxList = jyspmxService.findAllByParams(params);
+		List<Jyspmx> mxList = jyspmxService.findAll(params);
 		result.put("mxList", mxList);
 		return result;
 	}
@@ -103,7 +103,7 @@ public class TijiaoController extends BaseController{
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map map = new HashMap<>();
 		map.put("djh", djh);
-		Jyls jyls = jylsService.findOneByParams(map);
+		Jyls jyls = jylsService.findOne(map);
 		if (!"00".equals(jyls.getClztdm())) {
 			result.put("msg", "1");
 			return result;
@@ -127,7 +127,7 @@ public class TijiaoController extends BaseController{
 		Map map = new HashMap<>();
 		map.put("tqm", djh);
 		map.put("gsdm", "sqj");
-		Jyls jyls = jylsService.findOneByParams(map);
+		Jyls jyls = jylsService.findOne(map);
 		Map kpmap = new HashMap<>();
 		if (null==jyls) {
 			result.put("msg", false);
@@ -178,8 +178,8 @@ public class TijiaoController extends BaseController{
 		params.put("yx", yx);
 
 		boolean flag = false;
-		Jyls jyls = jylsService.findOneByParams(params);
-		List<Kpls> kplsList = kplsService.findAllByParams(params);
+		Jyls jyls = jylsService.findOne(params);
+		List<Kpls> kplsList = kplsService.findAll(params);
 		List<String> pdfUrlList = new ArrayList<>();
 		for (Kpls kpls : kplsList) {
 			pdfUrlList.add(kpls.getPdfurl());
@@ -315,8 +315,8 @@ public class TijiaoController extends BaseController{
 			result.put("sh", fphkyj2.getSfyj());
 			return result;
 		}
-		Jyls jyls = jylsService.findOneByParams(params);
-		List<Kpls> list = kplsService.findAllByParams(params);
+		Jyls jyls = jylsService.findOne(params);
+		List<Kpls> list = kplsService.findAll(params);
 		for (Kpls kpls : list) {
 			fphkyj.setYxbz("0");
 			fphkyj.setLrsj(new Date());
