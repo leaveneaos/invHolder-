@@ -147,10 +147,10 @@ public class PjjController extends BaseController {
 			}
 		}
 		String openid = (String) session.getAttribute("openid");
-		if (openid == null) {
-			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
-			session.setAttribute("openid", openid);
-		}
+//		if (openid == null) {
+//			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
+//			session.setAttribute("openid", openid);
+//		}
 		pagination.addParam("unionid", openid);
 		pagination.addParam("gsdm", gsdmList);
 		List<FpjVo> list = fpjService.findByPage(pagination);
@@ -183,8 +183,8 @@ public class PjjController extends BaseController {
 			djh = -1;
 		}
 		params.put("djh", djh);
-		List<Fpcxvo> list = kplsService.findAllByParams(params);
-		for (Fpcxvo kpls : list) {
+		List<Kpls> list = kplsService.findAll(params);
+		for (Kpls kpls : list) {
 			if (kpls.getPdfurl() != null && !"".equals(kpls.getPdfurl())) {
 				kpls.setPdfurl(kpls.getPdfurl().replace(".pdf", ".jpg"));
 			}
@@ -710,9 +710,9 @@ public class PjjController extends BaseController {
 	public Map getOpenid() {
 		Map<String, Object> result = new HashMap<>();
 		String openid = (String) session.getAttribute("openid");
-		if (openid == null) {
-			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
-		}
+//		if (openid == null) {
+//			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
+//		}
 		if (openid != null) {
 			result.put("success", true);
 		} else {
