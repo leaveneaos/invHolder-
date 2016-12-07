@@ -471,7 +471,7 @@ public class SmtqController extends BaseController {
                 result.put("num", "7");
             } else if (null != jyxx && null != jyxx.getId()) {
                 request.getSession().setAttribute("tqm", tqm);
-                request.getSession().setAttribute("je", je);
+                request.getSession().setAttribute("jyxx", jyxx);
                 request.getSession().setAttribute("ppjg", "1");
                 result.put("num", "3");
             } else {
@@ -509,8 +509,87 @@ public class SmtqController extends BaseController {
             return result;
         }
         String ppjg = String.valueOf(request.getSession().getAttribute("ppjg"));
-        if ("1".equals(ppjg)) {
-            Smtq smtq = new Smtq();
+        if ("1".equals(ppjg)){ 
+        	Jyxx jyxx = (Jyxx) request.getSession().getAttribute("jyxx");
+        	Map map2 = new HashMap<>();
+    		map2.put("gsdm", "sqj");
+    		map2.put("kpddm", jyxx.getStoreNo());
+    		Skp skp = skpService.findOneByParams(map2);
+    		if (null != skp && !"".equals(skp.getXfid())) {
+    			Xf xf = xfService.findOne(skp.getXfid());
+    			if (null != xf) {
+    				Jyls jyls = new Jyls();
+    				jyls.setClztdm("03");
+    				jyls.setDdh(jyxx.getOrderNo());
+    				jyls.setGfsh(nsrsbh);
+
+    				jyls.setGfmc(fptt);
+    				jyls.setGfyh(khh);
+    				jyls.setGfyhzh(khhzh);
+    				jyls.setGflxr("");
+    				jyls.setBz("");
+    				jyls.setGfemail(yx);
+    				jyls.setGfdz(dz);
+    				jyls.setTqm(jyxx.getOrderNo());
+    				jyls.setJylsh("SQJ" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
+    				jyls.setJshj(jyxx.getPrice());
+    				jyls.setYkpjshj(0.00);
+    				jyls.setHsbz("1");
+    				jyls.setXfid(xf.getId());
+    				jyls.setXfsh(xf.getXfsh());
+    				jyls.setXfmc(xf.getXfmc());
+    				// jyls.setXfid(331);
+    				// jyls.setXfmc("上海百旺测试盘");
+    				jyls.setXfsh(xf.getXfsh());
+    				jyls.setLrsj(new Date());
+    				jyls.setXgsj(new Date());
+    				jyls.setJylssj(new Date());
+    				jyls.setFpzldm("12");
+    				jyls.setFpczlxdm("11");
+    				jyls.setXfyh(xf.getXfyh());
+    				jyls.setXfyhzh(xf.getXfyhzh());
+    				jyls.setXfdz(xf.getXfdz());
+    				jyls.setXfdh(xf.getXfdh());
+    				if (StringUtils.isNotBlank(jyls.getGfemail())) {
+    					jyls.setSffsyj("1");
+    				}
+    				jyls.setKpr(xf.getKpr());
+    				jyls.setFhr(xf.getFhr());
+    				jyls.setSkr(xf.getSkr());
+    				jyls.setSsyf(new SimpleDateFormat("yyyyMM").format(new Date()));
+    				Map map3 = new HashMap<>();
+    				map3.put("gsdm", "sqj");
+    				Yh yh = yhService.findOneByParams(map3);
+    				jyls.setLrry(yh.getId());
+    				jyls.setXgry(yh.getId());
+    				jyls.setYxbz("1");
+    				jyls.setGsdm("sqj");
+    				jyls.setSkpid(skp.getId());
+    				Jyspmx jyspmx = new Jyspmx();
+    				jyspmx.setSpmxxh(1);
+    				jyspmx.setFphxz("0");
+    				jyspmx.setSpmc("餐饮费");
+    				jyspmx.setSpdm("1010101070000000000");
+    				jyspmx.setSpje(jyxx.getPrice());
+    				jyspmx.setSpsl(0.06);
+    				jyspmx.setLrsj(new Date());
+    				jyspmx.setXgsj(new Date());
+    				jyspmx.setLrry(yh.getId());
+    				jyspmx.setXgry(yh.getId());
+    				jyspmx.setGsdm("sqj");
+    				jyspmx.setSkpid(skp.getId());
+    				jylsService.save(jyls);
+    				jyspmx.setDjh(jyls.getDjh());
+    				jyspmx.setJshj(jyxx.getPrice());
+    				jyspmxService.save(jyspmx);
+    				result.put("msg", "1");
+    			}else{
+    				result.put("msg", "门店号为查询到销方!");
+    			}
+    			
+    		}else{
+    			result.put("msg", "未查询到门店号!");
+    		}
         } else {
             Tqmtq tqmtq1 = new Tqmtq();
             tqmtq1.setDdh(tqm);
