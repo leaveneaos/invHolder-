@@ -1,16 +1,16 @@
 package com.rjxx.taxeasy.controller;
 
+import com.rjxx.taxeasy.comm.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.rjxx.comm.web.BaseController;
 @Controller
 @RequestMapping("/dzfp_sm")
-public class Smtq2Controller extends BaseController{
+public class Smtq2Controller extends BaseController {
 
-	@RequestMapping
-	public String index() {
-		return "smtq/smtq2";
-	}
+    @RequestMapping
+    public String index() {
+        return "smtq/smtq2";
+    }
 
 }
