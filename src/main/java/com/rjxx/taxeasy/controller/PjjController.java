@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.comm.mybatis.Pagination;
 import com.rjxx.comm.web.BaseController;
+import com.rjxx.taxeasy.bizcomm.utils.DataOperte;
 import com.rjxx.taxeasy.domains.Ckhk;
 import com.rjxx.taxeasy.domains.Cszb;
 import com.rjxx.taxeasy.domains.Dzfplog;
@@ -97,6 +98,9 @@ public class PjjController extends BaseController {
 	
 	@Autowired
 	private SpfyxService spfyxService;
+	
+	@Autowired
+	private DataOperte dataOperte;
 
 	@Value("${emailHost}")
 	private String emailHost;
@@ -349,6 +353,22 @@ public class PjjController extends BaseController {
 					result.put("success", false);
 					result.put("msg", "超过开票日期6个月，不能重开！");
 					return result;
+				}else{
+					List<Integer> kpList = new ArrayList<>();
+					for (Kpls kpls2 : list) {
+						kpList.add(kpls2.getKplsh());
+					}
+					try {
+						dataOperte.updateKpls(kpList, djh, 0);
+						dataOperte.saveLog(djh, "01", "0", "电子发票服务平台重开操作", "已向服务端发送重开请求", 0, jyls.getXfsh(), "");
+						result.put("success", true);
+						result.put("msg", "重开请求提交成功，请注意查看操作结果！");
+					} catch (Exception e) {
+						e.printStackTrace();
+						result.put("success", false);
+						result.put("msg", "后台出现错误: " + e.getMessage());
+						dataOperte.saveLog(djh, "92", "1", "", "电子发票服务平台重开请求失败!", 2, jyls.getXfsh(), "");
+					}
 				}
 			}
 		}
@@ -445,9 +465,30 @@ public class PjjController extends BaseController {
 					ckhkService.save(hk);
 					cs = getCszb(jyls.getGsdm(), jyls.getXfid(), jyls.getSkpid(), "sfhksh");
 					if (cs != null && "否".equals(cs.getCsz())) {
-
+						try {
+							List<Integer> kpList = new ArrayList<>();
+							for (Kpls kpls2 : list) {
+								kpList.add(kpls2.getKplsh());
+							}
+							dataOperte.addJyls(kpList, djh, "13", 0);
+							Map prms = new HashMap<>();
+							params.put("id", hk.getId());
+							params.put("ztbz", "4");
+							ckhkService.updateZtbz(prms);
+							dataOperte.saveLog(djh, "01", "0", "电子发票服务平台换开操作", "已向服务端发送换开开请求", 0, jyls.getXfsh(), "");
+							result.put("success", true);
+							result.put("msg", "换开请求提交成功，请注意查看操作结果！");
+							return result;
+						} catch (Exception e) {
+							e.printStackTrace();
+							result.put("success", false);
+							result.put("msg", "后台出现错误: " + e.getMessage());
+							dataOperte.saveLog(djh, "92", "1", "", "电子发票服务平台换开请求失败!", 2, jyls.getXfsh(), "");
+							return result;
+						}
 					}
 					result.put("success", true);
+					return result;
 				}
 			}
 		} else {
@@ -992,8 +1033,8 @@ public class PjjController extends BaseController {
 					return result;
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					map.put("success", true);
-					logger.info("unionid" + map.get("unionid"));
-					logger.info("openid" + map.get("openid"));
+//					logger.info("unionid" + map.get("unionid"));
+//					logger.info("openid" + map.get("openid"));
 					session.setAttribute("unionid", map.get("unionid"));
 					session.setAttribute("openid", map.get("openid"));
 					return map;
