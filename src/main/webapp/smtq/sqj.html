@@ -22,10 +22,17 @@ background-attachment: fixed;" id="index">
 		}
 		function tiqu() {
 			var tqm = $('#tqm').val();
+			var num =  /^([1-9]+(\.[0-9]{2})?|0\.[1-9][0-9]|0\.0[1-9])$/;
+			var je = $('#je').val();
+			if(!num.test(je)){
+				$('#cwts').html("金额格式错误!");
+				return;
+			}
 			var code = $('#code').val();
 			$.post("../dzfp_sqj/tqyz", {
 				"tqm" : tqm,
-				"code" : code
+				"code" : code,
+				"je" :je
 			},
 					function(data) {
 						if (data.num == 1) {
@@ -59,6 +66,13 @@ background-attachment: fixed;" id="index">
 							mui.confirm(firm, title, btnArray, function(e) {
 
 							});
+						}else if(data.num ==7){
+							btnArray = [ '确定' ];
+							firm = "您提取的申请已提交,我们正在处理,请稍等!";
+							title = "提示";
+							mui.confirm(firm, title, btnArray, function(e) {
+
+							});
 						}
 					});
 		}
@@ -78,6 +92,10 @@ background-attachment: fixed;" id="index">
 		<form  style="margin-bottom: 50px;">
 			<div style="width: 90%;margin: 0 auto;">
 				<input type="text" id="tqm" class="mui-input-clear" style="box-shadow: 0px 0px 8px #FAFAFA;background-color: transparent;border: 1px solid rgba(0,0,0,-0.8);" placeholder="点击此输入发票提取码">
+			</div>
+			<p></p>
+			<div style="width: 90%;margin: 0 auto;">
+				<input type="text" id="je" class="mui-input-clear"  style="box-shadow: 0px 0px 8px #FAFAFA;background-color: transparent;border: 1px solid rgba(0,0,0,-0.8);" placeholder="点击此输入订单金额">
 			</div>
 			<p></p>
 			<div style="width: 90%;margin: 0 auto;">

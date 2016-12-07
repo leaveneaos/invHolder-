@@ -25,6 +25,7 @@ import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Skp;
 import com.rjxx.taxeasy.domains.Smtq;
 import com.rjxx.taxeasy.domains.Tqjl;
+import com.rjxx.taxeasy.domains.Tqmtq;
 import com.rjxx.taxeasy.domains.Xf;
 import com.rjxx.taxeasy.domains.Yh;
 import com.rjxx.taxeasy.service.CszbService;
@@ -36,6 +37,7 @@ import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.service.SkpService;
 import com.rjxx.taxeasy.service.SmtqService;
 import com.rjxx.taxeasy.service.TqjlService;
+import com.rjxx.taxeasy.service.TqmtqService;
 import com.rjxx.taxeasy.service.XfService;
 import com.rjxx.taxeasy.service.YhService;
 import com.rjxx.utils.MD5Util;
@@ -67,7 +69,8 @@ public class SmtqController extends BaseController {
 	private JyxxService jyxxservice;
 	@Autowired
 	private JyspmxService jyspmxService;
-
+	@Autowired
+	private TqmtqService tqmtqService;
 	@RequestMapping
 	@ResponseBody
 	public void index() throws Exception {
@@ -449,14 +452,16 @@ public class SmtqController extends BaseController {
 	// 校验提取码是否正确
 	@RequestMapping(value = "/tqyz")
 	@ResponseBody
-	public Map<String, Object> tqyz(String tqm, String code) {
+	public Map<String, Object> tqyz(String tqm, String code,String je) {
 		String sessionCode = (String) session.getAttribute("rand");
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (code != null && sessionCode != null && code.equals(sessionCode)) {
 			Map map = new HashMap<>();
 			map.put("tqm", tqm);
+			map.put("je", je);
 			map.put("gsdm", "sqj");
 			Jyxx jyxx = jyxxservice.findOneByParams(map);
+			Tqmtq tqmtq = tqmtqService.findOneByParams(map);
 			Jyls jyls = jylsService.findOne(map);
 			List<Kpls> list = jylsService.findByTqm(map);
 			if (list.size() > 0) {
@@ -486,11 +491,17 @@ public class SmtqController extends BaseController {
 				tqjlService.save(tqjl);
 			}else if (null!=jyls&&null!=jyls.getDjh()) {
 				result.put("num", "6");
+			}else if (null!=tqmtq&&null!=tqmtq.getId()) {
+				result.put("num", "7");
 			} else if (null != jyxx && null != jyxx.getId()) {
-				request.getSession().setAttribute("djh", jyxx.getOrderNo());
-				request.getSession().setAttribute("zje", jyxx.getPrice());
-				result.put("num", "5");
+				request.getSession().setAttribute("tqm", tqm);
+				request.getSession().setAttribute("je", je);
+				request.getSession().setAttribute("ppjg", "1");
+				result.put("num", "3");
 			} else {
+				request.getSession().setAttribute("tqm", tqm);
+				request.getSession().setAttribute("je", je);
+				request.getSession().setAttribute("ppjg", "0");
 				result.put("num", "3");
 			}
 		} else {
@@ -506,21 +517,41 @@ public class SmtqController extends BaseController {
 	public Map<String, Object> saveLs(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh,
 			String yx, String sj) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		String djh = String.valueOf(request.getSession().getAttribute("djh"));
-		if (null == djh || "".equals(djh)) {
+		String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+		if (null == tqm || "".equals(tqm)) {
 			result.put("msg", "1");
 			return result;
 		}
 		Map map = new HashMap<>();
-		map.put("tqm", djh);
+		map.put("tqm", tqm);
+		map.put("je", String.valueOf(request.getSession().getAttribute("je")));
 		map.put("gsdm", "sqj");
-		Jyxx jyxx = jyxxservice.findOneByParams(map);
+		Tqmtq tqmtq = tqmtqService.findOneByParams(map);
 		Jyls jyls1 = jylsService.findOne(map);
-		if (null!=jyls1&&null!=jyls1.getDjh()) {
+		if (null!=tqmtq&&null!=tqmtq.getId()) {
 			result.put("msg", "该单据号已提交过申请!");
 			return result;
 		}
-		Map map2 = new HashMap<>();
+		String ppjg = String.valueOf(request.getSession().getAttribute("ppjg"));
+		if ("1".equals(ppjg)) {
+			Smtq smtq = new Smtq();
+		}else{
+			Tqmtq tqmtq1 = new Tqmtq();
+			tqmtq1.setDdh(tqm);
+			tqmtq1.setLrsj(new Date());
+			tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
+			tqmtq1.setGfmc(fptt);
+			tqmtq1.setNsrsbh(nsrsbh);
+			tqmtq1.setDz(dz);
+			tqmtq1.setDh(dh);
+			tqmtq1.setKhh(khh);
+			tqmtq1.setKhhzh(khhzh);
+			tqmtq1.setFpzt("0");
+			tqmtq1.setYxbz("1");
+			tqmtq1.setGsdm("sqj");
+			tqmtqService.save(tqmtq1);
+		}
+/*		Map map2 = new HashMap<>();
 		map2.put("gsdm", "sqj");
 		map2.put("kpddm", jyxx.getStoreNo());
 		Skp skp = skpService.findOneByParams(map2);
@@ -540,13 +571,13 @@ public class SmtqController extends BaseController {
 				jyls.setGfemail(yx);
 				jyls.setGfdz(dz);
 				String tqm = jyxx.getOrderNo();
-				/*
+				
 				 * if (StringUtils.isNotBlank(tqm)) { Map params2 = new
 				 * HashMap<>(); params2.put("gsdm", "sqj"); params2.put("tqm",
 				 * tqm); Jyls tmp = jylsService.findByTqm(params2); if (tmp !=
 				 * null) { result.put("failure", true); result.put("xx",
 				 * "离线开票失败,提取码已经存在"); return result; } }
-				 */
+				 
 				jyls.setTqm(tqm);
 				jyls.setJylsh("SQJ" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
 				jyls.setJshj(jyxx.getPrice());
@@ -606,7 +637,7 @@ public class SmtqController extends BaseController {
 			
 		}else{
 			result.put("msg", "未查询到门店号!");
-		}
+		}*/
 		return result;
 	}
 }
