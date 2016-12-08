@@ -59,7 +59,10 @@
 							loadimage();
 						}else if(data.num == 5){
 							window.location.href = "../tijiao.html?time="+new Date();
-						}else if(data.num ==6){
+						}else if(data.num == 9){
+							$('#cwts').html("您输入的订单号或者金额有误!");
+							loadimage();
+						else if(data.num ==6){
 							btnArray = [ '确定' ];
 							firm = "您提取的申请已提交,我们正在处理,请稍等!";
 							title = "提示";

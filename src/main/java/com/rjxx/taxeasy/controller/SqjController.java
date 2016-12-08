@@ -434,6 +434,7 @@ public class SqjController extends BaseController {
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             Map map = new HashMap<>();
             map.put("tqm", tqm);
+            Jyxx jyxxtq = jyxxservice.findOneByParams(map);
             map.put("je", je);
             map.put("gsdm", "sqj");
             Jyxx jyxx = jyxxservice.findOneByParams(map);
@@ -469,6 +470,8 @@ public class SqjController extends BaseController {
                 result.put("num", "6");
             } else if (null != tqmtq && null != tqmtq.getId()) {
                 result.put("num", "7");
+            } else if (null != jyxxtq && null == jyxx) {
+                result.put("num", "9");
             } else if (null != jyxx && null != jyxx.getId()) {
                 request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute("je", je);
