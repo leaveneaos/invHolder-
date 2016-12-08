@@ -411,7 +411,7 @@ public class SmtqController extends BaseController {
 
     // 食其家 采用提取码提取方式
     // 跳转到sqj提取码提取页面
-    @RequestMapping(value = "/tqmtq")
+    @RequestMapping(value = "/sqj")
     @ResponseBody
     public void tqmtq() throws Exception {
         response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
@@ -419,7 +419,7 @@ public class SmtqController extends BaseController {
 
     // 食其家 寿司采用提取码提取方式
     // 跳转到sqj提取码提取页面
-    @RequestMapping(value = "/tqmsstq")
+    @RequestMapping(value = "/ss")
     @ResponseBody
     public void tqmsstq() throws Exception {
         response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());

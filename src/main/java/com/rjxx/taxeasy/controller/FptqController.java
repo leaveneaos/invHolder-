@@ -7,7 +7,9 @@ import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.TqjlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -32,7 +34,15 @@ public class FptqController extends BaseController {
         return null;
         // return "redirect:/zydc.html";
     }
-
+    
+    @RequestMapping(value = "/{tqm}",method = RequestMethod.GET)
+    @ResponseBody
+    public String tqm(@PathVariable ("tqm")String tqm) throws IOException {
+        response.sendRedirect(request.getContextPath() + "/zydc.html?tqm="+tqm+"&_t=" + System.currentTimeMillis());
+        return null;
+        // return "redirect:/zydc.html";
+    }
+    
     @RequestMapping(value = "/zydc")
     @ResponseBody
     public Map Fptq(String tqm, String code) {
