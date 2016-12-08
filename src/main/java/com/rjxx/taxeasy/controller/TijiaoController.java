@@ -318,7 +318,8 @@ public class TijiaoController extends BaseController {
     public Map tjsession() {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("djh", request.getSession().getAttribute("djh"));
-        result.put("zje", request.getSession().getAttribute("zje"));
+        result.put("tqm", request.getSession().getAttribute("tqm"));
+        result.put("zje", request.getSession().getAttribute("je"));
         return result;
     }
 

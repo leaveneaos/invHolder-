@@ -254,7 +254,7 @@ public class SmtqController extends BaseController {
         smtq.setGsdm(gsxx.getGsdm());
         smtq.setLrsj(new Date());
         smtqService.save(smtq);
-        Cszb cszb = this.getCszb("sqj", null, null, "sflxkp");
+     /*   Cszb cszb = this.getCszb("sqj", null, null, "sflxkp");
         if (null != cszb && "是".equals(cszb.getCsz())) {
             Map map2 = new HashMap<>();
             map2.put("gsdm", "sqj");
@@ -276,14 +276,14 @@ public class SmtqController extends BaseController {
                     jyls.setGfemail(yx);
                     jyls.setGfdz(dz);
                     String tqm = (String) request.getSession().getAttribute("orderNo");
-                    /*
+                    
 					 * if (StringUtils.isNotBlank(tqm)) { Map params2 = new
 					 * HashMap<>(); params2.put("gsdm", "sqj");
 					 * params2.put("tqm", tqm); Jyls tmp =
 					 * jylsService.findByTqm(params2); if (tmp != null) {
 					 * result.put("failure", true); result.put("xx",
 					 * "离线开票失败,提取码已经存在"); return result; } }
-					 */
+					 
                     jyls.setTqm(tqm);
                     jyls.setJylsh("SQJ" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
                     jyls.setJshj(Double.parseDouble((String) request.getSession().getAttribute("price")));
@@ -347,7 +347,7 @@ public class SmtqController extends BaseController {
                 result.put("failure", true);
                 result.put("xx", "离线开票失败,无税控盘信息");
             }
-        }
+        }*/
         result.put("failure", false);
         result.put("msg", "2");
         return result;
@@ -471,14 +471,15 @@ public class SmtqController extends BaseController {
                 result.put("num", "7");
             } else if (null != jyxx && null != jyxx.getId()) {
                 request.getSession().setAttribute("tqm", tqm);
+                request.getSession().setAttribute("je", je);
                 request.getSession().setAttribute("jyxx", jyxx);
                 request.getSession().setAttribute("ppjg", "1");
-                result.put("num", "3");
+                result.put("num", "5");
             } else {
                 request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute("je", je);
                 request.getSession().setAttribute("ppjg", "0");
-                result.put("num", "3");
+                result.put("num", "5");
             }
         } else {
             result.put("num", "4");
