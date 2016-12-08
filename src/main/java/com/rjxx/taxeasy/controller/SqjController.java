@@ -146,7 +146,7 @@ public class SqjController extends BaseController {
             } else {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             request.getSession().setAttribute("msg", e.getMessage());
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
         }
