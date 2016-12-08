@@ -18,7 +18,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/dzfp_sqj")
-public class SmtqController extends BaseController {
+public class SqjController extends BaseController {
 
     @Autowired
     private GsxxService gsxxservice;
