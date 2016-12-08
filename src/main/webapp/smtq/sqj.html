@@ -57,6 +57,7 @@ background-attachment: fixed;" id="index">
 							});
 						} else if (data.num == 4) {
 							$('#cwts').html("验证码输入错误");
+							loadimage();
 						}else if(data.num == 5){
 							window.location.href = "../tijiao.html?time="+new Date();
 						}else if(data.num ==6){
