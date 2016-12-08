@@ -606,6 +606,7 @@ public class SqjController extends BaseController {
             tqmtq1.setYxbz("1");
             tqmtq1.setGsdm("sqj");
             tqmtqService.save(tqmtq1);
+        	result.put("msg", "1");
         }
 /*		Map map2 = new HashMap<>();
 		map2.put("gsdm", "sqj");
