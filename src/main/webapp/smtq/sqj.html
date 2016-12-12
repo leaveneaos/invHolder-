@@ -22,7 +22,7 @@ background-attachment: fixed;" id="index">
 		}
 		function tiqu() {
 			var tqm = $('#tqm').val();
-			var num =  /^\d*\.{0,1}\d{0,1}$/;
+			var num =  /^\d+(\.\d{2})?$/;
 			var je = $('#je').val();
 			if(!num.test(je)){
 				$('#cwts').html("金额格式错误!");
