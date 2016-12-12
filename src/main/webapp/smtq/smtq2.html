@@ -31,9 +31,9 @@
 					{},
 					function(data) {
 						if(null!=data){
-							var se = data.zje*0.06.toFixed(2);
-							$('#mxtb').append("<tr><td>餐饮</td><td>"+data.zje+"</td><td>6%</td><td>"+se+"</td></tr>")
-							$('#mxtb').append("<tr style='background-color: #A1A2A4;'><td colspan='4' >价税合计："+data.zje+"</td></tr>");					
+							var se =(data.zje - (data.zje/1.06).toFixed(2)).toFixed(2);
+							$('#mxtb').append("<tr><td>餐饮</td><td>"+data.zje+"</td><td>6%</td><td style='display:none;'>"+se+"</td></tr>")
+							$('#mxtb').append("<tr style='background-color: #A1A2A4;'><td colspan='4' >合计："+data.zje+"</td></tr>");					
 							}
 					})
 		})
@@ -159,7 +159,7 @@
 						<th>名称</th>
 						<th>金额</th>
 						<th>税率</th>
-						<th>税额</th>
+						<th style="display: none;">税额</th>
 					</tr>
 			<!-- 		<tr>
 						<td>餐饮</td>
