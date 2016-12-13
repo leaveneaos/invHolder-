@@ -205,9 +205,6 @@ function getJy() {
 						bool = true;
 					}
 					page = page + 1;
-				},
-				error : function(data) {
-					alert(data.errcode + data.errmsg);
 				}
 			});
 }
