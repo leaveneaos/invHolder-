@@ -150,6 +150,7 @@ function getJy() {
 						$("#all").children("li").remove();
 					}
 					if (data.fps && data.fps.length > 0) {
+						alert(data.fps.length);
 						bool = false;
 						for (var i = 0; i < data.fps.length; i++) {
 							var val = data.fps[i];

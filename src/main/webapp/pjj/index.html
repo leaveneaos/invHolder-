@@ -197,29 +197,26 @@
 					method : 'post',
 					success : function(data) {
 						if (data.success) {
-							alert('111111');
 							getJy();
 						}else{
-							alert('222222');
 							var urlinfo = window.location.href; //获取当前页面的url
-							var gsdm;
+							var gsdm1;
 							if (urlinfo.indexOf('code') > -1) {
 								var len = urlinfo.length;//获取url的长度
 								var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
 								var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
 								var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
-								gsdm = newsids[1];//得到参数值
+								gsdm1 = newsids[1];//得到参数值
 							}
 							$.ajax({
 								url : '../pjj/getGsxx',
 								data : {
-									"gsdm" : gsdm
+									"gsdm" : gsdm1
 								},
 								method : 'post',
 								success : function(data) {
 									appid = data.gsxx.wxappid;
 									secret = data.gsxx.wxsecret;
-									alert(appid+','+secret);
 									window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appid+"&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
 								}
 							});
