@@ -141,8 +141,12 @@ public class PjjController extends BaseController {
         for (FpjVo fpjVo : list) {
             kpls.setDjh(fpjVo.getDjh());
             kps = kplsService.findByDjh(kpls);
-            if (!kps.isEmpty()) {
-                fpjVo.setKprq(sdf.format(kps.get(0).getKprq()));
+            if (!kps.isEmpty() && kps.size() > 0) {
+            	Kpls kp = kps.get(0);
+            	if (kp.getKprq() != null) {
+            		fpjVo.setKprq(sdf.format(kp.getKprq()));
+				}
+                
             }
         }
         result.put("fps", list);

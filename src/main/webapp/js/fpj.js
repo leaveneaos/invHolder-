@@ -149,9 +149,7 @@ function getJy() {
 					if (page == 1) {
 						$("#all").children("li").remove();
 					}
-					alert('111111');
 					if (data.fps && data.fps.length > 0) {
-						alert(data.fps.length);
 						bool = false;
 						for (var i = 0; i < data.fps.length; i++) {
 							var val = data.fps[i];
@@ -199,13 +197,11 @@ function getJy() {
 							
 						}
 					} else if (!data.fps && page == 1) {
-						alert('222222');
 						bool = true;
 						mui.confirm("没有您要查询的发票", "提示", [ '是' ], function(e) {
 							
 						});
 					}else{
-						alert('333333');
 						bool = true;
 					}
 					page = page + 1;
