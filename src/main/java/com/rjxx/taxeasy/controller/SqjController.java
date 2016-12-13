@@ -559,7 +559,7 @@ public class SqjController extends BaseController {
 					Jyspmx jyspmx = new Jyspmx();
 					jyspmx.setSpmxxh(1);
 					jyspmx.setFphxz("0");
-					jyspmx.setSpmc("餐饮费");
+					jyspmx.setSpmc("餐费");
 					jyspmx.setSpdm("1010101070000000000");
 					jyspmx.setSpje(jyxx.getPrice());
 					jyspmx.setSpsl(0.06);
