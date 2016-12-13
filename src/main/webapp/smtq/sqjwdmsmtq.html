@@ -15,73 +15,21 @@
 </head>
 <body id="index">
 	<script type="text/javascript">
-		function loadimage() {
-			document.getElementById("randImage").src = "../image.jsp?"
-					+ Math.random();
-		}
-		function tiqu() {
-			var tqm = $('#tqm').val();
-			var num =  /^\d*\.{0,1}\d{0,1}$/;
-			var je = $('#je').val();
-			if(!num.test(je)){
-				$('#cwts').html("金额格式错误!");
-				return;
-			}
-			var code = $('#code').val();
-			$.post("../dzfp_sqj/tqyz", {
-				"tqm" : tqm,
-				"code" : code,
-				"je" :je
-			},
-					function(data) {
-						if (data.num == 1) {
-							if (data.clztdm == "00") {
-								window.location.href = "../tijiao.html?time="+new Date();
-							} else {
-								btnArray = [ '确定' ];
-								firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-								title = "提示";
-								mui.confirm(firm, title, btnArray, function(e) {
-
-								});
-							}
-						} else if (data.num == 2) {
-							window.location.href = "../fp.html?time="+new Date();
-						} else if (data.num == 3) {
-							btnArray = [ '确定' ];
-							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-							title = "提示";
-							mui.confirm(firm, title, btnArray, function(e) {
-
-							});
-						} else if (data.num == 4) {
-							$('#cwts').html("验证码输入错误");
-							loadimage();
-						}else if(data.num == 5){
-							window.location.href = "../tijiao.html?time="+new Date();
-						}else if(data.num == 9){
-							$('#cwts').html("您输入的订单号或者金额有误!");
-							loadimage();
-						}else if(data.num ==6){
-							btnArray = [ '确定' ];
-							firm = "您提取的申请已提交,我们正在处理,请稍等!";
-							title = "提示";
-							mui.confirm(firm, title, btnArray, function(e) {
-
-							});
-						}else if(data.num ==7){
-							btnArray = [ '确定' ];
-							firm = "您提取的申请已提交,我们正在处理,请稍等!";
-							title = "提示";
-							mui.confirm(firm, title, btnArray, function(e) {
-
-							});
-						}
-					});
-		}
-		function tiaozhuan() {
-			window.location.href = "../bangzhu.html?time="+new Date();
-		}
+	$(function() {
+		$
+		.post(
+				"../dzfp_sqj/getSmsj",
+				{},
+				function(data) {
+					$('#orderNo').html(data.orderNo);
+					$('#orderTime').html(data.orderTime);
+					$('#price').html(data.price);
+					$('#sn').html(data.sn);
+				})
+	})
+	function tk(){
+		window.location.href = "../dzfp_sqj/smtq2";
+	}
 	</script>
 	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
 		<div>
