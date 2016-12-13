@@ -67,6 +67,7 @@ public class SqjController extends BaseController {
 			if (null == gsxx) {
 				request.getSession().setAttribute("msg", "公司信息不正确!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				return;
 			}
 			dbs += "key=" + gsxx.getSecretKey();
 			String key1 = MD5Util.generatePassword(dbs);
@@ -74,22 +75,27 @@ public class SqjController extends BaseController {
 			if (!sign.equals(key1.toLowerCase())) {
 				request.getSession().setAttribute("msg", "秘钥不匹配!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				return;
 			}
 			if (null == orderNo || "".equals(orderNo)) {
 				request.getSession().setAttribute("msg", "未包含流水号!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				return;
 			}
 			if (null == sn || "".equals(sn)) {
 				request.getSession().setAttribute("msg", "未包含门店信息!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				return;
 			}
 			if (null == orderTime || "".equals(orderTime)) {
 				request.getSession().setAttribute("msg", "未包含流水时间!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				return;
 			}
 			if (null == price || "".equals(price)) {
 				request.getSession().setAttribute("msg", "未包含金额!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				return;
 			}
 			Map map2 = new HashMap<>();
 			map2.put("gsdm", "sqj");
@@ -101,10 +107,12 @@ public class SqjController extends BaseController {
 					request.getSession().setAttribute("msg", "未查询到销方!");
 					response.sendRedirect(
 							request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+					return;
 				}
 			} else {
 				request.getSession().setAttribute("msg", "未查询到门店号!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+				return;
 			}
 			request.getSession().setAttribute("orderNo", orderNo);
 			request.getSession().setAttribute("orderTime1", orderTime);
@@ -143,23 +151,28 @@ public class SqjController extends BaseController {
 					tqjl.setLlqxx(llqxx);
 					tqjlService.save(tqjl);
 					response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+					return;
 				}
 				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
+				return;
 			} else {
 				if (null != skp.getPid()) {
 					Pp pp = ppService.findOne(skp.getPid());
 					if (null != pp.getPpurl()) {
 						response.sendRedirect(
 								request.getContextPath() + pp.getPpurl() + "?_t" + System.currentTimeMillis());
+						return;
 					}
 				} else {
 					response.sendRedirect(
 							request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
+					return;
 				}
 			}
 		} catch (Exception e) {
 			request.getSession().setAttribute("msg", e.getMessage());
 			response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			return;
 		}
 
 	}
