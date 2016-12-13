@@ -34,7 +34,7 @@
 				
 			</div>
 			<div style="width: 96%;margin-left: 2%;">
-				<img src="images/fwh.jpg" alt="" style="width: 96%;height: 300px;float: left;margin-bottom: 20px;"/>
+				<img id="img" src="images/fwh.jpg" alt="" style="width: 96%;height: 300px;float: left;margin-bottom: 20px;"/>
 				<div style="width: 96%;text-align: center;color: #03A9F4;font-size: 5mm;">
 					<div>关注公众号，查看已收藏发票</div	>
 					<div>泰易发票夹，您身边的发票管家</div>
@@ -69,6 +69,16 @@
 	</script>-->
 	<script type="text/javascript">
 		$(function(){
+			$.ajax({
+				async : false,
+				url : 'pjj/getGs',
+				method : 'post',
+				success : function(data) {
+					if (data.success && "rjxx" != data.gsxx.gsdm) {
+						$('#img').src='images/'+data.gsxx.gsdm+'1.jpg';
+					} 
+				}
+			});
 			$('#grfpj').click(function(){
 				window.location.href='pjj/index.html?_t=' + new Date().getTime();
 			});

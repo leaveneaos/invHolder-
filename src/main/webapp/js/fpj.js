@@ -1,7 +1,9 @@
 var access_token// 两小时刷新一次,每天限制2000次
 var expires_in;
-var openid;
+var openid = null;
 var refresh_token;
+var appid;
+var secret;
 
 function init(){
 	$.ajax({
@@ -11,7 +13,18 @@ function init(){
 			if (data.success) {
 				getJy();
 			}else{
-				window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+				$.ajax({
+					url : '../pjj/getGsxx',
+					method : 'post',
+					success : function(data) {
+						appid = data.gsxx.wxappid;
+						secret = data.gsxx.wxsecret;
+						window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appid+"&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
+					},
+					error : function(data) {
+						alert(data.errcode + data.errmsg);
+					}
+				});
 			}
 		},
 		error : function(data) {
@@ -22,7 +35,19 @@ function init(){
 
 // 用户同意授权，获取code
 function getCode() {
-	window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx9abc729e2b4637ee&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
+	$.ajax({
+		url : 'pjj/getGsxx',
+		method : 'post',
+		success : function(data) {
+			appid = data.gsxx.wxappid;
+			secret = data.gsxx.wxsecret;
+			window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appid+"&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
+		},
+		error : function(data) {
+			alert(data.errcode + data.errmsg);
+		}
+	});
+	
 }
 // 通过code换取网页授权access_token
 function getToken(code) {
@@ -30,7 +55,7 @@ function getToken(code) {
 		async : false,
 		url : '../pjj/getToken',
 		data : {
-			"appid" : 'wx9abc729e2b4637ee',
+			"appid" : appid,
 			"apiurl" : 'https://api.weixin.qq.com/sns/oauth2/access_token',
 			"code" : code
 		},
@@ -56,7 +81,7 @@ function getRefresh() {
 		async : false,
 		url : '../pjj/getRefresh',
 		data : {
-			"appid" : 'wx9abc729e2b4637ee',
+			"appid" : appid,
 			"apiurl" : 'https://api.weixin.qq.com/sns/oauth2/refresh_token',
 			"grant_type" : 'refresh_token',
 			"refresh_token" : refresh_token

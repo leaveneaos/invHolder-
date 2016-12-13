@@ -76,6 +76,9 @@ public class PjjController extends BaseController {
     @Autowired
     private DataOperte dataOperte;
 
+    @Autowired
+    private GsxxService gsxxService;
+
     @Value("${emailHost}")
     private String emailHost;
     @Value("${emailUserName}")
@@ -864,6 +867,54 @@ public class PjjController extends BaseController {
     }
 
     /**
+     * 获取公司信息
+     * @return
+     */
+    @RequestMapping(value = "/getGsxx")
+    @ResponseBody
+    public Map getGsxx(String gsdm){
+        Map<String, Object> result = new HashMap<String, Object>();
+    	Integer djh = (Integer)session.getAttribute("djh");
+    	Map<String, Object> params = new HashMap<>();
+    	Gsxx gsxx;
+    	if (gsdm == null || "".equals(gsdm)) {
+    		if (djh == null) {
+				gsxx = new Gsxx();
+			}else{
+				params.put("djh", djh);
+	        	gsxx = gsxxService.findOneByDjh(params);
+			}
+        	
+		}else{
+			params.put("gsdm", gsdm);
+        	gsxx = gsxxService.findOneByParams(params);
+		}
+    	if (gsxx != null && (null == gsxx.getWxappid() || "".equals(gsxx.getWxappid()))) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+			gsxx.setGsdm("rjxx");
+		}
+        session.setAttribute("gsxx", gsxx);
+        result.put("gsxx", gsxx);
+        result.put("success", true);
+        return result;
+    }
+
+    /**
+     * 获取公司信息
+     * @return
+     */
+    @RequestMapping(value = "/getGs")
+    @ResponseBody
+    public Map getGs(){
+    	Map<String, Object> result = new HashMap<>();
+    	Gsxx gs = (Gsxx)session.getAttribute("gsxx");
+    	result.put("gsxx", gs);
+    	result.put("success", true);
+    	return result;
+    }
+
+    /**
      * 获取授权code
      *
      * @param apiUrl
@@ -891,8 +942,9 @@ public class PjjController extends BaseController {
     @ResponseBody
     public Map hqtk(String apiurl, String appid, String code) {
         Map<String, Object> result = new HashMap<String, Object>();
+        Gsxx gsxx = (Gsxx)session.getAttribute("gsxx");
         // 获取token
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret=" + SECRET
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret=" + gsxx.getWxsecret()
                 + "&code=" + code + "&grant_type=authorization_code";
         // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         HttpClient client = new DefaultHttpClient();
