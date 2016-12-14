@@ -513,7 +513,7 @@ public class SqjController extends BaseController {
 					jyls.setClztdm("03");
 					jyls.setDdh(jyxx.getOrderNo());
 					jyls.setGfsh(nsrsbh);
-
+					jyls.setGfsjh(sj);
 					jyls.setGfmc(fptt);
 					jyls.setGfyh(khh);
 					jyls.setGfyhzh(khhzh);
