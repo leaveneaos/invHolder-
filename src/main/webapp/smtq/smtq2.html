@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8">
-		<title>输入发票抬头</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<head>
+<meta charset="utf-8">
+<title>输入发票抬头</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-		<!--标准mui.css-->
-		<link rel="stylesheet" href="../css/mui.min.css">
-		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="../css/app.css" />
-		<script type="text/javascript" src="../js/jquery.min.js"></script>
-		<style>
-			h5 {
-				margin: 5px 7px;
-			}
-		</style>
-	</head>
+<!--标准mui.css-->
+<link rel="stylesheet" href="../css/mui.min.css">
+<!--App自定义的css-->
+<link rel="stylesheet" type="text/css" href="../css/app.css" />
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<style>
+h5 {
+	margin: 5px 7px;
+}
+</style>
+</head>
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">输入发票抬头</h1>
-		</header>
-		<script type="text/javascript">
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">输入发票抬头</h1>
+	</header>
+	<script type="text/javascript">
 		$(function() {
 			$.post("../dzfp_sqj/getZje",
 					{},
@@ -42,7 +43,7 @@
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			var fptt = $('#fptt').val();
 			var yx = $('#yx').val();
-			var sj = $('#sj').val();
+		//	var sj = $('#sj').val();
 			var firm;
 			var title;
 			if (null == fptt || "" == fptt) {
@@ -57,11 +58,6 @@
 				 var btnArray = [ '是' ];
 					firm = "邮箱格式不正确!";
 					title = "提示"
-			}
-			else if(null == sj || "" == sj){
-				var btnArray = [ '是' ];
-				firm = "请输入手机号!";
-				title = "提示"
 			}else {
 				firm = "发票抬头:" + fptt + ";";
 				var nsrsbh = $('#nsrsbh').val();
@@ -89,9 +85,6 @@
 				}
 				if (null != yx && "" != yx) {
 					firm += "邮箱:" + yx + "。";
-				}
-				if (null != sj && "" != sj) {
-					firm += "手机:" + sj + "。";
 				}
 				title = "信息确认"
 			}
@@ -122,46 +115,53 @@
 			})
 		}
 		</script>
-		<div class="mui-content">
-			<div class="mui-content-padded" style="margin: 5px;">
-				
-				
-				
-				<form class="mui-input-group">
-					
-					<div class="mui-input-row">
-						<label><font color="red">*</font>购方名称</label>
-						<input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
-					</div>
-					<div class="mui-input-row">
-						<label style="font-size: 16px;">纳税人识别号</label>
-						<input type="number" id="nsrsbh" class="mui-input-clear" maxlength="20" placeholder="请输入纳税人识别号">
-					</div>
-					<div class="mui-input-row">
-						<label>地址</label>
-						<input type="text" id="dz" class="mui-input-clear" maxlength="200" placeholder="请输入地址">
-					</div>
-					<div class="mui-input-row">
-						<label>电话</label>
-						<input type="text" id="dh" class="mui-input-clear" maxlength="50" placeholder="请输入电话">
-					</div>
-					<div class="mui-input-row">
-						<label>开户行</label>
-						<input type="text" id="khh" class="mui-input-clear" maxlength="100" placeholder="请输入开户行">
-					</div>
-					<div class="mui-input-row">
-						<label>开户行账号</label>
-						<input type="text" id="yhzh" class="mui-input-clear" maxlength="50" placeholder="请输入开户行账号">
-					</div>
-				</form>
- 				<table id="mxtb" border="1" id="tab" style="width: 98%; margin-left: 1%; border: solid 1px #DEDEE3; text-align: center;">
-					<tr style="background-color: #A1A2A4;">
-						<th>名称</th>
-						<th>金额</th>
-						<th>税率</th>
-						<th style="display: none;">税额</th>
-					</tr>
-			<!-- 		<tr>
+	<div class="mui-content">
+		<div class="mui-content-padded" style="margin: 5px;">
+
+
+
+			<form class="mui-input-group">
+
+				<div class="mui-input-row">
+					<label><font color="red">*</font>购方名称</label> <input type="text"
+						id="fptt" name="gfmc" maxlength="100" class="mui-input-clear"
+						placeholder="请输入购方名称">
+				</div>
+				<div class="mui-input-row">
+					<label style="font-size: 16px;">纳税人识别号</label> <input type="number"
+						id="nsrsbh" class="mui-input-clear" maxlength="20"
+						placeholder="请输入纳税人识别号">
+				</div>
+				<div class="mui-input-row">
+					<label>地址</label> <input type="text" id="dz"
+						class="mui-input-clear" maxlength="200" placeholder="请输入地址">
+				</div>
+				<div class="mui-input-row">
+					<label>电话</label> <input type="text" id="dh"
+						class="mui-input-clear" maxlength="50" placeholder="请输入电话">
+				</div>
+				<div class="mui-input-row">
+					<label>开户行</label> <input type="text" id="khh"
+						class="mui-input-clear" maxlength="100" placeholder="请输入开户行">
+				</div>
+				<div class="mui-input-row">
+					<label>开户行账号</label> <input type="text" id="yhzh"
+						class="mui-input-clear" maxlength="50" placeholder="请输入开户行账号">
+				</div>
+				<div class="mui-input-row">
+					<label><font color="red">*</font>邮箱地址</label> <input type="email"
+						id="yx" class="mui-input-clear" placeholder="电子发票开具完成后发送到此邮箱">
+				</div>
+			</form>
+			<table id="mxtb" border="1" id="tab"
+				style="width: 98%; margin-left: 1%; border: solid 1px #DEDEE3; text-align: center;">
+				<tr style="background-color: #A1A2A4;">
+					<th>名称</th>
+					<th>金额</th>
+					<th>税率</th>
+					<th style="display: none;">税额</th>
+				</tr>
+				<!-- 		<tr>
 						<td>餐饮</td>
 						<td>200.00</td>
 						<td>6%</td>
@@ -170,26 +170,25 @@
 					<tr style="background-color: #A1A2A4;">
 						<td colspan="4" >价税合计：300.00</td>
 					</tr> -->
-				</table>
-				<form class="mui-input-group">
-					
-					<div class="mui-input-row">
-						<label><font color="red">*</font>邮箱地址</label>
-						<input type="email" id="yx" class="mui-input-clear" placeholder="请填写真实的邮箱否则邮件无法发送">
-					</div>
-					<div class="mui-input-row">
-						<label style="font-size: 16px;"><font color="red">*</font>手机号码</label>
-						<input type="text" id="sj" class="mui-input-clear" placeholder="请填写真实的电话否则短信无法发送">
-					</div>
-				</form>
-			</div>
+			</table>
+			<form class="mui-input-group">
+
+				<!-- 					<div class="mui-input-row">
+						<label style="font-size: 16px;">手机号码</label>
+						<input type="text" id="sj" class="mui-input-clear" placeholder="">
+					</div> -->
+			</form>
 		</div>
-		<button id='confirmBtn' type="button" onclick="tk()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;">确 &nbsp;&nbsp;认</button>
-		<div id="info" style="margin-bottom: 80px;color: red;margin-left: 2%;"></div>
-			
-		
-		<script src="../js/mui.min.js"></script>
-		<script type="text/javascript" charset="utf-8">
+	</div>
+	<button id='confirmBtn' type="button" onclick="tk()"
+		class="mui-btn mui-btn-primary mui-btn-block"
+		style="width: 96%; margin-left: 2%;">确 &nbsp;&nbsp;认</button>
+	<div id="info"
+		style="margin-bottom: 80px; color: red; margin-left: 2%;"></div>
+
+
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" charset="utf-8">
 			//mui初始化
 			mui.init({
 				swipeBack: true //启用右滑关闭功能
@@ -202,13 +201,16 @@
 			}); */
 			
 		</script>
-	</body>
-<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;z-index: 99;">
+</body>
+<div
+	style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB; z-index: 99;">
 
-		<div style="max-width: 800px;margin: 0 auto;">
-			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
+	<div style="max-width: 800px; margin: 0 auto;">
+		<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+		<div style="width: 30%; float: right; text-align: right;">
+			<a href="../bangzhu.html">遇到问题?</a>
 		</div>
-		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>
+	<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+</div>
 </html>

@@ -1,70 +1,80 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>等待审核</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<head>
+<meta charset="utf-8">
+<title>等待审核</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<!--标准mui.css-->
+<link rel="stylesheet" href="../css/mui.min.css">
+<!--App自定义的css-->
+<link rel="stylesheet" type="text/css" href="../css/app.css" />
+<style>
+.title {
+	margin: 20px 15px 7px;
+	color: #6d6d72;
+	font-size: 15px;
+}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">等待审核</h1>
+	</header>
 
-		<!--标准mui.css-->
-		<link rel="stylesheet" href="../css/mui.min.css">
-		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
-		<style>
-			.title{
-				margin: 20px 15px 7px;
-				color: #6d6d72;
-				font-size: 15px;
-			}
-			
-		</style>
-	</head>
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">等待审核</h1>
-		</header>
-		<div class="mui-content">
-			
-			<div style="width: 96%;margin-left: 2%;">
-				<p></p>
-				<b>我们已经受理了您的重开申请，请耐心等待！</b>
-				<p></p>
-				<span>您可以通过以下途径获得电子发票:</span>
-				<p></p>
-				<span>审核通过后你可以通过以下途径获得电子发票</span>
-				<p></p>
-				<p><span style="font-size: 18px;font-weight: 600;color: #000000;">1:通过所留邮箱</span></p>
-				<p><span style="font-size: 18px;font-weight: 600;color: #000000;">2:关注我们的公众号</span></p>
-				<p><span style="font-size: 18px;font-weight: 600;color: #000000;">3:稍后再次扫描二维码</span></p>
-			</div>
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<a href="../smtq/xgyx.html" class="mui-navigate-right">
-						重新输入邮箱号
-					</a>
-				</li>
-				<li class="mui-table-view-cell">
-					<a href="ewm.html" class="mui-navigate-right">
-						公众号
-					</a>
-				</li>
-			</ul>
-		    
+	<div class="mui-content">
+
+		<div style="width: 96%; margin-left: 2%;">
+			<p></p>
+			<b>电子发票开票申请成功，请耐心等待！</b>
+			<p></p>
+			<span>审核通过后你可以通过以下途径获得电子发票</span>
+			<p></p>
+			<p>
+				<span style="font-size: 18px; font-weight: 600; color: #000000;">1:通过预留邮箱</span>
+			</p>
+			<p>
+				<span style="font-size: 18px; font-weight: 600; color: #000000;">2:再次扫描二维码</span>
+			</p>
+			<p id="lifpj">
+				<span id="fpj"
+					style="font-size: 18px; font-weight: 600; color: #000000;">3:关注我们的公众号</span>
+			</p>
 		</div>
-		<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;z-index: 99;">
-		<div style="max-width: 800px;margin: 0 auto;">
-			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
-		</div>
-		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell"><a href="../smtq/xgyx.html"
+				class="mui-navigate-right"> 重新输入邮箱号 </a></li>
+			<li class="mui-table-view-cell"><a href="ewm.html"
+				class="mui-navigate-right"> 公众号 </a></li>
+		</ul>
+
 	</div>
-	</body>
-	<script src="../js/mui.min.js"></script>
-	<script>
-		mui.init({
-			swipeBack:true //启用右滑关闭功能
-		});
-	</script>
+	<div
+		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB; z-index: 99;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a href="../bangzhu.html">遇到问题?</a>
+			</div>
+		</div>
+		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+	</div>
+</body>
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript">
+	var ua = navigator.userAgent.toLowerCase();
+	if (ua.match(/MicroMessenger/i) != "micromessenger") {
+		$('#lifpj').html("");
+	}
+</script>
+<script>
+	mui.init({
+		swipeBack : true
+	//启用右滑关闭功能
+	});
+</script>
 </html>

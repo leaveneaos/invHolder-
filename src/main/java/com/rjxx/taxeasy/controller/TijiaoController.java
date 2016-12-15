@@ -232,7 +232,7 @@ public class TijiaoController extends BaseController {
         sendmail.setTo(email);
 
         sendmail.setFrom(emailForm);
-        sendmail.setSubject(emailTitle);
+        sendmail.setSubject("电子发票");
         sendmail.setContent(getAFMailContent(ddh, pdfUrlList, gsdm));
         // TODO 这里需要根据邮件摸板内容进行调整。
 

@@ -502,7 +502,7 @@ public class SqjController extends BaseController {
 		Tqmtq tqmtq = tqmtqService.findOneByParams(map);
 		Jyls jyls1 = jylsService.findOne(map);
 		if (null != tqmtq && null != tqmtq.getId()) {
-			result.put("msg", "该单据号已提交过申请!");
+			result.put("msg", "该提取码已提交过申请!");
 			return result;
 		}
 		String ppjg = String.valueOf(request.getSession().getAttribute("ppjg"));
@@ -600,6 +600,7 @@ public class SqjController extends BaseController {
 			tqmtq1.setKhhzh(khhzh);
 			tqmtq1.setFpzt("0");
 			tqmtq1.setYxbz("1");
+			tqmtq1.setGfemail(yx);
 			tqmtq1.setGsdm("sqj");
 			tqmtqService.save(tqmtq1);
 			result.put("msg", "1");

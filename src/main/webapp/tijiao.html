@@ -16,50 +16,48 @@
 	<script type="text/javascript">
 		var djh;
 		$(function() {
-			$
-					.post(
-							"tijiao/tjsession",
-							{},
-							function(data) {
-								djh = data.tqm;
-								if (djh != null && djh != "") {
-									$("#tab").append("<tr><td>餐费</td><td>"+data.zje+"</td><td>6%</td></tr>")	
-				/* 										var mxList = data.mxList;
-														var zje = 0.00;
-														$
-																.each(
-																		mxList,
-																		function(
-																				n,
-																				value) {
-																			zje += value.jshj;
-																			$(
-																					"#tab")
-																					.append(
-																							"<tr><td>"
-																									+ value.spmc
-																									+ "</td><td>"
-																									+ value.jshj
-																											.toFixed(2)
-																									+ "</td><td>"
-																									+ value.spsl
-																									* 100
-																									+ "%"
-																									+ "</td></tr>")
-																		});
-														$("#tab")
-																.append(
-																		"<tr style='background-color: #DFE0E3;'><td colspan='3'>合计可开票金额<span style='color: #007AFF; font-weight: 900;'>"
-																				+ zje
-																						.toFixed(2)
-																				+ "</span>元</td></tr>"); */
-								}else{
-									window.location.href = "smtq/demo.html?time="+new Date();
-								}
-							})
+			$.post("tijiao/tjsession", {}, function(data) {
+				djh = data.tqm;
+				if (djh != null && djh != "") {
+					$("#tab").append(
+							"<tr><td>餐费</td><td>" + data.zje
+									+ "</td><td>6%</td></tr>")
+					/* 										var mxList = data.mxList;
+															var zje = 0.00;
+															$
+																	.each(
+																			mxList,
+																			function(
+																					n,
+																					value) {
+																				zje += value.jshj;
+																				$(
+																						"#tab")
+																						.append(
+																								"<tr><td>"
+																										+ value.spmc
+																										+ "</td><td>"
+																										+ value.jshj
+																												.toFixed(2)
+																										+ "</td><td>"
+																										+ value.spsl
+					 * 100
+																										+ "%"
+																										+ "</td></tr>")
+																			});
+															$("#tab")
+																	.append(
+																			"<tr style='background-color: #DFE0E3;'><td colspan='3'>合计可开票金额<span style='color: #007AFF; font-weight: 900;'>"
+																					+ zje
+																							.toFixed(2)
+																					+ "</span>元</td></tr>"); */
+				} else {
+					window.location.href = "smtq/demo.html?time=" + new Date();
+				}
+			})
 		});
 		function tiaozhuan() {
-			window.location.href = "bangzhu.html?time="+new Date();
+			window.location.href = "bangzhu.html?time=" + new Date();
 		}
 	</script>
 	<p></p>
@@ -67,9 +65,9 @@
 	<p></p>
 	<form class="mui-input-group" action="tijiao/fpxx" method="post">
 		<div class="mui-input-row">
-			<label><font color="red">*</font>发票抬头</label> <input type="text" class="mui-input-clear"
-				required="required" maxlength="50" name="fptt" id="fptt"
-				placeholder="请输入发票抬头（必填）">
+			<label><font color="red">*</font>发票抬头</label> <input type="text"
+				class="mui-input-clear" required="required" maxlength="50"
+				name="fptt" id="fptt" placeholder="请输入发票抬头（必填）">
 		</div>
 		<div class="mui-input-row">
 			<label>纳税人识别号</label> <input type="text" class="mui-input-clear"
@@ -90,6 +88,10 @@
 		<div class="mui-input-row">
 			<label>银行账号</label> <input type="text" class="mui-input-clear"
 				id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
+		</div>
+		<div class="mui-input-row">
+			<label><font color="red">*</font>邮箱地址</label> <input type="email"
+				id="yx" class="mui-input-clear" placeholder="电子发票开具完成后发送到此邮箱">
 		</div>
 	</form>
 	<p></p>
@@ -122,11 +124,16 @@
 		function tk() {
 			var info = document.getElementById("info");
 			var fptt = $('#fptt').val();
+			var yx = $('#yx').val();
 			var firm;
 			var title;
 			if (null == fptt || "" == fptt) {
 				var btnArray = [ '是' ];
 				firm = "请输入发票抬头!";
+				title = "提示"
+			}else if (null == yx || "" == yx) {
+				var btnArray = [ '是' ];
+				firm = "请输入邮箱!";
 				title = "提示"
 			} else {
 				firm = "发票抬头:" + fptt + ";";
@@ -135,6 +142,7 @@
 				var dh = $('#dh').val();
 				var khh = $('#khh').val();
 				var yhzh = $('#yhzh').val();
+			
 				var btnArray = [ '否', '是' ];
 				if (null != nsrsbh && "" != nsrsbh) {
 					firm += "纳税人识别号:" + nsrsbh + ";";
@@ -151,37 +159,58 @@
 				if (null != yhzh && "" != yhzh) {
 					firm += "银行账号:" + yhzh + "。";
 				}
+				if (null != yx && "" != yx) {
+					firm += "邮箱:" + yx + "。";
+				}
 				title = "信息确认"
 			}
-			mui.confirm(firm, title, btnArray, function(e) {
-				if (e.index == 1) {
-	 				$("#confirmBtn").attr({"disabled":"disabled"});
-					$.post("dzfp_sqj/saveLs", {
-						"fptt" : fptt,
-						"nsrsbh" : nsrsbh,
-						"dz" : dz,
-						"dh" : dh,
-						"khh" : khh,
-						"yhzh" : yhzh,
-						"djh" : djh
-					}, function(data) {
-						if (data.msg==1) {
-							info.innerText = '正在处理您的请求,请等待片刻,或者稍好再次提取!';
-							fpzt();
-						}else{
-							btnArray = [ '确定' ];
-							firm = data.msg;
-							title = "提示";
-							mui.confirm(firm, title, btnArray, function(e) {
+			mui
+					.confirm(
+							firm,
+							title,
+							btnArray,
+							function(e) {
+								if (e.index == 1) {
+									$("#confirmBtn").attr({
+										"disabled" : "disabled"
+									});
+									$
+											.post(
+													"dzfp_sqj/saveLs",
+													{
+														"fptt" : fptt,
+														"nsrsbh" : nsrsbh,
+														"dz" : dz,
+														"dh" : dh,
+														"khh" : khh,
+														"yhzh" : yhzh,
+														"djh" : djh,
+														"yx" : yx
+													},
+													function(data) {
+														if (data.msg == 1) {
+															info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
+															fpzt();
+														} else {
+															btnArray = [ '确定' ];
+															firm = data.msg;
+															title = "提示";
+															mui
+																	.confirm(
+																			firm,
+																			title,
+																			btnArray,
+																			function(
+																					e) {
 
-							});
-						}
-					}); 
+																			});
+														}
+													});
 
-				} else {
-					info.innerText = '请重新确认';
-				}
-			})
+								} else {
+									info.innerText = '请重新确认';
+								}
+							})
 		}
 
 		/* 		document.getElementById("confirmBtn").addEventListener(
@@ -190,13 +219,13 @@
 		
 		 }); */
 
- 		function fpzt() {
+		function fpzt() {
 			$.post("tijiao/fpzt", {
 				"djh" : djh
 			}, function(data) {
 				if (data.msg) {
 					window.location.href = "dzfp_sqj/fp";
-				}else{
+				} else {
 					setTimeout("fpzt()", 3000);
 				}
 			});
