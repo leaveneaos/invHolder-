@@ -83,4 +83,43 @@ public class RjxxController extends BaseController {
         return result;
     }
 
+    @RequestMapping(value = "/getFp")
+    @ResponseBody
+    public void getFp(Integer djh) throws IOException{
+        Map<String, Object> result = new HashMap<String, Object>();
+        Kpls kpls = new Kpls();
+        kpls.setDjh(djh);
+        List<Kpls> list = kplsService.findByDjh(kpls);
+        if (list.size() > 0) {
+            String pdfdzs = "";
+            request.getSession().setAttribute("djh", list.get(0).getDjh());
+            for (Kpls kpls2 : list) {
+                pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+            }
+            if (pdfdzs.length() > 0) {
+                result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+            }
+            result.put("num", "2");
+            Tqjl tqjl = new Tqjl();
+            tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+            tqjl.setJlly("1");
+            tqjl.setTqsj(new Date());
+            String visiterIP;
+            if (request.getHeader("x-forwarded-for") == null) {
+                visiterIP = request.getRemoteAddr();// 访问者IP
+            } else {
+                visiterIP = request.getHeader("x-forwarded-for");
+            }
+            tqjl.setIp(visiterIP);
+            String llqxx = request.getHeader("User-Agent");
+            tqjl.setLlqxx(llqxx);
+            tqjlService.save(tqjl);
+        } else {
+            result.put("num", "3");
+        }
+        response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+       
+    }
+
 }

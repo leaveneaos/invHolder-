@@ -3,6 +3,7 @@ package com.rjxx.taxeasy.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.comm.mybatis.Pagination;
 import com.rjxx.taxeasy.bizcomm.utils.DataOperte;
+import com.rjxx.taxeasy.bizcomm.utils.WxUtil;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
@@ -79,6 +80,9 @@ public class PjjController extends BaseController {
     @Autowired
     private GsxxService gsxxService;
 
+    @Autowired
+    private WxUtil wxUtil;
+
     @Value("${emailHost}")
     private String emailHost;
     @Value("${emailUserName}")
@@ -94,6 +98,16 @@ public class PjjController extends BaseController {
     @ResponseBody
     public void index() throws IOException {
         response.sendRedirect(request.getContextPath() + "/pjj/index.html?_t=" + System.currentTimeMillis());
+    }
+
+    @RequestMapping(value = "/sendMessage")
+    @ResponseBody
+    public Map sendMessage(){
+    	Map<String, Object> result = new HashMap<>();
+    	String msg = wxUtil.sendMessage("os2OFs_D2zIcHKHqAJT0AKuYwaq4", "上海百旺测试盘", "王敏", "电子发票", 20000.00, "2016年11月11日", 16096);
+    	result.put("msg", msg);
+    	
+    	return result;
     }
 
     /**
