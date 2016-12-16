@@ -56,10 +56,18 @@
 							success : function(data) {
 								appid = data.gsxx.wxappid;
 								secret = data.gsxx.wxsecret;
-								window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
-										+ appid
-										+ "&redirect_uri=http://fpj.datarj.com/smtq/sqjwdmsmtq.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
-							}
+												var url = window.location.href;
+												if (url
+														.indexOf("fpjtest.datarj") > 0) {
+													window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+															+ appid
+															+ "&redirect_uri=http://fpjtest.datarj.com/smtq/sqjwdmsmtq.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+												} else {
+													window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+															+ appid
+															+ "&redirect_uri=http://fpj.datarj.com/smtq/sqjwdmsmtq.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+												}
+											}
 						});
 			} else {
 				window.location.href = "../dzfp_sqj/smtq2";
