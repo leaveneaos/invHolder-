@@ -43,29 +43,38 @@
 				}
 			}
 			var ua = navigator.userAgent.toLowerCase();
-			if (openid == null
-					&& ua.match(/MicroMessenger/i) == "micromessenger") {
+			if (ua.match(/MicroMessenger/i) == "micromessenger") {
 				$
 						.ajax({
-							url : '../pjj/getGsxx',
-							data : {
-								"gsdm" : "wljqr"
-							},
+							url : 'pjj/getOpenid',
 							method : 'post',
 							success : function(data) {
-								appid = data.gsxx.wxappid;
-								secret = data.gsxx.wxsecret;
-								var url = window.location.href;
-								if (url.indexOf("fpjtest.datarj") > 0) {
-									window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
-									+ appid
-									+ "&redirect_uri=http://fpjtest.datarj.com/wljqr.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
-								}else{
-									window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
-									+ appid
-									+ "&redirect_uri=http://fpj.datarj.com/wljqr.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
-								}
-						}
+								if (!data.success) {
+									$
+											.ajax({
+												url : 'pjj/getGsxx',
+												data : {
+													"gsdm" : "wljqr"
+												},
+												method : 'post',
+												success : function(data) {
+													appid = data.gsxx.wxappid;
+													secret = data.gsxx.wxsecret;
+													var url = window.location.href;
+													if (url
+															.indexOf("fpjtest.datarj") > 0) {
+														window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+																+ appid
+																+ "&redirect_uri=http://fpjtest.datarj.com/wljqr.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+													} else {
+														window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+																+ appid
+																+ "&redirect_uri=http://fpj.datarj.com/wljqr.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+													}
+												}
+											});
+		}
+							}
 						});
 			}
 		});
