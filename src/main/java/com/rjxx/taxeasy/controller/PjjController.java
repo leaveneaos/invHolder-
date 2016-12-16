@@ -153,20 +153,31 @@ public class PjjController extends BaseController {
         List<FpjVo> list = fpjService.findByPage(pagination);
         List<Kpls> kps = null;
         Kpls kpls = new Kpls();
+        List<FpjVo> deleteList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         for (FpjVo fpjVo : list) {
         	DecimalFormat d1 =new DecimalFormat("#,##0.00");    	
         	fpjVo.setJshj1("￥"+d1.format(fpjVo.getJshj()));
             kpls.setDjh(fpjVo.getDjh());
             kps = kplsService.findByDjh(kpls);
+            boolean flag = false;
             if (!kps.isEmpty() && kps.size() > 0) {
+            	for (Kpls kp : kps) {
+					if (!kp.getFpztdm().equals("00")) {
+						flag = true;
+						break;
+					}
+				}
                 Kpls kp = kps.get(0);
                 if (kp.getKprq() != null) {
                     fpjVo.setKprq(sdf.format(kp.getKprq()));
                 }
-
+                if (flag) {
+					deleteList.add(fpjVo);
+				}
             }
         }
+        list.removeAll(deleteList);
         result.put("fps", list);
         return result;
     }
