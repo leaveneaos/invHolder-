@@ -117,7 +117,7 @@ public class PjjController extends BaseController {
      */
     @RequestMapping(value = "/getKhjy")
     @ResponseBody
-    public Map getKhjy(String gsdm, Integer rows, Integer page) {
+    public Map getKhjy(String gsdm, Integer rows, Integer page,String yf) {
         Map<String, Object> result = new HashMap<>();
         Pagination pagination = new Pagination<>();
         if (rows == null) {
@@ -148,6 +148,7 @@ public class PjjController extends BaseController {
 //		}
         pagination.addParam("unionid", openid);
         pagination.addParam("gsdm", gsdmList);
+        pagination.addParam("yf", yf);
         List<FpjVo> list = fpjService.findByPage(pagination);
         List<Kpls> kps = null;
         Kpls kpls = new Kpls();

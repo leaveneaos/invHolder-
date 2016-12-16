@@ -142,7 +142,8 @@ function getJy() {
 					
 					"rows" : 10,
 					"page" : page,
-					"gsdm" : gsdm
+				//	"gsdm" : gsdm,
+					"yf" : yf
 		
 				},
 				success : function(data) {
