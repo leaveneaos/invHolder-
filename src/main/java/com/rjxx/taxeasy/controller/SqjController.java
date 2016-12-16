@@ -221,6 +221,7 @@ public class SqjController extends BaseController {
 		result.put("orderTime", request.getSession().getAttribute("orderTime"));
 		result.put("price", request.getSession().getAttribute("price"));
 		result.put("sn", request.getSession().getAttribute("sn"));
+		String llqxx = request.getHeader("User-Agent");
 		return result;
 	}
 
