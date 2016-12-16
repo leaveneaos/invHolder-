@@ -47,6 +47,9 @@ public class SqjController extends BaseController {
 	@Autowired
 	private PpService ppService;
 
+    @Autowired
+    private FpjService fpjService;
+
 	@RequestMapping
 	@ResponseBody
 	public void index() throws Exception {
@@ -191,7 +194,8 @@ public class SqjController extends BaseController {
 
 	@RequestMapping(value = "/smtq2")
 	@ResponseBody
-	public void smtq2() throws IOException {
+	public void smtq2(String openid) throws IOException {
+		session.setAttribute("openid", openid);
 		response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
 	}
 
@@ -222,6 +226,11 @@ public class SqjController extends BaseController {
 		result.put("price", request.getSession().getAttribute("price"));
 		result.put("sn", request.getSession().getAttribute("sn"));
 		String llqxx = request.getHeader("User-Agent");
+		if (llqxx.contains("MicroMessenger")) {
+			result.put("isWx", true);
+		}else{
+			result.put("isWx", false);
+		}
 		return result;
 	}
 
@@ -245,6 +254,7 @@ public class SqjController extends BaseController {
 			throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		String ddh = (String) request.getSession().getAttribute("orderNo");
+		String openid = (String)session.getAttribute("openid");
 		if ("".equals(ddh)) {
 			result.put("msg", "1");
 			return result;
@@ -277,6 +287,9 @@ public class SqjController extends BaseController {
 		smtq.setFpzt("07");
 		smtq.setYxbz("1");
 		smtq.setGsdm(gsxx.getGsdm());
+		if (openid != null) {
+			smtq.setOpenid(openid);
+		}
 		smtq.setLrsj(new Date());
 		smtqService.save(smtq);
 		/*
@@ -367,6 +380,14 @@ public class SqjController extends BaseController {
 		return result;
 	}
 
+	@RequestMapping(value = "/saveOpenid")
+	@ResponseBody
+	public Map saveOpenid(String openid) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		session.setAttribute("openid", openid);
+		return result;
+	}
+
 	public Cszb getCszb(String gsdm, Integer xfid, Integer kpdid, String csm) {
 		Map params = new HashMap<>();
 		params.put("gsdm", gsdm);
@@ -424,6 +445,7 @@ public class SqjController extends BaseController {
 	@ResponseBody
 	public Map<String, Object> tqyz(String tqm, String code, String je) {
 		String sessionCode = (String) session.getAttribute("rand");
+		String openid = (String)session.getAttribute("openid");
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (code != null && sessionCode != null && code.equals(sessionCode)) {
 			Map map = new HashMap<>();
@@ -492,6 +514,7 @@ public class SqjController extends BaseController {
 			String yx, String sj) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+		String openid = String.valueOf(request.getSession().getAttribute("openid"));
 		if (null == tqm || "".equals(tqm)) {
 			result.put("msg", "1");
 			return result;
@@ -577,6 +600,15 @@ public class SqjController extends BaseController {
 					jyspmx.setGsdm("sqj");
 					jyspmx.setSkpid(skp.getId());
 					jylsService.save(jyls);
+					if (openid != null) {
+						Fpj fpj = new Fpj();
+						fpj.setDjh(jyls.getDjh());
+						fpj.setUnionid(openid);
+						fpj.setYxbz("1");
+						fpj.setLrsj(new Date());
+						fpj.setXgsj(new Date());
+						fpjService.save(fpj);
+					}
 					jyspmx.setDjh(jyls.getDjh());
 					jyspmx.setJshj(jyxx.getPrice());
 					jyspmxService.save(jyspmx);
@@ -603,6 +635,9 @@ public class SqjController extends BaseController {
 			tqmtq1.setYxbz("1");
 			tqmtq1.setGfemail(yx);
 			tqmtq1.setGsdm("sqj");
+			if (openid != null) {
+				tqmtq1.setOpenid(openid);
+			}
 			tqmtqService.save(tqmtq1);
 			result.put("msg", "1");
 		}

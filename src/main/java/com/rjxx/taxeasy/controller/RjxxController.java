@@ -1,8 +1,10 @@
 package com.rjxx.taxeasy.controller;
 
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.domains.Fpj;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Tqjl;
+import com.rjxx.taxeasy.service.FpjService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.JyspmxService;
 import com.rjxx.taxeasy.service.KplsService;
@@ -30,6 +32,8 @@ public class RjxxController extends BaseController {
     private JyspmxService jyspmxService;
     @Autowired
     private TqjlService tqjlService;
+    @Autowired
+    private FpjService fpjService;
 
     @RequestMapping
     @ResponseBody
@@ -43,6 +47,7 @@ public class RjxxController extends BaseController {
     @ResponseBody
     public Map Fptq(String tqm, String code) {
         String sessionCode = (String) session.getAttribute("rand");
+        String openid = (String)session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             Map map = new HashMap<>();
@@ -59,6 +64,15 @@ public class RjxxController extends BaseController {
                     result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
                     request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
                 }
+                if (openid != null) {
+                	Fpj fpj = new Fpj();
+					fpj.setDjh(list.get(0).getDjh());
+					fpj.setUnionid(openid);
+					fpj.setYxbz("1");
+					fpj.setLrsj(new Date());
+					fpj.setXgsj(new Date());
+					fpjService.save(fpj);
+				}
                 result.put("num", "2");
                 Tqjl tqjl = new Tqjl();
                 tqjl.setDjh(String.valueOf(list.get(0).getDjh()));

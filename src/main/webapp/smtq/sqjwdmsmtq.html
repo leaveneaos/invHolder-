@@ -8,6 +8,7 @@
 <script src="../js/mui.min.js"></script>
 <link href="../css/mui.min.css" rel="stylesheet" />
 <script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/fpj.js"></script>
 <script type="text/javascript" charset="utf-8">
 	mui.init();
 </script>
@@ -16,20 +17,54 @@
 <body id="index">
 	<script type="text/javascript">
 	$(function() {
-		$
-		.post(
-				"../dzfp_sqj/getSmsj",
-				{},
-				function(data) {
-					$('#orderNo').html(data.orderNo);
-					$('#orderTime').html(data.orderTime);
-					$('#price').html(data.price);
-					$('#sn').html(data.sn);
-				})
-	})
-	function tk(){
-		window.location.href = "../dzfp_sqj/smtq2";
-	}
+			var urlinfo = window.location.href; //获取当前页面的url
+			if (urlinfo.indexOf('code') > -1) {
+				var len = urlinfo.length;//获取url的长度
+				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+				var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+				var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+				var code = newsids[1];//得到参数值
+				if (code != "rjxx") {
+					getToken(code);
+					if (openid != null) {
+						window.location.href = "../dzfp_sqj/smtq2?openid="
+								+ openid;
+					}
+				} else {
+					alert('未得到授权');
+					return;
+				}
+			}
+			$.post("../dzfp_sqj/getSmsj", {}, function(data) {
+				$('#orderNo').html(data.orderNo);
+				$('#orderTime').html(data.orderTime);
+				$('#price').html(data.price);
+				$('#sn').html(data.sn);
+			})
+		})
+		function tk() {
+			var ua = navigator.userAgent.toLowerCase();
+			if (ua.match(/MicroMessenger/i) == "micromessenger") {
+
+				$
+						.ajax({
+							url : '../pjj/getGsxx',
+							data : {
+								"gsdm" : "sqj"
+							},
+							method : 'post',
+							success : function(data) {
+								appid = data.gsxx.wxappid;
+								secret = data.gsxx.wxsecret;
+								window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+										+ appid
+										+ "&redirect_uri=http://fpj.datarj.com/smtq/sqjwdmsmtq.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+							}
+						});
+			} else {
+				window.location.href = "../dzfp_sqj/smtq2";
+			}
+		}
 	</script>
 	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
 		<div>

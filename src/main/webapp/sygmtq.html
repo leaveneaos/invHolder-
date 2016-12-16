@@ -8,12 +8,67 @@
 <script src="js/mui.min.js"></script>
 <link href="css/mui.min.css" rel="stylesheet" />
 <script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/fpj.js"></script>
 <script type="text/javascript" charset="utf-8">
 	mui.init();
 </script>
 </head>
 <body style="font-family: 微软雅黑;" id="index">
 	<script type="text/javascript">
+		$(function() {
+			var urlinfo = window.location.href; //获取当前页面的url
+			if (urlinfo.indexOf('code') > -1) {
+				var len = urlinfo.length;//获取url的长度
+				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+				var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+				var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+				var code = newsids[1];//得到参数值
+				if (code != "rjxx") {
+					getToken(code);
+					if (openid != null) {
+						$.ajax({
+							url : '../dzfp_sqj/saveOpenid',
+							data : {
+								"openid" : openid
+							},
+							method : 'post',
+							success : function(data) {
+
+							}
+						});
+					}
+				} else {
+					alert('未得到授权');
+					return;
+				}
+			}
+			var ua = navigator.userAgent.toLowerCase();
+			if (openid == null
+					&& ua.match(/MicroMessenger/i) == "micromessenger") {
+				$
+						.ajax({
+							url : '../pjj/getGsxx',
+							data : {
+								"gsdm" : "sygm"
+							},
+							method : 'post',
+							success : function(data) {
+								appid = data.gsxx.wxappid;
+								secret = data.gsxx.wxsecret;
+								var url = window.location.href;
+								if (url.indexOf("fpjtest.datarj") > 0) {
+									window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+									+ appid
+									+ "&redirect_uri=http://fpjtest.datarj.com/sygm.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+								}else{
+									window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+									+ appid
+									+ "&redirect_uri=http://fpj.datarj.com/smtq/sygm.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+								}
+						}
+						});
+			}
+		});
 		$(function() {
 			var url = window.location.href;
 			if (url.indexOf("tqm") != -1) {

@@ -1,79 +1,118 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8">
-		<title>信息确认</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<head>
+<meta charset="utf-8">
+<title>信息确认</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-		<!--标准mui.css-->
-		<link rel="stylesheet" href="../css/mui.min.css">
-		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
-		<style>
-			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
-		        margin-top: 0;
-		    }
-		    .mui-table h4{
-		        line-height: 21px;
-		        font-weight: 500;
-		    }
-		
-		    .mui-table .oa-icon{
-		        position: absolute;
-		        right:0;
-		        bottom: 0;
-		    }
-		    .mui-table .oa-icon-star-filled{
-		        color:#f14e41;
-		    }
-		</style>
-	</head>
+<!--标准mui.css-->
+<link rel="stylesheet" href="../css/mui.min.css">
+<!--App自定义的css-->
+<link rel="stylesheet" type="text/css" href="../css/app.css" />
+<style>
+.mui-table h4, .mui-table h5, .mui-table .mui-h5, .mui-table .mui-h6,
+	.mui-table p {
+	margin-top: 0;
+}
 
-	<body style="font-family: 微软雅黑;background-image: url(../images/2016-11-25_143009.png); background-repeat:no-repeat ;background-size:100% 100%; 
-background-attachment: fixed;">
+.mui-table h4 {
+	line-height: 21px;
+	font-weight: 500;
+}
+
+.mui-table .oa-icon {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+.mui-table .oa-icon-star-filled {
+	color: #f14e41;
+}
+</style>
+</head>
+
+<body
+	style="font-family: 微软雅黑; background-image: url(../images/2016-11-25_143009.png); background-repeat: no-repeat; background-size: 100% 100%; background-attachment: fixed;">
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/fpj.js"></script>
 	<script type="text/javascript">
-	$(function() {
-		$
-		.post(
-				"../dzfp_sqj/getSmsj",
-				{},
-				function(data) {
-					$('#orderNo').html(data.orderNo);
-					$('#orderTime').html(data.orderTime);
-					$('#price').html(data.price);
-					$('#sn').html(data.sn);
-				})
-	})
-	function tk(){
-		window.location.href = "../dzfp_sqj/smtq2";
-	}
+		$(function() {
+			var urlinfo = window.location.href; //获取当前页面的url
+			if (urlinfo.indexOf('code') > -1) {
+				var len = urlinfo.length;//获取url的长度
+				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+				var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+				var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+				var code = newsids[1];//得到参数值
+				if (code != "rjxx") {
+					getToken(code);
+					if (openid != null) {
+						window.location.href = "../dzfp_sqj/smtq2?openid="
+								+ openid;
+					}
+				} else {
+					alert('未得到授权');
+					return;
+				}
+			}
+			$.post("../dzfp_sqj/getSmsj", {}, function(data) {
+				$('#orderNo').html(data.orderNo);
+				$('#orderTime').html(data.orderTime);
+				$('#price').html(data.price);
+				$('#sn').html(data.sn);
+			})
+		})
+		function tk() {
+			var ua = navigator.userAgent.toLowerCase();
+			if (ua.match(/MicroMessenger/i) == "micromessenger") {
+
+				$
+						.ajax({
+							url : '../pjj/getGsxx',
+							data : {
+								"gsdm" : "sqj"
+							},
+							method : 'post',
+							success : function(data) {
+								appid = data.gsxx.wxappid;
+								secret = data.gsxx.wxsecret;
+								window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+										+ appid
+										+ "&redirect_uri=http://fpj.datarj.com/smtq/smtq1.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+							}
+						});
+			} else {
+				window.location.href = "../dzfp_sqj/smtq2";
+			}
+		}
 	</script>
-		<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
+	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
 		<div>
 			<img src="../images/sqj1.png" alt="" style="width: 100%;" />
 		</div>
-		<div style="width: 96%;margin: 0 auto;">
-			<div style="width: 100%;margin-bottom: 15px;">
+		<div style="width: 96%; margin: 0 auto;">
+			<div style="width: 100%; margin-bottom: 15px;">
 				<h4 class="mui-ellipsis" style="color: #D1AC38;">订单号</h4>
-		        <h5 id="orderNo" style="color: #FFFFFF;"></h5>
+				<h5 id="orderNo" style="color: #FFFFFF;"></h5>
 			</div>
-			<div style="width: 100%;margin-bottom: 15px;">
+			<div style="width: 100%; margin-bottom: 15px;">
 				<h4 class="mui-ellipsis" style="color: #D1AC38;">门店编号</h4>
-		        <h5 id="sn" style="color: #FFFFFF;"></h5>
+				<h5 id="sn" style="color: #FFFFFF;"></h5>
 			</div>
-			<div style="width: 100%;margin-bottom: 15px;">
+			<div style="width: 100%; margin-bottom: 15px;">
 				<h4 class="mui-ellipsis" style="color: #D1AC38;">交易日期</h4>
-		        <h5 id="orderTime" style="color: #FFFFFF;"></h5>
+				<h5 id="orderTime" style="color: #FFFFFF;"></h5>
 			</div>
-			<div style="width: 100%;margin-bottom: 15px;">
+			<div style="width: 100%; margin-bottom: 15px;">
 				<h4 class="mui-ellipsis" style="color: #D1AC38;">订单金额</h4>
-		        <h5 id="price" style="color: #FFFFFF;"></h5>
+				<h5 id="price" style="color: #FFFFFF;"></h5>
 			</div>
-		    <!--<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+			<!--<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
@@ -115,14 +154,19 @@ background-attachment: fixed;">
 		        
 		    </ul>-->
 		</div>
-		<button id='confirmBtn' type="button" onclick="tk()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;margin-top: 15px;">确认</button>
-		</div>
-	</body>
-	<div style="position:fixed;bottom:0;width: 100%;z-index: 99;color: #EEEEEE;">
-		<div style="max-width: 800px;margin: 0 auto;">
-			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
-		</div>
-		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+		<button id='confirmBtn' type="button" onclick="tk()"
+			class="mui-btn mui-btn-primary mui-btn-block"
+			style="width: 96%; margin-left: 2%; margin-top: 15px;">确认</button>
 	</div>
+</body>
+<div
+	style="position: fixed; bottom: 0; width: 100%; z-index: 99; color: #EEEEEE;">
+	<div style="max-width: 800px; margin: 0 auto;">
+		<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+		<div style="width: 30%; float: right; text-align: right;">
+			<a href="../bangzhu.html">遇到问题?</a>
+		</div>
+	</div>
+	<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+</div>
 </html>

@@ -8,12 +8,68 @@
 <script src="js/mui.min.js"></script>
 <link href="css/mui.min.css" rel="stylesheet" />
 <script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/fpj.js"></script>
 <script type="text/javascript" charset="utf-8">
 	mui.init();
 </script>
 </head>
 <body style="font-family: 微软雅黑;" id="index">
 	<script type="text/javascript">
+		$(function() {
+			var urlinfo = window.location.href; //获取当前页面的url
+			if (urlinfo.indexOf('code') > -1) {
+				var len = urlinfo.length;//获取url的长度
+				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+				var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+				var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+				var code = newsids[1];//得到参数值
+				if (code != "rjxx") {
+					getToken(code);
+					if (openid != null) {
+						$.ajax({
+							url : '../dzfp_sqj/saveOpenid',
+							data : {
+								"openid" : openid
+							},
+							method : 'post',
+							success : function(data) {
+
+							}
+						});
+					}
+				} else {
+					alert('未得到授权');
+					return;
+				}
+			}
+			var ua = navigator.userAgent.toLowerCase();
+			if (openid == null
+					&& ua.match(/MicroMessenger/i) != "micromessenger") {
+				$
+						.ajax({
+							url : '../pjj/getGsxx',
+							data : {
+								"gsdm" : "rjxx"
+							},
+							method : 'post',
+							success : function(data) {
+								appid = data.gsxx.wxappid;
+								secret = data.gsxx.wxsecret;
+								var url = window.location.href;
+								if (url.indexOf("fpjtest.datarj") > 0) {
+									window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+									+ appid
+									+ "&redirect_uri=http://fpjtest.datarj.com/rjxx.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+								}else{
+									window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+									+ appid
+									+ "&redirect_uri=http://fpj.datarj.com/rjxx.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+								}
+						}
+						});
+			}
+		});
+
 		function loadimage() {
 			document.getElementById("randImage").src = "image.jsp?"
 					+ Math.random();
@@ -21,45 +77,53 @@
 		function tiqu() {
 			var tqm = $('#tqm').val();
 			var code = $('#code').val();
-			$.post("dzfp/rjxx/zydc", {
-				"tqm" : tqm,
-				"code" : code
-			},
-					function(data) {
-						if (data.num == 1) {
-							if (data.clztdm == "00") {
-								window.location.href = "tijiao.html?time="+new Date();
-							} else {
-								btnArray = [ '确定' ];
-								firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-								title = "提示";
-								mui.confirm(firm, title, btnArray, function(e) {
+			$
+					.post(
+							"dzfp/rjxx/zydc",
+							{
+								"tqm" : tqm,
+								"code" : code
+							},
+							function(data) {
+								if (data.num == 1) {
+									if (data.clztdm == "00") {
+										window.location.href = "tijiao.html?time="
+												+ new Date();
+									} else {
+										btnArray = [ '确定' ];
+										firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
+										title = "提示";
+										mui.confirm(firm, title, btnArray,
+												function(e) {
 
-								});
-							}
-						} else if (data.num == 2) {
-							window.location.href = "fp.html?time="+new Date();
-						} else if (data.num == 3) {
-							btnArray = [ '确定' ];
-							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-							title = "提示";
-							mui.confirm(firm, title, btnArray, function(e) {
+												});
+									}
+								} else if (data.num == 2) {
+									window.location.href = "fp.html?time="
+											+ new Date();
+								} else if (data.num == 3) {
+									btnArray = [ '确定' ];
+									firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
+									title = "提示";
+									mui.confirm(firm, title, btnArray,
+											function(e) {
 
+											});
+								} else if (data.num == 4) {
+									$('#cwts').html("验证码输入错误");
+								} else if (data.num == 5) {
+									btnArray = [ '确定' ];
+									firm = data.msg;
+									title = "提示";
+									mui.confirm(firm, title, btnArray,
+											function(e) {
+
+											});
+								}
 							});
-						} else if (data.num == 4) {
-							$('#cwts').html("验证码输入错误");
-						}else if(data.num == 5){
-							btnArray = [ '确定' ];
-							firm = data.msg;
-							title = "提示";
-							mui.confirm(firm, title, btnArray, function(e) {
-
-							});
-						}
-					});
 		}
 		function tiaozhuan() {
-			window.location.href = "bangzhu.html?time="+new Date();
+			window.location.href = "bangzhu.html?time=" + new Date();
 		}
 	</script>
 	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
@@ -103,7 +167,9 @@
 		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
 		<div style="max-width: 800px; margin: 0 auto;">
 			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%; float: right; text-align: right;"><a href="bangzhu.html">遇到问题?</a></div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a href="bangzhu.html">遇到问题?</a>
+			</div>
 		</div>
 		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
 	</div>

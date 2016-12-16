@@ -255,6 +255,8 @@ p img {
 				class="mui-navigate-right"> 发送到邮箱 </a></li>
 			<li class="mui-table-view-cell" id="lifpj"><a id="fpj"
 				class="mui-navigate-right"> 收藏到发票夹 </a></li>
+			<li class="mui-table-view-cell" id="msg"><a id="fpj"
+				class="mui-navigate-right"> 发送 </a></li>
 		</ul>
 		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
 		<!--<a id="you" href="#"><button type="button"
@@ -362,6 +364,16 @@ p img {
 			});
 			$('#abc').click(function() {
 				window.location.href = "bangzhu.html?time=" + new Date();
+			});
+			$('#msg').click(function() {
+				$.ajax({
+				url : 'pjj/sendMessage',
+				data : {},
+				type : 'post',
+				success : function(data) {
+					alert(data.msg);
+				}
+			});
 			});
 
 			$('#fpj').click(function() {
