@@ -41,14 +41,17 @@ function getCode() {
 		success : function(data) {
 			appid = data.gsxx.wxappid;
 			secret = data.gsxx.wxsecret;
-			var url;
-			var ul = window.location.href;
-			if (ul.indexOf('fpjtest.datarj')) {
-				url = 'fpjtest.datarj';
-			}else{
-				url = 'fpj.datarj';
+			var url = window.location.href;
+			if (url.indexOf("fpjtest.datarj") > 0) {
+				window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+						+ appid
+						+ "&redirect_uri=http://fpjtest.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+			} else {
+				window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+						+ appid
+						+ "&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
 			}
-			window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appid+"&redirect_uri=http://"+url+".com/fp.html&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
+
 		},
 		error : function(data) {
 			alert(data.errcode + data.errmsg);
