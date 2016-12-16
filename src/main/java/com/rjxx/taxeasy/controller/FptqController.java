@@ -68,7 +68,7 @@ public class FptqController extends BaseController {
                     result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
                     request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
                 }
-                if (openid != null) {
+                if (openid != null && !openid.equals("null")) {
                 	Fpj fpj = new Fpj();
 					fpj.setDjh(list.get(0).getDjh());
 					fpj.setUnionid(openid);

@@ -287,7 +287,7 @@ public class SqjController extends BaseController {
 		smtq.setFpzt("07");
 		smtq.setYxbz("1");
 		smtq.setGsdm(gsxx.getGsdm());
-		if (openid != null) {
+		if (openid != null && !openid.equals("null")) {
 			smtq.setOpenid(openid);
 		}
 		smtq.setLrsj(new Date());
@@ -600,7 +600,7 @@ public class SqjController extends BaseController {
 					jyspmx.setGsdm("sqj");
 					jyspmx.setSkpid(skp.getId());
 					jylsService.save(jyls);
-					if (openid != null) {
+					if (openid != null && !openid.equals("null")) {
 						Fpj fpj = new Fpj();
 						fpj.setDjh(jyls.getDjh());
 						fpj.setUnionid(openid);
@@ -635,7 +635,7 @@ public class SqjController extends BaseController {
 			tqmtq1.setYxbz("1");
 			tqmtq1.setGfemail(yx);
 			tqmtq1.setGsdm("sqj");
-			if (openid != null) {
+			if (openid != null && !openid.equals("null")) {
 				tqmtq1.setOpenid(openid);
 			}
 			tqmtqService.save(tqmtq1);
