@@ -41,7 +41,14 @@ function getCode() {
 		success : function(data) {
 			appid = data.gsxx.wxappid;
 			secret = data.gsxx.wxsecret;
-			window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appid+"&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
+			var url;
+			var ul = window.location.href;
+			if (ul.indexOf('fpjtest.datarj')) {
+				url = 'fpjtest.datarj';
+			}else{
+				url = 'fpj.datarj';
+			}
+			window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+appid+"&redirect_uri=http://"+url+".com/fp.html&response_type=code&scope=snsapi_userinfo&state=rjxx#wechat_redirect";
 		},
 		error : function(data) {
 			alert(data.errcode + data.errmsg);
@@ -142,7 +149,8 @@ function getJy() {
 					
 					"rows" : 10,
 					"page" : page,
-					"gsdm" : gsdm
+				//	"gsdm" : gsdm,
+				//	"yf" : yf
 		
 				},
 				success : function(data) {

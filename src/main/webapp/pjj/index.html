@@ -40,9 +40,9 @@
 	<div class="mui-content">
 		<div style="padding: 10px 10px;">
 			<div id="segmentedControl" class="mui-segmented-control">
-				<a id="all1" class="mui-control-item mui-active" href="#item1"> 全部发票 </a> 
-<!-- 				<a id="house" class="mui-control-item" href="#item1"> 房地产 </a>
-				<a id="food" class="mui-control-item" href="#item1"> 餐饮 </a>  -->
+				<a id="all1" class="mui-control-item mui-active" href="#item1" style="width: 30%" > 全部 </a> 
+<!--  				<a id="house" class="mui-control-item" href="#item1"> 三月内</a>
+				<a id="food" class="mui-control-item" href="#item1"> 三月外 </a>   -->
 			</div>
 		</div>
 		<div>
@@ -252,19 +252,22 @@
 			});
 			$("#all1").on('tap', function (event) {
 				page = 1;
-				gsdm = null;
+			//	gsdm = null;
+				yf= '1';
 				getJy();
 				mui('#div1').pullRefresh().refresh(true);
 			});
 			$("#food").on('tap', function (event) {
 				page = 1;
-				gsdm = "sqj";
+			//	gsdm = "sqj";
+				yf= '2';
 				getJy();
 				mui('#div1').pullRefresh().refresh(true);
 			});
 			$("#house").on('tap', function (event) {
 				page = 1;
-				gsdm = "zydc";
+				//gsdm = "zydc";
+				yf= '3';
 				getJy();
 				mui('#div1').pullRefresh().refresh(true);
 			});
