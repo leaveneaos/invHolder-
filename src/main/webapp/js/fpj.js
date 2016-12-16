@@ -185,11 +185,11 @@ function getJy() {
 							var str = '<li class="mui-table-view-cell mui-media">'+
 							'<a class="mui-navigate-right" value="'+ val.djh+'">'
 								+ ' <img class="mui-media-object mui-pull-left" '
-								+ 'src="../images/'+val.gsdm+'.png">'
-								+'<div class="mui-media-body" style="font-size: 15px;">发票抬头：'
+								+ 'src="../images/'+val.logo+'.png">'
+								+'<div class="mui-media-body" style="font-size: 15px; margin-left:90px">发票抬头：'
 								+ val.gfmc
 								+ '<p class="mui-ellipsis">开票金额：'
-								+ val.jshj
+								+ val.jshj1
 								+ '元</p><p class="mui-ellipsis">开票时间：'
 								+ val.kprq
 								+ '</p><p class="mui-ellipsis">发票状态：'

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.mail.SendFailedException;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -154,6 +155,8 @@ public class PjjController extends BaseController {
         Kpls kpls = new Kpls();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         for (FpjVo fpjVo : list) {
+        	DecimalFormat d1 =new DecimalFormat("#,##0.00");    	
+        	fpjVo.setJshj1("￥"+d1.format(fpjVo.getJshj()));
             kpls.setDjh(fpjVo.getDjh());
             kps = kplsService.findByDjh(kpls);
             if (!kps.isEmpty() && kps.size() > 0) {
