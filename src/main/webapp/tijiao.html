@@ -190,7 +190,8 @@
 													function(data) {
 														if (data.msg == 1) {
 															info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
-															fpzt();
+															//fpzt();
+															window.location.href = "tishi2.html?time=" + new Date();
 														} else {
 															btnArray = [ '确定' ];
 															firm = data.msg;
@@ -219,7 +220,7 @@
 		
 		 }); */
 
-		function fpzt() {
+/* 		function fpzt() {
 			$.post("tijiao/fpzt", {
 				"djh" : djh
 			}, function(data) {
@@ -229,7 +230,7 @@
 					setTimeout("fpzt()", 3000);
 				}
 			});
-		}
+		} */
 	</script>
 </body>
 </html>
