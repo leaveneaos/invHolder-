@@ -102,12 +102,12 @@ public class PjjController extends BaseController {
 
     @RequestMapping(value = "/sendMessage")
     @ResponseBody
-    public Map sendMessage(){
-    	Map<String, Object> result = new HashMap<>();
-    	String msg = wxUtil.sendMessage("os2OFs_D2zIcHKHqAJT0AKuYwaq4", "上海百旺测试盘", "王敏", "电子发票", 20000.00, "2016年11月11日", 16096);
-    	result.put("msg", msg);
-    	
-    	return result;
+    public Map sendMessage() {
+        Map<String, Object> result = new HashMap<>();
+        String msg = wxUtil.sendMessage("os2OFs_D2zIcHKHqAJT0AKuYwaq4", "上海百旺测试盘", "王敏", "电子发票", 20000.00, "2016年11月11日", 16096);
+        result.put("msg", msg);
+
+        return result;
     }
 
     /**
@@ -117,7 +117,7 @@ public class PjjController extends BaseController {
      */
     @RequestMapping(value = "/getKhjy")
     @ResponseBody
-    public Map getKhjy(String gsdm, Integer rows, Integer page,String yf) {
+    public Map getKhjy(String gsdm, Integer rows, Integer page, String yf) {
         Map<String, Object> result = new HashMap<>();
         Pagination pagination = new Pagination<>();
         if (rows == null) {
@@ -157,11 +157,11 @@ public class PjjController extends BaseController {
             kpls.setDjh(fpjVo.getDjh());
             kps = kplsService.findByDjh(kpls);
             if (!kps.isEmpty() && kps.size() > 0) {
-            	Kpls kp = kps.get(0);
-            	if (kp.getKprq() != null) {
-            		fpjVo.setKprq(sdf.format(kp.getKprq()));
-				}
-                
+                Kpls kp = kps.get(0);
+                if (kp.getKprq() != null) {
+                    fpjVo.setKprq(sdf.format(kp.getKprq()));
+                }
+
             }
         }
         result.put("fps", list);
@@ -887,32 +887,33 @@ public class PjjController extends BaseController {
 
     /**
      * 获取公司信息
+     *
      * @return
      */
     @RequestMapping(value = "/getGsxx")
     @ResponseBody
-    public Map getGsxx(String gsdm){
+    public Map getGsxx(String gsdm) {
         Map<String, Object> result = new HashMap<String, Object>();
-    	Integer djh = (Integer)session.getAttribute("djh");
-    	Map<String, Object> params = new HashMap<>();
-    	Gsxx gsxx;
-    	if (gsdm == null || "".equals(gsdm)) {
-    		if (djh == null) {
-				gsxx = new Gsxx();
-			}else{
-				params.put("djh", djh);
-	        	gsxx = gsxxService.findOneByDjh(params);
-			}
-        	
-		}else{
-			params.put("gsdm", gsdm);
-        	gsxx = gsxxService.findOneByParams(params);
-		}
-    	if (gsxx != null && (null == gsxx.getWxappid() || "".equals(gsxx.getWxappid()))) {
-			gsxx.setWxappid(APP_ID);
-			gsxx.setWxsecret(SECRET);
-			gsxx.setGsdm("rjxx");
-		}
+        Integer djh = (Integer) session.getAttribute("djh");
+        Map<String, Object> params = new HashMap<>();
+        Gsxx gsxx;
+        if (gsdm == null || "".equals(gsdm)) {
+            if (djh == null) {
+                gsxx = new Gsxx();
+            } else {
+                params.put("djh", djh);
+                gsxx = gsxxService.findOneByDjh(params);
+            }
+
+        } else {
+            params.put("gsdm", gsdm);
+            gsxx = gsxxService.findOneByParams(params);
+        }
+        if (gsxx != null && (null == gsxx.getWxappid() || "".equals(gsxx.getWxappid()))) {
+            gsxx.setWxappid(APP_ID);
+            gsxx.setWxsecret(SECRET);
+            gsxx.setGsdm("rjxx");
+        }
         session.setAttribute("gsxx", gsxx);
         result.put("gsxx", gsxx);
         result.put("success", true);
@@ -921,16 +922,17 @@ public class PjjController extends BaseController {
 
     /**
      * 获取公司信息
+     *
      * @return
      */
     @RequestMapping(value = "/getGs")
     @ResponseBody
-    public Map getGs(){
-    	Map<String, Object> result = new HashMap<>();
-    	Gsxx gs = (Gsxx)session.getAttribute("gsxx");
-    	result.put("gsxx", gs);
-    	result.put("success", true);
-    	return result;
+    public Map getGs() {
+        Map<String, Object> result = new HashMap<>();
+        Gsxx gs = (Gsxx) session.getAttribute("gsxx");
+        result.put("gsxx", gs);
+        result.put("success", true);
+        return result;
     }
 
     /**
@@ -961,7 +963,7 @@ public class PjjController extends BaseController {
     @ResponseBody
     public Map hqtk(String apiurl, String appid, String code) {
         Map<String, Object> result = new HashMap<String, Object>();
-        Gsxx gsxx = (Gsxx)session.getAttribute("gsxx");
+        Gsxx gsxx = (Gsxx) session.getAttribute("gsxx");
         // 获取token
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret=" + gsxx.getWxsecret()
                 + "&code=" + code + "&grant_type=authorization_code";
