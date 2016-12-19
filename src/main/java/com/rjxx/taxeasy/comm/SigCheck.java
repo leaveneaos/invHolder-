@@ -23,7 +23,7 @@ public class SigCheck {
 	public static String SHA1(String str) {
         try {
             MessageDigest digest = java.security.MessageDigest
-                    .getInstance("SHA-1"); //如果是SHA加密只需要将"SHA-1"改成"SHA"即可
+                    .getInstance("SHA1"); //如果是SHA加密只需要将"SHA-1"改成"SHA"即可
             digest.update(str.getBytes());
             byte messageDigest[] = digest.digest();
             // Create Hex String
