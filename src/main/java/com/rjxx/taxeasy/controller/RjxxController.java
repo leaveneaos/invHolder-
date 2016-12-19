@@ -141,7 +141,7 @@ public class RjxxController extends BaseController {
 
 	@RequestMapping(value = "/token")
 	@ResponseBody
-	public void getMsg() {
+	public String getMsg() {
 		String sign = request.getParameter("signature");
 		String times = request.getParameter("timestamp");
 		String nonce = request.getParameter("nonce");
@@ -150,9 +150,12 @@ public class RjxxController extends BaseController {
 				&& StringUtils.isBlank(echo)) {
 			String result = SigCheck.valid(sign, times, nonce, echo);
 			if (result.equals(echo)) {
-				logger.error(result);
+				logger.error("isSuccess:"+result);
 			}
+			return result;
 		}
+		
+		return null;
 	}
 
 }
