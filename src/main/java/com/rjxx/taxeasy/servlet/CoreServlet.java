@@ -35,7 +35,7 @@ public class CoreServlet extends HttpServlet {
 	        out.close();  
 	        out = null;  
 	        
-	        response.sendRedirect("tishi1.html");
+	        request.getRequestDispatcher("/tishi2").forward(request, response);
 	    }  
 	  
 	    /** 

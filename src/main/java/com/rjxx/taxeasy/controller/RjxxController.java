@@ -146,15 +146,10 @@ public class RjxxController extends BaseController {
 		String times = request.getParameter("timestamp");
 		String nonce = request.getParameter("nonce");
 		String echo = request.getParameter("echostr");
-		if (!StringUtils.isBlank(sign) && !StringUtils.isBlank(times) && !StringUtils.isBlank(nonce)
-				&& !StringUtils.isBlank(echo)) {
-			if (SigCheck.checkSignature(sign, times, nonce)) {
-				logger.error("isSuccess:"+echo);
-			}
-			return "tishi2";
+		if (SigCheck.checkSignature(sign, times, nonce)) {
+			logger.error("isSuccess:" + echo);
 		}
-		
-		return "tishi1";
+		return "tishi2";
 	}
 
 }
