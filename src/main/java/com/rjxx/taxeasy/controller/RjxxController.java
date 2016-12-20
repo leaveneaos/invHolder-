@@ -147,6 +147,7 @@ public class RjxxController extends BaseController {
 		String nonce = request.getParameter("nonce");
 		String echo = request.getParameter("echostr");
 		if (SigCheck.checkSignature(sign, times, nonce)) {
+			
 			logger.error("isSuccess:" + echo);
 		}
 		return "tishi2";

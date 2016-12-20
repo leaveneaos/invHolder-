@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.LoggerFactory;
+
 import com.rjxx.taxeasy.comm.SigCheck;
 
 public class CoreServlet extends HttpServlet {
@@ -30,12 +32,11 @@ public class CoreServlet extends HttpServlet {
 	        PrintWriter out = response.getWriter();  
 	        // 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败  
 	        if (SigCheck.checkSignature(signature, timestamp, nonce)) {  
-	            out.print(echostr);  
+	            response.getOutputStream().print(request.getParameter("echostr"));
+	            LoggerFactory.getLogger(this.getClass()).error("isSuccess:" + echostr);
 	        }  
 	        out.close();  
 	        out = null;  
-	        
-	        request.getRequestDispatcher("/tishi2").forward(request, response);
 	    }  
 	  
 	    /** 
