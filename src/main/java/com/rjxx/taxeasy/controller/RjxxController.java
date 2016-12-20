@@ -152,10 +152,10 @@ public class RjxxController extends BaseController {
 			if (result.equals(echo)) {
 				logger.error("isSuccess:"+result);
 			}
-			return result;
+			return "tishi2";
 		}
 		
-		return null;
+		return "tishi1";
 	}
 
 }
