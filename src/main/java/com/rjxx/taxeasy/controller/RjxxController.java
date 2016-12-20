@@ -148,9 +148,8 @@ public class RjxxController extends BaseController {
 		String echo = request.getParameter("echostr");
 		if (StringUtils.isBlank(sign) && StringUtils.isBlank(times) && StringUtils.isBlank(nonce)
 				&& StringUtils.isBlank(echo)) {
-			String result = SigCheck.valid(sign, times, nonce, echo);
-			if (result.equals(echo)) {
-				logger.error("isSuccess:"+result);
+			if (SigCheck.checkSignature(sign, times, nonce)) {
+				logger.error("isSuccess:"+echo);
 			}
 			return "tishi2";
 		}
