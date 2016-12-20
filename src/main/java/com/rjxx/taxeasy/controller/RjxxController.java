@@ -141,7 +141,7 @@ public class RjxxController extends BaseController {
 
 	@RequestMapping(value = "/token")
 	@ResponseBody
-	public String getMsg() throws IOException {
+	public void getMsg() throws IOException {
 		String sign = request.getParameter("signature");
 		String times = request.getParameter("timestamp");
 		String nonce = request.getParameter("nonce");
@@ -150,7 +150,6 @@ public class RjxxController extends BaseController {
 			response.getOutputStream().print(request.getParameter("echostr"));
 			logger.error("isSuccess:" + echo);
 		}
-		return "tishi2";
 	}
 
 }
