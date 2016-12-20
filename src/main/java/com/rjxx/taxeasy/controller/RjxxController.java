@@ -141,13 +141,13 @@ public class RjxxController extends BaseController {
 
 	@RequestMapping(value = "/token")
 	@ResponseBody
-	public String getMsg() {
+	public String getMsg() throws IOException {
 		String sign = request.getParameter("signature");
 		String times = request.getParameter("timestamp");
 		String nonce = request.getParameter("nonce");
 		String echo = request.getParameter("echostr");
 		if (SigCheck.checkSignature(sign, times, nonce)) {
-			
+			response.getOutputStream().print(request.getParameter("echostr"));
 			logger.error("isSuccess:" + echo);
 		}
 		return "tishi2";
