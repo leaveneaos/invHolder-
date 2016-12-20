@@ -105,7 +105,7 @@ public class PjjController extends BaseController {
     @ResponseBody
     public Map sendMessage() {
         Map<String, Object> result = new HashMap<>();
-        String msg = wxUtil.sendMessage("os2OFs_D2zIcHKHqAJT0AKuYwaq4", "上海百旺测试盘", "王敏", "电子发票", 20000.00, "2016年11月11日", 16096);
+        String msg = wxUtil.sendMessage("os2OFs_D2zIcHKHqAJT0AKuYwaq4", "上海百旺测试盘", "林静霞", "电子发票", 2100.00, "2016年12月12日", 16104);
         result.put("msg", msg);
 
         return result;
