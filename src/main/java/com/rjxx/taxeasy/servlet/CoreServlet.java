@@ -34,6 +34,8 @@ public class CoreServlet extends HttpServlet {
 	        }  
 	        out.close();  
 	        out = null;  
+	        
+	        response.sendRedirect("tishi1.html");
 	    }  
 	  
 	    /** 
