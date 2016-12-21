@@ -706,13 +706,14 @@ public class PjjController extends BaseController {
     @RequestMapping(value = "/saveFpj")
     @ResponseBody
     @Transactional
-    public Map save(String openid) {
+    public Map save() {
         Map<String, Object> result = new HashMap<>();
         Integer djh = (Integer) session.getAttribute("djh");
         if (djh == null) {
             result.put("error", true);
             return result;
         }
+        String openid = (String)session.getAttribute("openid");
         Map<String, Object> params = new HashMap<>();
         params.put("djh", djh);
         params.put("unionid", openid);
