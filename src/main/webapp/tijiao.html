@@ -73,30 +73,48 @@
 				class="mui-input-clear" required="required" maxlength="50"
 				name="fptt" id="fptt" placeholder="请输入发票抬头（必填）">
 		</div>
+		<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#" style="color: #8A6DE9;">填写更多纳税人信息</a>
+						<div class="mui-collapse-content">
+							<form class="mui-input-group">
+								<div class="mui-input-row">
+									<label>纳税人识别号</label> <input type="text" class="mui-input-clear"
+										id="nsrsbh" maxlength="18" name="nsrsbh" placeholder="请输入纳税人识别号">
+								</div>
+								<div class="mui-input-row">
+									<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
+										maxlength="100" name="dz" placeholder="请输入地址">
+								</div>
+								<div class="mui-input-row">
+									<label>电话</label> <input type="text" class="mui-input-clear" id="dh"
+										maxlength="30" name="dh" placeholder="请输入电话">
+								</div>
+								<div class="mui-input-row">
+									<label>开户行</label> <input type="text" class="mui-input-clear"
+										id="khh" maxlength="50" name="khh" placeholder="请输入开户行">
+								</div>
+								<div class="mui-input-row">
+									<label>银行账号</label> <input type="text" class="mui-input-clear"
+										id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
+								</div>
+								
+							</form>
+						</div>
+					</li>
 		<div class="mui-input-row">
-			<label>纳税人识别号</label> <input type="text" class="mui-input-clear"
-				id="nsrsbh" maxlength="18" name="nsrsbh" placeholder="请输入纳税人识别号">
-		</div>
+									<label><font color="red">*</font>邮箱地址</label> <input type="email"
+										id="yx" class="mui-input-clear" placeholder="电子发票开具完成后发送到此邮箱">
+								</div>
 		<div class="mui-input-row">
-			<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
-				maxlength="100" name="dz" placeholder="请输入地址">
+			<label>手机号码</label> <input type="text"
+				id="sjh" class="mui-input-clear" placeholder="请输入手机号">
 		</div>
-		<div class="mui-input-row">
-			<label>电话</label> <input type="text" class="mui-input-clear" id="dh"
-				maxlength="30" name="dh" placeholder="请输入电话">
-		</div>
-		<div class="mui-input-row">
-			<label>开户行</label> <input type="text" class="mui-input-clear"
-				id="khh" maxlength="50" name="khh" placeholder="请输入开户行">
-		</div>
-		<div class="mui-input-row">
-			<label>银行账号</label> <input type="text" class="mui-input-clear"
-				id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
-		</div>
-		<div class="mui-input-row">
-			<label><font color="red">*</font>邮箱地址</label> <input type="email"
-				id="yx" class="mui-input-clear" placeholder="电子发票开具完成后发送到此邮箱">
-		</div>
+				</ul>
+		
+		
+		
+		
 	</form>
 	<p></p>
 	<table border="1" id="tab"
