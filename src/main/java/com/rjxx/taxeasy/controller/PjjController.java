@@ -64,9 +64,6 @@ public class PjjController extends BaseController {
     private CszbService cszbService;
 
     @Autowired
-    private DzfplogService dzfplogService;
-
-    @Autowired
     private ZzfpqpService zzfpService;
 
     @Autowired
@@ -105,7 +102,7 @@ public class PjjController extends BaseController {
     @ResponseBody
     public Map sendMessage() {
         Map<String, Object> result = new HashMap<>();
-        String msg = wxUtil.sendMessage("os2OFs_D2zIcHKHqAJT0AKuYwaq4", "上海百旺测试盘", "林静霞", "电子发票", 2100.00, "2016年12月12日", 16104);
+        String msg = wxUtil.sendMessage("oqBe0wg2o8tV84O9d17r6690MONw", "上海百旺测试盘", "林静霞", "电子发票", 2100.00, "2016年12月12日", 16104);
         result.put("msg", msg);
 
         return result;
