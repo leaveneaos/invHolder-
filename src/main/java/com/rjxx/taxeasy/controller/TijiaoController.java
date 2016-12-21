@@ -200,7 +200,8 @@ public class TijiaoController extends BaseController {
         for (String pdfUrl : pdfUrlList) {
             sb.append("<a href='" + pdfUrl + "'>" + null2Wz(pdfUrl) + "</a><br>");
         }
-        sb.append("请及时下载您的发票。");
+        sb.append("请及时下载您的发票。<br>");
+        sb.append("<font color='red'>提示:苹果浏览器无法显示发票章,只能下载pdf显示</font><br>");
         sb.append("<br/><br/>");
         sb.append(gsdm);
         sb.append("<br/>");

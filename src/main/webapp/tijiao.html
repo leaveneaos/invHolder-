@@ -164,7 +164,7 @@
 				var dh = $('#dh').val();
 				var khh = $('#khh').val();
 				var yhzh = $('#yhzh').val();
-			
+				var sjh = $('#sjh').val();
 				var btnArray = [ '否', '是' ];
 				if (null != nsrsbh && "" != nsrsbh) {
 					firm += "纳税人识别号:" + nsrsbh + ";";
@@ -183,6 +183,9 @@
 				}
 				if (null != yx && "" != yx) {
 					firm += "邮箱:" + yx + "。";
+				}
+				if (null != sjh && "" != sjh) {
+					firm += "手机:" + sjh + "。";
 				}
 				title = "信息确认"
 			}
@@ -207,7 +210,8 @@
 														"khh" : khh,
 														"yhzh" : yhzh,
 														"djh" : djh,
-														"yx" : yx
+														"yx" : yx,
+														"sj" :sjh
 													},
 													function(data) {
 														if (data.msg == 1) {

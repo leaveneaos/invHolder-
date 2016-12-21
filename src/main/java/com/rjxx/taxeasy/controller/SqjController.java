@@ -46,7 +46,8 @@ public class SqjController extends BaseController {
 	private TqmtqService tqmtqService;
 	@Autowired
 	private PpService ppService;
-
+	@Autowired
+	private SpService spService;
     @Autowired
     private FpjService fpjService;
 
@@ -589,7 +590,14 @@ public class SqjController extends BaseController {
 					Jyspmx jyspmx = new Jyspmx();
 					jyspmx.setSpmxxh(1);
 					jyspmx.setFphxz("0");
-					jyspmx.setSpmc("餐费");
+					Sp sp1 = new Sp();
+					sp1.setGsdm("sqj");
+					Sp sp = spService.findOneByParams(sp1);
+					if (null!=sp) {
+						jyspmx.setSpmc(sp.getSpmc());
+					}else{
+						jyspmx.setSpmc("餐饮服务");
+					}				
 					jyspmx.setSpdm("1010101070000000000");
 					jyspmx.setSpje(jyxx.getPrice());
 					jyspmx.setSpsl(0.06);
@@ -633,6 +641,7 @@ public class SqjController extends BaseController {
 			tqmtq1.setKhhzh(khhzh);
 			tqmtq1.setFpzt("0");
 			tqmtq1.setYxbz("1");
+			tqmtq1.setGfsjh(sj);
 			tqmtq1.setGfemail(yx);
 			tqmtq1.setGsdm("sqj");
 			if (openid != null && !openid.equals("null")) {
