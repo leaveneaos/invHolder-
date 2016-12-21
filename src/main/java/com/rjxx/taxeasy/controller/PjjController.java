@@ -718,7 +718,7 @@ public class PjjController extends BaseController {
         params.put("djh", djh);
         params.put("unionid", openid);
         Fpj fpj = fpjService.findOneByParams(params);
-        if (fpj != null) {
+        if (fpj != null && (fpj.getDjh().equals(djh) && fpj.getUnionid().equals(openid))) {
             result.put("nopeat", true);
             result.put("msg", "发票已收藏到发票夹");
             return result;
