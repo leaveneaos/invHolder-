@@ -1,6 +1,7 @@
 package com.rjxx.taxeasy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjxx.taxeasy.bizcomm.utils.SendalEmail;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
@@ -39,6 +40,10 @@ public class TijiaoController extends BaseController {
     private KplsService kplsService;
     @Autowired
     private SpfyxService spfyxService;
+	
+	@Autowired
+	private SendalEmail se;
+	
     @Value("${emailHost}")
     private String emailHost;
     @Value("${emailUserName}")
@@ -162,7 +167,7 @@ public class TijiaoController extends BaseController {
         }
         if (kplsList.size() > 0) {
             try {
-                sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc());
+                sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc(), String.valueOf(djh), jyls.getGsdm());
                 Spfyx spfyx = spfyxService.findOneByParams(params);
                 if (null == spfyx) {
                     spfyx = new Spfyx();
@@ -225,16 +230,8 @@ public class TijiaoController extends BaseController {
      * @param gsdm
      * @throws Exception
      */
-    public void sendMail(String ddh, String email, List<String> pdfUrlList, String gsdm) throws Exception {
-        MailUtil sendmail = new MailUtil();
-        sendmail.setHost(emailHost);
-        sendmail.setUserName(emailUserName);
-        sendmail.setPassWord(emailPwd);
-        sendmail.setTo(email);
-
-        sendmail.setFrom(emailForm);
-        sendmail.setSubject("电子发票");
-        sendmail.setContent(getAFMailContent(ddh, pdfUrlList, gsdm));
+    public void sendMail(String ddh, String email, List<String> pdfUrlList, String xfmc, String djh, String gsdm) throws Exception {
+    	 se.sendEmail(djh, gsdm, email, "发票提取", djh, getAFMailContent(ddh, pdfUrlList, xfmc), "电子发票");
         // TODO 这里需要根据邮件摸板内容进行调整。
 
         // XXX 先生/小姐您好：
@@ -253,7 +250,6 @@ public class TijiaoController extends BaseController {
         // 爱芙趣商贸（上海）有限公司
         // 20xx年x月x日
 
-        sendmail.sendMail();
         Tqjl tqjl = new Tqjl();
         tqjl.setDjh(String.valueOf(request.getSession().getAttribute("djh")));
         tqjl.setTqsj(new Date());
