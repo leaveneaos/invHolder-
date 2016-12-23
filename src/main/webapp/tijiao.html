@@ -106,10 +106,10 @@
 									<label><font color="red">*</font>邮箱地址</label> <input type="email"
 										id="yx" class="mui-input-clear" placeholder="电子发票开具完成后发送到此邮箱">
 								</div>
-		<div class="mui-input-row">
+	<!-- 	<div class="mui-input-row">
 			<label>手机号码</label> <input type="text"
 				id="sjh" class="mui-input-clear" placeholder="请输入手机号">
-		</div>
+		</div> -->
 				</ul>
 		
 		
@@ -164,7 +164,7 @@
 				var dh = $('#dh').val();
 				var khh = $('#khh').val();
 				var yhzh = $('#yhzh').val();
-				var sjh = $('#sjh').val();
+			//	var sjh = $('#sjh').val();
 				var btnArray = [ '否', '是' ];
 				if (null != nsrsbh && "" != nsrsbh) {
 					firm += "纳税人识别号:" + nsrsbh + ";";
@@ -184,9 +184,9 @@
 				if (null != yx && "" != yx) {
 					firm += "邮箱:" + yx + "。";
 				}
-				if (null != sjh && "" != sjh) {
+			/* 	if (null != sjh && "" != sjh) {
 					firm += "手机:" + sjh + "。";
-				}
+				} */
 				title = "信息确认"
 			}
 			mui
@@ -210,8 +210,8 @@
 														"khh" : khh,
 														"yhzh" : yhzh,
 														"djh" : djh,
-														"yx" : yx,
-														"sj" :sjh
+														"yx" : yx
+													//	"sj" :sjh
 													},
 													function(data) {
 														if (data.msg == 1) {
