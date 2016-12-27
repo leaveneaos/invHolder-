@@ -263,9 +263,7 @@
 											appid = data.gsxx.wxappid;
 											secret = data.gsxx.wxsecret;
 											var url = window.location.href;
-											alert(url);
 											if (url.indexOf("fpjtest.datarj") > 0) {
-												alert(appid);
 												window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
 														+ appid
 														+ "&redirect_uri=http://fpjtest.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";

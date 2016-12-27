@@ -906,6 +906,9 @@ public class PjjController extends BaseController {
     @RequestMapping(value = "/getGsxx")
     @ResponseBody
     public Map getGsxx(String gsdm) {
+    	if (gsdm == null) {
+			gsdm = "rjxx";
+		}
         Map<String, Object> result = new HashMap<String, Object>();
         Integer djh = (Integer) session.getAttribute("djh");
         Map<String, Object> params = new HashMap<>();
