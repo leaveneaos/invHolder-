@@ -549,7 +549,7 @@ public class SqjController extends BaseController {
 					jyls.setGfyh(khh);
 					jyls.setGfyhzh(khhzh);
 					jyls.setGflxr("");
-					jyls.setBz("");
+			//		jyls.setBz("");
 					jyls.setGfemail(yx);
 					jyls.setGfdz(dz);
 					jyls.setTqm(jyxx.getOrderNo());
@@ -568,6 +568,7 @@ public class SqjController extends BaseController {
 					jyls.setJylssj(new Date());
 					jyls.setFpzldm("12");
 					jyls.setFpczlxdm("11");
+					jyls.setBz(jyxx.getStoreNo());
 					jyls.setXfyh(xf.getXfyh());
 					jyls.setXfyhzh(xf.getXfyhzh());
 					jyls.setXfdz(xf.getXfdz());
