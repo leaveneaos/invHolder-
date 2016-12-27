@@ -119,47 +119,48 @@ public class PjjController extends BaseController {
      */
     @RequestMapping(value = "/getKhjy")
     @ResponseBody
-    public Map getKhjy(String gsdm, Integer rows, Integer page, String yf) {
+    public Map getKhjy(Integer sj) {
         Map<String, Object> result = new HashMap<>();
-        Pagination pagination = new Pagination<>();
-        if (rows == null) {
-            rows = 10;
-        }
-        if (page == null) {
-            page = 1;
-        }
-        pagination.setPageNo(page);
-        pagination.setPageSize(rows);
         String[] gsdms = null;
         List<String> gsdmList = null;
-        if (gsdm != null && !"".equals(gsdm)) {
-            if (gsdm.contains(",")) {
-                gsdms = gsdm.split(",");
-            } else {
-                gsdms = new String[]{gsdm};
-            }
-            gsdmList = new ArrayList<>();
-            for (String str : gsdms) {
-                gsdmList.add(str);
-            }
-        }
+        Map<String, Object> params = new HashMap<>();
         String openid = (String) session.getAttribute("openid");
-//		if (openid == null) {
-//			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
-//			session.setAttribute("openid", openid);
-//		}
-        pagination.addParam("unionid", openid);
-        pagination.addParam("gsdm", gsdmList);
-        pagination.addParam("yf", yf);
-        List<FpjVo> list = fpjService.findByPage(pagination);
+		if (openid == null) {
+			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
+			session.setAttribute("openid", openid);
+		}
+        params.put("unionid", openid);
+        Date date = new Date();
+        long year = date.getYear() + 1900;
+        long month = date.getMonth() + 1;
+        long day = date.getDay();
+        String date1 = null;
+        String date2 = null;
+        
+        if (sj.equals(1)) {
+			date1 = year +"-" + month + "-01";
+			date2 = year +"-" + month + "-" + day;
+		}else if (sj.equals(2)) {
+			date1 = year +"-" + (month-1) + "-01";
+			date2 = year +"-" + month + "-01";
+		}else{
+			date2 = year +"-" + (month-1) + "-01";
+		}
+        params.put("qsrq", date1);
+        params.put("zzrq", date2);
+        List<FpjVo> list = fpjService.findAllByParams(params);
         List<Kpls> kps = null;
         Kpls kpls = new Kpls();
         List<FpjVo> deleteList = new ArrayList<>();
+        String[] strs = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         for (FpjVo fpjVo : list) {
         	DecimalFormat d1 =new DecimalFormat("#,##0.00");    	
         	fpjVo.setJshj1("￥"+d1.format(fpjVo.getJshj()));
             kpls.setDjh(fpjVo.getDjh());
+
+			strs = fpjVo.getKprq().split("-");
+			fpjVo.setKprq(strs[0] + "年" + strs[1] + "月" + strs[2] + "日");
             kps = kplsService.findByDjh(kpls);
             boolean flag = false;
             if (!kps.isEmpty() && kps.size() > 0) {
@@ -169,10 +170,6 @@ public class PjjController extends BaseController {
 						break;
 					}
 				}
-                Kpls kp = kps.get(0);
-                if (kp.getKprq() != null) {
-                    fpjVo.setKprq(sdf.format(kp.getKprq()));
-                }
                 if (flag) {
 					deleteList.add(fpjVo);
 				}
@@ -763,9 +760,9 @@ public class PjjController extends BaseController {
     public Map getOpenid() {
         Map<String, Object> result = new HashMap<>();
         String openid = (String) session.getAttribute("openid");
-//		if (openid == null) {
-//			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
-//		}
+		if (openid == null) {
+			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
+		}
         if (openid != null) {
             result.put("success", true);
         } else {

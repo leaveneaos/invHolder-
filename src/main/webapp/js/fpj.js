@@ -142,7 +142,8 @@ function getUserMsg() {
 	});
 }
 // 获取用户发票夹中所以订单
-function getJy() {
+function getJy(itm) {
+	var item = $(itm);
 	$
 			.ajax({
 				async : false,
@@ -150,16 +151,14 @@ function getJy() {
 				method : 'post',
 				data : {
 					
-					"rows" : 10,
-					"page" : page,
+					"sj" : sj,
+//					"page" : page,
 				//	"gsdm" : gsdm,
 				//	"yf" : yf
 		
 				},
 				success : function(data) {
-					if (page == 1) {
-						$("#all").children("li").remove();
-					}
+					item.children("li").remove();
 					if (data.fps && data.fps.length > 0) {
 						bool = false;
 						for (var i = 0; i < data.fps.length; i++) {
@@ -204,16 +203,17 @@ function getJy() {
 									+ '</p>'
 							}
 							str += '</div></a></li>';
-							$("#all").append(str);
+							item.append(str);
 							
 						}
-					} else if (!data.fps && page == 1) {
+					} else if (!data.fps) {
 						bool = true;
 						mui.confirm("没有您要查询的发票", "提示", [ '是' ], function(e) {
 							
 						});
 					}else{
 						bool = true;
+						item.append("<li><p>没有您要查询的发票</p></li>");
 					}
 					page = page + 1;
 				}
