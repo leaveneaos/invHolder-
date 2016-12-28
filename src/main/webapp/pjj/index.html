@@ -247,7 +247,7 @@
 						if (data.success) {
 							sj=1;
 							
-							getJy("#itm1", $("#je"));
+							getJy("#itm1", $("#je").val());
 						} else {
 							var urlinfo = window.location.href; //获取当前页面的url
 							var gsdm1;
@@ -288,17 +288,17 @@
 					}
 				});
 		$("#itm11").on('tap', function(event) {
-			var je = $('#je', je).val();
+			var je = $('#je').val();
 			var num = /^\d+(\.\d{2})?$/;
 			if (je != null && je != "" && !num.test(je)) {
 				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
 				return;
 			}
 			sj = 1;
-			getJy("#itm1");
+			getJy("#itm1", je);
 		});
 		$("#itm22").on('tap', function(event) {
-			var je = $('#je', je).val();
+			var je = $('#je').val();
 			var num = /^\d+(\.\d{2})?$/;
 			if (je != null && je != "" && !num.test(je)) {
 				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
