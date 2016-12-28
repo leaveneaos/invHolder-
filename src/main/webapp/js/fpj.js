@@ -142,7 +142,7 @@ function getUserMsg() {
 	});
 }
 // 获取用户发票夹中所以订单
-function getJy(itm) {
+function getJy(itm, je) {
 	var item = $(itm);
 	$
 			.ajax({
@@ -152,6 +152,7 @@ function getJy(itm) {
 				data : {
 					
 					"sj" : sj,
+					"je" : je
 //					"page" : page,
 				//	"gsdm" : gsdm,
 				//	"yf" : yf

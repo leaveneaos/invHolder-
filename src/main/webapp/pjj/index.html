@@ -37,9 +37,13 @@
 </head>
 <body>
 
-	<!-- 	<div class="mui-input-row mui-search"> -->
-	<!-- 		<input type="search" class="mui-input-clear" placeholder=""> -->
-	<!-- 	</div> -->
+		<div class="mui-input-row">
+			<input type="text" id="je" class="mui-input-clear" placeholder="开票金额" style="width: 98%;margin-top: 3px;margin-left: 1%; margin-right: 1%;">
+			
+		<button type="button" id="search"
+			class="mui-btn mui-btn-primary"
+			style="width: 98%; margin-top: 10px;margin-left: 1%; margin-right: 1%;">查询</button>
+		</div>
 
 
 	<div class="mui-content">
@@ -64,9 +68,9 @@
 		<!-- 			</div> -->
 
 		<!-- 		</div> -->
-		<div style="margin-bottom: 50px;">
+		<div style="width: 98%;margin-botton: 50px;margin-left: 1%; margin-right: 1%;">
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell mui-collapse"><a
+				<li class="mui-table-view-cell mui-collapse mui-active"><a
 					class="mui-navigate-right" href="#" id="itm11">本月</a>
 					<div class="mui-collapse-content" id="itm1">
 						<!-- 					 <p>我是内容1</p>   -->
@@ -241,7 +245,9 @@
 					method : 'post',
 					success : function(data) {
 						if (data.success) {
-							getJy();
+							sj=1;
+							
+							getJy("#itm1", $("#je"));
 						} else {
 							var urlinfo = window.location.href; //获取当前页面的url
 							var gsdm1;
@@ -282,16 +288,34 @@
 					}
 				});
 		$("#itm11").on('tap', function(event) {
+			var je = $('#je', je).val();
+			var num = /^\d+(\.\d{2})?$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
 			sj = 1;
 			getJy("#itm1");
 		});
 		$("#itm22").on('tap', function(event) {
+			var je = $('#je', je).val();
+			var num = /^\d+(\.\d{2})?$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
 			sj = 2;
-			getJy("#itm2");
+			getJy("#itm2", je);
 		});
 		$("#itm33").on('tap', function(event) {
+			var je = $('#je').val();
+			var num = /^\d+(\.\d{2})?$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
 			sj = 3;
-			getJy("#itm3");
+			getJy("#itm3", je);
 		});
 		$("#itm1").on('tap', 'a', function(event) {
 			getFp($(this).attr("value"));
@@ -301,6 +325,23 @@
 		});
 		$("#itm3").on('tap', 'a', function(event) {
 			getFp($(this).attr("value"));
+		});
+		$("#search").on('tap', function(event) {
+			var je = $('#je').val();
+			var num = /^\d+(\.\d{2})?$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
+			var itm;
+			if (sj == 1) {
+				itm = "#itm1";
+			}else if (sj == 2){
+				itm = "#itm2";
+			}else if (sj == 3) {
+				itm = "#itm3";
+			}
+			getJy(itm, je);
 		});
 	})
 </script>

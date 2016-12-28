@@ -125,6 +125,7 @@ public class SqjController extends BaseController {
 			request.getSession().setAttribute("price", price);
 			request.getSession().setAttribute("sn", sn);
 			String ddh = (String) request.getSession().getAttribute("orderNo");
+			String openid = (String)session.getAttribute("openid");
 			Map map = new HashMap<>();
 			map.put("ddh", ddh);
 			map.put("gsdm", "sqj");
@@ -132,6 +133,21 @@ public class SqjController extends BaseController {
 			if (null != smtq1 && null != smtq1.getId()) {
 				List<Kpls> list = jylsService.findByTqm(map);
 				if (list.size() > 0) {
+					if (openid != null && !openid.equals("null")) {
+				        Map<String, Object> param = new HashMap<>();
+				        param.put("djh", list.get(0).getDjh());
+				        param.put("unionid", openid);
+				        Fpj fpj = fpjService.findOneByParams(param);
+				        if (fpj == null) {
+				        	fpj = new Fpj();
+							fpj.setDjh(list.get(0).getDjh());
+							fpj.setUnionid(openid);
+							fpj.setYxbz("1");
+							fpj.setLrsj(new Date());
+							fpj.setXgsj(new Date());
+							fpjService.save(fpj);
+						}
+					}
 					String pdfdzs = "";
 					for (Kpls kpls2 : list) {
 						pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
@@ -459,6 +475,21 @@ public class SqjController extends BaseController {
 			Jyls jyls = jylsService.findOne(map);
 			List<Kpls> list = jylsService.findByTqm(map);
 			if (list.size() > 0) {
+				if (openid != null && !openid.equals("null")) {
+			        Map<String, Object> params = new HashMap<>();
+			        params.put("djh", jyls.getDjh());
+			        params.put("unionid", openid);
+			        Fpj fpj = fpjService.findOneByParams(params);
+			        if (fpj == null) {
+			        	fpj = new Fpj();
+						fpj.setDjh(jyls.getDjh());
+						fpj.setUnionid(openid);
+						fpj.setYxbz("1");
+						fpj.setLrsj(new Date());
+						fpj.setXgsj(new Date());
+						fpjService.save(fpj);
+					}
+				}
 				String pdfdzs = "";
 				request.getSession().setAttribute("djh", list.get(0).getDjh());
 				for (Kpls kpls2 : list) {

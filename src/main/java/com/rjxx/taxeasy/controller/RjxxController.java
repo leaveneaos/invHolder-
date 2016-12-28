@@ -58,6 +58,7 @@ public class RjxxController extends BaseController {
 			map.put("gsdm", "rjxx");
 			List<Kpls> list = jylsService.findByTqm(map);
 			if (list.size() > 0) {
+				
 				String pdfdzs = "";
 				request.getSession().setAttribute("djh", list.get(0).getDjh());
 				for (Kpls kpls2 : list) {
@@ -68,13 +69,19 @@ public class RjxxController extends BaseController {
 					request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
 				}
 				if (openid != null && !openid.equals("null")) {
-					Fpj fpj = new Fpj();
-					fpj.setDjh(list.get(0).getDjh());
-					fpj.setUnionid(openid);
-					fpj.setYxbz("1");
-					fpj.setLrsj(new Date());
-					fpj.setXgsj(new Date());
-					fpjService.save(fpj);
+			        Map<String, Object> params = new HashMap<>();
+			        params.put("djh", list.get(0).getDjh());
+			        params.put("unionid", openid);
+			        Fpj fpj = fpjService.findOneByParams(params);
+			        if (fpj == null) {
+			        	fpj = new Fpj();
+						fpj.setDjh(list.get(0).getDjh());
+						fpj.setUnionid(openid);
+						fpj.setYxbz("1");
+						fpj.setLrsj(new Date());
+						fpj.setXgsj(new Date());
+						fpjService.save(fpj);
+					}
 				}
 				result.put("num", "2");
 				Tqjl tqjl = new Tqjl();
