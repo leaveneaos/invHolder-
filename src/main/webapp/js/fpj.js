@@ -163,6 +163,7 @@ function getJy(itm, je) {
 					if (data.fps && data.fps.length > 0) {
 						bool = false;
 						for (var i = 0; i < data.fps.length; i++) {
+							alert(data.fps.length);
 							var val = data.fps[i];
 							var zt = val.ztbz;
 							var fpzt;
