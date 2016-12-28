@@ -162,9 +162,7 @@ function getJy(itm, je) {
 					item.children("li").remove();
 					if (data.fps && data.fps.length > 0) {
 						bool = false;
-						alert("111111");
 						for (var i = 0; i < data.fps.length; i++) {
-							alert(data.fps.length);
 							var val = data.fps[i];
 							var zt = val.ztbz;
 							var fpzt;
@@ -210,13 +208,11 @@ function getJy(itm, je) {
 							
 						}
 					} else if (!data.fps) {
-						alert("222222");
 						bool = true;
 						mui.confirm("没有您要查询的发票", "提示", [ '是' ], function(e) {
 							
 						});
 					}else{
-						alert("33333");
 						bool = true;
 						item.append("<li><p>没有您要查询的发票</p></li>");
 					}
