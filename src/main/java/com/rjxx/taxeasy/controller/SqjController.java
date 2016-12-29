@@ -416,7 +416,6 @@ public class SqjController extends BaseController {
 					fpj.setLrsj(new Date());
 					fpj.setXgsj(new Date());
 					fpjService.save(fpj);
-					logger.info("收藏成功，单据号：" + djh);
 				}
 		}
 		return result;
