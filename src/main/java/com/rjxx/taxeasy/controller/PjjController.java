@@ -137,7 +137,7 @@ public class PjjController extends BaseController {
         
         if (sj.equals(1)) {
 			date1 = year +"-" + month + "-01";
-			date2 = year +"-" + month + "-" + day;
+			date2 = year +"-" + month + "-" + (day+1);
 		}else if (sj.equals(2)) {
 			date1 = year +"-" + (month-1) + "-01";
 			date2 = year +"-" + month + "-01";
