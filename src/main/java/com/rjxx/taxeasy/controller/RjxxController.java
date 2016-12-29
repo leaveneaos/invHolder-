@@ -2,9 +2,11 @@ package com.rjxx.taxeasy.controller;
 
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
+import com.rjxx.taxeasy.domains.Csb;
 import com.rjxx.taxeasy.domains.Fpj;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Tqjl;
+import com.rjxx.taxeasy.service.CsbService;
 import com.rjxx.taxeasy.service.FpjService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.JyspmxService;
@@ -37,6 +39,8 @@ public class RjxxController extends BaseController {
 	private TqjlService tqjlService;
 	@Autowired
 	private FpjService fpjService;
+	@Autowired
+	private CsbService csbService;
 
 	@RequestMapping
 	@ResponseBody
@@ -157,6 +161,38 @@ public class RjxxController extends BaseController {
 			response.getOutputStream().print(request.getParameter("echostr"));
 			logger.error("isSuccess:" + echo);
 		}
+	}
+
+	@RequestMapping(value = "/getUrl")
+	@ResponseBody
+	public Map<String, Object> getUrl(){
+		Map<String, Object> result = new HashMap<String, Object>();
+		Object djh = session.getAttribute("djh");
+		result.put("djh", djh);
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("csm", "mbxxurl");
+		Csb cs = csbService.findOneByParams(params);
+		if (djh == null) {
+			result.put("success", false);
+			return result;
+		}
+		if (cs != null) {
+			String url = cs.getMrz();
+			url = url.substring(0, url.lastIndexOf("/")+1)+"saveFpj?djh="+djh;
+			result.put("url", url);
+			result.put("success", true);
+		}
+		
+		return result;
+		
+	}
+
+	@RequestMapping(value = "/saveFpj")
+	@ResponseBody
+	public void saveFpj(Integer djh) throws IOException{
+		session.setAttribute("djh", djh);
+		response.sendRedirect(request.getContextPath() + "/sccg.html?_t=" + System.currentTimeMillis());
 	}
 
 }

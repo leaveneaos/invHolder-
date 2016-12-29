@@ -402,6 +402,22 @@ public class SqjController extends BaseController {
 	public Map saveOpenid(String openid) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		session.setAttribute("openid", openid);
+		Integer djh = (Integer)session.getAttribute("djh");
+		if (djh != null) {
+			 Map<String, Object> param = new HashMap<>();
+		        param.put("djh", djh);
+		        param.put("unionid", openid);
+		        Fpj fpj = fpjService.findOneByParams(param);
+		        if (fpj == null) {
+		        	fpj = new Fpj();
+					fpj.setDjh(djh);
+					fpj.setUnionid(openid);
+					fpj.setYxbz("1");
+					fpj.setLrsj(new Date());
+					fpj.setXgsj(new Date());
+					fpjService.save(fpj);
+				}
+		}
 		return result;
 	}
 
