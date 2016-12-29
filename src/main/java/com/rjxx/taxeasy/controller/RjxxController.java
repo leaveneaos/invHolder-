@@ -179,7 +179,7 @@ public class RjxxController extends BaseController {
 		}
 		if (cs != null) {
 			String url = cs.getMrz();
-			url = url.substring(0, url.lastIndexOf("/")+1)+"saveFpj?djh="+djh;
+			url = "http://" + url.substring(0, url.lastIndexOf("/")+1)+"saveFpj?djh="+djh;
 			result.put("url", url);
 			result.put("success", true);
 		}
