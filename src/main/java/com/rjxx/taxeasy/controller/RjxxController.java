@@ -192,6 +192,7 @@ public class RjxxController extends BaseController {
 	@ResponseBody
 	public void saveFpj(Integer djh) throws IOException{
 		session.setAttribute("djh", djh);
+		logger.info("单据号：" + djh);
 		response.sendRedirect(request.getContextPath() + "/sccg.html?_t=" + System.currentTimeMillis());
 	}
 
