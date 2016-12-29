@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="css/mui.min.css">
 <script src="js/mui.min.js"></script>
 <script type="text/javascript" src="js/jquery.min.js"></script>
-	document.write('<script src="js/app.js"></script>')
+<script src="js/app.js"></script>
 </head>
 <body>
 	<script type="text/javascript">
@@ -88,11 +88,11 @@
 			window.location.href = "index.html";
 		}
 	</script>
-	<header class="mui-bar mui-bar-nav">
+	<header class="mui-bar mui-bar-nav" style="max-width: 450px; margin: 0 auto; margin-bottom: 50px;">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		<h1 class="mui-title">发送到邮箱</h1>
 	</header>
-	<div class="mui-content">
+	<div class="mui-content" style="max-width: 450px; margin: 0 auto; margin-bottom: 50px;">
 
 		<div class="mui-content-padded" style="margin: 5px;">
 			<form class="mui-input-group" id="yxform">
@@ -103,10 +103,12 @@
 			</form>
 		</div>
 		<p id="cwxx" style="color: red;"></p>
-	</div>
-	<button id="yjfs" type="button" onclick="fpfs()"
+		<p></p>
+		<button id="yjfs" type="button" onclick="fpfs()"
 		class="mui-btn mui-btn-primary mui-btn-block"
 		style="width: 96%; margin-left: 2%;">发送</button>
+	</div>
+	
 	<!--<div
 		style="margin-top: 20px; text-align: left; width: 90%; margin-left: 5%;">
 		感谢您对“泰易电子发票”的支持，您的行为不仅促使了我司的规范化运营，大幅度降低了经营成本，同时为 人类的环保计划做出了伟大的贡献。<br />
