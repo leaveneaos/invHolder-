@@ -403,12 +403,10 @@ public class SqjController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		session.setAttribute("openid", openid);
 		Integer djh = (Integer)session.getAttribute("djh");
-		logger.info("djh1:"+djh);
 		if (djh != null) {
 			 Map<String, Object> param = new HashMap<>();
 		        param.put("djh", djh);
 		        param.put("unionid", openid);
-				logger.info("djh2:"+djh);
 		        Fpj fpj = fpjService.findOneByParams(param);
 		        if (fpj == null) {
 		        	fpj = new Fpj();
@@ -418,7 +416,6 @@ public class SqjController extends BaseController {
 					fpj.setLrsj(new Date());
 					fpj.setXgsj(new Date());
 					fpjService.save(fpj);
-					logger.info("djh2:"+djh);
 				}
 		}
 		return result;
