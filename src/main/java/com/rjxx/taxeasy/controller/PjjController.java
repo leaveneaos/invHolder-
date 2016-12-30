@@ -777,6 +777,22 @@ public class PjjController extends BaseController {
 //		}
         if (openid != null) {
             result.put("success", true);
+            Integer djh = (Integer)session.getAttribute("djh");
+    		if (djh != null) {
+    			 Map<String, Object> param = new HashMap<>();
+    		        param.put("djh", djh);
+    		        param.put("unionid", openid);
+    		        Fpj fpj = fpjService.findOneByParams(param);
+    		        if (fpj == null) {
+    		        	fpj = new Fpj();
+    					fpj.setDjh(djh);
+    					fpj.setUnionid(openid);
+    					fpj.setYxbz("1");
+    					fpj.setLrsj(new Date());
+    					fpj.setXgsj(new Date());
+    					fpjService.save(fpj);
+    				}
+    		}
         } else {
             result.put("success", false);
         }
