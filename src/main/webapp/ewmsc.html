@@ -70,7 +70,7 @@
 				method : 'post',
 				success : function(data) {
 					if (data.success) {
-						$('#doc-qrcode').qrcode({text:data.url,width:300,height:300});
+						$('#doc-qrcode').qrcode({text:data.url,width:350,height:350});
 					}else{
 						window.location.href = "smtq/demo.html?_t="
 							+ new Date().getTime();
