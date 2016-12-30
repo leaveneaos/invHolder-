@@ -133,7 +133,7 @@ public class SqjController extends BaseController {
 			if (null != smtq1 && null != smtq1.getId()) {
 				List<Kpls> list = jylsService.findByTqm(map);
 				if (list.size() > 0) {
-					if (openid != null && !openid.equals("null")) {
+					if (openid != null && !"null".equals(openid)) {
 				        Map<String, Object> param = new HashMap<>();
 				        param.put("djh", list.get(0).getDjh());
 				        param.put("unionid", openid);
@@ -304,7 +304,7 @@ public class SqjController extends BaseController {
 		smtq.setFpzt("07");
 		smtq.setYxbz("1");
 		smtq.setGsdm(gsxx.getGsdm());
-		if (openid != null && !openid.equals("null")) {
+		if (openid != null && !"null".equals(openid)) {
 			smtq.setOpenid(openid);
 		}
 		smtq.setLrsj(new Date());
@@ -403,7 +403,7 @@ public class SqjController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		session.setAttribute("openid", openid);
 		Integer djh = (Integer)session.getAttribute("djh");
-		if (djh != null) {
+		if (djh != null && openid != null && !openid.equals("null")) {
 			 Map<String, Object> param = new HashMap<>();
 		        param.put("djh", djh);
 		        param.put("unionid", openid);
@@ -491,7 +491,7 @@ public class SqjController extends BaseController {
 			Jyls jyls = jylsService.findOne(map);
 			List<Kpls> list = jylsService.findByTqm(map);
 			if (list.size() > 0) {
-				if (openid != null && !openid.equals("null")) {
+				if (openid != null && !"null".equals(openid)) {
 			        Map<String, Object> params = new HashMap<>();
 			        params.put("djh", jyls.getDjh());
 			        params.put("unionid", openid);
@@ -656,7 +656,7 @@ public class SqjController extends BaseController {
 					jyspmx.setGsdm("sqj");
 					jyspmx.setSkpid(skp.getId());
 					jylsService.save(jyls);
-					if (openid != null && !openid.equals("null")) {
+					if (openid != null && !"null".equals(openid)) {
 						Fpj fpj = new Fpj();
 						fpj.setDjh(jyls.getDjh());
 						fpj.setUnionid(openid);
@@ -692,7 +692,7 @@ public class SqjController extends BaseController {
 			tqmtq1.setGfsjh(sj);
 			tqmtq1.setGfemail(yx);
 			tqmtq1.setGsdm("sqj");
-			if (openid != null && !openid.equals("null")) {
+			if (openid != null && !"null".equals(openid)) {
 				tqmtq1.setOpenid(openid);
 			}
 			tqmtqService.save(tqmtq1);

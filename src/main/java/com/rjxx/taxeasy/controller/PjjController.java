@@ -775,10 +775,10 @@ public class PjjController extends BaseController {
 //		if (openid == null) {
 //			openid = "os2OFs_D2zIcHKHqAJT0AKuYwaq4";
 //		}
-        if (openid != null) {
+        if (openid != null && !"null".equals(openid)) {
             result.put("success", true);
             Integer djh = (Integer)session.getAttribute("djh");
-    		if (djh != null) {
+    		if (djh != null && openid != null && !"null".equals(openid)) {
     			 Map<String, Object> param = new HashMap<>();
     		        param.put("djh", djh);
     		        param.put("unionid", openid);

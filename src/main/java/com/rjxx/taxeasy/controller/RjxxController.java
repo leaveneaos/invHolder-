@@ -72,7 +72,7 @@ public class RjxxController extends BaseController {
 					result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
 					request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
 				}
-				if (openid != null && !openid.equals("null")) {
+				if (openid != null && !"null".equals(openid)) {
 			        Map<String, Object> params = new HashMap<>();
 			        params.put("djh", list.get(0).getDjh());
 			        params.put("unionid", openid);
