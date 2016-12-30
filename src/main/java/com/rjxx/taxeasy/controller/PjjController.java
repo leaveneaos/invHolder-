@@ -137,12 +137,24 @@ public class PjjController extends BaseController {
         
         if (sj.equals(1)) {
 			date1 = year +"-" + month + "-01";
-			date2 = year +"-" + month + "-" + (day+1);
+			if (month < 12) {
+				date2 = year +"-" + (month+1) + "-01";
+			}else{
+				date2 = (year+1) +"-" + (month+1-12) + "-01";
+			}
 		}else if (sj.equals(2)) {
-			date1 = year +"-" + (month-1) + "-01";
+			if (month > 1) {
+				date1 = year +"-" + (month-1) + "-01";
+			}else{
+				date1 = (year-1) +"-" + (month-1+12) + "-01";
+			}
 			date2 = year +"-" + month + "-01";
 		}else{
-			date2 = year +"-" + (month-1) + "-01";
+			if (month > 1) {
+				date2 = year +"-" + (month-1) + "-01";
+			}else{
+				date2 = (year-1) +"-" + (month-1 + 12) + "-01";
+			}
 		}
         params.put("qsrq", date1);
         params.put("zzrq", date2);
