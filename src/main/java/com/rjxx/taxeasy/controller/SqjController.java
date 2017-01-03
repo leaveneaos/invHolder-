@@ -103,7 +103,7 @@ public class SqjController extends BaseController {
 			}
 			Map map2 = new HashMap<>();
 			map2.put("gsdm", "sqj");
-			map2.put("kpddm", sn);
+			map2.put("kpddm", sn); 
 			Skp skp = skpService.findOneByParams(map2);
 			if (null != skp) {
 				Xf xf = xfService.findOne(skp.getXfid());
@@ -130,6 +130,11 @@ public class SqjController extends BaseController {
 			map.put("ddh", ddh);
 			map.put("gsdm", "sqj");
 			Smtq smtq1 = smtqService.findOneByParams(map);
+			Map mapo = new HashMap<>();
+			mapo.put("tqm", ddh);
+			mapo.put("je", String.valueOf(request.getSession().getAttribute("price")));
+			mapo.put("gsdm", "sqj");
+			Tqmtq tqmtq = tqmtqService.findOneByParams(mapo);
 			if (null != smtq1 && null != smtq1.getId()) {
 				List<Kpls> list = jylsService.findByTqm(map);
 				if (list.size() > 0) {
@@ -173,6 +178,9 @@ public class SqjController extends BaseController {
 					response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
 					return;
 				}
+				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
+				return;
+			}else if (null != tqmtq && null != tqmtq.getId()) {
 				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
 				return;
 			} else {
@@ -481,6 +489,10 @@ public class SqjController extends BaseController {
 		String openid = (String)session.getAttribute("openid");
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (code != null && sessionCode != null && code.equals(sessionCode)) {
+			Map mapo = new HashMap<>();
+			mapo.put("ddh", tqm);
+			mapo.put("gsdm", "sqj");
+			Smtq smtq1 = smtqService.findOneByParams(mapo);
 			Map map = new HashMap<>();
 			map.put("tqm", tqm);
 			Jyxx jyxxtq = jyxxservice.findOneByParams(map);
@@ -534,6 +546,8 @@ public class SqjController extends BaseController {
 				result.put("num", "6");
 			} else if (null != tqmtq && null != tqmtq.getId()) {
 				result.put("num", "7");
+			} else if (null != smtq1 && null != smtq1.getId()) {
+				result.put("num", "6");
 			} else if (null != jyxxtq && null == jyxx) {
 				result.put("num", "9");
 			} else if (null != jyxx && null != jyxx.getId()) {
