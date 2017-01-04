@@ -288,7 +288,7 @@
 				});
 		$("#itm11").on('tap', function(event) {
 			var je = $('#je').val();
-			var num = /^\d+(\.\d{2})?$/;
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
 			if (je != null && je != "" && !num.test(je)) {
 				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
 				return;
