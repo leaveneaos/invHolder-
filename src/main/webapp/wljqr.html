@@ -19,6 +19,15 @@
 </head>
 <body style="font-family: 微软雅黑;" id="index">
 	<script type="text/javascript">
+  	var sUserAgent = navigator.userAgent.toLowerCase();
+    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+    var bIsAndroid = sUserAgent.match(/android/i) == "android";
+    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
 		$(function() {
 			var urlinfo = window.location.href; //获取当前页面的url
 			if (urlinfo.indexOf('code') > -1) {
@@ -120,8 +129,11 @@
 												});
 									}
 								} else if (data.num == 2) {
-									window.location.href = "fp.html?time="
-											+ new Date();
+									  if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+									    	window.open("../fp.html?time=" + new Date());
+									    }else{
+									    	window.location.href = "../fp.html?time=" + new Date();
+									    }
 								} else if (data.num == 3) {
 									btnArray = [ '确定' ];
 									firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
