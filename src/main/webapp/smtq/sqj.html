@@ -35,7 +35,7 @@ color: #FFFFFF;  font-weight: 900;
 	style="font-family: 微软雅黑; background-image: url(../images/2016-11-25_143009.png); background-repeat: no-repeat; background-size: 100% 100%; background-attachment: fixed;"
 	id="index">
 	<script type="text/javascript">
-	  var sUserAgent = navigator.userAgent.toLowerCase();
+	  	var sUserAgent = navigator.userAgent.toLowerCase();
 	    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
 	    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
 	    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
@@ -132,7 +132,7 @@ color: #FFFFFF;  font-weight: 900;
 				} else if (data.num == 2) {
 
 					    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-					    	window.open = "../fp.html?time=" + new Date();
+					    	window.open("../fp.html?time=" + new Date());
 					    }else{
 					    	window.location.href = "../fp.html?time=" + new Date();
 					    }
