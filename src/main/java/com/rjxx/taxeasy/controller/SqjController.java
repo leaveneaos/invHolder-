@@ -124,6 +124,7 @@ public class SqjController extends BaseController {
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					session.setAttribute("access_token", map.get("access_token"));
 					session.setAttribute("openid", map.get("openid"));
+					logger.info(map.get("openid").toString());
 					map.put("success", true);
 				}
 			}
@@ -378,6 +379,8 @@ public class SqjController extends BaseController {
 		Map<String, Object> result = new HashMap<>();
 		String ddh = (String) request.getSession().getAttribute("orderNo");
 		String openid = (String) session.getAttribute("openid");
+
+		logger.info(openid);
 		if ("".equals(ddh)) {
 			result.put("msg", "1");
 			return result;
