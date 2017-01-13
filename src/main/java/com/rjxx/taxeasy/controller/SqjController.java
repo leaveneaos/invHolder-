@@ -76,16 +76,15 @@ public class SqjController extends BaseController {
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
-			logger.info(url);
 			String openid = String.valueOf(session.getAttribute("openid"));
 			if (openid == null || "null".equals(openid)) {
-				logger.info(gsxx.getWxappid());
 				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
 						+ url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
 						+ "#wechat_redirect";
-				logger.info(ul);
 				response.sendRedirect(ul);
 				return;
+			}else{
+				sendHtml(str, gsxx);
 			}
 		}
 	}
@@ -124,6 +123,12 @@ public class SqjController extends BaseController {
 			// 关闭连接 ,释放资源
 			client.getConnectionManager().shutdown();
 		}
+		
+	}
+
+	@RequestMapping(value = "/sendHtml")
+	@ResponseBody
+	public void sendHtml(String state, Gsxx gsxx) throws IOException{
 		try {
 			byte[] bytes = Base64.decodeBase64(state);
 			String csc = new String(bytes);
