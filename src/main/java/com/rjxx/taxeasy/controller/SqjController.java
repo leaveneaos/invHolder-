@@ -313,7 +313,6 @@ public class SqjController extends BaseController {
 	@RequestMapping(value = "/smtq2")
 	@ResponseBody
 	public void smtq2(String openid) throws IOException {
-		session.setAttribute("openid", openid);
 		response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
 	}
 
@@ -511,7 +510,7 @@ public class SqjController extends BaseController {
 	@ResponseBody
 	public Map saveOpenid(String openid) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		session.setAttribute("openid", openid);
+		openid = (String)session.getAttribute("openid");
 		Integer djh = (Integer) session.getAttribute("djh");
 		if (djh != null && openid != null && !openid.equals("null")) {
 			Map<String, Object> param = new HashMap<>();
