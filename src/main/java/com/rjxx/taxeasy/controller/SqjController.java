@@ -379,7 +379,7 @@ public class SqjController extends BaseController {
 			throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		String ddh = (String) request.getSession().getAttribute("orderNo");
-		String openid = (String) session.getAttribute("openid");
+		String openid = (String) request.getSession().getAttribute("openid");
 
 		logger.info(openid);
 		if ("".equals(ddh)) {
