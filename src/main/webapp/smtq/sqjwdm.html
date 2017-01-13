@@ -9,13 +9,20 @@
 <meta http-equiv="Cache-control" content="no-cache">
 <meta http-equiv="Cache" content="no-cache">
 <title>输入提取码</title>
-<script src="../js/mui.min.js"></script>
-<link href="../css/mui.min.css" rel="stylesheet" />
+<!-- <script src="../js/mui.min.js"></script> -->
 <script type="text/javascript" src="../js/jquery.min.js"></script>
-<script src="../js/fpj.js" type="text/javascript"></script>
-<script type="text/javascript" charset="utf-8">
-	mui.init();
+<link href="../css/mui.min.css" rel="stylesheet" />
+<link href="../css/jquery.alerts.css" rel="stylesheet" />
+
+<script type="text/javascript" src="../js/jquery-ui.js"></script>
+<script type="text/javascript">
+jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
 </script>
+<script type="text/javascript" src="../js/jquery.alerts.js"></script>
+<script src="../js/fpj.js" type="text/javascript"></script>
+<!-- <script type="text/javascript" charset="utf-8">
+	mui.init();
+</script> -->
 
 </head>
 <body id="index">
@@ -109,9 +116,7 @@
 						btnArray = [ '确定' ];
 						firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
 						title = "提示";
-						mui.confirm(firm, title, btnArray, function(e) {
-
-						});
+						jAlert(firm, title);
 					}
 				} else if (data.num == 2) {
 					  if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
@@ -123,9 +128,7 @@
 					btnArray = [ '确定' ];
 					firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
 					title = "提示";
-					mui.confirm(firm, title, btnArray, function(e) {
-
-					});
+					jAlert(firm, title);
 				} else if (data.num == 4) {
 					$('#cwts').html("验证码输入错误");
 					loadimage();
@@ -138,16 +141,12 @@
 					btnArray = [ '确定' ];
 					firm = "您提取的申请已提交,我们正在处理,请稍等!";
 					title = "提示";
-					mui.confirm(firm, title, btnArray, function(e) {
-
-					});
+					jAlert(firm, title);
 				} else if (data.num == 7) {
 					btnArray = [ '确定' ];
 					firm = "您提取的申请已提交,我们正在处理,请稍等!";
 					title = "提示";
-					mui.confirm(firm, title, btnArray, function(e) {
-
-					});
+					jAlert(firm, title);
 				}
 			});
 		}
