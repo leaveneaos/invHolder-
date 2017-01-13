@@ -78,6 +78,7 @@ public class SqjController extends BaseController {
 			String url = HtmlUtils.getBasePath(request);
 			String openid = String.valueOf(session.getAttribute("openid"));
 			if (openid == null || "null".equals(openid)) {
+				logger.info(gsxx.getWxappid());
 				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
 						+ url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
 						+ "#wechat_redirect";
