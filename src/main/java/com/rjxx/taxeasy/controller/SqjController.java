@@ -348,14 +348,14 @@ public class SqjController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map params = new HashMap<>();
 		params.put("ddh", (String) request.getSession().getAttribute("orderNo"));
-		params.put("tqm", (String) request.getSession().getAttribute("orderNo"));
+		params.put("tqm", (String) request.getSession().getAttribute("tqm"));
 		Smtq smtq = smtqService.findOneByParams(params);
 		Tqmtq tqmtq = tqmtqService.findOneByParams(params);
-		if (null!=smtq) {
+		if (null!=params.get("ddh")) {
 			smtq.setYx(yx);
 			smtqService.save(smtq);
-		}else if (null!=tqmtq) {
-			tqmtq.setGfsjh(yx);
+		}else if (null!=params.get("tqm")) {
+			tqmtq.setGfemail(yx);
 			tqmtqService.save(tqmtq);
 		}
 		result.put("num", "1");
