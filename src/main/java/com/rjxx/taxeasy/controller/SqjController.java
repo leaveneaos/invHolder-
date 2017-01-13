@@ -1,11 +1,20 @@
 package com.rjxx.taxeasy.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,15 +57,66 @@ public class SqjController extends BaseController {
 	private PpService ppService;
 	@Autowired
 	private SpService spService;
-    @Autowired
-    private FpjService fpjService;
+	@Autowired
+	private FpjService fpjService;
+
+	public static final String APP_ID = "wx9abc729e2b4637ee";
+
+	public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
+
+	public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
 	@RequestMapping
 	@ResponseBody
 	public void index() throws Exception {
+		String str = request.getParameter("q");
+		String ua = request.getHeader("user-agent").toLowerCase();
+		if (ua.indexOf("micromessenger") > 0) {
+			String url = HtmlUtils.getBasePath(request);
+			String openid = String.valueOf(session.getAttribute("openid"));
+			if (openid == null || "null".equals(openid)) {
+				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
+						+ url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
+						+ "#wechat_redirect";
+				response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=");
+				return;
+			}
+		}
+	}
+
+	@RequestMapping(value = "/getWx")
+	@ResponseBody
+	public void getWx(String state, String code) throws IOException {
+		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
+				+ SECRET + "&code=" + code + "&grant_type=authorization_code";
+		// https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
+		HttpClient client = new DefaultHttpClient();
+		HttpGet get = new HttpGet(turl);
+		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
 		try {
-			String str = request.getParameter("q");
-			byte[] bytes = Base64.decodeBase64(str);
+			HttpResponse res = client.execute(get);
+			String responseContent = null; // 响应内容
+			HttpEntity entity = res.getEntity();
+			responseContent = EntityUtils.toString(entity, "UTF-8");
+			Map map = jsonparer.readValue(responseContent, Map.class);
+			// 将json字符串转换为json对象
+			if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				if (map.get("errcode") != null) {// 错误时微信会返回错误码等信息，{"errcode":40013,"errmsg":"invalid
+					
+				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
+					session.setAttribute("access_token", map.get("access_token"));
+					session.setAttribute("openid", map.get("openid"));
+					map.put("success", true);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// 关闭连接 ,释放资源
+			client.getConnectionManager().shutdown();
+		}
+		try {
+			byte[] bytes = Base64.decodeBase64(state);
 			String csc = new String(bytes);
 			String[] cssz = csc.split("&");
 			String orderNo = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
@@ -103,7 +163,7 @@ public class SqjController extends BaseController {
 			}
 			Map map2 = new HashMap<>();
 			map2.put("gsdm", "sqj");
-			map2.put("kpddm", sn); 
+			map2.put("kpddm", sn);
 			Skp skp = skpService.findOneByParams(map2);
 			if (null != skp) {
 				Xf xf = xfService.findOne(skp.getXfid());
@@ -125,7 +185,7 @@ public class SqjController extends BaseController {
 			request.getSession().setAttribute("price", price);
 			request.getSession().setAttribute("sn", sn);
 			String ddh = (String) request.getSession().getAttribute("orderNo");
-			String openid = (String)session.getAttribute("openid");
+			String openid = (String) session.getAttribute("openid");
 			Map map = new HashMap<>();
 			map.put("ddh", ddh);
 			map.put("gsdm", "sqj");
@@ -139,12 +199,12 @@ public class SqjController extends BaseController {
 				List<Kpls> list = jylsService.findByTqm(map);
 				if (list.size() > 0) {
 					if (openid != null && !"null".equals(openid)) {
-				        Map<String, Object> param = new HashMap<>();
-				        param.put("djh", list.get(0).getDjh());
-				        param.put("unionid", openid);
-				        Fpj fpj = fpjService.findOneByParams(param);
-				        if (fpj == null) {
-				        	fpj = new Fpj();
+						Map<String, Object> param = new HashMap<>();
+						param.put("djh", list.get(0).getDjh());
+						param.put("unionid", openid);
+						Fpj fpj = fpjService.findOneByParams(param);
+						if (fpj == null) {
+							fpj = new Fpj();
 							fpj.setDjh(list.get(0).getDjh());
 							fpj.setUnionid(openid);
 							fpj.setYxbz("1");
@@ -180,7 +240,7 @@ public class SqjController extends BaseController {
 				}
 				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
 				return;
-			}else if (null != tqmtq && null != tqmtq.getId()) {
+			} else if (null != tqmtq && null != tqmtq.getId()) {
 				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
 				return;
 			} else {
@@ -202,7 +262,6 @@ public class SqjController extends BaseController {
 			response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 			return;
 		}
-
 	}
 
 	@RequestMapping(value = "/smtq3")
@@ -253,7 +312,7 @@ public class SqjController extends BaseController {
 		String llqxx = request.getHeader("User-Agent");
 		if (llqxx.contains("MicroMessenger")) {
 			result.put("isWx", true);
-		}else{
+		} else {
 			result.put("isWx", false);
 		}
 		return result;
@@ -279,7 +338,7 @@ public class SqjController extends BaseController {
 			throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		String ddh = (String) request.getSession().getAttribute("orderNo");
-		String openid = (String)session.getAttribute("openid");
+		String openid = (String) session.getAttribute("openid");
 		if ("".equals(ddh)) {
 			result.put("msg", "1");
 			return result;
@@ -410,21 +469,21 @@ public class SqjController extends BaseController {
 	public Map saveOpenid(String openid) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		session.setAttribute("openid", openid);
-		Integer djh = (Integer)session.getAttribute("djh");
+		Integer djh = (Integer) session.getAttribute("djh");
 		if (djh != null && openid != null && !openid.equals("null")) {
-			 Map<String, Object> param = new HashMap<>();
-		        param.put("djh", djh);
-		        param.put("unionid", openid);
-		        Fpj fpj = fpjService.findOneByParams(param);
-		        if (fpj == null) {
-		        	fpj = new Fpj();
-					fpj.setDjh(djh);
-					fpj.setUnionid(openid);
-					fpj.setYxbz("1");
-					fpj.setLrsj(new Date());
-					fpj.setXgsj(new Date());
-					fpjService.save(fpj);
-				}
+			Map<String, Object> param = new HashMap<>();
+			param.put("djh", djh);
+			param.put("unionid", openid);
+			Fpj fpj = fpjService.findOneByParams(param);
+			if (fpj == null) {
+				fpj = new Fpj();
+				fpj.setDjh(djh);
+				fpj.setUnionid(openid);
+				fpj.setYxbz("1");
+				fpj.setLrsj(new Date());
+				fpj.setXgsj(new Date());
+				fpjService.save(fpj);
+			}
 		}
 		return result;
 	}
@@ -474,6 +533,7 @@ public class SqjController extends BaseController {
 	public void tqmsstq() throws Exception {
 		response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());
 	}
+
 	// 食其家 寿司采用提取码提取方式
 	// 跳转到sqj提取码提取页面
 	@RequestMapping(value = "/wdm")
@@ -481,12 +541,13 @@ public class SqjController extends BaseController {
 	public void tqmwdmtq() throws Exception {
 		response.sendRedirect(request.getContextPath() + "/smtq/sqjwdm.html?_t=" + System.currentTimeMillis());
 	}
+
 	// 校验提取码是否正确
 	@RequestMapping(value = "/tqyz")
 	@ResponseBody
 	public Map<String, Object> tqyz(String tqm, String code, String je) {
 		String sessionCode = (String) session.getAttribute("rand");
-		String openid = (String)session.getAttribute("openid");
+		String openid = (String) session.getAttribute("openid");
 		Map<String, Object> result = new HashMap<String, Object>();
 		if (code != null && sessionCode != null && code.equals(sessionCode)) {
 			Map mapo = new HashMap<>();
@@ -504,12 +565,12 @@ public class SqjController extends BaseController {
 			List<Kpls> list = jylsService.findByTqm(map);
 			if (list.size() > 0) {
 				if (openid != null && !"null".equals(openid)) {
-			        Map<String, Object> params = new HashMap<>();
-			        params.put("djh", jyls.getDjh());
-			        params.put("unionid", openid);
-			        Fpj fpj = fpjService.findOneByParams(params);
-			        if (fpj == null) {
-			        	fpj = new Fpj();
+					Map<String, Object> params = new HashMap<>();
+					params.put("djh", jyls.getDjh());
+					params.put("unionid", openid);
+					Fpj fpj = fpjService.findOneByParams(params);
+					if (fpj == null) {
+						fpj = new Fpj();
 						fpj.setDjh(jyls.getDjh());
 						fpj.setUnionid(openid);
 						fpj.setYxbz("1");
@@ -610,7 +671,7 @@ public class SqjController extends BaseController {
 					jyls.setGfyh(khh);
 					jyls.setGfyhzh(khhzh);
 					jyls.setGflxr("");
-			//		jyls.setBz("");
+					// jyls.setBz("");
 					jyls.setGfemail(yx);
 					jyls.setGfdz(dz);
 					jyls.setTqm(jyxx.getOrderNo());
@@ -655,11 +716,11 @@ public class SqjController extends BaseController {
 					Sp sp1 = new Sp();
 					sp1.setGsdm("sqj");
 					Sp sp = spService.findOneByParams(sp1);
-					if (null!=sp) {
+					if (null != sp) {
 						jyspmx.setSpmc(sp.getSpmc());
-					}else{
+					} else {
 						jyspmx.setSpmc("餐饮服务");
-					}				
+					}
 					jyspmx.setSpdm("1010101070000000000");
 					jyspmx.setSpje(jyxx.getPrice());
 					jyspmx.setSpsl(0.06);
