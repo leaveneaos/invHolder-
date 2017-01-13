@@ -124,7 +124,7 @@ public class SqjController extends BaseController {
 				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
 					session.setAttribute("access_token", map.get("access_token"));
 					session.setAttribute("openid", map.get("openid"));
-					logger.info(map.get("openid").toString());
+					logger.info(session.getAttribute("openid").toString());
 					map.put("success", true);
 				}
 			}
@@ -152,6 +152,7 @@ public class SqjController extends BaseController {
 	@ResponseBody
 	public void sendHtml(String state, Gsxx gsxx) throws IOException{
 		try {
+			logger.info(session.getAttribute("openid").toString());
 			byte[] bytes = Base64.decodeBase64(state);
 			String csc = new String(bytes);
 			String[] cssz = csc.split("&");
