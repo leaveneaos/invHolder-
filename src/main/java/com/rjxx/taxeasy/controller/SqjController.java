@@ -623,8 +623,8 @@ public class SqjController extends BaseController {
 	@ResponseBody
 	public void tqmwdmtq() throws Exception {
 		Map<String, Object> params = new HashMap<>();
-		params.put("gsdm", "wdm");
-		String str = "bss";
+		params.put("gsdm", "sqj");
+		String str = "wdm";
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
