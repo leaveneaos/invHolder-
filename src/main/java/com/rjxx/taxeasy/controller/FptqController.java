@@ -1,12 +1,24 @@
 package com.rjxx.taxeasy.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.Fpj;
+import com.rjxx.taxeasy.domains.Gsxx;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Tqjl;
 import com.rjxx.taxeasy.service.FpjService;
+import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.TqjlService;
+import com.rjxx.utils.HtmlUtils;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,14 +42,73 @@ public class FptqController extends BaseController {
     private TqjlService tqjlService;
     @Autowired
     private FpjService fpjService;
+    @Autowired
+    private GsxxService gsxxService;
 
     @RequestMapping
     @ResponseBody
     public String index() throws IOException {
-        response.sendRedirect(request.getContextPath() + "/zydc.html?_t=" + System.currentTimeMillis());
+    	Map<String, Object> params = new HashMap<>();
+		params.put("gsdm", "zydc");
+		String str = "zydc";
+		Gsxx gsxx = gsxxService.findOneByParams(params);
+		String ua = request.getHeader("user-agent").toLowerCase();
+		if (ua.indexOf("micromessenger") > 0) {
+			String url = HtmlUtils.getBasePath(request);
+			String openid = String.valueOf(session.getAttribute("openid"));
+			if (openid == null || "null".equals(openid)) {
+				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+						+ url + "/extractInvoice/zydc/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
+						+ "#wechat_redirect";
+				response.sendRedirect(ul);
+				return null;
+			}else{
+				response.sendRedirect(request.getContextPath() + "/zydc.html?_t=" + System.currentTimeMillis());
+		        return null;
+			}
+		}
+        
         return null;
         // return "redirect:/zydc.html";
     }
+    
+    @RequestMapping(value = "/getWx")
+   	@ResponseBody
+   	public void getWx(String state, String code) throws IOException {
+   		Map params = new HashMap<>();
+   		params.put("gsdm", "wljqr");
+   		Gsxx gsxx = gsxxService.findOneByParams(params);
+   		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
+   				+ gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+   		// https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
+   		HttpClient client = new DefaultHttpClient();
+   		HttpGet get = new HttpGet(turl);
+   		ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
+   		try {
+   			HttpResponse res = client.execute(get);
+   			String responseContent = null; // 响应内容
+   			HttpEntity entity = res.getEntity();
+   			responseContent = EntityUtils.toString(entity, "UTF-8");
+   			Map map = jsonparer.readValue(responseContent, Map.class);
+   			// 将json字符串转换为json对象
+   			if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+   				if (map.get("errcode") != null) {// 错误时微信会返回错误码等信息，{"errcode":40013,"errmsg":"invalid
+   					
+   				} else {// 正常情况下{"access_token":"ACCESS_TOKEN","expires_in":7200}
+   					session.setAttribute("access_token", map.get("access_token"));
+   					session.setAttribute("openid", map.get("openid"));
+   					map.put("success", true);
+   				}
+   			}
+   		} catch (Exception e) {
+   			e.printStackTrace();
+   		} finally {
+   			// 关闭连接 ,释放资源
+   			client.getConnectionManager().shutdown();
+   		}
+   		response.sendRedirect(request.getContextPath() + "/zydc.html?_t=" + System.currentTimeMillis());
+   		return;
+   	}
     
     @RequestMapping(value = "/{tqm}",method = RequestMethod.GET)
     @ResponseBody
