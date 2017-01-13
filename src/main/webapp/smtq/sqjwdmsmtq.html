@@ -20,6 +20,15 @@
 </head>
 <body id="index">
 	<script type="text/javascript">
+	$(function() {
+		
+		$.post("../dzfp_sqj/getSmsj", {}, function(data) {
+			$('#orderNo').html(data.orderNo);
+			$('#orderTime').html(data.orderTime);
+			$('#price').html(data.price);
+			$('#sn').html(data.sn);
+		})
+	})
 		function tk() {
 			window.location.href = "../dzfp_sqj/smtq2";
 		}
