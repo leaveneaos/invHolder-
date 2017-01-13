@@ -73,6 +73,10 @@ public class SqjController extends BaseController {
 		Map<String, Object> params = new HashMap<>();
 		params.put("gsdm", "sqj");
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
+    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+		}
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
@@ -97,6 +101,10 @@ public class SqjController extends BaseController {
 		Map params = new HashMap<>();
 		params.put("gsdm", "sqj");
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
+    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+		}
 		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
 				+ gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
 		// https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code

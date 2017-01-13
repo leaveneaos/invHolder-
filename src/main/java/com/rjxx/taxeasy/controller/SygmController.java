@@ -44,6 +44,10 @@ public class SygmController extends BaseController {
     private FpjService fpjService;
     @Autowired
     private GsxxService gsxxService;
+
+	public static final String APP_ID = "wx9abc729e2b4637ee";
+
+	public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
     
 
     @RequestMapping
@@ -53,6 +57,10 @@ public class SygmController extends BaseController {
 		params.put("gsdm", "sygm");
 		String str = "sygm";
 		Gsxx gsxx = gsxxService.findOneByParams(params);
+    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+		}
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
@@ -80,6 +88,10 @@ public class SygmController extends BaseController {
 		Map params = new HashMap<>();
 		params.put("gsdm", "sygm");
 		Gsxx gsxx = gsxxService.findOneByParams(params);
+    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+		}
 		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
 				+ gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
 		// https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
