@@ -566,6 +566,10 @@ public class SqjController extends BaseController {
 		params.put("gsdm", "sqj");
 		String str = "sqj";
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
+    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+		}
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
@@ -596,6 +600,10 @@ public class SqjController extends BaseController {
 		params.put("gsdm", "sqj");
 		String str = "bss";
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
+    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+		}
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
@@ -626,6 +634,10 @@ public class SqjController extends BaseController {
 		params.put("gsdm", "sqj");
 		String str = "wdm";
 		Gsxx gsxx = gsxxservice.findOneByParams(params);
+    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+			gsxx.setWxappid(APP_ID);
+			gsxx.setWxsecret(SECRET);
+		}
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
