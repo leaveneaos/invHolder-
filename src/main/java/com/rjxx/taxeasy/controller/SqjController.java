@@ -123,7 +123,18 @@ public class SqjController extends BaseController {
 			// 关闭连接 ,释放资源
 			client.getConnectionManager().shutdown();
 		}
-		
+		if (state.equals("sqj")) {
+			
+			return;
+		}else if (state.equals("wdm")) {
+
+			return;
+		}else if (state.equals("bss")) {
+
+			return;
+		}else{
+			sendHtml(state, gsxx);
+		}
 	}
 
 	@RequestMapping(value = "/sendHtml")
@@ -534,7 +545,26 @@ public class SqjController extends BaseController {
 	@RequestMapping(value = "/sqj")
 	@ResponseBody
 	public void tqmtq() throws Exception {
-		response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
+		Map<String, Object> params = new HashMap<>();
+		params.put("gsdm", "sqj");
+		String str = "sqj";
+		Gsxx gsxx = gsxxservice.findOneByParams(params);
+		String ua = request.getHeader("user-agent").toLowerCase();
+		if (ua.indexOf("micromessenger") > 0) {
+			String url = HtmlUtils.getBasePath(request);
+			String openid = String.valueOf(session.getAttribute("openid"));
+			if (openid == null || "null".equals(openid)) {
+				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+						+ url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
+						+ "#wechat_redirect";
+				response.sendRedirect(ul);
+				return;
+			}else{
+				response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
+				return;
+			}
+		}
+		
 	}
 
 	// 食其家 寿司采用提取码提取方式
@@ -542,7 +572,26 @@ public class SqjController extends BaseController {
 	@RequestMapping(value = "/ss")
 	@ResponseBody
 	public void tqmsstq() throws Exception {
-		response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());
+		Map<String, Object> params = new HashMap<>();
+		params.put("gsdm", "sqj");
+		String str = "bss";
+		Gsxx gsxx = gsxxservice.findOneByParams(params);
+		String ua = request.getHeader("user-agent").toLowerCase();
+		if (ua.indexOf("micromessenger") > 0) {
+			String url = HtmlUtils.getBasePath(request);
+			String openid = String.valueOf(session.getAttribute("openid"));
+			if (openid == null || "null".equals(openid)) {
+				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+						+ url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
+						+ "#wechat_redirect";
+				response.sendRedirect(ul);
+				return;
+			}else{
+				response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());
+				return;
+			}
+		}
+		
 	}
 
 	// 食其家 寿司采用提取码提取方式
@@ -550,7 +599,26 @@ public class SqjController extends BaseController {
 	@RequestMapping(value = "/wdm")
 	@ResponseBody
 	public void tqmwdmtq() throws Exception {
-		response.sendRedirect(request.getContextPath() + "/smtq/sqjwdm.html?_t=" + System.currentTimeMillis());
+		Map<String, Object> params = new HashMap<>();
+		params.put("gsdm", "wdm");
+		String str = "bss";
+		Gsxx gsxx = gsxxservice.findOneByParams(params);
+		String ua = request.getHeader("user-agent").toLowerCase();
+		if (ua.indexOf("micromessenger") > 0) {
+			String url = HtmlUtils.getBasePath(request);
+			String openid = String.valueOf(session.getAttribute("openid"));
+			if (openid == null || "null".equals(openid)) {
+				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+						+ url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
+						+ "#wechat_redirect";
+				response.sendRedirect(ul);
+				return;
+			}else{
+				response.sendRedirect(request.getContextPath() + "/smtq/sqjwdm.html?_t=" + System.currentTimeMillis());
+				return;
+			}
+		}
+		
 	}
 
 	// 校验提取码是否正确
