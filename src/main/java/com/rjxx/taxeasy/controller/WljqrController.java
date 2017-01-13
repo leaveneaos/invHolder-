@@ -67,6 +67,7 @@ public class WljqrController extends BaseController{
 		        return null;
 			}
 		}
+		response.sendRedirect(request.getContextPath() + "/wljqr.html?_t=" + System.currentTimeMillis());
         return null;
         // return "redirect:/zydc.html";
     }

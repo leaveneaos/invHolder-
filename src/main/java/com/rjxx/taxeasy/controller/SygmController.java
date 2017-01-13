@@ -61,6 +61,7 @@ public class SygmController extends BaseController {
 				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
 						+ url + "sygm/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
 						+ "#wechat_redirect";
+				logger.info(ul);
 				response.sendRedirect(ul);
 				return null;
 			}else{
@@ -68,7 +69,7 @@ public class SygmController extends BaseController {
 		        return null;
 			}
 		}
-		
+		response.sendRedirect(request.getContextPath() + "/sygmtq.html?_t=" + System.currentTimeMillis());
 		return null;
         
         // return "redirect:/zydc.html";

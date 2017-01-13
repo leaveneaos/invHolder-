@@ -67,6 +67,7 @@ public class FptqController extends BaseController {
 		        return null;
 			}
 		}
+		response.sendRedirect(request.getContextPath() + "/zydc.html?_t=" + System.currentTimeMillis());
         
         return null;
         // return "redirect:/zydc.html";

@@ -77,7 +77,7 @@ public class RjxxController extends BaseController {
 				return null;
 			}
 		}
-		
+		response.sendRedirect(request.getContextPath() + "/rjxx.html?_t=" + System.currentTimeMillis());
 		return null;
 		// return "redirect:/zydc.html";
 	}
