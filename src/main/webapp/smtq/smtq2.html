@@ -12,11 +12,22 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Cache-control" content="no-cache">
 <meta http-equiv="Cache" content="no-cache">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui.js"></script>
+<script type="text/javascript">
+jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+</script>
+<script type="text/javascript" src="../js/jquery.alerts.js"></script>
 <!--标准mui.css-->
 <link rel="stylesheet" href="../css/mui.min.css">
+<link href="../css/jquery.alerts.css" rel="stylesheet" />
 <!--App自定义的css-->
 <link rel="stylesheet" type="text/css" href="../css/app.css" />
-<script type="text/javascript" src="../js/jquery.min.js"></script>
+<style type="text/css">
+.toggle dl{margin: 0;}
+.toggle dl dt { background:#F4FFF4 url('/jscss/demoimg/201102/bg_toggle_up.gif') no-repeat scroll 8px 14px; height:40px; line-height:40px; font-weight:bold; color:#006600; cursor:pointer;  padding-left:25px; display:block; }
+.toggle dl dt.current { background:#F4FFF4 url('/jscss/demoimg/201102/bg_toggle_down.gif') no-repeat scroll 8px 14px; }
+</style>
 <style>
 h5 {
 	margin: 5px 7px;
@@ -31,6 +42,13 @@ h5 {
 	</header>
 	<script type="text/javascript">
 		$(function() {
+			$(".toggle dl dd").hide();
+			$(".toggle dl dt").click(function(){
+				$(".toggle dl dd").not($(this).next()).hide();
+				$(".toggle dl dt").not($(this).next()).removeClass("current");
+				$(this).next().slideToggle(500);
+				$(this).toggleClass("current");
+				});
 			$.post("../dzfp_sqj/getZje",
 					{},
 					function(data) {
@@ -52,15 +70,21 @@ h5 {
 			if (null == fptt || "" == fptt) {
 				var btnArray = [ '是' ];
 				firm = "请输入发票抬头!";
-				title = "提示"
+				title = "提示";
+				jAlert(firm, title);
+				return;
 			}else if(null == yx || "" == yx){	
 				 var btnArray = [ '是' ];
 					firm = "请输入邮箱!";
-					title = "提示"
+					title = "提示";
+					jAlert(firm, title);
+					return;
 			}else if(!filter.test(yx)){
 				 var btnArray = [ '是' ];
 					firm = "邮箱格式不正确!";
-					title = "提示"
+					title = "提示";
+					jAlert(firm, title);
+					return;
 			}else {
 				firm = "发票抬头:" + fptt + ";";
 				var nsrsbh = $('#nsrsbh').val();
@@ -94,10 +118,32 @@ h5 {
 				} */
 				title = "信息确认"
 			}
-			mui.confirm(firm, title, btnArray, function(e) {
+			jConfirm(firm,title, function(r) {
+				if(r){
+					$.post("../dzfp_sqj/save", {
+						"fptt" : fptt,
+						"nsrsbh" : nsrsbh,
+						"dz" : dz,
+						"dh" : dh,
+						"khh" : khh,
+						"khhzh" : yhzh,
+						"yx" :yx
+						//"sj" : sj
+					}, function(data) {
+						if (data.failure) {
+							info.innerText = data.xx;
+						} else if (data.msg == 2) {
+							window.location.href = "../dzfp_sqj/smtq3";
+						}
+					});
+				}else{
+					info.innerText = '请重新确认';
+				}
+			});
+/* 			mui.confirm(firm, title, btnArray, function(e) {
 				if (e.index == 1) {
-				/* 	document.getElementById("confirmBtn").setAttribute(
-							"disabled", true); */
+				 	document.getElementById("confirmBtn").setAttribute(
+							"disabled", true); 
 					$.post("../dzfp_sqj/save", {
 						"fptt" : fptt,
 						"nsrsbh" : nsrsbh,
@@ -118,7 +164,7 @@ h5 {
 				} else {
 					info.innerText = '请重新确认';
 				}
-			})
+			}) */
 		}
 		</script>
 	<div class="mui-content">
@@ -140,8 +186,8 @@ h5 {
 				
 				
 				<ul class="mui-table-view">
-					<li class="mui-table-view-cell mui-collapse">
-						<a class="mui-navigate-right" href="#" style="color: #8A6DE9;">填写更多纳税人信息</a>
+					<!-- <li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#" style="color: #8A6DE9;">点击填写更多购方信息</a>
 						<div class="mui-collapse-content">
 							<form class="mui-input-group">
 								<div class="mui-input-row">
@@ -168,7 +214,41 @@ h5 {
 								
 							</form>
 						</div>
-					</li>
+					</li> -->
+										<div class="content">
+		          <div class="toggle">
+		    <dl>
+		              <dt>点击填写更多购方信息</dt>
+		              <dd>
+		        <div class="mui-collapse-content">
+								<div class="mui-input-row">
+									<label>纳税人识别号</label> <input type="text" class="mui-input-clear"
+										id="nsrsbh" maxlength="18" name="nsrsbh" placeholder="请输入纳税人识别号">
+								</div>
+								<div class="mui-input-row">
+									<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
+										maxlength="100" name="dz" placeholder="请输入地址">
+								</div>
+								<div class="mui-input-row">
+									<label>电话</label> <input type="text" class="mui-input-clear" id="dh"
+										maxlength="30" name="dh" placeholder="请输入电话">
+								</div>
+								<div class="mui-input-row">
+									<label>开户行</label> <input type="text" class="mui-input-clear"
+										id="khh" maxlength="50" name="khh" placeholder="请输入开户行">
+								</div>
+								<div class="mui-input-row">
+									<label>银行账号</label> <input type="text" class="mui-input-clear"
+										id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
+								</div>
+								
+						</div>
+		      </dd>
+		              
+		              
+		            </dl>
+		  </div>
+		 </div>
 		<div class="mui-input-row">
 									<label><font color="red">*</font>邮箱地址</label> <input type="email"
 										id="yx" class="mui-input-clear" placeholder="接收电子发票的邮箱">
@@ -223,12 +303,12 @@ h5 {
 		style="margin-bottom: 80px; color: red; margin-left: 2%;"></div>
 
 
-	<script src="../js/mui.min.js"></script>
+<!-- 	<script src="../js/mui.min.js"></script> -->
 	<script type="text/javascript" charset="utf-8">
 			//mui初始化
-			mui.init({
+	/* 		mui.init({
 				swipeBack: true //启用右滑关闭功能
-			});
+			}); */
 		/* 	var info = document.getElementById("info");
 			document.getElementById("alertBtn").addEventListener('tap', function() {
 				mui.alert('购方名称：上海容津', '请确认', function() {
