@@ -116,30 +116,30 @@ h5 {
 			/* 	if (null != sj && "" != sj) {
 					firm += "手机:" + sj + "。";
 				} */
-				title = "信息确认"
+				title = "信息确认";
+				jConfirm(firm,title, function(r) {
+					if(r){
+						$.post("../dzfp_sqj/save", {
+							"fptt" : fptt,
+							"nsrsbh" : nsrsbh,
+							"dz" : dz,
+							"dh" : dh,
+							"khh" : khh,
+							"khhzh" : yhzh,
+							"yx" :yx
+							//"sj" : sj
+						}, function(data) {
+							if (data.failure) {
+								info.innerText = data.xx;
+							} else if (data.msg == 2) {
+								window.location.href = "../dzfp_sqj/smtq3";
+							}
+						});
+					}else{
+						info.innerText = '请重新确认';
+					}
+				});
 			}
-			jConfirm(firm,title, function(r) {
-				if(r){
-					$.post("../dzfp_sqj/save", {
-						"fptt" : fptt,
-						"nsrsbh" : nsrsbh,
-						"dz" : dz,
-						"dh" : dh,
-						"khh" : khh,
-						"khhzh" : yhzh,
-						"yx" :yx
-						//"sj" : sj
-					}, function(data) {
-						if (data.failure) {
-							info.innerText = data.xx;
-						} else if (data.msg == 2) {
-							window.location.href = "../dzfp_sqj/smtq3";
-						}
-					});
-				}else{
-					info.innerText = '请重新确认';
-				}
-			});
 /* 			mui.confirm(firm, title, btnArray, function(e) {
 				if (e.index == 1) {
 				 	document.getElementById("confirmBtn").setAttribute(
