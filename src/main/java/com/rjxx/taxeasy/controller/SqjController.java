@@ -86,6 +86,8 @@ public class SqjController extends BaseController {
 			}else{
 				sendHtml(str, gsxx);
 			}
+		}else{
+			sendHtml(str, gsxx);
 		}
 	}
 
@@ -346,9 +348,16 @@ public class SqjController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Map params = new HashMap<>();
 		params.put("ddh", (String) request.getSession().getAttribute("orderNo"));
+		params.put("tqm", (String) request.getSession().getAttribute("orderNo"));
 		Smtq smtq = smtqService.findOneByParams(params);
-		smtq.setYx(yx);
-		smtqService.save(smtq);
+		Tqmtq tqmtq = tqmtqService.findOneByParams(params);
+		if (null!=smtq) {
+			smtq.setYx(yx);
+			smtqService.save(smtq);
+		}else if (null!=tqmtq) {
+			tqmtq.setGfsjh(yx);
+			tqmtqService.save(tqmtq);
+		}
 		result.put("num", "1");
 		return result;
 	}
@@ -563,6 +572,9 @@ public class SqjController extends BaseController {
 				response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
 				return;
 			}
+		}else{
+			response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
+			return;
 		}
 		
 	}
@@ -590,6 +602,9 @@ public class SqjController extends BaseController {
 				response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());
 				return;
 			}
+		}else{
+			response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());
+			return;
 		}
 		
 	}
@@ -617,6 +632,9 @@ public class SqjController extends BaseController {
 				response.sendRedirect(request.getContextPath() + "/smtq/sqjwdm.html?_t=" + System.currentTimeMillis());
 				return;
 			}
+		}else{
+			response.sendRedirect(request.getContextPath() + "/smtq/sqjwdm.html?_t=" + System.currentTimeMillis());
+			return;
 		}
 		
 	}
