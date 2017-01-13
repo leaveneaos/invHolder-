@@ -70,12 +70,15 @@ public class SqjController extends BaseController {
 	@ResponseBody
 	public void index() throws Exception {
 		String str = request.getParameter("q");
+		Map<String, Object> params = new HashMap<>();
+		params.put("gsdm", "sqj");
+		Gsxx gsxx = gsxxservice.findOneByParams(params);
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
 			String openid = String.valueOf(session.getAttribute("openid"));
 			if (openid == null || "null".equals(openid)) {
-				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
+				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
 						+ url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
 						+ "#wechat_redirect";
 				response.sendRedirect("https://open.weixin.qq.com/connect/oauth2/authorize?appid=");
@@ -87,8 +90,11 @@ public class SqjController extends BaseController {
 	@RequestMapping(value = "/getWx")
 	@ResponseBody
 	public void getWx(String state, String code) throws IOException {
-		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
-				+ SECRET + "&code=" + code + "&grant_type=authorization_code";
+		Map params = new HashMap<>();
+		params.put("gsdm", "sqj");
+		Gsxx gsxx = gsxxservice.findOneByParams(params);
+		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
+				+ gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
 		// https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 		HttpClient client = new DefaultHttpClient();
 		HttpGet get = new HttpGet(turl);
@@ -125,9 +131,6 @@ public class SqjController extends BaseController {
 			String sn = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
 			String sign = cssz[4].substring(cssz[4].lastIndexOf("=") + 1);
 			String dbs = csc.substring(0, csc.lastIndexOf("&") + 1);
-			Map params = new HashMap<>();
-			params.put("gsdm", "sqj");
-			Gsxx gsxx = gsxxservice.findOneByParams(params);
 			if (null == gsxx) {
 				request.getSession().setAttribute("msg", "公司信息不正确!");
 				response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
