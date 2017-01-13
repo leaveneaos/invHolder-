@@ -223,7 +223,7 @@ jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=
 					jAlert(firm, title);
 					return;
 			} else {
-				firm = "发票抬头:" + fptt + ";";
+				firm = "发票抬头:" + fptt + "</br>";
 				var nsrsbh = $('#nsrsbh').val();
 				var dz = $('#dz').val();
 				var dh = $('#dh').val();
@@ -240,22 +240,22 @@ jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=
 			//	var sjh = $('#sjh').val();
 				var btnArray = [ '否', '是' ];
 				if (null != nsrsbh && "" != nsrsbh) {
-					firm += "纳税人识别号:" + nsrsbh + ";";
+					firm += "纳税人识别号:" + nsrsbh + "</br>";
 				}
 				if (null != dz && "" != dz) {
-					firm += "地址:" + dz + ";";
+					firm += "地址:" + dz +  "</br>";
 				}
 				if (null != dh && "" != dh) {
-					firm += "电话:" + dh + ";";
+					firm += "电话:" + dh +  "</br>";
 				}
 				if (null != khh && "" != khh) {
-					firm += "开户行:" + khh + ";";
+					firm += "开户行:" + khh +  "</br>";
 				}
 				if (null != yhzh && "" != yhzh) {
-					firm += "银行账号:" + yhzh + "。";
+					firm += "银行账号:" + yhzh +  "</br>";
 				}
 				if (null != yx && "" != yx) {
-					firm += "邮箱:" + yx + "。";
+					firm += "邮箱:" + yx +  "</br>";
 				}
 			/* 	if (null != sjh && "" != sjh) {
 					firm += "手机:" + sjh + "。";
