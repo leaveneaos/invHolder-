@@ -124,13 +124,13 @@ public class SqjController extends BaseController {
 			client.getConnectionManager().shutdown();
 		}
 		if (state.equals("sqj")) {
-			
+			response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
 			return;
 		}else if (state.equals("wdm")) {
-
+			response.sendRedirect(request.getContextPath() + "/smtq/sqjwdm.html?_t=" + System.currentTimeMillis());
 			return;
 		}else if (state.equals("bss")) {
-
+			response.sendRedirect(request.getContextPath() + "/smtq/sqjss.html?_t=" + System.currentTimeMillis());
 			return;
 		}else{
 			sendHtml(state, gsxx);
