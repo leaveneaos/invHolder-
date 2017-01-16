@@ -152,7 +152,6 @@ public class SqjController extends BaseController {
 	@ResponseBody
 	public void sendHtml(String state, Gsxx gsxx) throws IOException{
 		try {
-			logger.info(session.getAttribute("openid").toString());
 			byte[] bytes = Base64.decodeBase64(state);
 			String csc = new String(bytes);
 			String[] cssz = csc.split("&");
@@ -416,6 +415,8 @@ public class SqjController extends BaseController {
 		if (openid != null && !"null".equals(openid)) {
 			smtq.setOpenid(openid);
 		}
+		String llqxx = request.getHeader("User-Agent");
+		smtq.setLlqxx(llqxx);
 		smtq.setLrsj(new Date());
 		smtqService.save(smtq);
 		/*
@@ -863,6 +864,27 @@ public class SqjController extends BaseController {
 					jyspmx.setDjh(jyls.getDjh());
 					jyspmx.setJshj(jyxx.getPrice());
 					jyspmxService.save(jyspmx);
+					Tqmtq tqmtq1 = new Tqmtq();
+					tqmtq1.setDdh(tqm);
+					tqmtq1.setLrsj(new Date());
+					tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
+					tqmtq1.setGfmc(fptt);
+					tqmtq1.setNsrsbh(nsrsbh);
+					tqmtq1.setDz(dz);
+					tqmtq1.setDh(dh);
+					tqmtq1.setKhh(khh);
+					tqmtq1.setKhhzh(khhzh);
+					tqmtq1.setFpzt("1");
+					tqmtq1.setYxbz("1");
+					tqmtq1.setGfsjh(sj);
+					tqmtq1.setGfemail(yx);
+					tqmtq1.setGsdm("sqj");
+					String llqxx = request.getHeader("User-Agent");
+					tqmtq1.setLlqxx(llqxx);
+					if (openid != null && !"null".equals(openid)) {
+						tqmtq1.setOpenid(openid);
+					}
+					tqmtqService.save(tqmtq1);
 					result.put("msg", "1");
 				} else {
 					result.put("msg", "门店号为查询到销方!");
@@ -887,6 +909,8 @@ public class SqjController extends BaseController {
 			tqmtq1.setGfsjh(sj);
 			tqmtq1.setGfemail(yx);
 			tqmtq1.setGsdm("sqj");
+			String llqxx = request.getHeader("User-Agent");
+			tqmtq1.setLlqxx(llqxx);
 			if (openid != null && !"null".equals(openid)) {
 				tqmtq1.setOpenid(openid);
 			}
