@@ -773,6 +773,10 @@ public class SqjController extends BaseController {
 			result.put("msg", "该提取码已提交过申请!");
 			return result;
 		}
+		if (jyls1 != null) {
+			result.put("msg", "该订单正在开票!");
+			return result;
+		}
 		String ppjg = String.valueOf(request.getSession().getAttribute("ppjg"));
 		if ("1".equals(ppjg)) {
 			Jyxx jyxx = (Jyxx) request.getSession().getAttribute("jyxx");
