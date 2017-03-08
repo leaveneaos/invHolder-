@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>输入提取码</title>
+<script src="../js/mui.min.js"></script>
+<link href="../css/mui.min.css" rel="stylesheet" />
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/fpj.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+	mui.init();
+</script>
+
+</head>
+<body id="index">
+	<script type="text/javascript">
+	$(function() {
+		
+		$.post("../dzfp_sqj/getSmsj", {}, function(data) {
+			$('#orderNo').html(data.orderNo);
+			$('#orderTime').html(data.orderTime);
+			$('#price').html(data.price);
+			$('#sn').html(data.sn);
+		})
+	})
+		function tk() {
+			window.location.href = "../dzfp_sqj/smtq2";
+		}
+	</script>
+	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
+		<div>
+			<img src="../images/wdm.png" alt="" style="width: 100%;" />
+		</div>
+		<p></p>
+		
+		<p></p>
+		<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed" style="margin-bottom: 50px;">
+		        <li class="mui-table-view-cell">
+		            <div class="mui-table">
+		                <div class="mui-table-cell mui-col-xs-10">
+		                    <h4 class="mui-ellipsis">订单号</h4>
+		                    <h5 id="orderNo"></h5>
+		                    
+		                </div>
+		                
+		            </div>
+		        </li>
+		        <li class="mui-table-view-cell">
+		        	 <div class="mui-table">
+		        	 	<div class="mui-table-cell mui-col-xs-10">
+		                    <h4 class="mui-ellipsis">门店编号</h4>
+		                    <h5 id="sn"></h5>       
+		              </div>
+		              </div>
+		        </li>
+		        <li class="mui-table-view-cell">
+		            <div class="mui-table">
+		                <div class="mui-table-cell mui-col-xs-10">
+		                    <h4 class="mui-ellipsis-2">交易日期</h4>
+		                    <h5 id="orderTime"></h5>
+		                    
+		                </div>
+		                
+		            </div>
+		        </li>
+		 
+		        <li class="mui-table-view-cell">
+		            <div class="mui-table">
+		                <div class="mui-table-cell mui-col-xs-10">
+		                    <h4 class="mui-ellipsis-2">订单金额</h4>
+		                    <h5 id="price"></h5>
+		                   
+		                </div>
+		            </div>
+		        </li>
+		       </ul>
+		<p id="cwts" style="color: red; margin-left: 23px; margin-top: -40px;"></p>
+
+		
+		<!--<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item" href="#tabbar-with-chat"> <span
+			class="mui-tab-label">泰易电子发票云服务平台</span>
+		</a> <a class="mui-tab-item" href="#tabbar-with-map" onclick="tiaozhuan()"
+			style="text-align: right;"> <span class="mui-tab-label">遇到问题？</span>
+		</a>
+	</nav>-->
+	<button id='confirmBtn' type="button" onclick="tk()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;margin-top: 15px;">确认</button>
+	</div>
+	
+	<div style="position: fixed; bottom: 0; width: 100%;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
+		</div>
+		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+	</div>
+</body>
+</html>

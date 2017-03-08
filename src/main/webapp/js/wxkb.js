@@ -1,5 +1,4 @@
 var access_token// 两小时刷新一次,每天限制2000次
-var url;
 var expires_in;
 // 第一步获取access_token
 function access_token() {
@@ -9,12 +8,13 @@ function access_token() {
 		data : {
 			"grant_type" : 'client_credential',
 			"appid" : 'wx9abc729e2b4637ee',
-			"secret" : ''// secret 值
+			"secret" : '6415ee7a53601b6a0e8b4ac194b382eb'// secret 值
 		},
 		method : 'get',
 		success : function(data) {
 			access_token = data.access_token;
 			expires_in = data.expires_in;
+			alert(data.access_token);
 		},
 		error : function(data) {
 			alert(data.errcode + data.errmsg);
@@ -22,29 +22,10 @@ function access_token() {
 	});
 }
 
-// 第二步上传卡卷logo
-function LOGO() {
-	$.ajax({
-		async : false,
-		url : 'https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token='
-				+ access_token,
-		data : {
-			"buffer" : '',// 文件数据流
-		  "access_token" : access_token
-		},
-		method : 'post',
-		success : function(data) {
-			url = data.url;
-		},
-		error : function(data) {
-			alert(data.errcode + data.errmsg);
-		}
-	});
-}
+
 // 第三步 选取卡卷背景颜色
 // 第四步 创建卡卷
 function cjkj() {
-	LOGO();
 	$
 			.ajax({
 				async : false,
@@ -55,7 +36,7 @@ function cjkj() {
 						"card_type" : "GIFT",
 						"groupon" : {
 							"base_info" : {
-								"logo_url" : url,
+								"logo_url" : "http://mmbiz.qpic.cn/mmbiz_png/SGSA3AKjmxdJREpvW9kv6ERMHyUmT4NbWbEHK5p3naVquws5mrL04Bq7zibtTL8d9iccKcZdOf1OYPibKzDib2rDsw/0",
 								"brand_name" : "中原地产",
 								"code_type" : "CODE_TYPE_TEXT",
 								"title" : "电子发票提取",

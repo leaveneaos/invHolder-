@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>重开原因</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="Cache" content="no-cache">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<style>
+			h5 {
+				margin: 5px 7px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">申请原因</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<div class="mui-content">
+			<div class="mui-card">
+				<form class="mui-input-group">
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>发票抬头写错了</label>
+						<input name="checkbox" id="Item1" value="1" type="checkbox" >
+					</div>
+					<div class="mui-input-row mui-checkbox mui-left">
+						<label>发票报销不了</label>
+						<input name="checkbox" id = "Item2" value="2" type="checkbox">
+					</div>
+				</form>
+			</div>
+		</div>
+				<div class="mui-input-row" style="margin: 10px 5px;">
+					其他
+					<textarea id="textarea" rows="5" placeholder="其他原因"></textarea>
+				</div>
+			</div>
+		</div>
+<!-- 		<button type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 46%;margin-left: 3%;float: left;">取消</button> -->
+		<button type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block" style="width: 96%;margin-left: 2%;margin-right: 2%;background-color: #007AFF;border: 1px solid #007AFF;">好</button>
+		<div style="position:fixed;bottom:0;width: 100%;background-color: #F7F7F7;border-top: 1px solid #CBCBCB;z-index: 99;">
+		<div style="max-width: 800px;margin: 0 auto;">
+			<div style="width: 70%;float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%;float: right;text-align: right;"><a href="../bangzhu.html">遇到问题?</a></div>
+		</div>
+		<div style="text-align: center;font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+	</div>
+	</body>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				$("#Item1").change(function() {
+					if ($("#Item1").is(':checked')) {
+						$('#Item2').attr("checked",false);
+					}
+				});
+				$("#Item2").change(function() {
+					if ($("#Item2").is(':checked')) {
+						$('#Item1').attr("checked",false);
+					}
+				});
+			});
+			function fpfs(){
+				var flag = false;
+				var chk1 = $('#Item1').is(':checked');
+				var chk2 = $('#Item2').is(':checked');
+				var textarea = $('#textarea').val();
+				var firm = "";
+				var btnArray;
+				var title;
+				if (!chk1) {
+					flag = true;
+				}else{
+					firm = "发票抬头写错了";
+				}
+				if (!chk2) {
+					flag = true;
+				}else{
+					firm = "发票报销不了";
+				}
+				if (textarea != null && textarea != "") {
+					firm = textarea;
+				}else{
+					flag = true;
+				}
+				if (!flag) {
+					firm = "请选择或输入重开原因";
+					btnArray = [ '是' ];
+					title = "提示";
+				}else{
+					btnArray = [ '否', '是' ];
+					title = "发票重开原因";
+				}
+				mui.confirm(firm, title, btnArray, function(e) {
+					if (e.index == 1) {
+					/* 	document.getElementById("confirmBtn").setAttribute(
+								"disabled", true); */
+						$.post("../pjj/update", {
+							"chk1" : chk1,
+							"chk2" : chk2,
+							"textarea" : textarea
+						}, function(data) {
+							if (data.success) {
+								window.location.href = "examine.html?time="+new Date();
+							} else if (data.none) {
+								window.location.href = "../pjj/error";
+							}
+						});
+	
+					} else {
+						info.innerText = '请重新确认';
+					}
+				});
+			}
+		</script>
+
+</html>

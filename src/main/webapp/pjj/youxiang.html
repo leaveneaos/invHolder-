@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>邮箱</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+
+<link rel="stylesheet" href="../css/mui.min.css">
+<script src="../js/mui.min.js"></script>
+<script src="../js/jquery.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var djh;
+		$(function() {
+			$
+					.post(
+							"../tijiao/yxsession",
+							{},
+							function(data) {
+								if (null != data.yx) {
+									var trs = "";
+									// 									$
+									// 											.each(
+									// 													data.yx,
+									// 													function(n, value) {
+
+									// 														trs += "<li class='mui-table-view-cell'><a onclick='fpfs1(this)' class='mui-navigate-right'>发送到:"
+									// 																+ value.email
+									// 																+ "</a></li>";
+									// 													});
+									trs += "<div class='mui-input-row'><label>邮箱</label> <input type='email' id='username' placeholder='请输入您的邮箱'></div>"
+									$('#yxform').append(trs);
+								}
+							})
+
+		})
+		function fpfs1(val) {
+			$('#cwxx').html("正在发送,请关注您的邮箱!");
+			var te = $(val).html();
+			var yx = te.substring(te.lastIndexOf(":") + 1);
+			$.post("sendEmail", {
+				"yx" : yx
+			}, function(data) {
+				if (data.success) {
+					window.location.href = "../tishi2.html?_t="
+							+ new Date().getTime();
+				} else {
+					//alert(data.msg);
+					window.location.href = "../pjj/first";
+				}
+			});
+		}
+		function fpfs() {
+			$('#send').attr("disabled", true);
+			var youxiang = $('#username').val();
+			if (null == youxiang || "" == youxiang) {
+				$('#cwxx').html("请输入邮箱!");
+				$('#send').attr("disabled", false);
+			} else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+					.test(youxiang)) {
+				$('#cwxx').html("正在发送...");
+				$.post("sendEmail", {
+					"yx" : youxiang
+				}, function(data) {
+					$('#send').attr("disabled", false);
+					if (data.success) {
+						window.location.href = "../tishi2.html?_t="
+								+ new Date().getTime();
+					} else if (data.error) {
+						$('#cwxx').html("邮箱地址不存在，请重新输入...");
+					} else {
+						//alert(data.msg);
+						window.location.href = "../pjj/first";
+					}
+				});
+			} else {
+				$('#cwxx').html("请输入正确的邮箱格式!");
+				$('#send').attr("disabled", false);
+			}
+		}
+	</script>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">发送到邮箱</h1>
+	</header>
+	<div class="mui-content">
+
+		<div class="mui-content-padded" style="margin: 5px;">
+			<form class="mui-input-group" id="yxform"></form>
+		</div>
+		<p id="cwxx" style="color: red;"></p>
+	</div>
+	<button type="button" id="send" onclick="fpfs()"
+		class="mui-btn mui-btn-primary mui-btn-block"
+		style="width: 96%; margin-left: 2%; margin-top: 15px;">发送</button>
+	<!--<div
+		style="margin-top: 20px; text-align: left; width: 90%; margin-left: 5%;">
+		感谢您对“泰易电子发票”的支持，您的行为不仅促使了我司的规范化运营，大幅度降低了经营成本，同时为 人类的环保计划做出了伟大的贡献。<br />
+		<p></p>
+
+		电子发票在保管、查询、调阅时更加方便，不仅可以发送至邮箱，还可以直接关注“容津信息”公众号，查询及管理您的发票。
+
+		泰易发票夹，您身边的发票管理专家
+
+	</div>-->
+	<div
+		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a href="../bangzhu.html">遇到问题?</a>
+			</div>
+		</div>
+		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+	</div>
+</body>
+</html>

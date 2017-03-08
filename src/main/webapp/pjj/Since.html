@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<title>申请换开</title>
+<script src="../js/mui.min.js"></script>
+<script src="../js/mui.picker.js"></script>
+<script src="../js/mui.poppicker.js"></script>
+<script src="../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/city.data-3.js" type="text/javascript"
+	charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="../css/app.css" />
+<link href="../css/mui.picker.css" rel="stylesheet" />
+<link href="../css/mui.poppicker.css" rel="stylesheet" />
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<link href="../css/mui.min.css" rel="stylesheet" />
+<script type="text/javascript" charset="utf-8">
+	mui.init();
+</script>
+<style>
+.mui-control-content {
+	background-color: white;
+	min-height: 215px;
+}
+
+.mui-control-content .mui-loading {
+	margin-top: 50px;
+}
+</style>
+<body>
+	<script type="text/javascript">
+		var djh;
+		var kpd;
+		$(function() {
+			kpd = new Array();
+			$
+					.ajax({
+						async : false,
+						url : '../pjj/getKpd',
+						method : 'post',
+						success : function(data) {
+							if (data.kpds && data.kpds.length > 0) {
+								for (var i = 0; i < data.kpds.length; i++) {
+									var val = data.kpds[i];
+									kpd.push({
+										text : val.kpdmc
+									});
+									var str = '<li class="mui-table-view-cell mui-media">'
+											+ '<a class="mui-navigate-right"> <img class="mui-media-object '+
+						'mui-pull-left" src="../images/muwu.jpg"><div class="mui-media-body">'
+											+ val.kpdmc
+											+ '<p class="mui-ellipsis"></p>'
+											+ '<p class="mui-ellipsis"></p></div></a></li>';
+									$("#mdxx").append(str);
+								}
+							} else {
+								mui.confirm("发票已处理或正在处理中...", "提示", [ '是' ],
+										function(e) {
+										});
+							}
+						},
+						error : function(data) {
+							alert(data.errcode + data.errmsg);
+						}
+					});
+
+		})
+		function sqyj() {
+			var sjrxm = $('#sjrxm').val();
+			var dwmc = $('#dwmc').val();
+			var sjdz = $('#sjdz').val();
+			var yhm = $('#yhm').val();
+			var lxdh = $('#lxdh').val();
+			if (null == sjrxm || "" == sjrxm) {
+				$('#cwts').html("请输入收件人姓名!");
+			} else if (null == sjdz || "" == sjdz) {
+				$('#cwts').html("请输入收件地址!");
+			} else if (null == yhm || "" == yhm) {
+				$('#cwts').html("请输入用户名!");
+			} else if (null == lxdh || "" == lxdh) {
+				$('#cwts').html("请输入联系电话!");
+			} else {
+				$.post("../pjj/saveYjxx", {
+					"sjr" : sjrxm,
+					"dwmc" : dwmc,
+					"yjdz" : sjdz,
+					"yb" : yhm,
+					"lxdh" : lxdh
+				}, function(data) {
+					if (data.success) {
+						window.location.href = "../tishi1.html?_t="
+								+ new Date().getTime();
+					} else if (data.repeat) {
+						mui.confirm("您已提交过申请", "提示", [ '是' ], function(e) {
+						});
+					} else if (!data.success) {
+						mui.confirm(data.msg, "提示", [ '是' ], function(e) {
+						});
+					} else {
+						window.location.href = "../smtq/demo.html?_t="
+								+ new Date().getTime();
+					}
+				});
+			}
+		}
+		function ztxx() {
+			var divdm = $('#userResult').text();
+			var divqssj = $('#cityResult').text();
+			var divjssj = $('#cityResult1').text();
+			if (divdm == null || divdm == "") {
+				$('#info').html("请选择店面");
+			} else if (divqssj == null || divqssj == "") {
+				$('#info').html("请选择自提起始时间");
+			} else if (divjssj == null || divjssj == "") {
+				$('#info').html("请选择自提结束时间");
+			} else {
+				$.post("../pjj/saveZtxx", {
+					"divdm" : divdm,
+					"divqssj" : divqssj,
+					"divjssj" : divjssj
+				}, function(data) {
+					if (data.success) {
+						window.location.href = "../tishi.html?_t="
+								+ new Date().getTime();
+					} else if (data.repeat) {
+						mui.confirm("您已提交过申请", "提示", [ '是' ], function(e) {
+						});
+					} else if (!data.success) {
+						mui.confirm(data.msg, "提示", [ '是' ], function(e) {
+						});
+					} else {
+						window.location.href = "../smtq/demo.html?_t="
+								+ new Date().getTime();
+					}
+				});
+			}
+		}
+	</script>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<h1 class="mui-title">全部发票</h1>
+	</header>
+	<div class="mui-content">
+		<div id="slider" class="mui-slider">
+			<div id="sliderSegmentedControl"
+				class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				<a class="mui-control-item" href="#item1mobile"> 邮寄 </a> <a
+					class="mui-control-item" href="#item2mobile"> 自提 </a>
+
+			</div>
+			<div id="sliderProgressBar"
+				class="mui-slider-progress-bar mui-col-xs-4"></div>
+			<div class="mui-slider-group">
+				<div id="item1mobile"
+					class="mui-slider-item mui-control-content mui-active">
+
+					<p></p>
+					<span
+						style="padding-left: 13px; color: #007AFF; font-weight: 900; font-size: 19px;">请输入收件人信息</span>
+					<p></p>
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label><font color="red">*</font>收件人姓名</label> <input type="text"
+								id="sjrxm" class="mui-input-clear" placeholder="请输入收件人姓名(必填)">
+						</div>
+						<div class="mui-input-row">
+							<label>单位名称</label> <input type="text" id="dwmc"
+								class="mui-input-clear" placeholder="请输入单位名称">
+						</div>
+						<div class="mui-input-row">
+							<label><font color="red">*</font>收件地址</label> <input type="text"
+								id="sjdz" class="mui-input-clear" placeholder="请输入收件地址(必填)">
+						</div>
+						<div class="mui-input-row">
+							<label><font color="red">*</font>邮编</label> <input type="text"
+								id="yhm" class="mui-input-clear" placeholder="请输入用户名(必填)">
+						</div>
+						<div class="mui-input-row">
+							<label><font color="red">*</font>联系电话</label> <input type="text"
+								id="lxdh" class="mui-input-clear" placeholder="请输入联系电话(必填)">
+						</div>
+
+					</form>
+					<p id="cwts" style="color: red;"></p>
+					<button id='confirmBtn' type="button" onclick="sqyj()"
+						class="mui-btn mui-btn-primary mui-btn-block"
+						style="width: 96%; margin-left: 2%; margin-top: 15px;">提交</button>
+				</div>
+				<div id="item2mobile" class="mui-slider-item mui-control-content">
+					<div class="mui-content">
+						<div class="mui-content-padded">
+							<button id='showUserPicker' class="mui-btn mui-btn-block"
+								type='button' style="margin-bottom: 0; padding: 0;">请选择店面</button>
+							<div id='userResult' class="ui-alert"
+								style="font-size: 21px; text-align: center; line-height: 30px; color: #6641E2;"></div>
+							<button id='showCityPicker' class="mui-btn mui-btn-block"
+								type='button' style="margin-bottom: 0; padding: 0;">请选择自提起始时间</button>
+							<div id='cityResult' class="ui-alert"
+								style="font-size: 21px; text-align: center; line-height: 30px; color: #007AFF;"></div>
+							<button id='showCityPicker1' class="mui-btn mui-btn-block"
+								type='button' style="margin-bottom: 0; padding: 0;">请选择自提结束时间</button>
+							<div id='cityResult1' class="ui-alert"
+								style="font-size: 21px; text-align: center; line-height: 30px; color: red;"></div>
+						</div>
+					</div>
+					<script src="../js/mui.min.js"></script>
+					<!--<script src="../js/mui.picker.min.js"></script>-->
+					<script src="../js/mui.picker.js"></script>
+					<script src="../js/mui.poppicker.js"></script>
+					<script src="../js/city.data.js" type="text/javascript"
+						charset="utf-8"></script>
+					<script src="../js/city.data-3.js" type="text/javascript"
+						charset="utf-8"></script>
+					<script>
+						(function($, doc) {
+							$.init();
+							$
+									.ready(function() {
+										//普通示例
+										var userPicker = new $.PopPicker();
+										userPicker.setData(kpd);
+										var showUserPickerButton = doc
+												.getElementById('showUserPicker');
+										var userResult = doc
+												.getElementById('userResult');
+										showUserPickerButton
+												.addEventListener(
+														'tap',
+														function(event) {
+															userPicker
+																	.show(function(
+																			items) {
+																		var dm = JSON
+																				.stringify(items[0].text);
+																		userResult.innerText = dm
+																				.substring(
+																						1,
+																						dm.length - 1);
+																		//返回 false 可以阻止选择框的关闭
+																		//return false;
+																	});
+														}, false);
+										//-----------------------------------------
+										//级联示例
+										var cityPicker = new $.PopPicker({
+											layer : 2
+										});
+										cityPicker.setData(cityData);
+										var showCityPickerButton = doc
+												.getElementById('showCityPicker');
+										var cityResult = doc
+												.getElementById('cityResult');
+										showCityPickerButton
+												.addEventListener(
+														'tap',
+														function(event) {
+															cityPicker
+																	.show(function(
+																			items) {
+																		cityResult.innerText = ""
+																				+ items[0].text
+																				+ ""
+																				+ items[1].text;
+																		//返回 false 可以阻止选择框的关闭
+																		//return false;
+																	});
+														}, false);
+										//-----------------------------------------
+										//级联示例
+										var cityPicker = new $.PopPicker({
+											layer : 2
+										});
+										cityPicker.setData(cityData);
+										var showCityPickerButton = doc
+												.getElementById('showCityPicker1');
+										var cityResult1 = doc
+												.getElementById('cityResult1');
+										showCityPickerButton
+												.addEventListener(
+														'tap',
+														function(event) {
+															cityPicker
+																	.show(function(
+																			items) {
+																		cityResult1.innerText = ""
+																				+ items[0].text
+																				+ ""
+																				+ items[1].text;
+																		//返回 false 可以阻止选择框的关闭
+																		//return false;
+																	});
+														}, false);
+									});
+						})(mui, document);
+					</script>
+					<ul id="mdxx"
+						class="mui-table-view mui-table-view-chevron mui-table-view mui-table-view-radio">
+						<!-- 						<li class="mui-table-view-cell mui-media"><a -->
+						<!-- 							class="mui-navigate-right"> <img class="mui-media-object mui-pull-left" src="../images/muwu.jpg"> -->
+						<!-- 								<div class="mui-media-body"> -->
+						<!-- 									汇成新村店 -->
+						<!-- 									<p class='mui-ellipsis'>地址：上海市徐汇区</p> -->
+						<!-- 									<p class='mui-ellipsis'>电话：89654568</p> -->
+						<!-- 								</div> -->
+						<!-- 						</a></li> -->
+						<!-- 						<li class="mui-table-view-cell mui-media"><a -->
+						<!-- 							class='mui-navigate-right' href="javascript:;"> <img -->
+						<!-- 								class="mui-media-object mui-pull-left" src="../images/yuantiao.jpg"> -->
+						<!-- 								<div class="mui-media-body"> -->
+						<!-- 									康健路店 -->
+						<!-- 									<p class='mui-ellipsis'>地址：上海市宝山区</p> -->
+						<!-- 									<p class='mui-ellipsis'>电话：89654568</p> -->
+						<!-- 								</div> -->
+						<!-- 						</a></li> -->
+						<!-- 						<li class="mui-table-view-cell mui-media"> -->
+						<!-- 							<a class="mui-navigate-right">  -->
+						<!-- 								<img class="mui-media-object mui-pull-left" src="../images/cbd.jpg"> -->
+						<!-- 								<div class="mui-media-body"> -->
+						<!-- 									漕宝路店 -->
+						<!-- 									<p class='mui-ellipsis'>地址：上海市徐汇区</p> -->
+						<!-- 									<p class='mui-ellipsis'>电话：89654568</p> -->
+						<!-- 								</div> -->
+						<!-- 						</a></li> -->
+					</ul>
+					<div class="mui-content">
+						<button type="button" id="sqhk" onclick="ztxx()"
+							class="mui-btn mui-btn-primary mui-btn-block"
+							style="width: 96%; margin-left: 2%; margin-top: 15px;">申请换开</button>
+						<div class="mui-content-padded">
+							<p id="info"></p>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+
+	</div>
+	<div
+		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB; z-index: 99;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a href="../bangzhu.html">遇到问题?</a>
+			</div>
+		</div>
+		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+	</div>
+	<script src="../js/mui.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack : false
+		});
+		(function($) {
+			$('.mui-scroll-wrapper').scroll({
+				indicators : true
+			//是否显示滚动条
+			});
+			var html2 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第二个选项卡子项-1</li><li class="mui-table-view-cell">第二个选项卡子项-2</li><li class="mui-table-view-cell">第二个选项卡子项-3</li><li class="mui-table-view-cell">第二个选项卡子项-4</li><li class="mui-table-view-cell">第二个选项卡子项-5</li></ul>';
+			var html3 = '<ul class="mui-table-view"><li class="mui-table-view-cell">第三个选项卡子项-1</li><li class="mui-table-view-cell">第三个选项卡子项-2</li><li class="mui-table-view-cell">第三个选项卡子项-3</li><li class="mui-table-view-cell">第三个选项卡子项-4</li><li class="mui-table-view-cell">第三个选项卡子项-5</li></ul>';
+			var item2 = document.getElementById('item2mobile');
+
+			document
+					.getElementById('slider')
+					.addEventListener(
+							'slide',
+							function(e) {
+								if (e.detail.slideNumber === 1) {
+									if (item2.querySelector('.mui-loading')) {
+										setTimeout(
+												function() {
+													item2
+															.querySelector('.mui-scroll').innerHTML = html2;
+												}, 500);
+									}
+								} else if (e.detail.slideNumber === 2) {
+									if (item3.querySelector('.mui-loading')) {
+										setTimeout(
+												function() {
+													item3
+															.querySelector('.mui-scroll').innerHTML = html3;
+												}, 500);
+									}
+								}
+							});
+			var sliderSegmentedControl = document
+					.getElementById('sliderSegmentedControl');
+			$('.mui-input-group')
+					.on(
+							'change',
+							'input',
+							function() {
+								if (this.checked) {
+									sliderSegmentedControl.className = 'mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-'
+											+ this.value;
+									//force repaint
+									sliderProgressBar.setAttribute('style',
+											sliderProgressBar
+													.getAttribute('style'));
+								}
+							});
+		})(mui);
+	</script>
+
+</body>
+
+</html>

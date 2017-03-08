@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>网页访问出错</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+<link rel="stylesheet" type="text/css" href="../css/error_all.css?t=201303212934">
+</head>
+<body class="error-404">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	$
+	.post(
+			"../dzfp_sqj/getmsg",
+			{},
+			function(data) {
+				if(null!=data){
+					if(null!=data.msg&&""!=data.msg){
+						$('#msg').html("");
+						$('#msg').html(data.msg);
+					}		
+				}
+				})
+			})
+</script>
+<div id="doc_main">
+	
+	<section class="bd clearfix">
+		<div class="module-error">
+			<div class="error-main clearfix">
+				<div class="label"></div>
+				<div class="info">
+					<h3 class="title"><b></b>提示</h3>
+					<div class="reason">
+						<p id="msg">您的请求已过期!</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+
+</body></html>

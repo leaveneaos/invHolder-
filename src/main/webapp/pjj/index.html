@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>泰易发票夹</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+
+<!--标准mui.css-->
+<link rel="stylesheet" href="../css/mui.min.css">
+<!--App自定义的css-->
+<link rel="stylesheet" type="text/css" href="../css/app.css" />
+<style>
+.mui-card .mui-control-content {
+	padding: 10px;
+}
+
+.mui-control-content {
+	min-height: 400px;
+	height: auto !important;
+	height: 400px;
+}
+
+.mui-table-view .mui-media-object {
+	height: 62px;
+	line-height: 62px;
+	max-width: 72px;
+}
+</style>
+</head>
+<body>
+
+		<div class="mui-input-row mui-search">
+			<input type="search" id="je" onkeyup="search(event)" class="mui-input-clear" placeholder="开票金额" style="width: 98%;margin-top: 10px;margin-left: 1%; margin-right: 1%;">
+			
+<!-- 		<button type="button" id="search" -->
+<!-- 			class="mui-btn mui-btn-primary" -->
+<!-- 			style="width: 98%; margin-top: 10px;margin-left: 1%; margin-right: 1%;">查询</button> -->
+		</div>
+
+
+	<div class="mui-content">
+		<!-- 		<div style="padding: 10px 10px;"> -->
+		<!-- 			<div id="segmentedControl" class="mui-segmented-control"> -->
+		<!-- 				<a id="all1" class="mui-control-item mui-active" href="#item1" style="width: 30%" > 全部 </a>  -->
+		<!--  				<a id="house" class="mui-control-item" href="#item1"> 三月内</a> -->
+		<!-- 				<a id="food" class="mui-control-item" href="#item1"> 三月外 </a>   -->
+		<!-- 			</div> -->
+		<!-- 		</div> -->
+		<!-- 		<div> -->
+		<!-- 			<div id="item1" -->
+		<!-- 				class="mui-slider-item mui-control-content mui-active"> -->
+		<!-- 				<div id="div1" class="mui-scroll-wrapper" -->
+		<!-- 					style="margin-bottom: 50px; height: 400px;"> -->
+		<!-- 					<div class="mui-scroll" style=""> -->
+		<!-- 						<ul class="mui-table-view mui-table-view-chevron" id="all"> -->
+
+		<!-- 						</ul> -->
+		<!-- 					</div> -->
+		<!-- 				</div> -->
+		<!-- 			</div> -->
+
+		<!-- 		</div> -->
+		<div style="width: 98%;margin-botton: 50px; margin-top: 3px;margin-left: 1%; margin-right: 1%;">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-collapse mui-active"><a
+					class="mui-navigate-right" href="#" id="itm11">本月</a>
+					<div class="mui-collapse-content" id="itm1">
+						<!-- 					 <p>我是内容1</p>   -->
+						<!--                      <p>我是内容2</p>   -->
+						<!--                      <p>我是内容3</p>   -->
+						<!--                      <p>我是内容4</p>   -->
+					</div></li>
+				<li class="mui-table-view-cell mui-collapse"><a
+					class="mui-navigate-right" href="#" id="itm22">上个月</a>
+					<div class="mui-collapse-content" id="itm2">
+						<!-- 第2个面板中的内容 -->
+					</div></li>
+				<li class="mui-table-view-cell mui-collapse"><a
+					class="mui-navigate-right" href="#" id="itm33">两月之前</a>
+					<div class="mui-collapse-content" id="itm3">
+						<!-- 第3个面板中的内容 -->
+					</div></li>
+			</ul>
+		</div>
+	</div>
+	<script src="../js/mui.min.js"></script>
+	<!-- 	<script type="text/javascript"> -->
+	<!-- // 			document.write('<script src="../js/fpj.js" type="text/javascript"/>'); -->
+	<!-- 	</script> -->
+	<script src="../js/fpj.js" type="text/javascript"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script>
+		var page = 1;
+		var sj = 1;
+		var bool = false;
+		mui.init({
+			swipeBack : true
+		//启用右滑关闭功能
+		});
+		(function($) {
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration : 0.0005
+			//flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			mui('#div1').scroll({
+				indicators : true
+			//是否显示滚动条
+			});
+
+			var segmentedControl = document.getElementById('segmentedControl');
+			$('.mui-input-group')
+					.on(
+							'change',
+							'input',
+							function() {
+								if (this.checked) {
+									var styleEl = document
+											.querySelector('input[name="style"]:checked');
+									var colorEl = document
+											.querySelector('input[name="color"]:checked');
+									if (styleEl && colorEl) {
+										var style = styleEl.value;
+										var color = colorEl.value;
+										segmentedControl.className = 'mui-segmented-control'
+												+ (style ? (' mui-segmented-control-' + style)
+														: '')
+												+ ' mui-segmented-control-'
+												+ color;
+									}
+								}
+							});
+		})(mui);
+
+		// 		mui.init({
+		// 		  pullRefresh : {
+		// 		    container:"#all",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+		// 		    down : {
+		// 		      height:50,//可选,默认50.触发下拉刷新拖动距离,
+		// 		      auto: true,//可选,默认false.自动下拉刷新一次
+		// 		      contentdown : "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+		// 		      contentover : "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+		// 		      contentrefresh : "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+		// 		      callback :function(){//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+		// 		      	mui('#all').pullRefresh().endPulldownToRefresh();
+		// 		      } 
+		// 		    }
+		// 		  }
+		// 		});
+		// 		mui
+		// 				.init({
+		// 					pullRefresh : {
+		// 						container : "#div1",//待刷新区域标识，querySelector能定位的css选择器均可，比如：id、.class等
+		// 						up : {
+		// 							height : 50,//可选.默认50.触发上拉加载拖动距离
+		// 							auto : true,//可选,默认false.自动上拉加载一次
+		// 							contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+		// 							// 		      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+		// 							callback : function() {//必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+		// 								$
+		// 										.ajax({
+		// 											url : '../pjj/getOpenid',
+		// 											method : 'post',
+		// 											success : function(data) {
+		// 												if (data.success) {
+		// 													getJy();
+		// 												} else {
+		// 													var urlinfo = window.location.href; //获取当前页面的url
+		// 													var gsdm1;
+		// 													if (urlinfo.indexOf('code') > -1) {
+		// 														var len = urlinfo.length;//获取url的长度
+		// 														var offset = urlinfo
+		// 																.indexOf("?");//设置参数字符串开始的位置
+		// 														var newsidinfo = urlinfo
+		// 																.substr(offset,
+		// 																		len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+		// 														var newsids = newsidinfo
+		// 																.split("=");//对获得的参数字符串按照“=”进行分割
+		// 														gsdm1 = newsids[1];//得到参数值
+		// 													}
+		// 													$
+		// 															.ajax({
+		// 																url : '../pjj/getGsxx',
+		// 																data : {
+		// 																	"gsdm" : gsdm1
+		// 																},
+		// 																method : 'post',
+		// 																success : function(
+		// 																		data) {
+		// 																	appid = data.gsxx.wxappid;
+		// 																	secret = data.gsxx.wxsecret;
+		// 																	var url = window.location.href;
+		// 																	if (url
+		// 																			.indexOf("fpjtest.datarj") > 0) {
+		// 																		window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+		// 																				+ appid
+		// 																				+ "&redirect_uri=http://fpjtest.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+		// 																	} else {
+		// 																		window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+		// 																				+ appid
+		// 																				+ "&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+		// 																	}
+
+		// 																}
+		// 															});
+		// 												}
+		// 												mui('#div1').pullRefresh()
+		// 														.endPullupToRefresh(
+		// 																bool);
+		// 											},
+		// 											error : function(data) {
+		// 												alert(data.errcode
+		// 														+ data.errmsg);
+		// 											}
+		// 										});
+		// 							}
+		// 						}
+		// 					}
+		// 				});
+	</script>
+	<div
+		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB; z-index: 99;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a href="../bangzhu.html">遇到问题?</a>
+			</div>
+		</div>
+		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var gsdm = null;
+	$(function() {
+		$
+				.ajax({
+					url : '../pjj/getOpenid',
+					method : 'post',
+					success : function(data) {
+						if (data.success) {
+							sj=1;
+							getJy("#itm1", $("#je").val());
+						} else {
+							var urlinfo = window.location.href; //获取当前页面的url
+							var gsdm1;
+							if (urlinfo.indexOf('gsdm') > -1) {
+								var len = urlinfo.length;//获取url的长度
+								var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+								var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+								var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+								gsdm1 = newsids[1];//得到参数值
+							}
+							$
+									.ajax({
+										url : '../pjj/getGsxx',
+										data : {
+											"gsdm" : gsdm1
+										},
+										method : 'post',
+										success : function(data) {
+											appid = data.gsxx.wxappid;
+											secret = data.gsxx.wxsecret;
+											var url = window.location.href;
+											if (url.indexOf("fpjtest.datarj") > 0) {
+												window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+														+ appid
+														+ "&redirect_uri=http://fpjtest.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+											} else {
+												window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+														+ appid
+														+ "&redirect_uri=http://fpj.datarj.com/fp.html&response_type=code&scope=snsapi_base&state=rjxx#wechat_redirect";
+											}
+
+										}
+									});
+						}
+					},
+					error : function(data) {
+						alert(data.errcode + data.errmsg);
+					}
+				});
+		$("#itm11").on('tap', function(event) {
+			var je = $('#je').val();
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
+			sj = 1;
+			getJy("#itm1", je);
+		});
+		$("#itm22").on('tap', function(event) {
+			var je = $('#je').val();
+			var num = /^\d+(\.\d{2})?$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
+			sj = 2;
+			getJy("#itm2", je);
+		});
+		$("#itm33").on('tap', function(event) {
+			var je = $('#je').val();
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
+			sj = 3;
+			getJy("#itm3", je);
+		});
+		$("#itm1").on('tap', 'a', function(event) {
+			getFp($(this).attr("value"));
+		});
+		$("#itm2").on('tap', 'a', function(event) {
+			getFp($(this).attr("value"));
+		});
+		$("#itm3").on('tap', 'a', function(event) {
+			getFp($(this).attr("value"));
+		});
+		$("#search").on('tap', function(event) {
+			var je = $('#je').val();
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
+			var itm;
+			if (sj == 1) {
+				itm = "#itm1";
+			}else if (sj == 2){
+				itm = "#itm2";
+			}else if (sj == 3) {
+				itm = "#itm3";
+			}
+			getJy(itm, je);
+		});
+	});
+	function search(e){
+		if(e.keyCode == 13) {
+	        $("#je").blur();
+	        var je = $('#je').val();
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+			if (je != null && je != "" && !num.test(je)) {
+				mui.confirm("金额格式有误!", "提示", [ '是' ], function(e) {});
+				return;
+			}
+			var itm;
+			if (sj == 1) {
+				itm = "#itm1";
+			}else if (sj == 2){
+				itm = "#itm2";
+			}else if (sj == 3) {
+				itm = "#itm3";
+			}
+			getJy(itm, je);
+	    }
+	}
+</script>
+
+</html>

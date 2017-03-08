@@ -8,6 +8,10 @@
 	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
 <!--标准mui.css-->
 <link rel="stylesheet" href="css/mui.min.css">
 <!--App自定义的css-->
@@ -146,109 +150,41 @@
 	transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
-@
--webkit-keyframes fadeIn { 0% {
-	opacity: 0;
-}
-
-100%
-{
-opacity
-
-
-
-
-
-
-:
-
-
-
- 
-
-
-
-1;
-}
-}
-@
-keyframes fadeIn { 0% {
-	opacity: 0;
-}
-
-100%
-{
-opacity
-
-
-
-
-
-
-:
-
-
-
- 
-
-
-
-1;
-}
-}
-@
--webkit-keyframes fadeOut { 0% {
-	opacity: 1;
-}
-
-100%
-{
-opacity
-
-
-
-
-
-
-:
-
-
-
- 
-
-
-
-0;
-}
-}
-@
-keyframes fadeOut { 0% {
-	opacity: 1;
-}
-
-100%
-{
-opacity
-
-
-
-
-
-
-:
-
-
-
- 
-
-
-
-0;
-}
-}
-p img {
-	max-width: 100%;
-	height: auto;
+@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			p img {
+				max-width: 100%;
+				height: auto;
 }
 </style>
 <!--
@@ -259,13 +195,13 @@ p img {
 
 <body>
 	<header class="mui-bar mui-bar-nav">
-		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
 		<h1 class="mui-title">发票预览</h1>
 	</header>
 	<div class="mui-content">
 		<div id=parentIndustryUL class="mui-content-padded">
 
-			<!-- 				<div style="width: 33%;float: left;">
+			<!--<div style="width: 33%;float: left;">
 					<img src="images/yuantiao.jpg" data-preview-src="" data-preview-group="1" style="width: 100%;"/>
 				</div>
 				
@@ -275,49 +211,206 @@ p img {
 				
 				<div style="width: 33%;float: left;">
 					<img src="images/shuijiao.jpg" data-preview-src="" data-preview-group="1" style="width: 100%;"/>
-				</div>
-				 -->
+				</div> -->
+
 		</div>
 	</div>
 	<p></p>
-	<div style="width: 100%; padding-left: 13px; float: left;">
+
+	<div style="width: 100%; float: left; margin-bottom: 50px;">
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell"><a id="you"
+				class="mui-navigate-right"> 发送到邮箱 </a></li>
+			<li class="mui-table-view-cell" id="lifpj"><a id="fpj"
+				class="mui-navigate-right"> 收藏到发票夹 </a></li>
+			<li class="mui-table-view-cell" id="lifpj1"><a id="fpj1"
+				class="mui-navigate-right"> 收藏到发票夹 </a></li>
+<!-- 			<li class="mui-table-view-cell" id="msg"><a id="fpj" -->
+<!-- 				class="mui-navigate-right"> 发送 </a></li> -->
+		</ul>
 		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
-		<a id="you" href="#"><button type="button" onclick="sckj()"
+		<!--<a id="you" href="#"><button type="button"
 				class="mui-btn mui-btn-warning">邮箱</button></a>
-		<button type="button" class="mui-btn mui-btn-success">微信卡包</button>
+		<a id="fpj" href="#"><button type="button" id="fpj1" 
+				class="mui-btn mui-btn-warning">发票夹</button></a>-->
+		<!-- 	<button onclick="sckj()" type="button" class="mui-btn mui-btn-success">微信卡包</button> -->
 
 		<!-- <a id="hk" href="#"><button type="button"
 				class="mui-btn mui-btn-royal mui-btn-outlined">我想要纸质发票</button></a> -->
 	</div>
+	<div
+		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
+		<div style="max-width: 800px; margin: 0 auto;">
+			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
+			<div style="width: 30%; float: right; text-align: right;">
+				<a id="abc" href="">遇到问题?</a>
+			</div>
+		</div>
+		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
+	</div>
 	<p></p>
 	<script src="js/mui.min.js"></script>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/wxkb.js"></script>
+	<script src="js/fpj.js" type="text/javascript"></script>
 	<script type="text/javascript">
+		var djh;
+		var fdfdz;
+		var ua = navigator.userAgent.toLowerCase();
+		if (ua.match(/MicroMessenger/i) != "micromessenger") {
+			$('#fpj').hide();
+			$('#lifpj').hide();
+		}else{
+			$('#fpj1').hide();
+			$('#lifpj1').hide();
+		}
 		$(function() {
-			var urlinfo = window.location.href;
-			var len = urlinfo.length;
-			var offset = urlinfo.indexOf("?");
-			var newsidinfo = urlinfo.substr(offset, len)
-			var newsids = newsidinfo.split("=");
-			var pdfdzs = newsids[1].substring(0, newsids[1].indexOf("&"));
-			var djh = newsids[2];
-			var pdfdz = pdfdzs.split(",");
-			$('#you').attr("href", "youxiang.html?djh=" + djh);
-			$('#hk').attr("href", "sqhk.html?djh=" + djh);
 			$
-					.each(
-							pdfdz,
-							function(n, value) {
-								$("#parentIndustryUL")
-										.append(
-												"<div style='width: 33%;float: left;'><img src='"
-														+ value
-														+ "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+					.post(
+							"tijiao/fpsession",
+							{},
+							function(data) {
+								djh = data.djh;
+								var pdfdzs = data.pdfdz
+								if (djh != null && djh != "") {
+									pdfdz = pdfdzs.split(",");
+									$
+											.each(
+													pdfdz,
+													function(n, value) {
+														$("#parentIndustryUL")
+																.append(
+																		"<div style='width: 100%;float: left;'><img src='"
+																				+ value
+																				+ "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
 
-							});
+													});
+								} else {
+									window.location.href = "smtq/demo.html?time="
+											+ new Date().getTime();
+								}
+							})
+			//			$('#you').attr("href", "youxiang.html");
+			//			$('#abc').attr("href", "bangzhu.html");
+			//$('#hk').attr("href", "sqhk.html");
+
+			var urlinfo = window.location.href; //获取当前页面的url
+			if (urlinfo.indexOf('code') > -1) {
+				var len = urlinfo.length;//获取url的长度
+				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+				var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+				var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+				var code = newsids[1];//得到参数值
+				if (code != "rjxx") {
+					getToken(code);
+					// 					getRefresh();
+					if (openid != null) {
+						getUserMsg();
+						// 						if (unionid != null) {
+						$.ajax({
+							url : '../pjj/saveFpj',
+							method : 'post',
+							success : function(data) {
+								if (data.success) {
+									window.location.href = "../sccg.html?_t="
+											+ new Date().getTime();
+								} else if (data.nopeat) {
+									window.location.href = "../sccg.html?_t="
+											+ new Date().getTime();
+								} else {
+									window.location.href = "../pjj/first";
+								}
+							}
+						});
+						// 						}
+					}
+				} else {
+					alert('未得到授权');
+					return;
+				}
+			}
+			$('#you').click(function() {
+				window.location.href = "youxiang.html?_t=" + new Date().getTime();
+			});
+			$('#abc').click(function() {
+				window.location.href = "bangzhu.html?_t=" + new Date().getTime();
+			});
+			$('#fpj1').click(function() {
+				window.location.href = "ewmsc.html?_t=" + new Date().getTime();
+			});
+			$('#msg').click(function() {
+				$.ajax({
+				url : 'pjj/sendMessage',
+				data : {},
+				type : 'post',
+				success : function(data) {
+					alert(data.msg);
+				}
+			});
+			});
+
+			$('#fpj').click(function() {
+				if (openid == null) {
+					getCode();
+				} else {
+					$.ajax({
+						url : '../pjj/saveFpj',
+						data : {
+							"openid" : openid
+						},
+						method : 'post',
+						success : function(data) {
+							if (data.success) {
+								window.location.href = "../sccg.html?_t="
+											+ new Date().getTime();
+							} else if (data.nopeat) {
+								window.location.href = "../sccg.html?_t="
+											+ new Date().getTime();
+							} else {
+								window.location.href = "../pjj/first";
+							}
+						}
+					});
+				}
+				// 				$.ajax({
+				// 					url : 'pjj/getOpenid',
+				// 					method : 'post',
+				// 					success : function(data) {
+				// 						if (data.success) {
+				// 							flag = true;
+				// 						} else {
+				// 							getCode();
+				// 						}						
+				// 					}
+				// 				});
+			});
+
+			//			$('#fpj1').click(function() {
+			//				if (openid == null) {
+			//					getCode();
+			//				}else{
+			//					$.ajax({
+			//						url : '../pjj/saveFpj',
+			//						data : {
+			//							"openid" : openid
+			//						},
+			//						method : 'post',
+			//						success : function(data) {
+			//							if (data.success) {
+			//								window.location.href = "../pjj/first";
+			//							}else if (data.nopeat) {
+			//								window.location.href = "../pjj/first";
+			//							} else {
+			//								window.location.href = "../pjj/first";
+			//							}
+			//						}
+			//					});
+			//				}
+			//			});
+
 		})
 		function tiaozhuan() {
-			window.location.href = "index.html";
+			window.location.href = "zydc.html?time=" + new Date();
 		}
 		function sckj() {
 			$.ajax({
@@ -325,27 +418,11 @@ p img {
 				data : {},
 				type : 'post',
 				success : function(data) {
-					if (data.msg) {
-						if (data.bz == 1) {
-							//生成卡卷
-						} else if (data.bz == 0) {
-							//重新获取accessToken
-							access_token();
-							//保存获取到的accessToken
-							$.ajax({
-								url : 'tijiao/wxkb',
-								data : {"accessToken":access_token,"expires_in":expires_in},
-								type : 'post',
-								success : function(data) {
-									if (!data.msg) {
-										alert("保存新accessToken失败");
-									}
-
-								}
-							});
-							//生成卡卷
-							cjkj();
-						}
+					if (data.success) {
+						//alert(data.card_id)
+						window.location.href = data.show_qrcode_url;
+					} else {
+						alert(data.msg);
 					}
 				}
 			});
@@ -373,10 +450,10 @@ p img {
 	</div> -->
 	<script type="text/javascript">
 		mui.init();
-		if (mui.os.ios || mui.os.android) {
-		} else {
-			document.getElementById("zon").style.width = "640px";
-		}
+		/* 		if (mui.os.ios || mui.os.android) {
+		 } else {
+		 document.getElementById("zon").style.width = "640px";
+		 } */
 	</script>
 
 </body>
@@ -399,6 +476,4 @@ p img {
 		class="mui-tab-label">泰易电子发票云</span>
 	</a>
 </nav>  -->
-</body>
-
 </html>
