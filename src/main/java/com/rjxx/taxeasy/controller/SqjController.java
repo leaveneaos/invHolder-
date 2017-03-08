@@ -228,49 +228,49 @@ public class SqjController extends BaseController {
 			mapo.put("je", String.valueOf(request.getSession().getAttribute("price")));
 			mapo.put("gsdm", "sqj");
 			Tqmtq tqmtq = tqmtqService.findOneByParams(mapo);
-			if (null != smtq1 && null != smtq1.getId()) {
-				List<Kpls> list = jylsService.findByTqm(map);
-				if (list.size() > 0) {
-					if (openid != null && !"null".equals(openid)) {
-						Map<String, Object> param = new HashMap<>();
-						param.put("djh", list.get(0).getDjh());
-						param.put("unionid", openid);
-						Fpj fpj = fpjService.findOneByParams(param);
-						if (fpj == null) {
-							fpj = new Fpj();
-							fpj.setDjh(list.get(0).getDjh());
-							fpj.setUnionid(openid);
-							fpj.setYxbz("1");
-							fpj.setLrsj(new Date());
-							fpj.setXgsj(new Date());
-							fpjService.save(fpj);
-						}
+			List<Kpls> list = jylsService.findByTqm(map);
+			if (list.size() > 0) {
+				if (openid != null && !"null".equals(openid)) {
+					Map<String, Object> param = new HashMap<>();
+					param.put("djh", list.get(0).getDjh());
+					param.put("unionid", openid);
+					Fpj fpj = fpjService.findOneByParams(param);
+					if (fpj == null) {
+						fpj = new Fpj();
+						fpj.setDjh(list.get(0).getDjh());
+						fpj.setUnionid(openid);
+						fpj.setYxbz("1");
+						fpj.setLrsj(new Date());
+						fpj.setXgsj(new Date());
+						fpjService.save(fpj);
 					}
-					String pdfdzs = "";
-					for (Kpls kpls2 : list) {
-						pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
-					}
-					if (pdfdzs.length() > 0) {
-						request.getSession().setAttribute("djh", list.get(0).getDjh());
-						request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-					}
-					Tqjl tqjl = new Tqjl();
-					tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
-					tqjl.setTqsj(new Date());
-					String visiterIP;
-					if (request.getHeader("x-forwarded-for") == null) {
-						visiterIP = request.getRemoteAddr();// 访问者IP
-					} else {
-						visiterIP = request.getHeader("x-forwarded-for");
-					}
-					tqjl.setIp(visiterIP);
-					tqjl.setJlly("1");
-					String llqxx = request.getHeader("User-Agent");
-					tqjl.setLlqxx(llqxx);
-					tqjlService.save(tqjl);
-					response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
-					return;
 				}
+				String pdfdzs = "";
+				for (Kpls kpls2 : list) {
+					pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+				}
+				if (pdfdzs.length() > 0) {
+					request.getSession().setAttribute("djh", list.get(0).getDjh());
+					request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+				}
+				Tqjl tqjl = new Tqjl();
+				tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+				tqjl.setTqsj(new Date());
+				String visiterIP;
+				if (request.getHeader("x-forwarded-for") == null) {
+					visiterIP = request.getRemoteAddr();// 访问者IP
+				} else {
+					visiterIP = request.getHeader("x-forwarded-for");
+				}
+				tqjl.setIp(visiterIP);
+				tqjl.setJlly("1");
+				String llqxx = request.getHeader("User-Agent");
+				tqjl.setLlqxx(llqxx);
+				tqjlService.save(tqjl);
+				response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+				return;
+			}
+			if (null != smtq1 && null != smtq1.getId()) {
 				response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
 				return;
 			} else if (null != tqmtq && null != tqmtq.getId()) {
