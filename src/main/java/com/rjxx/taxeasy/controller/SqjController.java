@@ -392,7 +392,9 @@ public class SqjController extends BaseController {
 		Smtq smtq1 = smtqService.findOneByParams(map);
 		Smtq smtq;
 		if (null != smtq1) {
-			smtq = smtq1;
+			result.put("failure", true);
+			result.put("xx", "您的请求已接收，请勿重复提交");
+			return result;
 		} else {
 			smtq = new Smtq();
 		}
