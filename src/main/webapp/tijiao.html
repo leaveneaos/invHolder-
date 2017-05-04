@@ -261,6 +261,7 @@ jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=
 					firm += "手机:" + sjh + "。";
 				} */
 				title = "信息确认";
+				$("#confirmBtn").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
 					if(r){
 						$.post("dzfp_sqj/saveLs", {
@@ -281,11 +282,12 @@ jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=
 								btnArray = [ '确定' ];
 								firm = data.msg;
 								info.innerText =firm;
-
+								$("#confirmBtn").attr("disabled",false);
 							}
 						});
 					}else{
 						info.innerText = '请重新确认';
+						$("#confirmBtn").attr("disabled",false);
 					}
 				});
 			}
