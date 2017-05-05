@@ -55,7 +55,7 @@ h5 {
 						if(null!=data){
 							var se =(data.zje - (data.zje/1.06).toFixed(2)).toFixed(2);
 							$('#mxtb').append("<tr><td>餐饮服务</td><td>"+data.zje+"</td><td>6%</td><td style='display:none;'>"+se+"</td></tr>")
-							$('#mxtb').append("<tr style='background-color: #A1A2A4;'><td colspan='4' >合计："+data.zje+"</td></tr>");					
+							$('#mxtb').append("<tr style='background-color: #A1A2A4;'><td colspan='4' >合计："+data.zje+"</td></tr>");
 							}
 					})
 		})
@@ -73,7 +73,7 @@ h5 {
 				title = "提示";
 				jAlert(firm, title);
 				return;
-			}else if(null == yx || "" == yx){	
+			}else if(null == yx || "" == yx){
 				 var btnArray = [ '是' ];
 					firm = "请输入邮箱!";
 					title = "提示";
@@ -143,7 +143,9 @@ h5 {
 								$("#confirmBtn").attr("disabled",false);
 							} else if (data.msg == 2) {
 								window.location.href = "../dzfp_sqj/smtq3";
-							}
+							} else{
+                                window.location.href = "demo.html";
+                            }
 						});
 					}else{
 						info.innerText = '请重新确认';
@@ -154,7 +156,7 @@ h5 {
 /* 			mui.confirm(firm, title, btnArray, function(e) {
 				if (e.index == 1) {
 				 	document.getElementById("confirmBtn").setAttribute(
-							"disabled", true); 
+							"disabled", true);
 					$.post("../dzfp_sqj/save", {
 						"fptt" : fptt,
 						"nsrsbh" : nsrsbh,
@@ -190,12 +192,12 @@ h5 {
 						id="fptt" name="gfmc" maxlength="100" class="mui-input-clear"
 						placeholder="请输入购方名称">
 				</div>
-				
-				
-				
-				
-				
-				
+
+
+
+
+
+
 				<ul class="mui-table-view">
 					<!-- <li class="mui-table-view-cell mui-collapse">
 						<a class="mui-navigate-right" href="#" style="color: #8A6DE9;">点击填写更多购方信息</a>
@@ -222,7 +224,7 @@ h5 {
 					<label>开户行账号</label> <input type="text" id="yhzh"
 						class="mui-input-clear" maxlength="50" placeholder="请输入开户行账号">
 				</div>
-								
+
 							</form>
 						</div>
 					</li> -->
@@ -252,11 +254,11 @@ h5 {
 									<label>银行账号</label> <input type="text" class="mui-input-clear"
 										id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
 								</div>
-								
+
 						</div>
 		      </dd>
-		              
-		              
+
+
 		            </dl>
 		  </div>
 		 </div>
@@ -268,17 +270,17 @@ h5 {
 									<label>手机</label> <input type="text"
 										id="sj" class="mui-input-clear" placeholder="请填写手机号">
 								</div> -->
-		
+
 				</ul>
-				
-		
-				
-				
-				
-				
-				
-				
-				
+
+
+
+
+
+
+
+
+
 			</form>
 			<table id="mxtb" border="1" id="tab"
 				style="width: 98%; margin-left: 1%; border: solid 1px #DEDEE3; text-align: center;">
@@ -326,7 +328,7 @@ h5 {
 					info.innerText = '确认信息';
 				});
 			}); */
-			
+
 		</script>
 </body>
 <div
