@@ -431,6 +431,17 @@ public class SqjController extends BaseController {
     @ResponseBody
     public Map getZje() {
         Map<String, Object> result = new HashMap<>();
+        String sn = (String) request.getSession().getAttribute("sn");
+        if (StringUtils.isNotBlank(sn)) {
+            Map map2 = new HashMap<>();
+            map2.put("gsdm", "sqj");
+            map2.put("kpddm", sn);
+            Skp skp = skpService.findOneByParams(map2);
+            if (skp != null) {
+                String spsl = cszbService.getSpbmbbh("sqj", skp.getXfid(), skp.getId(), "spsl").getCsz();
+                result.put("slv", spsl);
+            }
+        }
         result.put("zje", request.getSession().getAttribute("price"));
         return result;
     }
@@ -475,23 +486,6 @@ public class SqjController extends BaseController {
             }
         }
         return result;
-    }
-
-    public Cszb getCszb(String gsdm, Integer xfid, Integer kpdid, String csm) {
-        Map params = new HashMap<>();
-        params.put("gsdm", gsdm);
-        params.put("xfid", xfid);
-        params.put("kpdid", kpdid);
-        params.put("csm", csm);
-        List<Cszb> list = new ArrayList<>();
-        list = cszbService.findAllByParams(params);
-        if (list.size() == 1) {
-            return list.get(0);
-        } else if (list.size() == 0) {
-            return new Cszb();
-        } else {
-            return list.get(0);
-        }
     }
 
     public static void main(String[] args) {
@@ -792,9 +786,10 @@ public class SqjController extends BaseController {
                     } else {
                         jyspmx.setSpmc("餐饮服务");
                     }
-                    jyspmx.setSpdm("1010101070000000000");
+                    jyspmx.setSpdm("3070401000000000000");
                     jyspmx.setSpje(jyxx.getPrice());
-                    jyspmx.setSpsl(0.06);
+                    String spsl = cszbService.getSpbmbbh("sqj", skp.getXfid(), skp.getId(), "spsl").getCsz();
+                    jyspmx.setSpsl(Double.valueOf(spsl));
                     jyspmx.setLrsj(new Date());
                     jyspmx.setXgsj(new Date());
                     jyspmx.setLrry(yh.getId());
