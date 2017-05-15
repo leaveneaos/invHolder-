@@ -24,18 +24,18 @@ jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=
 	mui.init();
 </script> -->
 <style type="text/css">
-	input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { 
+	input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
 color: #FFFFFF; font-weight: 900;
-} 
-input:-moz-placeholder, textarea:-moz-placeholder { 
+}
+input:-moz-placeholder, textarea:-moz-placeholder {
 color: #FFFFFF;  font-weight: 900;
-} 
-input::-moz-placeholder, textarea::-moz-placeholder { 
+}
+input::-moz-placeholder, textarea::-moz-placeholder {
 color: #FFFFFF;  font-weight: 900;
-} 
-input:-ms-input-placeholder, textarea:-ms-input-placeholder { 
+}
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 color: #FFFFFF;  font-weight: 900;
-} 
+}
 </style>
 </head>
 <body
@@ -51,7 +51,7 @@ color: #FFFFFF;  font-weight: 900;
 	    var bIsAndroid = sUserAgent.match(/android/i) == "android";
 	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
 	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-		
+
 		function loadimage() {
 			document.getElementById("randImage").src = "../image.jsp?"
 					+ Math.random();
@@ -90,7 +90,7 @@ color: #FFFFFF;  font-weight: 900;
 					    }else{
 					    	window.location.href = "../fp.html?time=" + new Date();
 					    }
-				
+
 				} else if (data.num == 3) {
 					btnArray = [ '确定' ];
 					firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
@@ -123,6 +123,9 @@ color: #FFFFFF;  font-weight: 900;
 
 					}); */
 					jAlert(firm, title);
+				} else if (data.num == 11) {
+                    $('#cwts').html("输入的提取码不正确");
+                    loadimage();
 				}
 			});
 		}

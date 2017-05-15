@@ -317,6 +317,7 @@ public class TijiaoController extends BaseController {
         result.put("djh", request.getSession().getAttribute("djh"));
         result.put("tqm", request.getSession().getAttribute("tqm"));
         result.put("zje", request.getSession().getAttribute("je"));
+        result.put("slv", request.getSession().getAttribute("slv"));
         return result;
     }
 

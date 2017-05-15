@@ -94,6 +94,9 @@ jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=
 					firm = "您提取的申请已提交,我们正在处理,请稍等!";
 					title = "提示";
 					jAlert(firm, title);
+				} else if (data.num == 11) {
+					$('#cwts').html("输入的提取码不正确");
+					loadimage();
 				}
 			});
 		}

@@ -23,7 +23,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dzfp_sqj")
@@ -611,6 +614,28 @@ public class SqjController extends BaseController {
         String openid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
+            //验证提取码
+            //201705122093019160,6%
+            //201705122113019160,3%
+            String storeNo = null;
+            if (tqm.length() > 12) {
+                storeNo = tqm.substring(8, 12);
+                Map params = new HashMap();
+                params.put("kpddm", storeNo);
+                Skp skp = skpService.findOneByParams(params);
+                if (skp == null) {
+                    //提取码不正确
+                    result.put("num", "11");
+                    return result;
+                }
+                Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
+                request.getSession().setAttribute("slv", cszb.getCsz());
+            } else {
+                //提取码不正确
+                result.put("num", "11");
+                return result;
+            }
+
             Map mapo = new HashMap<>();
             mapo.put("ddh", tqm);
             mapo.put("gsdm", "sqj");

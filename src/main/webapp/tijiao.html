@@ -41,10 +41,12 @@ jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=
 
 			$.post("tijiao/tjsession", {}, function(data) {
 				djh = data.tqm;
+				var slv = data.slv;
+				slv = parseFloat(slv) * 100;
 				if (djh != null && djh != "") {
 					$("#tab").append(
 							"<tr><td>餐饮服务</td><td>" + data.zje
-									+ "</td><td>6%</td></tr>")
+									+ "</td><td>"+slv+"%</td></tr>")
 					/* 										var mxList = data.mxList;
 															var zje = 0.00;
 															$
