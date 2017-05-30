@@ -46,19 +46,19 @@
 								}
 							})
 		})
-		function fpfs1(va) {
-			$('#cwxx').html("正在发送,请关注您的邮箱!");
-			var te = $(va).html();
-			var yx = te.substring(te.lastIndexOf(":") + 1)
-			$.post("tijiao/yxfs", {
-				"yx" : yx,
-				"djh" : djh
-			}, function(data) {
-				if (data.msg) {
-					window.location.href = "tishi2.html?time=" + new Date();
-				}
-			});
-		}
+		// function fpfs1(va) {
+		// 	$('#cwxx').html("正在发送,请关注您的邮箱!");
+		// 	var te = $(va).html();
+		// 	var yx = te.substring(te.lastIndexOf(":") + 1)
+		// 	$.post("tijiao/yxfs", {
+		// 		"yx" : yx,
+		// 		"djh" : djh
+		// 	}, function(data) {
+		// 		if (data.msg) {
+		// 			window.location.href = "tishi2.html?time=" + new Date();
+		// 		}
+		// 	});
+		// }
 		function fpfs() {
 			var youxiang = $('#username').val();
 			if (null == youxiang || "" == youxiang) {
@@ -84,9 +84,9 @@
 				$('#cwxx').html("请输入正确的邮箱格式!");
 			}
 		}
-		function tiaozhuan() {
-			window.location.href = "index.html";
-		}
+		// function tiaozhuan() {
+		// 	window.location.href = "index.html";
+		// }
 	</script>
 	<header class="mui-bar mui-bar-nav" style="max-width: 450px; margin: 0 auto; margin-bottom: 50px;">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
