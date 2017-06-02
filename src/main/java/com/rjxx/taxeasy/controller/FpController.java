@@ -20,7 +20,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,17 +31,19 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/fp")
 public class FpController extends BaseController {
 
     public static String SESSION_KEY_FPTQ_GSDM = "fptq_gsdm";
 
     @Autowired
     private JylsService jylsService;
+
     @Autowired
     private TqjlService tqjlService;
+
     @Autowired
     private FpjService fpjService;
+
     @Autowired
     private GsxxService gsxxService;
 
@@ -50,24 +51,32 @@ public class FpController extends BaseController {
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/{gsdm}", method = RequestMethod.GET)
+    @RequestMapping(value = "/hdsc", method = RequestMethod.GET)
     @ResponseBody
-    public String index(@PathVariable(value = "gsdm") String gsdm) throws IOException {
-        session.setAttribute(SESSION_KEY_FPTQ_GSDM, gsdm);
+    public String index() throws Exception {
+        return init("hdsc");
+    }
+
+    private String init(String gsdm) throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("gsdm", gsdm);
         Gsxx gsxx = gsxxService.findOneByParams(params);
-        if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if (gsxx == null) {
+            response.sendError(501, gsdm + " not exist!!!");
+            return null;
         }
+        session.setAttribute(SESSION_KEY_FPTQ_GSDM, gsdm);
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
+            if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
+                gsxx.setWxappid(APP_ID);
+                gsxx.setWxsecret(SECRET);
+            }
             String url = HtmlUtils.getBasePath(request);
-            String openid = String.valueOf(session.getAttribute("openid"));
+            String openid = (String) session.getAttribute("openid");
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "/fp/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
+                        + url + "/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return null;
@@ -78,14 +87,12 @@ public class FpController extends BaseController {
         }
         response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
         return null;
-        // return "redirect:/zydc.html";
     }
 
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state, String code) throws IOException {
         Map params = new HashMap<>();
-        params.put("gsdm", state);
         session.setAttribute(SESSION_KEY_FPTQ_GSDM, state);
         Gsxx gsxx = gsxxService.findOneByParams(params);
         if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
@@ -122,13 +129,6 @@ public class FpController extends BaseController {
         }
         response.sendRedirect(request.getContextPath() + "/" + state + ".html?_t=" + System.currentTimeMillis());
         return;
-    }
-
-    @RequestMapping(value = "/{gsdm}/{tqm}", method = RequestMethod.GET)
-    @ResponseBody
-    public String tqm(@PathVariable("gsdm") String gsdm, @PathVariable("tqm") String tqm) throws IOException {
-        response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?tqm=" + tqm + "&_t=" + System.currentTimeMillis());
-        return null;
     }
 
     @RequestMapping(value = "/fptq")
