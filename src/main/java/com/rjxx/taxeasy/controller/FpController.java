@@ -20,6 +20,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,10 +52,10 @@ public class FpController extends BaseController {
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/hdsc", method = RequestMethod.GET)
+    @RequestMapping(value = "/dzfp_{gsdm}", method = RequestMethod.GET)
     @ResponseBody
-    public String index() throws Exception {
-        return init("hdsc");
+    public String index(@PathVariable("gsdm") String gsdm) throws Exception {
+        return init(gsdm);
     }
 
     private String init(String gsdm) throws Exception {
@@ -94,6 +95,7 @@ public class FpController extends BaseController {
     public void getWx(String state, String code) throws IOException {
         Map params = new HashMap<>();
         session.setAttribute(SESSION_KEY_FPTQ_GSDM, state);
+        params.put("gsdm", state);
         Gsxx gsxx = gsxxService.findOneByParams(params);
         if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
             gsxx.setWxappid(APP_ID);
