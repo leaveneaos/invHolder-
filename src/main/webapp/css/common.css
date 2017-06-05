@@ -9,6 +9,11 @@ header img {
 #index {
 	position: relative;
 }
+.title {
+	margin: 20px 15px 7px;
+	color: #6d6d72;
+	font-size: 15px;
+}
 footer {
 	position: fixed;
 	bottom: 0; 
@@ -23,7 +28,13 @@ footer p {
 	box-sizing: border-box;
 	line-height: 40px;
 }
-
+.step {
+	margin: 10px 0;
+}
+.eTip {
+	color: red;
+	margin-left: 2%;
+}
 .company {
 	font-size: 16px;
 	float: left;
@@ -31,4 +42,14 @@ footer p {
 .help {
 	font-size: 18px;
 	float: right;
+}
+.saveEwm {
+	width: 50px; 
+	height: 50px; 
+	float: left;
+}
+.sendEvm {
+	line-height: 50px; 
+	font-size: 15px; 
+	font-weight: 700;
 }

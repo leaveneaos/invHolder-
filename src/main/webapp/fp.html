@@ -1,196 +1,191 @@
 <!doctype html>
 <html>
-
 <head>
-<meta charset="utf-8">
-<title>发票预览</title>
-<meta name="viewport"
-	content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta http-equiv="Expires" content="0">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Cache-control" content="no-cache">
-<meta http-equiv="Cache" content="no-cache">
-<!--标准mui.css-->
-<link rel="stylesheet" href="css/mui.min.css">
-<!--App自定义的css-->
-<style type="text/css">
-.mui-preview-image.mui-fullscreen {
-	position: fixed;
-	z-index: 20;
-	background-color: #000;
-}
+	<meta charset="utf-8">
+	<title>发票预览</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="css/mui.min.css">
+	<!--App自定义的css-->
+	<style type="text/css">
+		.mui-preview-image.mui-fullscreen {
+			position: fixed;
+			z-index: 20;
+			background-color: #000;
+		}
 
-.mui-preview-header, .mui-preview-footer {
-	position: absolute;
-	width: 100%;
-	left: 0;
-	z-index: 10;
-}
+		.mui-preview-header, .mui-preview-footer {
+			position: absolute;
+			width: 100%;
+			left: 0;
+			z-index: 10;
+		}
 
-.mui-preview-header {
-	height: 44px;
-	top: 0;
-}
+		.mui-preview-header {
+			height: 44px;
+			top: 0;
+		}
 
-.mui-preview-footer {
-	height: 50px;
-	bottom: 0px;
-}
+		.mui-preview-footer {
+			height: 50px;
+			bottom: 0px;
+		}
 
-.mui-preview-header .mui-preview-indicator {
-	display: block;
-	line-height: 25px;
-	color: #fff;
-	text-align: center;
-	margin: 15px auto 4;
-	width: 70px;
-	background-color: rgba(0, 0, 0, 0.4);
-	border-radius: 12px;
-	font-size: 16px;
-}
+		.mui-preview-header .mui-preview-indicator {
+			display: block;
+			line-height: 25px;
+			color: #fff;
+			text-align: center;
+			margin: 15px auto 4;
+			width: 70px;
+			background-color: rgba(0, 0, 0, 0.4);
+			border-radius: 12px;
+			font-size: 16px;
+		}
 
-.mui-preview-image {
-	display: none;
-	-webkit-animation-duration: 0.5s;
-	animation-duration: 0.5s;
-	-webkit-animation-fill-mode: both;
-	animation-fill-mode: both;
-}
+		.mui-preview-image {
+			display: none;
+			-webkit-animation-duration: 0.5s;
+			animation-duration: 0.5s;
+			-webkit-animation-fill-mode: both;
+			animation-fill-mode: both;
+		}
 
-.mui-preview-image.mui-preview-in {
-	-webkit-animation-name: fadeIn;
-	animation-name: fadeIn;
-}
+		.mui-preview-image.mui-preview-in {
+			-webkit-animation-name: fadeIn;
+			animation-name: fadeIn;
+		}
 
-.mui-preview-image.mui-preview-out {
-	background: none;
-	-webkit-animation-name: fadeOut;
-	animation-name: fadeOut;
-}
+		.mui-preview-image.mui-preview-out {
+			background: none;
+			-webkit-animation-name: fadeOut;
+			animation-name: fadeOut;
+		}
 
-.mui-preview-image.mui-preview-out .mui-preview-header,
-	.mui-preview-image.mui-preview-out .mui-preview-footer {
-	display: none;
-}
+		.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+			display: none;
+		}
 
-.mui-zoom-scroller {
-	position: absolute;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-box-align: center;
-	-webkit-align-items: center;
-	align-items: center;
-	-webkit-box-pack: center;
-	-webkit-justify-content: center;
-	justify-content: center;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	-webkit-backface-visibility: hidden;
-}
+		.mui-zoom-scroller {
+			position: absolute;
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-box-align: center;
+			-webkit-align-items: center;
+			align-items: center;
+			-webkit-box-pack: center;
+			-webkit-justify-content: center;
+			justify-content: center;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			-webkit-backface-visibility: hidden;
+		}
 
-.mui-zoom {
-	-webkit-transform-style: preserve-3d;
-	transform-style: preserve-3d;
-}
+		.mui-zoom {
+			-webkit-transform-style: preserve-3d;
+			transform-style: preserve-3d;
+		}
 
-.mui-slider .mui-slider-group .mui-slider-item img {
-	width: auto;
-	height: auto;
-	max-width: 100%;
-	max-height: 100%;
-}
+		.mui-slider .mui-slider-group .mui-slider-item img {
+			width: auto;
+			height: auto;
+			max-width: 100%;
+			max-height: 100%;
+		}
 
-.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
-	width: 100%;
-}
+		.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+			width: 100%;
+		}
 
-.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item
-	{
-	display: inline-table;
-}
+		.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item
+			{
+			display: inline-table;
+		}
 
-.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
-	display: table-cell;
-	vertical-align: middle;
-}
+		.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+			display: table-cell;
+			vertical-align: middle;
+		}
 
-.mui-preview-loading {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	display: none;
-}
+		.mui-preview-loading {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			display: none;
+		}
 
-.mui-preview-loading.mui-active {
-	display: block;
-}
+		.mui-preview-loading.mui-active {
+			display: block;
+		}
 
-.mui-preview-loading .mui-spinner-white {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-left: -25px;
-	margin-top: -25px;
-	height: 50px;
-	width: 50px;
-}
+		.mui-preview-loading .mui-spinner-white {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-left: -25px;
+			margin-top: -25px;
+			height: 50px;
+			width: 50px;
+		}
 
-.mui-preview-image img.mui-transitioning {
-	-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
-	transition: transform 0.5s ease, opacity 0.5s ease;
-}
+		.mui-preview-image img.mui-transitioning {
+			-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+			transition: transform 0.5s ease, opacity 0.5s ease;
+		}
 
-@-webkit-keyframes fadeIn {
-				0% {
-					opacity: 0;
-				}
-				100% {
-					opacity: 1;
-				}
+		@-webkit-keyframes fadeIn {
+			0% {
+				opacity: 0;
 			}
-			@keyframes fadeIn {
-				0% {
-					opacity: 0;
-				}
-				100% {
-					opacity: 1;
-				}
+			100% {
+				opacity: 1;
 			}
-			@-webkit-keyframes fadeOut {
-				0% {
-					opacity: 1;
-				}
-				100% {
-					opacity: 0;
-				}
+		}
+		@keyframes fadeIn {
+			0% {
+				opacity: 0;
 			}
-			@keyframes fadeOut {
-				0% {
-					opacity: 1;
-				}
-				100% {
-					opacity: 0;
-				}
+			100% {
+				opacity: 1;
 			}
-			p img {
-				max-width: 100%;
-				height: auto;
-}
-</style>
-<!--
-<meta name="viewport"
-	content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-<link href="css/mui.min.css" rel="stylesheet" />-->
+		}
+		@-webkit-keyframes fadeOut {
+			0% {
+				opacity: 1;
+			}
+			100% {
+				opacity: 0;
+			}
+		}
+		@keyframes fadeOut {
+			0% {
+				opacity: 1;
+			}
+			100% {
+				opacity: 0;
+			}
+		}
+		p img {
+			max-width: 100%;
+			height: auto;
+		}
+	</style>
 </head>
 
 <body>
@@ -198,57 +193,29 @@
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
 		<h1 class="mui-title">发票预览</h1>
 	</header>
-	<div class="mui-content">
-		<div id=parentIndustryUL class="mui-content-padded">
+	<section class="mui-content">
+		<div id=parentIndustryUL class="mui-content-padded"></div>
+	</section>
 
-			<!--<div style="width: 33%;float: left;">
-					<img src="images/yuantiao.jpg" data-preview-src="" data-preview-group="1" style="width: 100%;"/>
-				</div>
-				
-				<div style="width: 33%;float: left;">
-					<img src="images/muwu.jpg" data-preview-src="" data-preview-group="1" style="width: 100%;"/>
-				</div>
-				
-				<div style="width: 33%;float: left;">
-					<img src="images/shuijiao.jpg" data-preview-src="" data-preview-group="1" style="width: 100%;"/>
-				</div> -->
-
-		</div>
-	</div>
-	<p></p>
-
-	<div style="width: 100%; float: left; margin-bottom: 50px;">
+	<section>
 		<ul class="mui-table-view">
-			<li class="mui-table-view-cell"><a id="you"
-				class="mui-navigate-right"> 发送到邮箱 </a></li>
-			<li class="mui-table-view-cell" id="lifpj"><a id="fpj"
-				class="mui-navigate-right"> 收藏到发票夹 </a></li>
-			<li class="mui-table-view-cell" id="lifpj1"><a id="fpj1"
-				class="mui-navigate-right"> 收藏到发票夹 </a></li>
-<!-- 			<li class="mui-table-view-cell" id="msg"><a id="fpj" -->
-<!-- 				class="mui-navigate-right"> 发送 </a></li> -->
+			<li class="mui-table-view-cell">
+				<a id="you" class="mui-navigate-right"> 发送到邮箱 </a>
+			</li>
+			<li class="mui-table-view-cell" id="lifpj">
+				<a id="fpj" class="mui-navigate-right"> 收藏到发票夹 </a>
+			</li>
+			<li class="mui-table-view-cell" id="lifpj1">
+				<a id="fpj1" class="mui-navigate-right"> 收藏到发票夹 </a>
+			</li>
 		</ul>
-		<!-- 	<button type="button" class="mui-btn mui-btn-primary">收藏</button> -->
-		<!--<a id="you" href="#"><button type="button"
-				class="mui-btn mui-btn-warning">邮箱</button></a>
-		<a id="fpj" href="#"><button type="button" id="fpj1" 
-				class="mui-btn mui-btn-warning">发票夹</button></a>-->
-		<!-- 	<button onclick="sckj()" type="button" class="mui-btn mui-btn-success">微信卡包</button> -->
+	</section>
 
-		<!-- <a id="hk" href="#"><button type="button"
-				class="mui-btn mui-btn-royal mui-btn-outlined">我想要纸质发票</button></a> -->
-	</div>
-	<div
-		style="position: fixed; bottom: 0; width: 100%; background-color: #F7F7F7; border-top: 1px solid #CBCBCB;">
-		<div style="max-width: 800px; margin: 0 auto;">
-			<div style="width: 70%; float: left;">泰易电子发票云服务平台</div>
-			<div style="width: 30%; float: right; text-align: right;">
-				<a id="abc" href="">遇到问题?</a>
-			</div>
-		</div>
-		<div style="text-align: center; font-size: 4mm;">技术支持：上海容津信息技术有限公司</div>
-	</div>
-	<p></p>
+	<footer>
+		<p class="company">上海容津信息技术有限公司</p>
+		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
+	</footer>
+
 	<script src="js/mui.min.js"></script>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/wxkb.js"></script>
@@ -265,36 +232,31 @@
 			$('#lifpj1').hide();
 		}
 		$(function() {
-			$
-					.post(
-							"tijiao/fpsession",
-							{},
-							function(data) {
-								djh = data.djh;
-								var pdfdzs = data.pdfdz
-								if (djh != null && djh != "") {
-									pdfdz = pdfdzs.split(",");
-									$
-											.each(
-													pdfdz,
-													function(n, value) {
-														$("#parentIndustryUL")
-																.append(
-																		"<div style='width: 100%;float: left;'><img src='"
-																				+ value
-																				+ "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+			$.post(
+				"tijiao/fpsession",
+				{},
+				function(data) {
+					djh = data.djh;
+					var pdfdzs = data.pdfdz
+					if (djh != null && djh != "") {
+						pdfdz = pdfdzs.split(",");
+						$
+							.each(
+								pdfdz,
+								function(n, value) {
+									$("#parentIndustryUL")
+										.append("<div style='width: 100%;float: left;'><img src='" + value
+														+ "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
 
-													});
-								} else {
-									window.location.href = "smtq/demo.html?time="
-											+ new Date().getTime();
-								}
-							})
-			//			$('#you').attr("href", "youxiang.html");
-			//			$('#abc').attr("href", "bangzhu.html");
-			//$('#hk').attr("href", "sqhk.html");
+								});
+					} else {
+						window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+					}
+				}
+			)
 
 			var urlinfo = window.location.href; //获取当前页面的url
+
 			if (urlinfo.indexOf('code') > -1) {
 				var len = urlinfo.length;//获取url的长度
 				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
@@ -303,10 +265,8 @@
 				var code = newsids[1];//得到参数值
 				if (code != "rjxx") {
 					getToken(code);
-					// 					getRefresh();
 					if (openid != null) {
 						getUserMsg();
-						// 						if (unionid != null) {
 						$.ajax({
 							url : '../pjj/saveFpj',
 							method : 'post',
@@ -322,7 +282,6 @@
 								}
 							}
 						});
-						// 						}
 					}
 				} else {
 					alert('未得到授权');
@@ -340,13 +299,13 @@
 			});
 			$('#msg').click(function() {
 				$.ajax({
-				url : 'pjj/sendMessage',
-				data : {},
-				type : 'post',
-				success : function(data) {
-					alert(data.msg);
-				}
-			});
+					url : 'pjj/sendMessage',
+					data : {},
+					type : 'post',
+					success : function(data) {
+						alert(data.msg);
+					}
+				});
 			});
 
 			$('#fpj').click(function() {
@@ -372,46 +331,8 @@
 						}
 					});
 				}
-				// 				$.ajax({
-				// 					url : 'pjj/getOpenid',
-				// 					method : 'post',
-				// 					success : function(data) {
-				// 						if (data.success) {
-				// 							flag = true;
-				// 						} else {
-				// 							getCode();
-				// 						}						
-				// 					}
-				// 				});
 			});
-
-			//			$('#fpj1').click(function() {
-			//				if (openid == null) {
-			//					getCode();
-			//				}else{
-			//					$.ajax({
-			//						url : '../pjj/saveFpj',
-			//						data : {
-			//							"openid" : openid
-			//						},
-			//						method : 'post',
-			//						success : function(data) {
-			//							if (data.success) {
-			//								window.location.href = "../pjj/first";
-			//							}else if (data.nopeat) {
-			//								window.location.href = "../pjj/first";
-			//							} else {
-			//								window.location.href = "../pjj/first";
-			//							}
-			//						}
-			//					});
-			//				}
-			//			});
-
 		})
-		// function tiaozhuan() {
-		// 	window.location.href = "zydc.html?time=" + new Date();
-		// }
 		function sckj() {
 			$.ajax({
 				url : 'tijiao/kbcx',
@@ -419,7 +340,6 @@
 				type : 'post',
 				success : function(data) {
 					if (data.success) {
-						//alert(data.card_id)
 						window.location.href = data.show_qrcode_url;
 					} else {
 						alert(data.msg);
@@ -428,52 +348,12 @@
 			});
 		}
 	</script>
-	<!-- 	<div id="zon">
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">发票预览</h1>
-		</header>
-		<div class="mui-content">
-			<ul class="mui-table-view mui-grid-view" id="parentIndustryUL">
-			</ul>
-		</div>
-		<p></p>
-		<div style="width: 100%; padding-left: 13px;">
-			<button type="button" class="mui-btn mui-btn-primary">收藏</button>
-			<a id="you" href="#"><button type="button"
-					class="mui-btn mui-btn-warning">邮箱</button></a>
-			<button type="button" class="mui-btn mui-btn-success">微信卡包</button>
-
-			<a id="hk" href="#"><button type="button"
-					class="mui-btn mui-btn-royal mui-btn-outlined">我想要纸质发票</button></a>
-		</div>
-	</div> -->
-	<script type="text/javascript">
+	<script src="js/mui.min.js"></script>
+	<script src="js/mui.zoom.js"></script>
+	<script src="js/mui.previewimage.js"></script>
+	<script>
 		mui.init();
-		/* 		if (mui.os.ios || mui.os.android) {
-		 } else {
-		 document.getElementById("zon").style.width = "640px";
-		 } */
+		mui.previewImage();
 	</script>
-
 </body>
-<script src="js/mui.min.js"></script>
-<script src="js/mui.zoom.js"></script>
-<script src="js/mui.previewimage.js"></script>
-<script>
-	mui.previewImage();
-</script>
-<!--<script src="../js/mui.min.js"></script>
-<script>
-		mui.init({
-			swipeBack:true //启用右滑关闭功能
-		});
-	</script>-->
-<!--  <nav class="mui-bar mui-bar-tab">
-	<a  class="mui-tab-item" href="index.html" onclick="tiaozhuan()"><span
-		class="mui-icon mui-icon-home"></span> <span class="mui-tab-label">返回首页</span>
-	</a> <a class="mui-tab-item" href="#tabbar-with-map"> <span
-		class="mui-tab-label">泰易电子发票云</span>
-	</a>
-</nav>  -->
 </html>
