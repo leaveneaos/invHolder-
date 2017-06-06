@@ -33,11 +33,6 @@
 		#tab tr {
 			background-color: #A1A2A4;
 		}
-		#confirmBtn {
-			width: 95%; 
-			margin: 0px auto 30px;
-			border-radius: 20px;
-		}
 	</style>
 </head>
 <body>
@@ -50,8 +45,13 @@
 			<div class="mui-input-row">
 				<label><font color="red">*</font>发票抬头</label> <input type="text"
 					class="mui-input-clear" required="required" maxlength="50"
-					name="fptt" id="fptt" placeholder="请输入发票抬头（必填）">
+					name="fptt" id="fptt" placeholder="请输入发票抬头">
+				
 			</div>
+			<div class="mui-input-row">
+					<label><font color="red">*</font>纳税人识别号</label> <input type="text" class="mui-input-clear"
+						id="nsrsbh" maxlength="20" name="nsrsbh" placeholder="请输入纳税人识别号">
+				</div>
 			<ul class="mui-table-view">
 				<div class="content">
 		          	<div class="toggle">
@@ -59,10 +59,7 @@
 			              	<dt>点击填写更多购方信息</dt>
 			              	<dd>
 			        			<div class="mui-collapse-content">
-									<div class="mui-input-row">
-										<label>纳税人识别号</label> <input type="text" class="mui-input-clear"
-											id="nsrsbh" maxlength="20" name="nsrsbh" placeholder="请输入纳税人识别号">
-									</div>
+									
 									<div class="mui-input-row">
 										<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
 											maxlength="100" name="dz" placeholder="请输入地址">
