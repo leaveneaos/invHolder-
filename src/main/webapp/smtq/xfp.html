@@ -11,14 +11,23 @@
 	<link rel="stylesheet" type="text/css" href="../css/common.css">
 	<link rel="stylesheet" type="text/css" href="../css/iconfont.css">
 
-	<!--标准mui.css-->
+	标准mui.css
 	<link rel="stylesheet" href="../css/mui.min.css">
-	<!--App自定义的css-->
+	App自定义的css
 	<link rel="stylesheet" type="text/css" href="../css/app.css" />
 	<style type="text/css">
 		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
 			border: none;
 			border: 0;
+		}
+		.mui-col-xs-4 {
+		    width: 33.33333333%;
+		}
+		.mui-grid-view.mui-grid-9 {
+			border-left: 0;
+		}
+		.mui-bar-nav~.mui-content {
+		    padding-top: 23px;
 		}
 	</style>
 </head>
@@ -31,19 +40,19 @@
 	<div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
 		<section>
 			<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
-				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
 					<a href="#">
 	                    <span class="mui-icon iconfont icon-youxiang"></span>
 	                    <div class="mui-media-body" style="color: #fff;">邮箱</div>
 	                </a>
                 </li>
-                <li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
 					<a href="#">
-	                    <span class="mui-icon iconfont icon-fapiao1"></span>
+	                    <span class="mui-icon iconfont icon-fapiaoguanli1"></span>
 	                    <div class="mui-media-body" style="color: #fff;">发票夹</div>
 	                </a>
                 </li>
-                <li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
 					<a href="#">
 	                    <span class="mui-icon iconfont icon-jikediancanicon23"></span>
 	                    <div class="mui-media-body" style="color: #fff;">支付宝</div>
@@ -58,9 +67,6 @@
 		</footer>
 	</div>
 
-
-
-
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
 	<script type="text/javascript">
@@ -68,3 +74,69 @@
 	</script>
 </body>
 </html>
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Hello MUI</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	标准mui.css
+	<link rel="stylesheet" href="../css/mui.min.css">
+	App自定义的css
+	<link rel="stylesheet" type="text/css" href="../css/app.css">
+</head>
+<body class="mui-ios mui-ios-9 mui-ios-9-1">
+
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">9宫格默认样式</h1>
+		</header>
+		<div class="mui-content">
+		        <ul class="mui-table-view mui-grid-view mui-grid-9">
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-home"></span>
+		                    <div class="mui-media-body">Home</div></a></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-email"><span class="mui-badge">5</span></span>
+		                    <div class="mui-media-body">Email</div></a></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-chatbubble"></span>
+		                    <div class="mui-media-body">Chat</div></a></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-location"></span>
+		                    <div class="mui-media-body">location</div></a></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-search"></span>
+		                    <div class="mui-media-body">Search</div></a></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-phone"></span>
+		                    <div class="mui-media-body">Phone</div></a></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-gear"></span>
+		                    <div class="mui-media-body">Setting</div></a></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-info"></span>
+		                    <div class="mui-media-body">about</div></a></li>
+		           <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a href="#">
+		                    <span class="mui-icon mui-icon-more"></span>
+		                    <div class="mui-media-body">more</div></a></li>
+		        </ul> 
+		</div>
+	
+	<script src="../js/mui.min.js"></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+	</script>
+</body>
+</html> -->

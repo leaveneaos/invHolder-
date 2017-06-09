@@ -13,8 +13,14 @@
 }
 .icon-jikediancanicon23:before { content: "\e785"; }
 
-.icon-youxiang:before { content: "\e62d"; }
+.icon-youxiang:before { content: "\e62f"; }
 
-.icon-fapiao1:before { content: "\e609"; }
+.icon-fapiao:before { content: "\e602"; }
 
+.icon-fapiao1:before { content: "\e607"; }
 
+.icon-fapiaoguanli:before { content: "\e6f4"; }
+
+.icon-fapiaoguanli1:before { content: "\e61d"; }
+
+.icon-fapiaoguanli2:before { content: "\e610"; }
