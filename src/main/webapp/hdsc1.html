@@ -90,7 +90,7 @@
 			var code = $('#code').val();
 			$
 				.post(
-					"dzfp_wljqr/fptq",
+					"fptq",
 					{
 						"tqm" : tqm,
 						"code" : code
@@ -108,9 +108,9 @@
 							}
 						} else if (data.num == 2) {
 							  if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-							    	window.open("../fp.html?time=" + new Date());
+							    	window.open("fp.html?time=" + new Date());
 							    }else{
-							    	window.location.href = "../fp.html?time=" + new Date();
+							    	window.location.href = "fp.html?time=" + new Date();
 							    }
 						} else if (data.num == 3) {
 							btnArray = [ '确定' ];
