@@ -20,7 +20,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,10 +51,10 @@ public class FpController extends BaseController {
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/dzfp_{gsdm}", method = RequestMethod.GET)
+    @RequestMapping(value = "/hdsc", method = RequestMethod.GET)
     @ResponseBody
-    public String index(@PathVariable("gsdm") String gsdm) throws Exception {
-        return init(gsdm);
+    public String index() throws Exception {
+        return init("hdsc");
     }
 
     private String init(String gsdm) throws Exception {
@@ -82,11 +81,11 @@ public class FpController extends BaseController {
                 response.sendRedirect(ul);
                 return null;
             } else {
-                response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/" + gsdm + "1.html?_t=" + System.currentTimeMillis());
                 return null;
             }
         }
-        response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
+        response.sendRedirect(request.getContextPath() + "/" + gsdm + "1.html?_t=" + System.currentTimeMillis());
         return null;
     }
 
@@ -129,7 +128,7 @@ public class FpController extends BaseController {
             // 关闭连接 ,释放资源
             client.getConnectionManager().shutdown();
         }
-        response.sendRedirect(request.getContextPath() + "/" + state + ".html?_t=" + System.currentTimeMillis());
+        response.sendRedirect(request.getContextPath() + "/" + state + "1.html?_t=" + System.currentTimeMillis());
         return;
     }
 
