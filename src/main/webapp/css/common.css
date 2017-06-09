@@ -1,5 +1,4 @@
 body,html {
-	font-family: 微软雅黑;
 	width: 100%;
 }
 header img {
@@ -52,4 +51,15 @@ footer p {
 	line-height: 50px; 
 	font-size: 15px; 
 	font-weight: 700;
+}				
+.data-tip {
+	padding: 7px 15px;
+}
+.data-yzm {
+	width: 100px;
+	height: 50px;
+	float: right;
+}
+.star {
+	color: red;
 }
