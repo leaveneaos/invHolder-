@@ -24,10 +24,17 @@
 		}
 		.cbox {
 			padding: 5px 0 0 15px;
+		    color: #007AFF;
+		}
+		.mui-input-row label {
+			width: 40%;
+		}
+		.mui-input-row label~input {
+			width: 60%;
 		}
 	</style>
 </head>
-<body onresize="document.activeElement.scrollIntoView(true);">
+<body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
 		<h1 class="mui-title">电子发票</h1>
@@ -38,7 +45,7 @@
 		<section class="mui-content-padded data-dtc">
 			<form class="mui-input-group">
 				<div class="mui-input-row">
-					<label><span class="star">*</span>名称</label> 
+					<label>名称<span class="star">*</span></label> 
 					<input type="text" id="username" placeholder="请填写准确的抬头名称">
 				</div>
 			</form>
@@ -47,14 +54,14 @@
 			<form class="mui-input-group">
 				<div class="cbox">
 					<input type="checkbox" checked name="" >
-					<label>用于报销</label>
+					<label>是否用于报销</label>
 				</div>
 				<div class="mui-input-row">
-					<label><span class="star">*</span>邮箱地址</label>
+					<label>邮箱地址<span class="star">*</span></label>
 					<input name="yxdz" id="yxdz" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
 				</div>
 				<div class="mui-input-row">
-					<label><span>*</span>纳税人识别号</label>
+					<label>纳税人识别号<span>*</span></label>
 					<input name="sbh" id="sbh" type="text" class="mui-input-clear" placeholder="请输入纳税人识别号">
 				</div>
 				<div class="mui-input-row">
@@ -75,7 +82,7 @@
 				</div>
     		</form>
 		</section>
-		<section class="mui-content-padded data-dtc">
+		<section class="mui-content-padded">
 			<form class="mui-input-group">
 				<div class="mui-input-row">
 					<label>开票项目</label> 
@@ -90,7 +97,7 @@
 		<section class="data-tip">
 			备注：自2017年7月1日起，购买方为企业的，索取增值税普通发票时，应向销售方提供纳税人识别号或统一社会信用代码;
 		</section>
-		<button class="mui-btn mui-btn-primary mui-btn-block" style="margin-bottom: 65px;">申请开票</button>
+		<button id="sqkp" class="mui-btn mui-btn-primary mui-btn-block" style="margin-bottom: 65px;">申请开票</button>
 
 		<footer>
 			<p class="company">上海容津信息技术有限公司</p>
@@ -102,7 +109,11 @@
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
 	<script type="text/javascript">
-
+		$(function() {
+			$('#sqkp').on('click',function() {
+				window.location.href = 'kpxx.html'
+			})
+		})
 	</script>
 </body>
 </html>
