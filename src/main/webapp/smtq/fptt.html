@@ -27,7 +27,7 @@
 		}
 	</style>
 </head>
-<body>
+<body onresize="document.activeElement.scrollIntoView(true);">
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
 		<h1 class="mui-title">电子发票</h1>
@@ -51,31 +51,27 @@
 				</div>
 				<div class="mui-input-row">
 					<label><span class="star">*</span>邮箱地址</label>
-					<input type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
+					<input name="yxdz" id="yxdz" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
 				</div>
 				<div class="mui-input-row">
 					<label><span>*</span>纳税人识别号</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入纳税人识别号">
+					<input name="sbh" id="sbh" type="text" class="mui-input-clear" placeholder="请输入纳税人识别号">
 				</div>
 				<div class="mui-input-row">
 					<label>单位地址</label>
-					<input type="text" class="mui-input-clear" placeholder="收票单位注册地址">
+					<input name="dwdz" id="dwdz" type="text" class="mui-input-clear" placeholder="收票单位注册地址">
 				</div>
 				<div class="mui-input-row">
 					<label>电话号码</label>
-					<input type="text" class="mui-input-clear" placeholder="请输入公司电话号码">
+					<input name="dhhm" id="dhhm" type="text" class="mui-input-clear" placeholder="请输入公司电话号码">
 				</div>
 				<div class="mui-input-row">
 					<label>开户银行</label>
-					<input type="text" class="mui-input-clear" placeholder="收票单位开户银行">
-				</div>
-				<div class="mui-input-row">
-					<label>开户银行</label>
-					<input type="text" class="mui-input-clear" placeholder="收票单位开户银行">
+					<input name="khyh" id="khyh" type="text" class="mui-input-clear" placeholder="收票单位开户银行">
 				</div>
 				<div class="mui-input-row">
 					<label>银行账号</label>
-					<input type="text" class="mui-input-clear" placeholder="收票单位银行帐号">
+					<input name="yhzh" id="yhzh" type="text" class="mui-input-clear" placeholder="收票单位银行帐号">
 				</div>
     		</form>
 		</section>
@@ -83,11 +79,11 @@
 			<form class="mui-input-group">
 				<div class="mui-input-row">
 					<label>开票项目</label> 
-					<input type="text">
+					<input name="kpxm" id="kpxm" type="text">
 				</div>
 				<div class="mui-input-row">
 					<label>开票金额</label> 
-					<input type="text">
+					<input name="kpje" id="kpje" type="text">
 				</div>
 			</form>
 		</section>
@@ -105,5 +101,8 @@
 
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript">
+
+	</script>
 </body>
 </html>
