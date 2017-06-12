@@ -1,5 +1,12 @@
 body,html {
-	width: 100%;
+	min-width: 320px;
+	max-width: 620px;
+	margin: 0 auto;
+}
+header {
+	min-width: 320px;
+	max-width: 620px;
+	margin: 0 auto;
 }
 header img {
 	width: 100%;
@@ -19,6 +26,9 @@ footer {
 	width: 100%; 
 	background-color: #F7F7F7;
 	border-top: 1px solid #CBCBCB;
+	min-width: 320px;
+	max-width: 620px;
+	margin: 0 auto;
 
 }
 footer p {
