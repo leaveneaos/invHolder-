@@ -16,14 +16,13 @@
 	<link rel="stylesheet" type="text/css" href="../css/app.css" />
 	<style type="text/css">
 		.mui-content-padded {
-			margin: 10px 0px 10px 30px;
+			margin: 10px 0px 10px 70px;
 		}
 	   	.confirm {
    		 	margin: 0 10px;
 		    width: 40px;
 		    height: 40px;
 		    display: inline-block;
-		    text-align: center;
 		    background-color: #6555FA;
 		    border: 1px solid #ddd;
 		    border-radius: 20px;
@@ -84,7 +83,7 @@
 		</section>
 
 		<section style="text-align: center;margin: 10px auto 61px;">
-			<button type="button" class="mui-btn">修 改</button>
+			<button type="button" class="mui-btn" id="revise">修 改</button>
 			<button type="button" class="mui-btn mui-btn-danger">确 认</button>
 		</section>
 
@@ -100,7 +99,14 @@
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
 	<script type="text/javascript">
-		
+		$(function () {
+			$('#revise').on('click',function() {
+				window.location.href = 'fptt.html';
+			})
+			$('.mui-btn-danger').on('click',function() {
+				window.location.href = 'xfp.html';
+			})
+		})
 	</script>
 </body>
 </html>

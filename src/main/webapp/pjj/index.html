@@ -31,18 +31,24 @@
 			line-height: 62px;
 			max-width: 72px;
 		}
+		.data-dtc {
+			margin: 5px;
+		}
 	</style>
 </head>
 <body>
-
-	<div class="mui-input-row mui-search">
+	<!-- <div class="mui-input-row mui-search">
 		<input type="search" id="je" onkeyup="search(event)" class="mui-input-clear" placeholder="开票金额" style="width: 98%;margin-top: 10px;margin-left: 1%; margin-right: 1%;">
-	</div>
+	</div> -->
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+		<h1 class="mui-title">发票夹</h1>
+	</header>
 
-	<div class="mui-content">
-		<div style="width: 98%;margin-botton: 50px; margin-top: 3px;margin-left: 1%; margin-right: 1%;">
+	<section class="mui-content">
+		<div class="data-dtc">
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell mui-collapse mui-active"><a
+				<li class="mui-table-view-cell mui-collapse"><a
 					class="mui-navigate-right" href="#" id="itm11">本月</a>
 					<div class="mui-collapse-content" id="itm1">
 						<!-- 					 <p>我是内容1</p>   -->
@@ -60,7 +66,7 @@
 					</div></li>
 			</ul>
 		</div>
-	</div>
+	</section>
 	
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
