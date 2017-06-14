@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>电子发票</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="css/app.css" />
+	<style>
+		.mui-card .mui-control-content {
+			padding: 10px;
+		}
+
+		.mui-control-content {
+			min-height: 400px;
+			height: auto !important;
+			height: 400px;
+		}
+
+		.mui-table-view .mui-media-object {
+			height: 62px;
+			line-height: 62px;
+			max-width: 72px;
+		}
+		.data-dtc {
+			margin: 5px;
+		}
+	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+		<h1 class="mui-title">电子发票</h1>
+	</header>
+
+	<section class="mui-content">
+		<div class="data-dtc">
+			<ul class="mui-table-view mui-table-view-chevron">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="smtq/xfp.html" id="mth">本月</a>
+				</li>
+
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="smtq/xfp.html" id="lmth">上个月</a>
+				</li>
+
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="smtq/xfp.html" id="tlmth">两个月之前</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="smtq/xfp.html" id="lyear">十二个月之前</a>
+				</li>
+			</ul>
+		</div>
+	</section>
+	
+	<footer>
+		<p class="company">上海容津信息技术有限公司</p>
+		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
+	</footer>
+
+	<script src="js/mui.min.js"></script>
+	<script src="js/fpj.js" type="text/javascript"></script>
+	<script src="js/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		
+	</script>
+</body>
+</html>
