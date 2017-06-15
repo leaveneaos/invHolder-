@@ -41,24 +41,28 @@
 		<section>
 			<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
 				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-					<a href="youxiang.html">
+					<a id="you">
 	                    <span class="mui-icon iconfont icon-youxiang"></span>
 	                    <div class="mui-media-body" style="color: #fff;">邮箱</div>
 	                </a>
                 </li>
                 <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-					<a href="../pjj/index.html">
+					<a id="fpj">
 	                    <span class="mui-icon iconfont icon-fapiaoguanli1"></span>
 	                    <div class="mui-media-body" style="color: #fff;">发票夹</div>
 	                </a>
                 </li>
                 <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-					<a href="../waitting.html">
+					<a id="zfb">
 	                    <span class="mui-icon iconfont icon-jikediancanicon23"></span>
 	                    <div class="mui-media-body" style="color: #fff;">支付宝</div>
 	                </a>
                 </li>
 		    </ul>
+		</section>
+
+		<section id=parentIndustryUL>
+			
 		</section>
 
 		<footer>
@@ -67,10 +71,104 @@
 		</footer>
 	</div>
 
-	<script type="text/javascript" src="../js/jquery.min.js"></script>
-	<script src="../js/mui.min.js"></script>
+	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/wxkb.js"></script>
+	<script src="js/fpj.js" type="text/javascript"></script>
 	<script type="text/javascript">
+		var djh;
+		$(function() {
+			$.post(
+				"tijiao/fpsession",
+				{},
+				function(data) {
+					djh = data.djh;
+					var pdfdzs = data.pdfdz
+					if (djh != null && djh != "") {
+						pdfdz = pdfdzs.split(",");
+						$.each(
+							pdfdz,
+							function(n, value) {
+								$("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
 
+							}
+						);
+					} else {
+						window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+					}
+				}
+			)
+
+			var urlinfo = window.location.href; //获取当前页面的url
+
+			if (urlinfo.indexOf('code') > -1) {
+				var len = urlinfo.length;//获取url的长度
+				var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
+				var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
+				var newsids = newsidinfo.split("=");//对获得的参数字符串按照“=”进行分割
+				var code = newsids[1];//得到参数值
+				if (code != "rjxx") {
+					getToken(code);
+					if (openid != null) {
+						getUserMsg();
+						$.ajax({
+							url : '../pjj/saveFpj',
+							method : 'post',
+							success : function(data) {
+								if (data.success) {
+									window.location.href = "../sccg.html?_t="
+											+ new Date().getTime();
+								} else if (data.nopeat) {
+									window.location.href = "../sccg.html?_t="
+											+ new Date().getTime();
+								} else {
+									window.location.href = "../pjj/first";
+								}
+							}
+						});
+					}
+				} else {
+					alert('未得到授权');
+					return;
+				}
+			}
+
+			$('#you').click(function() {
+				window.location.href = "youxiang.html?_t=" + new Date().getTime();
+			});
+			$('#zfb').click(function() {
+				window.location.href = "waitting.html?_t=" + new Date().getTime();
+			});
+
+
+			$('#fpj').click(function() {
+				if (openid == null) {
+					getCode();
+				} else {
+					$.ajax({
+						url : '../pjj/saveFpj',
+						data : {
+							"openid" : openid
+						},
+						method : 'post',
+						success : function(data) {
+							if (data.success) {
+								window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
+							} else (data.nopeat) {
+								window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
+							}index
+						}
+					});
+				}
+			});
+		})
+	</script>
+	<script src="js/mui.min.js"></script>
+	<script src="js/mui.zoom.js"></script>
+	<script src="js/mui.previewimage.js"></script>
+	<script>
+		mui.init();
+		mui.previewImage();
 	</script>
 </body>
 </html>
