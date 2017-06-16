@@ -28,6 +28,9 @@
 			margin-left: 23px; 
 			opacity: 0;
 		}
+		.mui-input-group .mui-input-row {
+		    height: 45px;
+		}
 	</style>
 </head>
 <body id="index">
@@ -44,6 +47,9 @@
 		<form class="mui-input-group">
 			<div class="mui-input-row">
 				<input type="text" id="tqm" class="mui-input-clear" placeholder="点击此输入发票提取码">
+			</div>
+			<div class="mui-input-row">
+				<input type="text" id="je" class="mui-input-clear" placeholder="点击此输入订单金额">
 			</div>
 			<div class="mui-input-row">
 				<input type="text" id="code" name="code" placeholder="请输入右侧验证码">
@@ -72,14 +78,6 @@
 	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
 	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
 		
-		$(function() {
-			var url = window.location.href;
-
-			if (url.indexOf("tqm") != -1) {
-				var tqm = url.substring(url.indexOf("=") + 1, url.indexOf("&"));
-				$('#tqm').val(tqm);
-			}
-		})
 
 		function loadimage() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
@@ -89,46 +87,62 @@
 
 		function tiqu() {
 			var tqm = $('#tqm').val();
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+			var je = $('#je').val();
+			if (!num.test(je)) {
+				$('#cwts').html("金额格式错误!");
+				return;
+			}
 			var code = $('#code').val();
-			$.post(
-				"extractInvoice/zydc/zydc",
-				{
-					"tqm" : tqm,
-					"code" : code
-				},
-				function(data) {
-					if (data.num == 1) {
-						if (data.clztdm == "00") {
-							window.location.href = "tijiao.html?time=" + new Date();
-						} else {
-							btnArray = [ '确定' ];
-							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-							title = "提示";
-							alert(firm, title);
-						}
-					} else if (data.num == 2) {
-					    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-					    	window.open("../fp.html?time=" + new Date());
-					    }else{
-					    	window.location.href = "../fp.html?time=" + new Date();
-					    }
-					} else if (data.num == 3) {
-
+			$.post("../dzfp_sqj/tqyz", {
+				"tqm" : tqm,
+				"code" : code,
+				"je" : je
+			}, function(data) {
+				if (data.num == 1) {
+					if (data.clztdm == "00") {
+						window.location.href = "tijiao.html?time="
+								+ new Date();
+					} else {
 						btnArray = [ '确定' ];
 						firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
 						title = "提示";
 						alert(firm, title);
-
-					} else if (data.num == 4) {
-						$('#cwts').css('opacity','1');
-					} else if (data.num == 5) {
-						btnArray = [ '确定' ];
-						firm = data.msg;
-						title = "提示";
-						alert(firm, title);
 					}
+				} else if (data.num == 2) {
+				    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+				    	window.open("fp.html?time=" + new Date());
+				    }else{
+				    	window.location.href = "fp.html?time=" + new Date();
+				    }
+				} else if (data.num == 3) {
+					btnArray = [ '确定' ];
+					firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
+					title = "提示";
+					alert(firm, title);
+				} else if (data.num == 4) {
+					$('#cwts').html("验证码输入错误");
+					loadimage();
+				} else if (data.num == 5) {
+					window.location.href = "tijiao.html?time=" + new Date();
+				} else if (data.num == 9) {
+					$('#cwts').html("您输入的提取码或者金额有误!");
+					loadimage();
+				} else if (data.num == 6) {
+					btnArray = [ '确定' ];
+					firm = "您提取的申请已提交,我们正在处理,请稍等!";
+					title = "提示";
+					alert(firm, title);
+				} else if (data.num == 7) {
+					btnArray = [ '确定' ];
+					firm = "您提取的申请已提交,我们正在处理,请稍等!";
+					title = "提示";
+					alert(firm, title);
+				} else if (data.num == 11) {
+                    $('#cwts').html("输入的提取码不正确");
+                    loadimage();
 				}
-			);
+			});
 		}
 
 		function tiaozhuan() {
