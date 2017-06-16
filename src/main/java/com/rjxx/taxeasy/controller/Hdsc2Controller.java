@@ -163,6 +163,7 @@ public class Hdsc2Controller extends BaseController{
                     result.put("gsdm", gsdm);
                     request.getSession().setAttribute("khh", khh);
                     request.getSession().setAttribute("gsdm", gsdm);
+
                 } else {
                     result.put("num", "3");
                 }
