@@ -83,10 +83,11 @@
                     function(data) {
                         var  gsdm = data.gsdm;
                         var  khh=data.khh;
-                        $("#mth").attr("href","/hdsc2/xfp?month=this&gsdm="+gsdm+"&khh="+khh);
-                        $("#lmth").attr("href","/hdsc2/xfp?month=previous&gsdm="+gsdm+"&khh="+khh);
-                        $("#tlmth").attr("href","/hdsc2/xfp?month=twobefore&gsdm="+gsdm+"&khh="+khh);
-                        $("#lyear").attr("href","/hdsc2/xfp?month=Decemberbefore&gsdm="+gsdm+"&khh="+khh);
+                        var  djh=data.djh;
+                        $("#mth").attr("href","/hdsc2/xfp?month=this&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
+                        $("#lmth").attr("href","/hdsc2/xfp?month=previous&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
+                        $("#tlmth").attr("href","/hdsc2/xfp?month=twobefore&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
+                        $("#lyear").attr("href","/hdsc2/xfp?month=Decemberbefore&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
                     })
 		});
 	</script>

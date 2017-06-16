@@ -76,15 +76,15 @@
 <script type="text/javascript" src="../js/wxkb.js"></script>
 <script src="../js/fpj.js" type="text/javascript"></script>
 <script type="text/javascript">
-    var djh;
+    var serialorder;
     $(function() {
         $.post(
-            "tijiao/fpsession",
+            "/tijiao/fpsession",
             {},
             function(data) {
-                djh = data.djh;
-                var pdfdzs = data.pdfdz
-                if (djh != null && djh != "") {
+                serialorder = data.serialorder;
+                var pdfdzs = data.pdfdz;
+                if (serialorder != null && serialorder != "") {
                     pdfdz = pdfdzs.split(",");
                     $.each(
                         pdfdz,
@@ -93,10 +93,10 @@
                         }
                     );
                 } else {
-                    window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                    window.location.href = "/smtq/demo.html?time=" + new Date().getTime();
                 }
             }
-        )
+        );
 
         var urlinfo = window.location.href; //获取当前页面的url
 
@@ -133,39 +133,39 @@
         }
 
         $('#you').click(function() {
-            window.location.href = "../youxiang.html?_t=" + new Date().getTime();
+            window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
         });
         $('#zfb').click(function() {
             window.location.href = "../waitting.html?_t=" + new Date().getTime();
         });
-         $('#fpj').click(function() {
+      /*   $('#fpj').click(function() {
          	window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
+         });*/
+
+
+         $('#fpj').click(function() {
+             if (openid == null) {
+                 getCode();
+             } else {
+                 $.ajax({
+                     url : '../pjj/saveFpj',
+                     data : {
+                         "openid" : openid
+                     },
+                     method : 'post',
+                     success : function(data) {
+                         if (data.success) {
+                             window.location.href = "../index.html?_t=" + new Date().getTime();
+                         } else if (data.nopeat) {
+						 	window.location.href = "../index.html?_t="
+						 			+ new Date().getTime();
+						 } else {
+						 	window.location.href = "../pjj/first";
+						 }
+                     }
+                 });
+             }
          });
-
-
-      //   $('#fpj').click(function() {
-      //       if (openid == null) {
-      //           getCode();
-      //       } else {
-      //           $.ajax({
-      //               url : '../pjj/saveFpj',
-      //               data : {
-      //                   "openid" : openid
-      //               },
-      //               method : 'post',
-      //               success : function(data) {
-      //                   if (data.success) {
-      //                       window.location.href = "../index.html?_t=" + new Date().getTime();
-      //                   } else if (data.nopeat) {
-						// 	window.location.href = "../index.html?_t="
-						// 			+ new Date().getTime();
-						// } else {
-						// 	window.location.href = "../pjj/first";
-						// }
-      //               }
-      //           });
-      //       }
-      //   });
     })
 </script>
 <script src="../js/mui.min.js"></script>

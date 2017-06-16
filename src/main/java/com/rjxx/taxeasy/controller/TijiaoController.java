@@ -150,6 +150,49 @@ public class TijiaoController extends BaseController {
         return result;
     }
 
+    /**
+     * 新邮箱发送
+     * @param yx
+     * @param
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/xyxfs")
+    @ResponseBody
+    public Map xyxfs(String yx, String serialorder) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+        Map params = new HashMap<>();
+        params.put("serialorder", serialorder);
+        params.put("yx", yx);
+
+        boolean flag = false;
+        List<Kpls> kplsList = kplsService.findAll(params);
+        params.put("djh",kplsList.get(0).getDjh());
+        Jyls jyls = jylsService.findOne(params);
+        List<String> pdfUrlList = new ArrayList<>();
+        for (Kpls kpls : kplsList) {
+            pdfUrlList.add(kpls.getPdfurl());
+        }
+        if (kplsList.size() > 0) {
+            try {
+                sendMail(jyls.getDdh(), yx, pdfUrlList, jyls.getXfmc(), String.valueOf(kplsList.get(0).getDjh()), jyls.getGsdm());
+                Spfyx spfyx = spfyxService.findOneByParams(params);
+                if (null == spfyx) {
+                    spfyx = new Spfyx();
+                    spfyx.setEmail(yx);
+                    spfyx.setYxbz("1");
+                    spfyx.setLrsj(new Date());
+                    spfyx.setDjh(Integer.valueOf(kplsList.get(0).getDjh()));
+                    spfyxService.save(spfyx);
+                }
+                flag = true;
+            } catch (Exception e) {
+                flag = false;
+            }
+        }
+        result.put("msg", flag);
+        return result;
+    }
     @RequestMapping(value = "/yxfs")
     @ResponseBody
     public Map yxfs(String yx, String djh) throws Exception {
@@ -328,6 +371,7 @@ public class TijiaoController extends BaseController {
     public Map yxsession() {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("djh", request.getSession().getAttribute("djh"));
+        result.put("serialorder", request.getSession().getAttribute("serialorder"));
         if (null != request.getSession().getAttribute("djh")) {
             Map params = new HashMap<>();
             params.put("djh", String.valueOf(request.getSession().getAttribute("djh")));
@@ -342,7 +386,7 @@ public class TijiaoController extends BaseController {
     @ResponseBody
     public Map fpsession() {
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("djh", request.getSession().getAttribute("djh"));
+        result.put("serialorder", request.getSession().getAttribute("serialorder"));
         result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
         request.getSession().setAttribute("msg", "请重新扫描二维码");
         return result;

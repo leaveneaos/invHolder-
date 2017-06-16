@@ -150,53 +150,23 @@ public class Hdsc2Controller extends BaseController{
             map.put("gsdm", gsdm);
             map.put("month", "");
             List<Kpls> list = jylsService.findBykhh(map);
-            if (list.size() > 0) {
-                result.put("num", "2");
-                result.put("khh", khh);
-                result.put("gsdm", gsdm);
-                request.getSession().setAttribute("khh", khh);
-                request.getSession().setAttribute("gsdm", gsdm);
-
-               /* String pdfdzs = "";
-                request.getSession().setAttribute("djh", list.get(0).getDjh());
-                for (Kpls kpls2 : list) {
-                    pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+            boolean f=true;
+            for(int i=0;i<list.size();i++){
+                if(!list.get(0).getFpztdm().equals("00")){
+                    f=false;
                 }
-                if (pdfdzs.length() > 0) {
-                    result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                    request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                }
-                if (openid != null && !"null".equals(openid)) {
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("djh", list.get(0).getDjh());
-                    params.put("unionid", openid);
-                    Fpj fpj = fpjService.findOneByParams(params);
-                    if (fpj == null) {
-                        fpj = new Fpj();
-                        fpj.setDjh(list.get(0).getDjh());
-                        fpj.setUnionid(openid);
-                        fpj.setYxbz("1");
-                        fpj.setLrsj(new Date());
-                        fpj.setXgsj(new Date());
-                        fpjService.save(fpj);
-                    }
-                }
-                result.put("num", "2");
-                Tqjl tqjl = new Tqjl();
-                tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
-                tqjl.setJlly("1");
-                tqjl.setTqsj(new Date());
-                String visiterIP;
-                if (request.getHeader("x-forwarded-for") == null) {
-                    visiterIP = request.getRemoteAddr();// 访问者IP
+            }
+            if(f){
+                if (list.size() > 0) {
+                    result.put("num", "2");
+                    result.put("khh", khh);
+                    result.put("gsdm", gsdm);
+                    request.getSession().setAttribute("khh", khh);
+                    request.getSession().setAttribute("gsdm", gsdm);
                 } else {
-                    visiterIP = request.getHeader("x-forwarded-for");
+                    result.put("num", "3");
                 }
-                tqjl.setIp(visiterIP);
-                String llqxx = request.getHeader("User-Agent");
-                tqjl.setLlqxx(llqxx);
-                tqjlService.save(tqjl);*/
-            } else {
+            }else{
                 result.put("num", "3");
             }
         } else {
@@ -223,14 +193,15 @@ public class Hdsc2Controller extends BaseController{
              map.put("twobefore"," b.kprq between date_sub(now(),interval 2 month) and now()");
              list = jylsService.findBykhh(map);
         }else if(month.equals("Decemberbefore")){
-             map.put("Decemberbefore", " year(b.kprq)=year(date_sub(now(),interval 1 year))");
+             map.put("Decemberbefore", " b.kprq between date_sub(now(),interval 12 month) and now()");
              list = jylsService.findBykhh(map);
         }
 
         if (list.size() > 0) {
             String pdfdzs = "";
+                request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
                 request.getSession().setAttribute("djh", list.get(0).getDjh());
-                for (Kpls kpls2 : list) {
+            for (Kpls kpls2 : list) {
                     pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
                 }
                 if (pdfdzs.length() > 0) {
@@ -272,7 +243,7 @@ public class Hdsc2Controller extends BaseController{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+          }
       return null;
     }
 }
