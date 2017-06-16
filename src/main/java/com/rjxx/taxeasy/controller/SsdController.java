@@ -86,11 +86,11 @@ public class SsdController extends BaseController{
                 response.sendRedirect(ul);
                 return null;
             } else {
-                response.sendRedirect(request.getContextPath() + "/" + "tsg" + ".html?_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
                 return null;
             }
         }
-        response.sendRedirect(request.getContextPath() + "/" + "tsg" + ".html?_t=" + System.currentTimeMillis());
+        response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
         return null;
     }
 
