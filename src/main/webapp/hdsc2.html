@@ -85,7 +85,7 @@
 			var khh = $('#khh').val();
 			var code = $('#code').val();
 			$.post(
-				"fptq",
+				"/hdsc2/fptq",
 				{
 					"khh" : khh,
 					"code" : code
@@ -93,9 +93,9 @@
 				function(data) {
 					if (data.num == 2) {
 					    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-					    	window.open("dzfp.html?time=" + new Date());
+					    	window.open("dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date());
 					    }else{
-					    	window.location.href = "dzfp.html?time=" + new Date();
+					    	window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date();
 					    }
 					} else if (data.num == 3) {
 						btnArray = [ '确定' ];

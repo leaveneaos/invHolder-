@@ -49,18 +49,18 @@
 		<div class="data-dtc">
 			<ul class="mui-table-view mui-table-view-chevron">
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="smtq/xfp.html" id="mth">本月</a>
+					<a class="mui-navigate-right"  id="mth">本月</a>
 				</li>
 
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="smtq/xfp.html" id="lmth">上个月</a>
+					<a class="mui-navigate-right"  id="lmth">上个月</a>
 				</li>
 
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="smtq/xfp.html" id="tlmth">两个月之前</a>
+					<a class="mui-navigate-right"  id="tlmth">两个月之前</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="smtq/xfp.html" id="lyear">十二个月之前</a>
+					<a class="mui-navigate-right"  id="lyear">十二个月之前</a>
 				</li>
 			</ul>
 		</div>
@@ -76,7 +76,19 @@
 	<script src="js/jquery.min.js"></script>
 
 	<script type="text/javascript">
-		
+		$(function(){
+            $.post(
+                    "tijiao/tjsession",
+                    {},
+                    function(data) {
+                        var  gsdm = data.gsdm;
+                        var  khh=data.khh;
+                        $("#mth").attr("href","/hdsc2/xfp?month=this&gsdm="+gsdm+"&khh="+khh);
+                        $("#lmth").attr("href","/hdsc2/xfp?month=previous&gsdm="+gsdm+"&khh="+khh);
+                        $("#tlmth").attr("href","/hdsc2/xfp?month=twobefore&gsdm="+gsdm+"&khh="+khh);
+                        $("#lyear").attr("href","/hdsc2/xfp?month=Decemberbefore&gsdm="+gsdm+"&khh="+khh);
+                    })
+		});
 	</script>
 </body>
 </html>
