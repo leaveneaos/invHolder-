@@ -11,9 +11,9 @@
 	<link rel="stylesheet" type="text/css" href="../css/common.css">
 	<link rel="stylesheet" type="text/css" href="../css/iconfont.css">
 
-	标准mui.css
+	<!-- 标准mui.css -->
 	<link rel="stylesheet" href="../css/mui.min.css">
-	App自定义的css
+	<!-- App自定义的css -->
 	<link rel="stylesheet" type="text/css" href="../css/app.css" />
 	<style type="text/css">
 		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
@@ -71,10 +71,10 @@
 	</footer>
 </div>
 
-<script src="js/mui.min.js"></script>
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/wxkb.js"></script>
-<script src="js/fpj.js" type="text/javascript"></script>
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/wxkb.js"></script>
+<script src="../js/fpj.js" type="text/javascript"></script>
 <script type="text/javascript">
     var djh;
     $(function() {
@@ -90,7 +90,6 @@
                         pdfdz,
                         function(n, value) {
                             $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-
                         }
                     );
                 } else {
@@ -134,41 +133,47 @@
         }
 
         $('#you').click(function() {
-            window.location.href = "youxiang.html?_t=" + new Date().getTime();
+            window.location.href = "../youxiang.html?_t=" + new Date().getTime();
         });
         $('#zfb').click(function() {
-            window.location.href = "waitting.html?_t=" + new Date().getTime();
+            window.location.href = "../waitting.html?_t=" + new Date().getTime();
         });
+         $('#fpj').click(function() {
+         	window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
+         });
 
 
-        $('#fpj').click(function() {
-            if (openid == null) {
-                getCode();
-            } else {
-                $.ajax({
-                    url : '../pjj/saveFpj',
-                    data : {
-                        "openid" : openid
-                    },
-                    method : 'post',
-                    success : function(data) {
-                        if (data.success) {
-                            window.location.href = "../index.html?_t=" + new Date().getTime();
-                        } else (data.nopeat) {
-                            window.location.href = "../index.html?_t=" + new Date().getTime();
-                        }index
-                    }
-                });
-            }
-        });
+      //   $('#fpj').click(function() {
+      //       if (openid == null) {
+      //           getCode();
+      //       } else {
+      //           $.ajax({
+      //               url : '../pjj/saveFpj',
+      //               data : {
+      //                   "openid" : openid
+      //               },
+      //               method : 'post',
+      //               success : function(data) {
+      //                   if (data.success) {
+      //                       window.location.href = "../index.html?_t=" + new Date().getTime();
+      //                   } else if (data.nopeat) {
+						// 	window.location.href = "../index.html?_t="
+						// 			+ new Date().getTime();
+						// } else {
+						// 	window.location.href = "../pjj/first";
+						// }
+      //               }
+      //           });
+      //       }
+      //   });
     })
 </script>
-<script src="js/mui.min.js"></script>
-<script src="js/mui.zoom.js"></script>
-<script src="js/mui.previewimage.js"></script>
+<script src="../js/mui.min.js"></script>
+<script src="../js/mui.zoom.js"></script>
+<!-- <script src="../js/mui.previewimage.js"></script> -->
 <script>
     mui.init();
-    mui.previewImage();
+    // mui.previewImage();
 </script>
 </body>
 </html>
