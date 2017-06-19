@@ -387,6 +387,7 @@ public class TijiaoController extends BaseController {
     public Map fpsession() {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("serialorder", request.getSession().getAttribute("serialorder"));
+        result.put("djh", request.getSession().getAttribute("djh"));
         result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
         request.getSession().setAttribute("msg", "请重新扫描二维码");
         return result;
