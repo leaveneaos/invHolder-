@@ -191,10 +191,10 @@ public class Hdsc2Controller extends BaseController{
              map.put("previous", "   date_format(b.kprq,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')");
              list = jylsService.findBykhh(map);
         }else if(month.equals("twobefore")){
-             map.put("twobefore"," b.kprq between date_sub(now(),interval 2 month) and now()");
+             map.put("twobefore"," b.kprq <date_add(curdate(),interval -2 MONTH)");
              list = jylsService.findBykhh(map);
         }else if(month.equals("Decemberbefore")){
-             map.put("Decemberbefore", " b.kprq between date_sub(now(),interval 12 month) and now()");
+             map.put("Decemberbefore", "year(b.kprq)=year(date_sub(now(),interval 1 year))");
              list = jylsService.findBykhh(map);
         }
 
