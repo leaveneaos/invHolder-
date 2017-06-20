@@ -33,6 +33,10 @@
 		#tab tr {
 			background-color: #A1A2A4;
 		}
+		.cbox {
+			padding: 5px 0 0 15px;
+		    color: #007AFF;
+		}
 	</style>
 </head>
 <body>
@@ -42,16 +46,21 @@
 
 	<section>
 		<form class="mui-input-group" action="tijiao/fpxx" method="post">
-			<div class="mui-input-row">
-				<label><font color="red">*</font>发票抬头</label> <input type="text"
-					class="mui-input-clear" required="required" maxlength="50"
-					name="fptt" id="fptt" placeholder="请输入发票抬头">
-				
+			<div class="cbox">
+				<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
+				<label>用于报销</label>
 			</div>
 			<div class="mui-input-row">
-					<label><font color="red">*</font>纳税人识别号</label> <input type="text" class="mui-input-clear"
-						id="nsrsbh" maxlength="20" name="nsrsbh" placeholder="请输入纳税人识别号">
-				</div>
+				<label><font color="red">*</font>发票抬头</label> 
+				<input type="text" class="mui-input-clear" required="required" maxlength="50"
+					name="fptt" id="fptt" placeholder="请输入发票抬头">
+			</div>
+			<div class="mui-input-row">
+				<label><font color="red" class="isCheck">*</font>纳税人识别号</label> 
+				<input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20"
+					name="nsrsbh" placeholder="请输入纳税人识别号">
+			</div>
+
 			<ul class="mui-table-view">
 				<div class="content">
 		          	<div class="toggle">
@@ -59,6 +68,7 @@
 			              	<dt>点击填写更多购方信息</dt>
 			              	<dd>
 			        			<div class="mui-collapse-content">
+									
 									<div class="mui-input-row">
 										<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
 											maxlength="100" name="dz" placeholder="请输入地址">
@@ -140,6 +150,7 @@
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			var fptt = $('#fptt').val();
 			var yx = $('#yx').val();
+			var nsrsbh = $('#nsrsbh').val();
 			var firm;
 			var title;
 			if (null == fptt || "" == fptt) {
@@ -151,6 +162,12 @@
 			}else if (null == yx || "" == yx) {
 				var btnArray = [ '是' ];
 				firm = "请输入邮箱!";
+				title = "提示";
+				alert(firm, title);
+				return;
+			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
+				var btnArray = [ '是' ];
+				firm = "请输纳税人识别号!";
 				title = "提示";
 				alert(firm, title);
 				return;
@@ -230,6 +247,14 @@
 				});
 			}
 		}
+
+		function CheckAll(obj) {
+		   if ($(obj).prop("checked")) {
+		      $('.isCheck').html('*');
+		   } else {
+		      $('.isCheck').html('');
+		   }
+		} 	
 	</script>
 </body>
 </html>
