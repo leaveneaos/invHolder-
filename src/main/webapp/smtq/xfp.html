@@ -79,18 +79,23 @@
             "../tijiao/fpsession",
             {},
             function(data) {
-                serialorder = data.serialorder;
-                var pdfdzs = data.pdfdz;
-                if (serialorder != null && serialorder != "") {
-                    pdfdz = pdfdzs.split(",");
-                    $.each(
-                        pdfdz,
-                        function(n, value) {
-                            $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-                        }
-                    );
-                } else {
-                    window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                var msg=data.msg;
+                if(msg!="暂时未有发票开具"){
+                    serialorder = data.serialorder;
+                    var pdfdzs = data.pdfdz;
+                    if (serialorder != null && serialorder != "") {
+                        pdfdz = pdfdzs.split(",");
+                        $.each(
+                            pdfdz,
+                            function(n, value) {
+                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+                            }
+                        );
+                    } else {
+                        window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                    }
+                }else{
+                    $("#parentIndustryUL").append("<div style='width: 100%;text-align:center ;'>"+msg+"</div>");
                 }
             }
         );

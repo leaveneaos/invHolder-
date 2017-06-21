@@ -363,6 +363,7 @@ public class TijiaoController extends BaseController {
         result.put("slv", request.getSession().getAttribute("slv"));
         result.put("khh", request.getSession().getAttribute("khh"));
         result.put("gsdm", request.getSession().getAttribute("gsdm"));
+        result.put("msg", request.getSession().getAttribute("msg"));
         return result;
     }
 
@@ -389,6 +390,7 @@ public class TijiaoController extends BaseController {
         result.put("serialorder", request.getSession().getAttribute("serialorder"));
         result.put("djh", request.getSession().getAttribute("djh"));
         result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
+        result.put("msg", request.getSession().getAttribute("msg"));
         request.getSession().setAttribute("msg", "请重新扫描二维码");
         return result;
     }

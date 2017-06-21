@@ -244,7 +244,14 @@ public class Hdsc2Controller extends BaseController{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-          }
+          }else{
+            try {
+                response.sendRedirect(request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis());
+                request.getSession().setAttribute("msg","暂时未有发票开具");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
       return null;
     }
 }
