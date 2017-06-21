@@ -67,23 +67,9 @@
 	</footer>
 
 	<script type="text/javascript">
-	  	var sUserAgent = navigator.userAgent.toLowerCase();
-	    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-	    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-	    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-	    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-	    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-	    var bIsAndroid = sUserAgent.match(/android/i) == "android";
-	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
-		
-
 		function loadimage() {
 			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
 		}
-
-
-
 		function tiqu() {
 			var tqm = $('#tqm').val();
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
@@ -103,53 +89,35 @@
 				function(data) {
 					if (data.num == 1) {
 						if (data.clztdm == "00") {
-							window.location.href = "../tijiao.html?time="
-									+ new Date();
+							window.location.href = "../fptt.html?time=" + new Date();
 						} else {
 							btnArray = [ '确定' ];
 							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
 							title = "提示";
 							alert(firm, title);
 						}
-					} else if (data.num == 2) {
-					    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-					    	window.open("fp.html?time=" + new Date());
-					    }else{
-					    	window.location.href = "fp.html?time=" + new Date();
-					    }
-					} else if (data.num == 3) {
-						btnArray = [ '确定' ];
-						firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-						title = "提示";
-						alert(firm, title);
-					} else if (data.num == 4) {
-						$('#cwts').html("验证码输入错误");
-						loadimage();
-					} else if (data.num == 5) {
-						window.location.href = "tijiao.html?time=" + new Date();
-					} else if (data.num == 9) {
-						$('#cwts').html("您输入的提取码或者金额有误!");
-						loadimage();
-					} else if (data.num == 6) {
-						btnArray = [ '确定' ];
-						firm = "您提取的申请已提交,我们正在处理,请稍等!";
-						title = "提示";
-						alert(firm, title);
-					} else if (data.num == 7) {
-						btnArray = [ '确定' ];
-						firm = "您提取的申请已提交,我们正在处理,请稍等!";
-						title = "提示";
-						alert(firm, title);
-					} else if (data.num == 11) {
-	                    $('#cwts').html("输入的提取码不正确");
+					}else if (data.num == 2) {
+						$('#cwts').html("输入的提取码不正确");
 	                    loadimage();
+						
+					}else if (data.num == 3) {
+						$('#cwts').html("您输入金额不正确!");
+						loadimage();
+					} else if (data.num == 4) {
+						$('#cwts').html("您输入的验证码不正确");
+						loadimage();
+						
+					}else if (data.num == 5) {
+	                   	btnArray = [ '确定' ];
+						firm = "您提取的申请已提交,我们正在处理,请稍等!";
+						title = "提示";
+						alert(firm, title);
 					}
 				}
 			);
 		}
-
 		function tiaozhuan() {
-			window.location.href = "bangzhu.html?time=" + new Date();
+			window.location.href = "../bangzhu.html?time=" + new Date();
 		}
 	</script>
 </body>
