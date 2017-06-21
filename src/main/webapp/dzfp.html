@@ -60,7 +60,7 @@
 					<a class="mui-navigate-right"  id="tlmth">两个月之前</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right"  id="lyear">十二个月之前</a>
+					<a  class="mui-navigate-right"  id="lyear">十二个月之前</a>
 				</li>
 			</ul>
 		</div>
@@ -76,6 +76,15 @@
 	<script src="js/jquery.min.js"></script>
 
 	<script type="text/javascript">
+		$('#mth').on('click',function() {
+        	alert('暂时未有发票开具')
+        })
+        $('#tlmth').on('click',function() {
+        	alert('暂时未有发票开具')
+        })
+        $('#lyear').on('click',function() {
+        	alert('暂时未有发票开具')
+        })
 		$(function(){
             $.post(
                 "tijiao/tjsession",
@@ -84,10 +93,11 @@
                     var  gsdm = data.gsdm;
                     var  khh=data.khh;
                     var  djh=data.djh;
-                    $("#mth").attr("href","hdsc/xfp?month=this&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
+                    // $("#mth").attr("href","hdsc/xfp?month=this&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
                     $("#lmth").attr("href","hdsc/xfp?month=previous&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
-                    $("#tlmth").attr("href","hdsc/xfp?month=twobefore&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
-                    $("#lyear").attr("href","hdsc/xfp?month=Decemberbefore&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
+                    // $("#tlmth").attr("href","hdsc/xfp?month=twobefore&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
+                    // $("#lyear").attr("href","hdsc/xfp?month=Decemberbefore&gsdm="+gsdm+"&khh="+khh+"&djh="+djh);
+                    
                 }
             )
 		});
