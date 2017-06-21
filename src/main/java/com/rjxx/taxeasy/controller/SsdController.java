@@ -56,7 +56,7 @@ public class SsdController extends BaseController{
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping
     @ResponseBody
     public String index() throws Exception {
         return init("shssts");
@@ -81,7 +81,7 @@ public class SsdController extends BaseController{
             String openid = (String) session.getAttribute("openid");
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
+                        + url + "/ssd/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return null;
