@@ -8,16 +8,16 @@
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
 	<title>输入提取码</title>
-	<link rel="stylesheet" type="text/css" href="css/common.css">
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui.js"></script>
 	<script type="text/javascript">
 		jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
 	</script>
-	<script type="text/javascript" src="js/jquery.alerts.js"></script>
-	<link href="css/mui.min.css" rel="stylesheet" />
-	<link href="css/jquery.alerts.css" rel="stylesheet" />
-	<script src="js/fpj.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../js/jquery.alerts.js"></script>
+	<link href="../css/mui.min.css" rel="stylesheet" />
+	<link href="../css/jquery.alerts.css" rel="stylesheet" />
+	<script src="../js/fpj.js" type="text/javascript"></script>
 	<style type="text/css">
 		#code {
 			width: 60%; 
@@ -34,7 +34,7 @@
 </head>
 <body id="index">
 	<header>
-		<img src="images/afq.png"/>
+		<img src="../images/afq.png"/>
 	</header>
 	
 
@@ -63,7 +63,7 @@
 
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
-		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
+		<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
 
 	<script type="text/javascript">
@@ -79,7 +79,7 @@
 		
 
 		function loadimage() {
-			document.getElementById("randImage").src = "image.jsp?" + Math.random();
+			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
 		}
 
 
@@ -103,7 +103,7 @@
 				function(data) {
 					if (data.num == 1) {
 						if (data.clztdm == "00") {
-							window.location.href = "tijiao.html?time="
+							window.location.href = "../tijiao.html?time="
 									+ new Date();
 						} else {
 							btnArray = [ '确定' ];
