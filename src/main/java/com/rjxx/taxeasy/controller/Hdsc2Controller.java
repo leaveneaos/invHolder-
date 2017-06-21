@@ -34,7 +34,7 @@ import java.util.Map;
  * Created by xlm on 2017/6/15.
  */
 @Controller
-@RequestMapping("/hdsc2")
+@RequestMapping("/hdsc")
 public class Hdsc2Controller extends BaseController{
 
 
@@ -56,7 +56,7 @@ public class Hdsc2Controller extends BaseController{
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping
     @ResponseBody
     public String index() throws Exception {
         return init("hdsc");
