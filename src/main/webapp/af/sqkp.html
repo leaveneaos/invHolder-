@@ -44,18 +44,14 @@
 
 	<div class="mui-content">
 		<section class="mui-content-padded data-dtc">
-			<form class="mui-input-group">
-				<div class="mui-input-row">
-					<label><span  style="color: red;">*</span>名称</label> 
-					<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称">
-				</div>
-			</form>
-		</section>
-		<section class="mui-content-padded data-dtc">
-			<form class="mui-input-group" action="tijiao/fpxx" method="post">
+			<form class="mui-input-group" action="sqkp/fpxx" method="post">
 				<div class="cbox">
 					<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
 					<label>用于报销</label>
+				</div>
+				<div class="mui-input-row">
+					<label><span  style="color: red;">*</span>名称</label> 
+					<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称">
 				</div>
 				<div class="mui-input-row">
 					<label><span style="color: red;">*</span>邮箱地址</label>
