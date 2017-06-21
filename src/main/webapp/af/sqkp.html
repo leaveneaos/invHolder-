@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>电子发票</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">   
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link href="../css/jquery.alerts.css" rel="stylesheet" />
+
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="../css/app.css" />
+	<style type="text/css">
+		.data-dtc {
+			margin: 5px;
+		}
+		.data-tip {
+			font-size: 14px;
+			color: red;
+		}
+		.cbox {
+			padding: 5px 0 0 15px;
+		    color: #007AFF;
+		}
+		.mui-input-row label {
+			width: 40%;
+		}
+		.mui-input-row label~input {
+			width: 60%;
+		}
+	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+		<h1 class="mui-title">电子发票</h1>
+	</header>
+
+
+	<div class="mui-content">
+		<section class="mui-content-padded data-dtc">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label><span  style="color: red;">*</span>名称</label> 
+					<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称">
+				</div>
+			</form>
+		</section>
+		<section class="mui-content-padded data-dtc">
+			<form class="mui-input-group" action="tijiao/fpxx" method="post">
+				<div class="cbox">
+					<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
+					<label>用于报销</label>
+				</div>
+				<div class="mui-input-row">
+					<label><span style="color: red;">*</span>邮箱地址</label>
+					<input name="yx" id="yx" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
+				</div>
+				<div class="mui-input-row">
+					<label><span  style="color: red;" class="isCheck">*</span>纳税人识别号</label>
+					<input id="nsrsbh" maxlength="20"
+					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请输入纳税人识别号">
+				</div>
+				<div class="mui-input-row">
+					<label>单位地址</label>
+					<input id="dz" maxlength="100" name="dz" type="text" class="mui-input-clear" placeholder="收票单位注册地址">
+				</div>
+				<div class="mui-input-row">
+					<label>电话号码</label>
+					<input id="dh" maxlength="30" name="dh" type="text" class="mui-input-clear" placeholder="请输入公司电话号码">
+				</div>
+				<div class="mui-input-row">
+					<label>开户银行</label>
+					<input id="khh" maxlength="50" name="khh" type="text" class="mui-input-clear" placeholder="收票单位开户银行">
+				</div>
+				<div class="mui-input-row">
+					<label>银行账号</label>
+					<input id="yhzh" maxlength="50" name="yhzh" type="text" class="mui-input-clear" placeholder="收票单位银行帐号">
+				</div>
+    		</form>
+		</section>
+		<section class="mui-content-padded">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>开票项目</label> 
+					<input name="kpxm" id="kpxm" type="text">
+				</div>
+				<div class="mui-input-row">
+					<label>开票金额</label> 
+					<input name="kpje" id="kpje" type="text">
+				</div>
+			</form>
+		</section>
+		<section class="data-tip">
+			备注：自2017年7月1日起，购买方为企业的，索取增值税普通发票时，应向销售方提供纳税人识别号或统一社会信用代码;
+		</section>
+		<button id="sqkp" onclick="kp()" class="mui-btn mui-btn-primary mui-btn-block" style="margin-bottom: 65px;">申请开票</button>
+		<div id="info" style="margin-bottom: 80px; color: red; margin-left: 2%;"></div>
+
+		<footer>
+			<p class="company">上海容津信息技术有限公司</p>
+			<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
+		</footer>
+	</div>
+	
+
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui.js"></script>
+	<script type="text/javascript" src="../js/jquery.alerts.js"></script>
+	<script type="text/javascript">
+	jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+	</script>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript">
+		// $(function() {
+		// 	$('#sqkp').on('click',function() {
+		// 		window.location.href = 'kpxx.html'
+		// 	})
+		// })
+
+		function kp() {
+			var info = document.getElementById("info");
+			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			var fptt = $('#fptt').val();
+			var yx = $('#yx').val();
+			var nsrsbh = $('#nsrsbh').val();
+			var firm;
+			var title;
+			if (null == fptt || "" == fptt) {
+				var btnArray = [ '是' ];
+				firm = "请输入发票抬头!";
+				title = "提示";
+				alert(firm, title);
+				return;
+			}else if (null == yx || "" == yx) {
+				var btnArray = [ '是' ];
+				firm = "请输入邮箱!";
+				title = "提示";
+				alert(firm, title);
+				return;
+			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
+				var btnArray = [ '是' ];
+				firm = "请输纳税人识别号!";
+				title = "提示";
+				alert(firm, title);
+				return;
+			}else if(!filter.test(yx)){
+				 var btnArray = [ '是' ];
+					firm = "邮箱格式不正确!";
+					title = "提示";
+					alert(firm, title);
+					return;
+			} else {
+				firm = "发票抬头:" + fptt + "</br>";
+				var nsrsbh = $('#nsrsbh').val();
+				var dz = $('#dz').val();
+				var dh = $('#dh').val();
+				var khh = $('#khh').val();
+				var yhzh = $('#yhzh').val();
+				if(null!=nsrsbh&&nsrsbh!=''){
+					if(nsrsbh.length!=15&&nsrsbh.length!=18&&nsrsbh.length!=20){
+						firm = "税号长度不对,税号为15,18,20位中一种";
+						title = "提示";
+						alert(firm, title);
+						return;
+					}
+				}
+			//	var sjh = $('#sjh').val();
+				var btnArray = [ '否', '是' ];
+				if (null != nsrsbh && "" != nsrsbh) {
+					firm += "纳税人识别号:" + nsrsbh + "</br>";
+				}
+				if (null != dz && "" != dz) {
+					firm += "地址:" + dz +  "</br>";
+				}
+				if (null != dh && "" != dh) {
+					firm += "电话:" + dh +  "</br>";
+				}
+				if (null != khh && "" != khh) {
+					firm += "开户行:" + khh +  "</br>";
+				}
+				if (null != yhzh && "" != yhzh) {
+					firm += "银行账号:" + yhzh +  "</br>";
+				}
+				if (null != yx && "" != yx) {
+					firm += "邮箱:" + yx +  "</br>";
+				}
+			/* 	if (null != sjh && "" != sjh) {
+					firm += "手机:" + sjh + "。";
+				} */
+				title = "信息确认";
+				$("#confirmBtn").attr("disabled",true);
+				jConfirm(firm,title, function(r) {
+					if(r){
+						$.post("dzfp_sqj/saveLs", {
+							"fptt" : fptt,
+							"nsrsbh" : nsrsbh,
+							"dz" : dz,
+							"dh" : dh,
+							"khh" : khh,
+							"khhzh" : yhzh,
+							"yx" :yx
+							//"sj" : sj
+						}, function(data) {
+							if (data.msg == 1) {
+								info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
+							} else {
+								btnArray = [ '确定' ];
+								firm = data.msg;
+								info.innerText =firm;
+								$("#sqkp").attr("disabled",false);
+							}
+						});
+					}else{
+						info.innerText = '请重新确认';
+						$("#sqkp").attr("disabled",false);
+					}
+				});
+			}
+		}
+
+
+
+		function CheckAll(obj) {
+		   if ($(obj).prop("checked")) {
+		      $('.isCheck').html('*');
+		   } else {
+		      $('.isCheck').html('');
+		   }
+		} 
+
+
+		function tiaozhuan() {
+			window.location.href = "bangzhu.html?time=" + new Date();
+		}
+	</script>
+</body>
+</html>
