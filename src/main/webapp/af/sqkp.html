@@ -38,7 +38,7 @@
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
-		<h1 class="mui-title">电子发票</h1>
+		<h1 class="mui-title">发票信息</h1>
 	</header>
 
 
@@ -183,25 +183,29 @@
 				$("#confirmBtn").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
 					if(r){
-						$.post("dzfp_sqj/saveLs", {
-							"fptt" : fptt,
-							"nsrsbh" : nsrsbh,
-							"dz" : dz,
-							"dh" : dh,
-							"khh" : khh,
-							"khhzh" : yhzh,
-							"yx" :yx
-						}, function(data) {
-							if (data.msg == 1) {
-								info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
-								window.location.href = "af/kpxx.html?time=" + new Date();
-							} else {
-								btnArray = [ '确定' ];
-								firm = data.msg;
-								info.innerText =firm;
-								$("#sqkp").attr("disabled",false);
+						$.post(
+							"dzfp_af/saveLs", 
+							{
+								"fptt" : fptt,
+								"nsrsbh" : nsrsbh,
+								"dz" : dz,
+								"dh" : dh,
+								"khh" : khh,
+								"khhzh" : yhzh,
+								"yx" :yx
+							}, 
+							function(data) {
+								if (data.msg == 1) {
+									info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
+									window.location.href = "af/kpxx.html?time=" + new Date();
+								} else {
+									btnArray = [ '确定' ];
+									firm = data.msg;
+									info.innerText =firm;
+									$("#sqkp").attr("disabled",false);
+								}
 							}
-						});
+						);
 					}else{
 						info.innerText = '请重新确认';
 						$("#sqkp").attr("disabled",false);
@@ -210,8 +214,6 @@
 			}
 		}
 
-
-
 		function CheckAll(obj) {
 		   if ($(obj).prop("checked")) {
 		      $('.isCheck').html('*');
@@ -219,7 +221,6 @@
 		      $('.isCheck').html('');
 		   }
 		} 
-
 
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();

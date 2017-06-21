@@ -31,7 +31,7 @@
 <body>
 <header class="mui-bar mui-bar-nav">
 	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
-	<h1 class="mui-title">电子发票</h1>
+	<h1 class="mui-title">发票提取</h1>
 </header>
 
 <div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
@@ -76,21 +76,26 @@
     var serialorder;
     $(function() {
         $.post(
-            "../tijiao/fpsession",
+            "../sqkp/fpsession",
             {},
             function(data) {
-                serialorder = data.serialorder;
-                var pdfdzs = data.pdfdz;
-                if (serialorder != null && serialorder != "") {
-                    pdfdz = pdfdzs.split(",");
-                    $.each(
-                        pdfdz,
-                        function(n, value) {
-                            $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-                        }
-                    );
-                } else {
-                    window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                var msg=data.msg;
+                if(msg!="暂时未有发票开具"){
+                    serialorder = data.serialorder;
+                    var pdfdzs = data.pdfdz;
+                    if (serialorder != null && serialorder != "") {
+                        pdfdz = pdfdzs.split(",");
+                        $.each(
+                            pdfdz,
+                            function(n, value) {
+                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+                            }
+                        );
+                    } else {
+                        window.location.href = "../smtq/demo.html?time=" + new Date().getTime();
+                    }
+                }else{
+                    $("#parentIndustryUL").append("<div style='width: 100%;text-align:center ;'>"+msg+"</div>");
                 }
             }
         );
@@ -132,37 +137,36 @@
         $('#you').click(function() {
             window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
         });
-        $('#zfb').click(function() {
-            window.location.href = "../waitting.html?_t=" + new Date().getTime();
+        $('#fpj').click(function() {
+         	// window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
         });
-      /*   $('#fpj').click(function() {
-         	window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
-         });*/
+        $('#zfb').click(function() {
+            // window.location.href = "../waitting.html?_t=" + new Date().getTime();
+        });
 
-
-         $('#fpj').click(function() {
-             if (openid == null) {
-                 getCode();
-             } else {
-                 $.ajax({
-                     url : '../pjj/saveFpj',
-                     data : {
-                         "openid" : openid
-                     },
-                     method : 'post',
-                     success : function(data) {
-                         if (data.success) {
-                             window.location.href = "../index.html?_t=" + new Date().getTime();
-                         } else if (data.nopeat) {
-						 	window.location.href = "../index.html?_t="
-						 			+ new Date().getTime();
-						 } else {
-						 	window.location.href = "../pjj/first";
-						 }
-                     }
-                 });
-             }
-         });
+       //  $('#fpj').click(function() {
+       //       if (openid == null) {
+       //           getCode();
+       //       } else {
+       //           $.ajax({
+       //               url : '../pjj/saveFpj',
+       //               data : {
+       //                   "openid" : openid
+       //               },
+       //               method : 'post',
+       //               success : function(data) {
+       //                   if (data.success) {
+       //                       window.location.href = "../index.html?_t=" + new Date().getTime();
+       //                   } else if (data.nopeat) {
+						 // 	window.location.href = "../index.html?_t="
+						 // 			+ new Date().getTime();
+						 // } else {
+						 // 	window.location.href = "../pjj/first";
+						 // }
+       //               }
+       //           });
+       //       }
+       //  });
     })
 </script>
 <script src="../js/mui.min.js"></script>
