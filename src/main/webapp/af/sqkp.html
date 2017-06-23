@@ -81,14 +81,12 @@
     		</form>
 		</section>
 		<section class="mui-content-padded">
-			<form class="mui-input-group">
+			<form class="mui-input-group" id="tab">
 				<div class="mui-input-row">
-					<label>开票项目</label> 
-					<input name="kpxm" id="kpxm" type="text">
+					<label id="kpxm">开票项目</label>
 				</div>
 				<div class="mui-input-row">
-					<label>开票金额</label> 
-					<input name="kpje" id="kpje" type="text">
+					<label id="kpje">开票金额</label>
 				</div>
 			</form>
 		</section>
@@ -113,6 +111,26 @@
 	</script>
 	<script src="../js/mui.min.js"></script>
 	<script type="text/javascript">
+        var djh;
+		$(function () {
+            $.post(
+                "../dzfp_af/tjsession",
+				{},
+				function(data) {
+                    djh = data.tqm;
+                    if (djh != null && djh != "") {
+                        $("#kpxm").after("<span>" + data.spmc + "<span>")
+                        $("#kpje").after("<span>" + data.zje + "<span>")
+                    } else {
+                        window.location.href = "../smtq/demo.html?time=" + new Date();
+                    }
+				}
+			)
+
+
+
+        })
+
 		function kp() {
 			var info = document.getElementById("info");
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -184,7 +202,7 @@
 				jConfirm(firm,title, function(r) {
 					if(r){
 						$.post(
-							"dzfp_af/saveLs", 
+							"../dzfp_af/xgsession",
 							{
 								"fptt" : fptt,
 								"nsrsbh" : nsrsbh,
@@ -197,7 +215,7 @@
 							function(data) {
 								if (data.msg == 1) {
 									info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
-									window.location.href = "af/kpxx.html?time=" + new Date();
+									window.location.href = "../af/kpxx.html?time=" + new Date();
 								} else {
 									btnArray = [ '确定' ];
 									firm = data.msg;
@@ -223,7 +241,7 @@
 		} 
 
 		function tiaozhuan() {
-			window.location.href = "bangzhu.html?time=" + new Date();
+			window.location.href = "../bangzhu.html?time=" + new Date();
 		}
 	</script>
 </body>
