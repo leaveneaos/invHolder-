@@ -1,71 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>电子发票</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Cache-control" content="no-cache">
-  <meta http-equiv="Cache" content="no-cache">
-  <link rel="stylesheet" type="text/css" href="../css/common.css">
-  <link rel="stylesheet" type="text/css" href="../css/iconfont.css">
+    <meta charset="UTF-8">
+    <title>电子发票</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css">
 
-  <!-- 标准mui.css -->
-  <link rel="stylesheet" href="../css/mui.min.css">
-  <!-- App自定义的css -->
-  <link rel="stylesheet" type="text/css" href="../css/app.css" />
-  <style type="text/css">
-    .mui-grid-view.mui-grid-9 .mui-table-view-cell {
-      border: none;
-      border: 0;
-    }
-    .mui-col-xs-4 {
-      width: 33.33333333%;
-    }
-    .mui-grid-view.mui-grid-9 {
-      border-left: 0;
-    }
-  </style>
+    <!-- 标准mui.css -->
+    <link rel="stylesheet" href="../css/mui.min.css">
+    <!-- App自定义的css -->
+    <link rel="stylesheet" type="text/css" href="../css/app.css"/>
+    <style type="text/css">
+        .mui-grid-view.mui-grid-9 .mui-table-view-cell {
+            border: none;
+            border: 0;
+        }
+
+        .mui-col-xs-4 {
+            width: 33.33333333%;
+        }
+
+        .mui-grid-view.mui-grid-9 {
+            border-left: 0;
+        }
+
+        #zfb {
+            visibility: hidden;
+        }
+    </style>
 </head>
 <body>
 <header class="mui-bar mui-bar-nav">
-  <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
-  <h1 class="mui-title">电子发票</h1>
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+    <h1 class="mui-title">电子发票</h1>
 </header>
 
 <div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
-  <section>
-    <ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
-      <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-        <a id="you">
-          <span class="mui-icon iconfont icon-youxiang"></span>
-          <div class="mui-media-body" style="color: #fff;">邮箱</div>
-        </a>
-      </li>
-      <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-        <a id="fpj">
-          <span class="mui-icon iconfont icon-fapiaoguanli1"></span>
-          <div class="mui-media-body" style="color: #fff;">发票夹</div>
-        </a>
-      </li>
-      <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-        <a id="zfb">
-          <span class="mui-icon iconfont icon-jikediancanicon23"></span>
-          <div class="mui-media-body" style="color: #fff;">支付宝</div>
-        </a>
-      </li>
-    </ul>
-  </section>
+    <section>
+        <ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+                <a id="you">
+                    <span class="mui-icon iconfont icon-youxiang"></span>
+                    <div class="mui-media-body" style="color: #fff;">邮箱</div>
+                </a>
+            </li>
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+                <a id="fpj">
+                    <span class="mui-icon iconfont icon-fapiaoguanli1"></span>
+                    <div class="mui-media-body" style="color: #fff;">发票夹</div>
+                </a>
+            </li>
+            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+                <a id="zfb">
+                    <span class="mui-icon iconfont icon-jikediancanicon23"></span>
+                    <div class="mui-media-body" style="color: #fff;">支付宝</div>
+                </a>
+            </li>
+        </ul>
+    </section>
 
-  <section id=parentIndustryUL>
+    <section id=parentIndustryUL>
 
-  </section>
+    </section>
 
-  <footer>
-    <p class="company">上海容津信息技术有限公司</p>
-    <p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
-  </footer>
+    <footer>
+        <p class="company">上海容津信息技术有限公司</p>
+        <p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
+    </footer>
 </div>
 
 <script src="../js/mui.min.js"></script>
@@ -74,33 +81,40 @@
 <script src="../js/fpj.js" type="text/javascript"></script>
 <script type="text/javascript">
     var serialorder;
-    $(function() {
+    $(function () {
         $.post(
-            "../tijiao/fpsession",
-            {},
-            function(data) {
-                var msg=data.msg;
-                if(msg!="暂时未有发票开具"){
-                    serialorder = data.serialorder;
-                    var pdfdzs = data.pdfdz;
-                    if (serialorder != null && serialorder != "") {
-                        pdfdz = pdfdzs.split(",");
-                        $.each(
-                            pdfdz,
-                            function(n, value) {
-                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-                            }
-                        );
+                "../tijiao/fpsession",
+                {},
+                function (data) {
+                    var msg = data.msg;
+                    if (msg != "暂时未有发票开具") {
+                        serialorder = data.serialorder;
+                        var pdfdzs = data.pdfdz;
+                        if (serialorder != null && serialorder != "") {
+                            pdfdz = pdfdzs.split(",");
+                            $.each(
+                                    pdfdz,
+                                    function (n, value) {
+                                        $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+                                    }
+                            );
+                        } else {
+                            window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                        }
                     } else {
-                        window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                        $("#parentIndustryUL").append("<div style='width: 100%;text-align:center ;'>" + msg + "</div>");
                     }
-                }else{
-                    $("#parentIndustryUL").append("<div style='width: 100%;text-align:center ;'>"+msg+"</div>");
                 }
-            }
         );
 
         var urlinfo = window.location.href; //获取当前页面的url
+        //显示支付宝按钮
+        if (urlinfo.indexOf("isAlipay=true") != -1) {
+            $("#zfb").css("visibility", "visible");
+            $("#zfb").click(function () {
+                window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+            });
+        }
 
         if (urlinfo.indexOf('code') > -1) {
             var len = urlinfo.length;//获取url的长度
@@ -113,15 +127,15 @@
                 if (openid != null) {
                     getUserMsg();
                     $.ajax({
-                        url : '../pjj/saveFpj',
-                        method : 'post',
-                        success : function(data) {
+                        url: '../pjj/saveFpj',
+                        method: 'post',
+                        success: function (data) {
                             if (data.success) {
                                 window.location.href = "../sccg.html?_t="
-                                    + new Date().getTime();
+                                        + new Date().getTime();
                             } else if (data.nopeat) {
                                 window.location.href = "../sccg.html?_t="
-                                    + new Date().getTime();
+                                        + new Date().getTime();
                             } else {
                                 window.location.href = "../pjj/first";
                             }
@@ -134,39 +148,39 @@
             }
         }
 
-        $('#you').click(function() {
+        $('#you').click(function () {
             window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
         });
-        $('#zfb').click(function() {
+        $('#zfb').click(function () {
             // window.location.href = "../waitting.html?_t=" + new Date().getTime();
         });
-        $('#fpj').click(function() {
-          // window.location.href = "../waitting.html?_t=" + new Date().getTime();
+        $('#fpj').click(function () {
+            // window.location.href = "../waitting.html?_t=" + new Date().getTime();
         });
 
 
-      //   $('#fpj').click(function() {
-      //       if (openid == null) {
-      //           getCode();
-      //       } else {
-      //           $.ajax({
-      //               url : '../pjj/saveFpj',
-      //               data : {
-      //                   "openid" : openid
-      //               },
-      //               method : 'post',
-      //               success : function(data) {
-      //                   if (data.success) {
-      //                       window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
-      //                   } else if (data.nopeat) {
-            //    window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
-            // } else {
-            //    window.location.href = "../pjj/first";
-            // }
-      //               }
-      //            });
-      //       }
-      //   });
+        //   $('#fpj').click(function() {
+        //       if (openid == null) {
+        //           getCode();
+        //       } else {
+        //           $.ajax({
+        //               url : '../pjj/saveFpj',
+        //               data : {
+        //                   "openid" : openid
+        //               },
+        //               method : 'post',
+        //               success : function(data) {
+        //                   if (data.success) {
+        //                       window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
+        //                   } else if (data.nopeat) {
+        //    window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
+        // } else {
+        //    window.location.href = "../pjj/first";
+        // }
+        //               }
+        //            });
+        //       }
+        //   });
     })
 </script>
 <script src="../js/mui.min.js"></script>
