@@ -21,6 +21,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.rjxx.thirdpart</groupId>
+            <artifactId>alipay-sdk</artifactId>
+            <version>java-ALL20170516175137</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
