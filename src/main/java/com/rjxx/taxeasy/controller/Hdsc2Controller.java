@@ -10,6 +10,7 @@ import com.rjxx.taxeasy.service.FpjService;
 import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.TqjlService;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,7 +22,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/hdsc")
-public class Hdsc2Controller extends BaseController{
+public class Hdsc2Controller extends BaseController {
 
 
     public static String SESSION_KEY_FPTQ_GSDM = "fptq_gsdm";
@@ -72,12 +72,13 @@ public class Hdsc2Controller extends BaseController{
         }
         session.setAttribute(SESSION_KEY_FPTQ_GSDM, gsdm);
         String ua = request.getHeader("user-agent").toLowerCase();
+        String url = HtmlUtils.getBasePath(request);
         if (ua.indexOf("micromessenger") > 0) {
             if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
                 gsxx.setWxappid(APP_ID);
                 gsxx.setWxsecret(SECRET);
             }
-            String url = HtmlUtils.getBasePath(request);
+
             String openid = (String) session.getAttribute("openid");
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
@@ -89,10 +90,18 @@ public class Hdsc2Controller extends BaseController{
                 response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
                 return null;
             }
+        } else if (AlipayUtils.isAlipayBrowser(request)) {
+            if (!AlipayUtils.isAlipayAuthorized(session)) {
+                AlipayUtils.initAlipayAuthorization(request, response, "/hdsc");
+                return null;
+            }
+            response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+            return null;
         }
         response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
         return null;
     }
+
 
     @RequestMapping(value = "/getWx")
     @ResponseBody
@@ -150,13 +159,13 @@ public class Hdsc2Controller extends BaseController{
             map.put("gsdm", gsdm);
             map.put("month", "");
             List<Kpls> list = jylsService.findBykhh(map);
-            boolean f=true;
-            for(int i=0;i<list.size();i++){
-                if(!list.get(0).getFpztdm().equals("00")){
-                    f=false;
+            boolean f = true;
+            for (int i = 0; i < list.size(); i++) {
+                if (!list.get(0).getFpztdm().equals("00")) {
+                    f = false;
                 }
             }
-            if(f){
+            if (f) {
                 if (list.size() > 0) {
                     result.put("num", "2");
                     result.put("khh", khh);
@@ -167,7 +176,7 @@ public class Hdsc2Controller extends BaseController{
                 } else {
                     result.put("num", "3");
                 }
-            }else{
+            } else {
                 result.put("num", "3");
             }
         } else {
@@ -175,83 +184,88 @@ public class Hdsc2Controller extends BaseController{
         }
         return result;
     }
+
     @RequestMapping(value = "/xfp")
     @ResponseBody
-    public Map xfp(String khh, String gsdm,String month) {
-        Map result=new HashMap();
+    public Map xfp(String khh, String gsdm, String month) {
+        Map result = new HashMap();
         String openid = (String) session.getAttribute("openid");
         Map map = new HashMap<>();
         map.put("khh", khh);
         map.put("gsdm", gsdm);
-        List<Kpls> list=null;
-        if(month.equals("this")){
-             map.put("this", "  date_format(b.kprq,'%Y-%m')=date_format(now(),'%Y-%m')");
-             list = jylsService.findBykhh(map);
-        }else if(month.equals("previous")){
-             map.put("previous", "   date_format(b.kprq,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')");
-             list = jylsService.findBykhh(map);
-        }else if(month.equals("twobefore")){
-             map.put("twobefore"," b.kprq <date_add(curdate(),interval -2 MONTH)");
-             list = jylsService.findBykhh(map);
-        }else if(month.equals("Decemberbefore")){
-             map.put("Decemberbefore", "year(b.kprq)=year(date_sub(now(),interval 1 year))");
-             list = jylsService.findBykhh(map);
+        List<Kpls> list = null;
+        if (month.equals("this")) {
+            map.put("this", "  date_format(b.kprq,'%Y-%m')=date_format(now(),'%Y-%m')");
+            list = jylsService.findBykhh(map);
+        } else if (month.equals("previous")) {
+            map.put("previous", "   date_format(b.kprq,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')");
+            list = jylsService.findBykhh(map);
+        } else if (month.equals("twobefore")) {
+            map.put("twobefore", " b.kprq <date_add(curdate(),interval -2 MONTH)");
+            list = jylsService.findBykhh(map);
+        } else if (month.equals("Decemberbefore")) {
+            map.put("Decemberbefore", "year(b.kprq)=year(date_sub(now(),interval 1 year))");
+            list = jylsService.findBykhh(map);
         }
 
         if (list.size() > 0) {
             String pdfdzs = "";
-                request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
-                request.getSession().setAttribute("djh", list.get(0).getDjh());
+            request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
+            request.getSession().setAttribute("djh", list.get(0).getDjh());
             for (Kpls kpls2 : list) {
-                    pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+                pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+            }
+            if (pdfdzs.length() > 0) {
+                result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+            }
+            if (openid != null && !"null".equals(openid)) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("djh", list.get(0).getDjh());
+                params.put("unionid", openid);
+                Fpj fpj = fpjService.findOneByParams(params);
+                if (fpj == null) {
+                    fpj = new Fpj();
+                    fpj.setDjh(list.get(0).getDjh());
+                    fpj.setUnionid(openid);
+                    fpj.setYxbz("1");
+                    fpj.setLrsj(new Date());
+                    fpj.setXgsj(new Date());
+                    fpjService.save(fpj);
                 }
-                if (pdfdzs.length() > 0) {
-                    result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                    request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                }
-                if (openid != null && !"null".equals(openid)) {
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("djh", list.get(0).getDjh());
-                    params.put("unionid", openid);
-                    Fpj fpj = fpjService.findOneByParams(params);
-                    if (fpj == null) {
-                        fpj = new Fpj();
-                        fpj.setDjh(list.get(0).getDjh());
-                        fpj.setUnionid(openid);
-                        fpj.setYxbz("1");
-                        fpj.setLrsj(new Date());
-                        fpj.setXgsj(new Date());
-                        fpjService.save(fpj);
-                    }
-                }
-                result.put("num", "2");
-                Tqjl tqjl = new Tqjl();
-                tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
-                tqjl.setJlly("1");
-                tqjl.setTqsj(new Date());
-                String visiterIP;
-                if (request.getHeader("x-forwarded-for") == null) {
-                    visiterIP = request.getRemoteAddr();// 访问者IP
-                } else {
-                    visiterIP = request.getHeader("x-forwarded-for");
-                }
-                tqjl.setIp(visiterIP);
-                String llqxx = request.getHeader("User-Agent");
-                tqjl.setLlqxx(llqxx);
-                tqjlService.save(tqjl);
+            }
+            result.put("num", "2");
+            Tqjl tqjl = new Tqjl();
+            tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+            tqjl.setJlly("1");
+            tqjl.setTqsj(new Date());
+            String visiterIP;
+            if (request.getHeader("x-forwarded-for") == null) {
+                visiterIP = request.getRemoteAddr();// 访问者IP
+            } else {
+                visiterIP = request.getHeader("x-forwarded-for");
+            }
+            tqjl.setIp(visiterIP);
+            String llqxx = request.getHeader("User-Agent");
+            tqjl.setLlqxx(llqxx);
+            tqjlService.save(tqjl);
             try {
-                response.sendRedirect(request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis());
+                String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
+                if (AlipayUtils.isAlipayBrowser(request)) {
+                    redirectUrl += "&isAlipay=true";
+                }
+                response.sendRedirect(redirectUrl);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-          }else{
+        } else {
             try {
                 response.sendRedirect(request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis());
-                request.getSession().setAttribute("msg","暂时未有发票开具");
+                request.getSession().setAttribute("msg", "暂时未有发票开具");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-      return null;
+        return null;
     }
 }
