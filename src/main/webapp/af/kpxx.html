@@ -45,6 +45,9 @@
 	   		width: 35%;
 	   		font-size: 18px;
 	   	}
+	   	.lht {
+	   		line-height: 50px;
+	   	}
 	</style>
 
 </head>
@@ -106,9 +109,9 @@
                     {},
                     function (data) {
 
-                        $("#fptt2").after("<span>" + data.fptt + "<span>")
-                        $("#fpje2").after("<span>" + data.je + "<span>")
-                        $("#yx2").after("<span>" + data.yx + "<span>")
+                        $("#fptt2").after("<span class='lht'>" + data.fptt + "<span>")
+                        $("#fpje2").after("<span class='lht'>" + data.je + "<span>")
+                        $("#yx2").after("<span class='lht'>" + data.yx + "<span>")
 
                     }
                 );

@@ -33,6 +33,9 @@
 		.mui-input-row label~input {
 			width: 60%;
 		}
+		.lht {
+			line-height: 50px;
+		}
 	</style>
 </head>
 <body>
@@ -128,8 +131,8 @@
                        	$("#khh").val(data.khh);
                        	$("#yhzh").val(data.yhzh);
 
-                        $("#kpxm").after("<span>" + data.spmc + "</span>")
-                        $("#kpje").after("<span>" + data.je + "</span>")
+                        $("#kpxm").after("<span class='lht'>" + data.spmc + "</span>")
+                        $("#kpje").after("<span class='lht'>" + data.je + "</span>")
                     } else {
                         window.location.href = "../smtq/demo.html?time=" + new Date();
                     }
