@@ -87,7 +87,7 @@
 
 		<section style="text-align: center;margin-bottom: 61px;">
 			<button type="button" id="revise" class="mui-btn mui-btn-royal">修 改</button>
-			<button type="button" class="mui-btn mui-btn-danger">确 认</button>
+			<button type="button"  id = "queren" class="mui-btn mui-btn-danger">确 认</button>
 		</section>
 
 		<footer>
@@ -102,7 +102,7 @@
 		$(function () {
             $(function () {
                 $.post(
-                    "../dzfp_af/xgsession2",
+                    "../af/qrxxsession",/*确认信息*/
                     {},
                     function (data) {
 
@@ -114,28 +114,20 @@
                 );
             });
 
-
-
-
             $('#revise').on('click', function () {
-                window.location.href = '../af/sqkp.html';
-            })
-            $('.mui-btn-danger').on('click', function () {
-                $(function () {
-                    $.post()
-                    {
-                        "../dzfp_af/saveLs",
-                            {},
-                            function () {
-                                window.location.href = '../af/xfp.html';
-                            }
-                    }
-                })
-
+                window.location.href = '../af/sqkp2.html';
             });
 
+            $('#queren').on('click',function () {
+				$.post(
+				    "../af/saveLs",
+					{},
 
-
+					function () {
+						window.location.href = '../af/ysl.html'
+                    }
+				);
+            })
 		});
 	</script>
 </body>

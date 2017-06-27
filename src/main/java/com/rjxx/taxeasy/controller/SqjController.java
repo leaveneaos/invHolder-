@@ -33,35 +33,35 @@ import java.util.Map;
 public class SqjController extends BaseController {
 
     @Autowired
-    private GsxxService gsxxservice;
+    private GsxxService gsxxservice;//公司信息
     @Autowired
-    private SmtqService smtqService;
+    private SmtqService smtqService;//扫描提取
     @Autowired
-    private JylsService jylsService;
+    private JylsService jylsService;//交易流水
     @Autowired
-    private KplsService kplsService;
+    private KplsService kplsService;//开票流水
     @Autowired
-    private TqjlService tqjlService;
+    private TqjlService tqjlService;//提取记录
     @Autowired
-    private CszbService cszbService;
+    private CszbService cszbService;//参数主表
     @Autowired
-    private SkpService skpService;
+    private SkpService skpService;//税控盘
     @Autowired
-    private XfService xfService;
+    private XfService xfService;//销方
     @Autowired
-    private YhService yhService;
+    private YhService yhService;//用户
     @Autowired
-    private JyxxService jyxxservice;
+    private JyxxService jyxxservice;//交易信息
     @Autowired
-    private JyspmxService jyspmxService;
+    private JyspmxService jyspmxService;//交易商品明细
     @Autowired
-    private TqmtqService tqmtqService;
+    private TqmtqService tqmtqService;//提取码提取
     @Autowired
-    private PpService ppService;
+    private PpService ppService;//品牌
     @Autowired
-    private SpService spService;
+    private SpService spService;//商品
     @Autowired
-    private FpjService fpjService;
+    private FpjService fpjService;//发票夹
 
     public static final String APP_ID = "wx9abc729e2b4637ee";
 

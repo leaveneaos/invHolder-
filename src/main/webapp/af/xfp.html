@@ -76,15 +76,13 @@
     var serialorder;
     $(function() {
         $.post(
-            "../sqkp/fpsession",
+            "../af/fpsession",
             {},
             function(data) {
-                var msg=data.msg;
-                if(msg!="暂时未有发票开具"){
                     serialorder = data.serialorder;
-                    var pdfdzs = data.pdfdz;
+                    var pdfdzs = data.pdfdzs;
                     if (serialorder != null && serialorder != "") {
-                        pdfdz = pdfdzs.split(",");
+                      var  pdfdz = pdfdzs.split(",");
                         $.each(
                             pdfdz,
                             function(n, value) {
@@ -94,14 +92,11 @@
                     } else {
                         window.location.href = "../smtq/demo.html?time=" + new Date().getTime();
                     }
-                }else{
-                    $("#parentIndustryUL").append("<div style='width: 100%;text-align:center ;'>"+msg+"</div>");
-                }
+
             }
         );
 
         var urlinfo = window.location.href; //获取当前页面的url
-
         if (urlinfo.indexOf('code') > -1) {
             var len = urlinfo.length;//获取url的长度
             var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
@@ -135,46 +130,23 @@
         }
 
         $('#you').click(function() {
-            window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
+             window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
         });
         $('#fpj').click(function() {
-         	// window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
+         	 window.location.href = "../waitting.html?_t=" + new Date().getTime();
         });
         $('#zfb').click(function() {
-            // window.location.href = "../waitting.html?_t=" + new Date().getTime();
+             window.location.href = "../waitting.html?_t=" + new Date().getTime();
         });
 
-       //  $('#fpj').click(function() {
-       //       if (openid == null) {
-       //           getCode();
-       //       } else {
-       //           $.ajax({
-       //               url : '../pjj/saveFpj',
-       //               data : {
-       //                   "openid" : openid
-       //               },
-       //               method : 'post',
-       //               success : function(data) {
-       //                   if (data.success) {
-       //                       window.location.href = "../index.html?_t=" + new Date().getTime();
-       //                   } else if (data.nopeat) {
-						 // 	window.location.href = "../index.html?_t="
-						 // 			+ new Date().getTime();
-						 // } else {
-						 // 	window.location.href = "../pjj/first";
-						 // }
-       //               }
-       //           });
-       //       }
-       //  });
     })
 </script>
 <script src="../js/mui.min.js"></script>
 <script src="../js/mui.zoom.js"></script>
-<!-- <script src="../js/mui.previewimage.js"></script> -->
+
 <script>
     mui.init();
-    // mui.previewImage();
+
 </script>
 </body>
 </html>

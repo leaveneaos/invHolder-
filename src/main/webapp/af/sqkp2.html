@@ -50,11 +50,11 @@
 					<label>用于报销</label>
 				</div>
 				<div class="mui-input-row">
-					<label id="fptt2"><span  style="color: red;">*</span>名称</label>
+					<label ><span  style="color: red;">*</span>名称</label>
 					<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称">
 				</div>
 				<div class="mui-input-row">
-					<label id ="yx2"><span style="color: red;">*</span>邮箱地址</label>
+					<label ><span style="color: red;">*</span>邮箱地址</label>
 					<input name="yx" id="yx" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
 				</div>
 				<div class="mui-input-row">
@@ -114,11 +114,20 @@
         var djh;
 		$(function () {
             $.post(
-                "../af/spmcAndje",
+                "../af/xgxxsession",//修改信息
 				{},
 				function(data) {
                     djh = data.tqm;
                     if (djh != null && djh != "") {
+
+                        $("#fptt").val(data.fptt);
+                        $("#yx").val(data.yx);
+                       	$("#nsrsbh").val(data.nsrsbh);
+                       	$("#dz").val(data.dz);
+                       	$("#dh").val(data.dh);
+                       	$("#khh").val(data.khh);
+                       	$("#yhzh").val(data.yhzh);
+
                         $("#kpxm").after("<span>" + data.spmc + "</span>")
                         $("#kpje").after("<span>" + data.je + "</span>")
                     } else {

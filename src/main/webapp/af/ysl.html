@@ -77,5 +77,24 @@
 
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
+	<!--<script type="text/javascript">
+		$(function () {
+			$.post(
+			    "../dzfp_af/yxfs",
+				{},
+				function (data) {
+					if(data.msg == true){
+                        firm = "邮件已成功发送到您的邮箱,请注意查收,谢谢!";
+                        title = "提示";
+                        jAlert(firm,title);
+					}else{
+                        firm = "邮件发送失败,请重新输入邮箱!";
+                        title = "提示";
+                        jAlert(firm,title);
+					}
+                }
+			)
+        })
+	</script>-->
 </body>
 </html>

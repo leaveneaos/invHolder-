@@ -30,10 +30,10 @@
 
 		<div class="mui-content-padded" style="margin: 5px;">
 			<form class="mui-input-group" id="yxform">
-					<!-- <div class="mui-input-row">
+					 <div class="mui-input-row">
 					<label>邮箱</label> <input type="email" id="username" 
 						placeholder="请输入您的邮箱">
-				</div> -->
+				</div>
 			</form>
 		</div>
 
@@ -58,11 +58,6 @@
                     serialorder = data.serialorder;
 					if (null == serialorder || "" == serialorder) {
 						window.location.href = "/smtq/demo.html?time=" + new Date();
-					}
-					if (null != data.yx) {
-						var trs = "";
-						trs += "<div class='mui-input-row'><label>邮箱地址</label> <input type='email' id='username' placeholder='请输入您的邮箱'></div>"
-						$('#yxform').append(trs);
 					}
 				}
 			)

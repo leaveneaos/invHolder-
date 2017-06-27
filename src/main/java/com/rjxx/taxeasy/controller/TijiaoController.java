@@ -376,8 +376,6 @@ public class TijiaoController extends BaseController {
         if (null != request.getSession().getAttribute("djh")) {
             Map params = new HashMap<>();
             params.put("djh", String.valueOf(request.getSession().getAttribute("djh")));
-            List<Spfyx> list = spfyxService.findAllByParams(params);
-            result.put("yx", list);
         }
         request.getSession().setAttribute("msg", "请重新扫描二维码");
         return result;
