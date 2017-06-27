@@ -461,7 +461,7 @@ public class AfController extends BaseController {
         String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
         String openid = String.valueOf(request.getSession().getAttribute("openid"));
         if (null == tqm || "".equals(tqm)) {
-            result.put("msg", "1");
+            result.put("msg", "提取码为空,请重新扫描输入!");
             return result;
         }
         Map map = new HashMap<>();
