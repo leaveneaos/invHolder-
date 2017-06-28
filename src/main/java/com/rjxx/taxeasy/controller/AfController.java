@@ -204,7 +204,7 @@ public class AfController extends BaseController {
             }
             Map map2 = new HashMap<>();
             map2.put("gsdm", "af");
-            map2.put("kpddm", sn);
+            //map2.put("kpddm", "AF001");
             Skp skp = skpService.findOneByParams(map2);
             if (null != skp) {
                 Xf xf = xfService.findOne(skp.getXfid());
@@ -359,7 +359,7 @@ public class AfController extends BaseController {
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             String storeNo = null;
             Map param = new HashMap();
-            param.put("kpddm", "kpdaf987");
+            //param.put("kpddm", "AF001");
             param.put("gsdm","af");
             Skp skp = skpService.findOneByParams(param);
             Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
