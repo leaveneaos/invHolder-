@@ -77,6 +77,7 @@ public class AlipayUtils {
         if (StringUtils.isBlank(accessToken)) {
             throw new Exception("alipay not authorized!!!");
         }
+        System.out.println(accessToken);
         String userId = (String) session.getAttribute(AlipayConstants.ALIPAY_USER_ID);
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
         AlipayEbppInvoiceTitleListGetRequest request = new AlipayEbppInvoiceTitleListGetRequest();

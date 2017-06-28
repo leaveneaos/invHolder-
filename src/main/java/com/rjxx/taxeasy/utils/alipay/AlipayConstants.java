@@ -9,7 +9,7 @@ public class AlipayConstants {
 
 //    public static final String URL = "https://openapi.alipay.com/gateway.do";
 
-    public static final String AUTH_SCOPE = "auth_user";
+    public static final String AUTH_SCOPE = "auth_base";
 
     /**
      * 沙箱
