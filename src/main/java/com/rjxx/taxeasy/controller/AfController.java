@@ -75,7 +75,7 @@ public class AfController extends BaseController {
     @RequestMapping
     @ResponseBody
     public void index() throws Exception{
-        String str = request.getParameter("q");
+        //String str = request.getParameter("q");
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","af");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
@@ -93,7 +93,7 @@ public class AfController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "/dzfp_af/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
+                        + url + "/af/getWx&" + "response_type=code&scope=snsapi_base&state=" + "af"
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
