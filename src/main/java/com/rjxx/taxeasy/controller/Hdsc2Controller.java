@@ -90,14 +90,15 @@ public class Hdsc2Controller extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-        } else if (AlipayUtils.isAlipayBrowser(request)) {
-            if (!AlipayUtils.isAlipayAuthorized(session)) {
-                AlipayUtils.initAlipayAuthorization(request, response, "/hdsc");
-                return null;
-            }
-            response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
-            return null;
         }
+//        else if (AlipayUtils.isAlipayBrowser(request)) {
+//            if (!AlipayUtils.isAlipayAuthorized(session)) {
+//                AlipayUtils.initAlipayAuthorization(request, response, "/hdsc");
+//                return null;
+//            }
+//            response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+//            return null;
+//        }
         response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
         return null;
     }
