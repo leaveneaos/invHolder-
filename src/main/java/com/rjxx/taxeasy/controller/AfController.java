@@ -357,13 +357,6 @@ public class AfController extends BaseController {
         String openid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            String storeNo = null;
-            Map param = new HashMap();
-            //param.put("kpddm", "AF001");
-            param.put("gsdm","af");
-            Skp skp = skpService.findOneByParams(param);
-            Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
-            request.getSession().setAttribute("slv", cszb.getCsz());
             Map map = new HashMap<>();
             map.put("tqm", tqm);
             map.put("gsdm", "af");
@@ -383,6 +376,15 @@ public class AfController extends BaseController {
                     return result;
                 }
             }
+            Map param = new HashMap();
+            param.put("kpddm", jyxxsq.getKpddm());
+            param.put("gsdm","af");
+            Skp skp = skpService.findOneByParams(param);
+            Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
+            request.getSession().setAttribute("slv", cszb.getCsz());
+
+
+
             Map params3 = new HashMap();
             params3.put("sqlsh",jyxxsq.getSqlsh());
             List<JymxsqCl> jymxsqClList = jymxsqClService.findBySqlsh(params3);
