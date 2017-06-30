@@ -570,7 +570,13 @@ public class AfController extends BaseController {
         request.getSession().setAttribute("khh", khh);
         request.getSession().setAttribute("yhzh", yhzh);
         request.getSession().setAttribute("yx", yx);
-        result.put("msg", "1");
+         String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+        if(tqm != null && !tqm.equals("")){
+            result.put("msg", "1");
+        }else {
+            result.put("msg","信息保存出现错误,请返回上一级重新操作!");
+        }
+
         return  result;
     }
 
@@ -599,8 +605,6 @@ public class AfController extends BaseController {
         result.put("je", request.getSession().getAttribute("je"));
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("spmc",request.getSession().getAttribute("spmc"));
-
-
         return  result;
     }
 }
