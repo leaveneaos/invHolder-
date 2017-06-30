@@ -492,27 +492,13 @@ public class AfController extends BaseController {
             map2.put("kpddm", jyxxsq.getKpddm());
             Skp skp = skpService.findOneByParams(map2);
             List<Jyxxsq> list = new ArrayList<Jyxxsq>();
-            if(fptt != null && !fptt.equals("")){
-                jyxxsq.setGfmc(fptt);
-            }
-            if(yx != null && !yx.equals("")){
-                jyxxsq.setGfemail(yx);
-            }
-            if(nsrsbh != null && !nsrsbh.equals("")){
-                jyxxsq.setGfsh(nsrsbh);
-            }
-            if(dz != null && !dz.equals("")) {
-                jyxxsq.setGfdz(dz);
-            }
-            if(dh != null && !dh.equals("")){
-                jyxxsq.setGfdh(dh);
-            }
-            if(khh != null && !khh.equals("")){
-                jyxxsq.setGfyh(khh);
-            }
-            if(yhzh != null && !yhzh.equals("")){
-                jyxxsq.setGfyhzh(yhzh);
-            }
+                jyxxsq.setGfmc(fptt.trim());
+                jyxxsq.setGfemail(yx.trim());
+                jyxxsq.setGfsh(nsrsbh.trim());
+                jyxxsq.setGfdz(dz.trim());
+                jyxxsq.setGfdh(dh.trim());
+                jyxxsq.setGfyh(khh.trim());
+                jyxxsq.setGfyhzh(yhzh.trim());
             list.add(jyxxsq);
             try {
                List resultList =  afFpclService.afzjkp(list,"01");
