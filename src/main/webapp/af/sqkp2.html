@@ -61,9 +61,9 @@
 					<input name="yx" id="yx" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
 				</div>
 				<div class="mui-input-row">
-					<label><span  style="color: red;" class="isCheck">*</span>纳税人识别号</label>
+					<label><span  style="color: red;" class="isCheck">*</span>购方税号</label>
 					<input id="nsrsbh" maxlength="20"
-					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请输入纳税人识别号">
+					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请输入购方税号">
 				</div>
 				<div class="mui-input-row">
 					<label>单位地址</label>
@@ -165,7 +165,7 @@
 				return;
 			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
 				var btnArray = [ '是' ];
-				firm = "请输纳税人识别号!";
+				firm = "请输购方税号!";
 				title = "提示";
 				alert(firm, title);
 				return;
