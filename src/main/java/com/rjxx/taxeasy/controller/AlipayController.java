@@ -7,15 +7,19 @@ import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Kpspmx;
+import com.rjxx.taxeasy.domains.Pp;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.service.KpspmxService;
+import com.rjxx.taxeasy.service.PpService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -33,6 +37,9 @@ public class AlipayController extends BaseController {
 
     @Autowired
     private KpspmxService kpspmxService;
+
+    @Autowired
+    private PpService ppService;
 
     /**
      * 获取阿里授权
@@ -68,12 +75,15 @@ public class AlipayController extends BaseController {
      */
     @RequestMapping(value = "/syncAlipay")
     @ResponseBody
-    public String syncAlipay() throws Exception {
-        Object djhObject = session.getAttribute("djh");
-        if (djhObject == null) {
-            request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
+    public String syncAlipay(@RequestParam(required = false) Integer djh) throws Exception {
+        if (djh == null) {
+            Object djhObject = session.getAttribute("djh");
+            if (djhObject == null) {
+                request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            djh = Integer.valueOf(djhObject.toString());
         }
         //判断是否是支付宝内
         if (!AlipayUtils.isAlipayBrowser(request)) {
@@ -85,23 +95,35 @@ public class AlipayController extends BaseController {
             AlipayUtils.initAlipayAuthorization(request, response, "/syncAlipay");
             return null;
         }
-        int djh = Integer.valueOf(djhObject.toString());
         Map params = new HashMap();
         params.put("djh", djh);
         List<Kpls> kplsList = kplsService.findAll(params);
+        String redirectUrl = null;
         for (Kpls kpls : kplsList) {
             int kplsh = kpls.getKplsh();
             Map params2 = new HashMap();
             params2.put("kplsh", kplsh);
             List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
-            boolean ret = AlipayUtils.syncInvoice2Alipay(session, kpls, kpspmxList);
-            if (!ret) {
+            Pp pp = ppService.findOnePpByGsdmSkpid(kpls.getSkpid(), kpls.getGsdm());
+            if (pp == null || StringUtils.isBlank(pp.getAliMShortName()) || StringUtils.isBlank(pp.getAliSubMShortName())) {
+                request.getSession().setAttribute("msg", "该商户没有注册到支付宝发票管家");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            redirectUrl = AlipayUtils.syncInvoice2Alipay(session, kpls, kpspmxList, pp.getAliMShortName(), pp.getAliSubMShortName());
+            if (redirectUrl == null) {
                 request.getSession().setAttribute("msg", "将发票归集到支付宝发票管家出现异常");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
         }
-        return "成功";
+        if (redirectUrl == null) {
+            request.getSession().setAttribute("msg", "将发票归集到支付宝发票管家出现异常");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
+        } else {
+            response.sendRedirect(redirectUrl);
+            return null;
+        }
     }
-
 }
