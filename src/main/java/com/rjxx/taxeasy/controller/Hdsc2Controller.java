@@ -95,9 +95,6 @@ public class Hdsc2Controller extends BaseController {
                 AlipayUtils.initAlipayAuthorization(request, response, "/hdsc");
                 return null;
             }
-            if (true) {
-                AlipayUtils.getAlipayInvoiceTitleList(session);
-            }
             response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
             return null;
         }

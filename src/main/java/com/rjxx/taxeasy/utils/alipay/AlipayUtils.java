@@ -2,6 +2,7 @@ package com.rjxx.taxeasy.utils.alipay;
 
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.InvoiceTitleModel;
 import com.alipay.api.request.AlipayEbppInvoiceSycnRequest;
 import com.alipay.api.request.AlipayEbppInvoiceTitleListGetRequest;
 import com.alipay.api.response.AlipayEbppInvoiceSycnResponse;
@@ -9,6 +10,7 @@ import com.alipay.api.response.AlipayEbppInvoiceTitleListGetResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Kpspmx;
+import com.rjxx.taxeasy.vo.InvoiceTitleVo;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -72,7 +74,7 @@ public class AlipayUtils {
      * @param session
      * @return
      */
-    public static String getAlipayInvoiceTitleList(HttpSession session) throws Exception {
+    public static List<InvoiceTitleVo> getAlipayInvoiceTitleList(HttpSession session) throws Exception {
         String accessToken = (String) session.getAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN);
         if (StringUtils.isBlank(accessToken)) {
             throw new Exception("alipay not authorized!!!");
@@ -85,23 +87,38 @@ public class AlipayUtils {
                 "\"user_id\":\"" + userId + "\"" +
                 "  }");
         AlipayEbppInvoiceTitleListGetResponse response = alipayClient.execute(request, accessToken);
-        System.out.println(response.getBody());
         if (response.isSuccess()) {
-            System.out.println("调用成功");
-        } else {
-            System.out.println("调用失败");
+            List<InvoiceTitleModel> invoiceTitleModelList = response.getTitleList();
+            if (invoiceTitleModelList != null && !invoiceTitleModelList.isEmpty()) {
+                List<InvoiceTitleVo> voList = new ArrayList<>();
+                for (InvoiceTitleModel model : invoiceTitleModelList) {
+                    InvoiceTitleVo vo = new InvoiceTitleVo();
+                    vo.setDefault(model.getIsDefault());
+                    vo.setOpenBankAccount(model.getOpenBankAccount());
+                    vo.setOpenBankName(model.getOpenBankName());
+                    vo.setTaxRegisterNo(model.getTaxRegisterNo());
+                    vo.setTitleName(model.getTitleName());
+                    vo.setUserAddress(model.getUserAddress());
+                    vo.setUserEmail(model.getUserEmail());
+                    vo.setUserMobile(model.getUserMobile());
+                    voList.add(vo);
+                }
+                return voList;
+            }
         }
         return null;
     }
 
     /**
-     * 同步发票到支付宝发票管家
+     * 同步发票到支付宝发票管家，成功返回支付宝的url，失败则返回null
      *
      * @param kpls
      * @param kpspmxList
+     * @param mShortName
+     * @param subMShortName
      * @return
      */
-    public static boolean syncInvoice2Alipay(HttpSession session, Kpls kpls, List<Kpspmx> kpspmxList) throws Exception {
+    public static String syncInvoice2Alipay(HttpSession session, Kpls kpls, List<Kpspmx> kpspmxList, String mShortName, String subMShortName) throws Exception {
         String accessToken = (String) session.getAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN);
         if (StringUtils.isBlank(accessToken)) {
             throw new Exception("alipay not authorized!!!");
@@ -111,8 +128,8 @@ public class AlipayUtils {
         AlipayEbppInvoiceSycnRequest alipayEbppInvoiceSycnRequest = new AlipayEbppInvoiceSycnRequest();
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         AlipayBizObject alipayBizObject = new AlipayBizObject();
-        alipayBizObject.setM_short_name("RJXX");
-        alipayBizObject.setSub_m_short_name("RJXX_01");
+        alipayBizObject.setM_short_name(mShortName);
+        alipayBizObject.setSub_m_short_name(subMShortName);
         InvoiceInfo invoiceInfo = new InvoiceInfo();
         List<InvoiceInfo> invoiceInfoList = new ArrayList<>();
         invoiceInfoList.add(invoiceInfo);
@@ -153,7 +170,11 @@ public class AlipayUtils {
         invoiceInfo.setInvoice_title(invoiceTitle);
         invoiceTitle.setUser_id(userId);
         invoiceTitle.setTitle_name(kpls.getGfmc());
-        invoiceTitle.setTitle_type("CORPORATION");
+        if (StringUtils.isNotBlank(kpls.getGfsh())) {
+            invoiceTitle.setTitle_type("CORPORATION");
+        } else {
+            invoiceTitle.setTitle_type("PERSONAL");
+        }
         invoiceTitle.setUser_mobile(kpls.getGfdh());
         invoiceTitle.setLogon_id("");
         invoiceTitle.setUser_email("");
@@ -190,11 +211,10 @@ public class AlipayUtils {
         result = result.replace("_default", "is_default");
         alipayEbppInvoiceSycnRequest.setBizContent(result);
         AlipayEbppInvoiceSycnResponse response = alipayClient.execute(alipayEbppInvoiceSycnRequest);
-        System.out.println(response.getBody());
         if (response.isSuccess()) {
-            return true;
+            return response.getUrl();
         } else {
-            return false;
+            return null;
         }
     }
 
