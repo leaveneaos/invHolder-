@@ -90,8 +90,8 @@
                     <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
                 </div>
                 <div class="mui-input-row">
-                    <label><font color="red" class="isCheck">*</font>纳税人识别号</label> 
-                    <input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20" name="nsrsbh" placeholder="请输入纳税人识别号">
+                    <label><font color="red" class="isCheck">*</font>购方税号</label> 
+                    <input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20" name="nsrsbh" placeholder="请输入购方税号">
                 </div>
 
                 <ul class="mui-table-view">
@@ -224,7 +224,7 @@
                 return;
             }else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
                 var btnArray = [ '是' ];
-                firm = "请输纳税人识别号!";
+                firm = "请输入购方税号!";
                 title = "提示";
                 alert(firm, title);
                 return;
@@ -270,7 +270,7 @@
                 //  var sj = $('#sj').val();
                 var btnArray = ['否', '是'];
                 if (null != nsrsbh && "" != nsrsbh) {
-                    firm += "纳税人识别号:" + nsrsbh + "</br>";
+                    firm += "购方税号:" + nsrsbh + "</br>";
                 }
                 if (null != dz && "" != dz) {
                     firm += "地址:" + dz + "</br>";
