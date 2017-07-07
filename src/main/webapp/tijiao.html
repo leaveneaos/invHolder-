@@ -53,7 +53,10 @@
 			<div class="mui-input-row">
 				<label><font color="red">*</font>发票抬头</label> 
 				<input type="text" class="mui-input-clear" required="required" maxlength="50"
-					name="fptt" id="fptt" placeholder="请输入发票抬头">
+					name="fptt" id="fptt" placeholder="请输入发票抬头" list="getFptt" onchange="changeFptt(this.value)">
+				<datalist id="getFptt" >
+				  <!-- <option value="getFptt"> -->
+				</datalist>
 			</div>
 			<div class="mui-input-row">
 				<label><font color="red" class="isCheck">*</font>购方税号</label> 
@@ -130,7 +133,6 @@
 				$(this).next().slideToggle(500);
 				$(this).toggleClass("current");
 				});
-
 			$.post(
 				"tijiao/tjsession", 
 				{}, 
@@ -150,27 +152,53 @@
                 {},
                 function(test) {
 					if(test.success) {
-					    var dataList = test.data;
-					    for(var i=0;i<dataList;i++) {
-                            if(dataList[i].isDefault) {
-                            	
-                            }else {
-                            	
-                            }
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+					 	   	  var fp=dataList[i];
+      					      if(fp.default) {
+                                  option+="<option vaLue='"+fp.titleName+"' selected>"+fp.titleName+"</option>";
+                                  $('#fptt').val(fp.titleName);
+                                  $('#nsrsbh').val(fp.taxRegisterNo);
+                                  $('#dz').val(fp.userAddress);
+                                  $('#dh').val(fp.userMobile);
+                                  $('#khh').val(fp.openBankName);
+                                  $('#yhzh').val(fp.openBankAccount);
+                                  $('#yx').val(fp.userEmail);
+      					      }else {
+                                  option+="<option vaLue='"+fp.titleName+"'>"+fp.titleName+"</option>";
+                              }
 						}
-
+                        $("#getFptt").append(option);
 					}
-                }
-            );
-
-
+                });
 		});
-
+		function changeFptt(obj){
+            $.post(
+                '/getInvoiceTitle',
+                {},
+                function(test) {
+                    if(test.success) {
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+                            var fp = dataList[i];
+                            if (fp.titleName==obj) {
+                                $('#nsrsbh').val(fp.taxRegisterNo);
+                                $('#dz').val(fp.userAddress);
+                                $('#dh').val(fp.userMobile);
+                                $('#khh').val(fp.openBankName);
+                                $('#yhzh').val(fp.openBankAccount);
+                                $('#yx').val(fp.userEmail);
+                            }
+                        }
+                    }
+                });
+		}
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();
 		}
 		var json=storage.getItem("data");
-		//转之前判断是不是标准的字符串格式,不是的话需要转换
 		var obj = JSON.parse('['+json+']');
 		for(var i=0;i<obj.length;i++) {
 			if(obj[i].fptt != '') {
@@ -260,7 +288,7 @@
 		            var d=JSON.stringify(data);
 		            storage.setItem("data",d);
 		        }
-			//	var sjh = $('#sjh').val();
+				//var sjh = $('#sjh').val();
 				var btnArray = [ '否', '是' ];
 				if (null != nsrsbh && "" != nsrsbh) {
 					firm += "购方税号:" + nsrsbh + "</br>";
@@ -280,9 +308,9 @@
 				if (null != yx && "" != yx) {
 					firm += "邮箱:" + yx +  "</br>";
 				}
-			/* 	if (null != sjh && "" != sjh) {
+				if (null != sjh && "" != sjh) {
 					firm += "手机:" + sjh + "。";
-				} */
+				}
 				title = "信息确认";
 				$("#confirmBtn").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
