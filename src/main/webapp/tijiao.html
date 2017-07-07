@@ -131,46 +131,70 @@
 				$(this).toggleClass("current");
 				});
 
-			$.post("tijiao/tjsession", {}, function(data) {
-				djh = data.tqm;
-				var slv = data.slv;
-				slv = parseFloat(slv) * 100;
-				if (djh != null && djh != "") {
-					$("#tab").append("<tr><td>餐饮服务</td><td>" + data.zje + "</td><td>"+slv+"%</td></tr>")
-				} else {
-					window.location.href = "smtq/demo.html?time=" + new Date();
+			$.post(
+				"tijiao/tjsession", 
+				{}, 
+				function(data) {
+					djh = data.tqm;
+					var slv = data.slv;
+					slv = parseFloat(slv) * 100;
+					if (djh != null && djh != "") {
+						$("#tab").append("<tr><td>餐饮服务</td><td>" + data.zje + "</td><td>"+slv+"%</td></tr>")
+					} else {
+						window.location.href = "smtq/demo.html?time=" + new Date();
+					}
 				}
-			})
+			);
+		  	$.post(
+                '/getInvoiceTitle',
+                {},
+                function(test) {
+					if(test.success) {
+					    var dataList = test.data;
+					    for(var i=0;i<dataList;i++) {
+                            if(dataList[i].isDefault) {
+                            	
+                            }else {
+                            	
+                            }
+						}
+
+					}
+                }
+            );
+
+
 		});
+
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();
 		}
-			var json=storage.getItem("data");
-			//转之前判断是不是标准的字符串格式,不是的话需要转换
-			var obj = JSON.parse('['+json+']');
-			for(var i=0;i<obj.length;i++) {
-				if(obj[i].fptt != '') {
-					document.getElementById('fptt').value = obj[i].fptt;
-				}
-				if(obj[i].nsrsbh != '') {
-					document.getElementById('nsrsbh').value = obj[i].nsrsbh;
-				}
-				if(obj[i].dz != '') {
-					document.getElementById('dz').value = obj[i].dz;
-				}
-				if(obj[i].dh != '') {
-					document.getElementById('dh').value = obj[i].dh;
-				}
-				if(obj[i].khh != '') {
-					document.getElementById('khh').value = obj[i].khh;
-				}
-				if(obj[i].yhzh != '') {
-					document.getElementById('yhzh').value = obj[i].yhzh;
-				}
-				if(obj[i].yx != '') {
-					document.getElementById('yx').value = obj[i].yx;
-				}
-			};
+		var json=storage.getItem("data");
+		//转之前判断是不是标准的字符串格式,不是的话需要转换
+		var obj = JSON.parse('['+json+']');
+		for(var i=0;i<obj.length;i++) {
+			if(obj[i].fptt != '') {
+				document.getElementById('fptt').value = obj[i].fptt;
+			}
+			if(obj[i].nsrsbh != '') {
+				document.getElementById('nsrsbh').value = obj[i].nsrsbh;
+			}
+			if(obj[i].dz != '') {
+				document.getElementById('dz').value = obj[i].dz;
+			}
+			if(obj[i].dh != '') {
+				document.getElementById('dh').value = obj[i].dh;
+			}
+			if(obj[i].khh != '') {
+				document.getElementById('khh').value = obj[i].khh;
+			}
+			if(obj[i].yhzh != '') {
+				document.getElementById('yhzh').value = obj[i].yhzh;
+			}
+			if(obj[i].yx != '') {
+				document.getElementById('yx').value = obj[i].yx;
+			}
+		};
 		function tk() {
 			var info = document.getElementById("info");
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
