@@ -6,6 +6,7 @@ import com.rjxx.taxeasy.bizcomm.utils.SendalEmail;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
@@ -101,6 +102,13 @@ public class AfController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
                 return;
             }
+        }else if (AlipayUtils.isAlipayBrowser(request)) {
+            if (!AlipayUtils.isAlipayAuthorized(session)) {
+                AlipayUtils.initAlipayAuthorization(request, response, "/af");
+                return;
+            }
+            response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
+            return;
         } else {
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
             return;
