@@ -148,7 +148,7 @@
 				}
 			);
 		  	$.post(
-                '/getInvoiceTitle',
+                '/einv/getInvoiceTitle',
                 {},
                 function(test) {
 					if(test.success) {
@@ -175,7 +175,7 @@
 		});
 		function changeFptt(obj){
             $.post(
-                '/getInvoiceTitle',
+                '/einv/getInvoiceTitle',
                 {},
                 function(test) {
                     if(test.success) {
@@ -198,31 +198,34 @@
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();
 		}
-		var json=storage.getItem("data");
-		var obj = JSON.parse('['+json+']');
-		for(var i=0;i<obj.length;i++) {
-			if(obj[i].fptt != '') {
-				document.getElementById('fptt').value = obj[i].fptt;
-			}
-			if(obj[i].nsrsbh != '') {
-				document.getElementById('nsrsbh').value = obj[i].nsrsbh;
-			}
-			if(obj[i].dz != '') {
-				document.getElementById('dz').value = obj[i].dz;
-			}
-			if(obj[i].dh != '') {
-				document.getElementById('dh').value = obj[i].dh;
-			}
-			if(obj[i].khh != '') {
-				document.getElementById('khh').value = obj[i].khh;
-			}
-			if(obj[i].yhzh != '') {
-				document.getElementById('yhzh').value = obj[i].yhzh;
-			}
-			if(obj[i].yx != '') {
-				document.getElementById('yx').value = obj[i].yx;
-			}
+		if(storage.data) {
+			var json=storage.getItem("data");
+			var obj = JSON.parse('['+json+']');
+			for(var i=0;i<obj.length;i++) {
+				if(obj[i].fptt != '') {
+					document.getElementById('fptt').value = obj[i].fptt;
+				}
+				if(obj[i].nsrsbh != '') {
+					document.getElementById('nsrsbh').value = obj[i].nsrsbh;
+				}
+				if(obj[i].dz != '') {
+					document.getElementById('dz').value = obj[i].dz;
+				}
+				if(obj[i].dh != '') {
+					document.getElementById('dh').value = obj[i].dh;
+				}
+				if(obj[i].khh != '') {
+					document.getElementById('khh').value = obj[i].khh;
+				}
+				if(obj[i].yhzh != '') {
+					document.getElementById('yhzh').value = obj[i].yhzh;
+				}
+				if(obj[i].yx != '') {
+					document.getElementById('yx').value = obj[i].yx;
+				}
+			};
 		};
+		
 		function tk() {
 			var info = document.getElementById("info");
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
