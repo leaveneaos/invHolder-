@@ -109,10 +109,10 @@ public class AfController extends BaseController {
             }
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
             return;
-        } else {
+        }/*else {
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
             return;
-        }
+        }*/
 
     }
 
