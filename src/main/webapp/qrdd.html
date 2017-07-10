@@ -35,6 +35,14 @@
 				font-size: 15px;
 				font-weight: 700;
 		    }
+		    #code {
+				width: 60%; 
+				float: left; 
+			}
+			#cwts {
+				color: red; 
+				margin-left: 23px; 
+			}
 		</style>
 	</head>
 
@@ -51,34 +59,18 @@
 				</div>
 				<img src="images/ddxx.png" alt="" style="height: 50px;"/>
 			</div>
-		    <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
-		        <li class="mui-table-view-cell">
-		            <div class="mui-table">
-		                <div class="mui-table-cell mui-col-xs-10">
-		                    <h4 class="mui-ellipsis-2">提取码</h4>
-		                    <h5 id="tqm"></h5>
-		                </div>
-		            </div>
-		        </li>
-		        <li class="mui-table-view-cell">
-		            <div class="mui-table">
-		                <div class="mui-table-cell mui-col-xs-10">
-		                    <h4 class="mui-ellipsis-2">交易时间</h4>
-		                    <h5 id="jysj"></h5>
-		                   
-		                </div>
-		            </div>
-		        </li>
-		        <li class="mui-table-view-cell">
-		            <div class="mui-table">
-		                <div class="mui-table-cell mui-col-xs-10">
-		                    <h4 class="mui-ellipsis-2">订单金额</h4>
-		                    <h5 id="ddje">元</h5>
-		                   
-		                </div>
-		            </div>
-		        </li>
-		    </ul>
+		</section>
+		<section>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<input type="text" id="tqm" class="mui-input-clear" placeholder="点击此输入发票提取码">
+				</div>
+				<div class="mui-input-row">
+					<input type="text" id="code" name="code" placeholder="请输入右侧验证码"> 
+					<img src="image.jsp" class="data-yzm" name="randImage" id="randImage" onclick="loadimage()"/>
+				</div>
+			</form>
+			<p id="cwts"></p>
 		</section>
 
 		<button id="Button1" onclick="queRen()" class="mui-btn mui-btn-primary mui-btn-block">确&nbsp;&nbsp;认</button>
@@ -92,27 +84,53 @@
 	
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript">
-		$(function(){
-			$.ajax({
-				url : '待定',
-				method : 'post',
-				success : function(data) {
-					if (data.success) {
-						$('#tqm').html(data.tqm);
-						$('#jysj').html(data.jysj);
-						$('#ddje').html(data.ddje);
-					}else{
-						待定
-					}
-				},
-				error : function(data) {
-					alert(待定);
+		var sUserAgent = navigator.userAgent.toLowerCase();
+	    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+	    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+	    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+	    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+	    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+	    var bIsAndroid = sUserAgent.match(/android/i) == "android";
+	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
+
+		function loadimage() {
+			document.getElementById("randImage").src = "image.jsp?" + Math.random();
+		};
+		function queRen() {
+			var tqm = $('#tqm').val();
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+			var code = $('#code').val();
+			$.post(
+				"待定",
+				{
+					"tqm" : tqm,
+					"code" : code,
+				}, 
+				function(data) {
+					if (data.num == 1) {
+						if (data.clztdm == "00") {
+							window.location.href = "spmx.html?time=" + new Date();
+						} else {
+							btnArray = [ '确定' ];
+							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
+							title = "提示";
+							jAlert(firm,title);
+						}
+					}else if (data.num == 4) {
+						$('#cwts').html("您输入的验证码不正确");
+						loadimage();	
+					}else if (data.num == 6) {
+                        btnArray = [ '确定' ];
+                        firm = "您提取的申请已提交,我们正在处理,请稍等!";
+                        title = "提示";
+                        jAlert(firm, title);
+                    }else if (data.num == 11) {
+                        $('#cwts').html("输入的提取码不正确");
+                        loadimage();
+                    }
 				}
-			});
-		})
-		
-		function queRen(){
-			window.location.href = "spmx.html?time="+new Date();
+			);
 		}
 	</script>
 </html>
