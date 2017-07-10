@@ -55,20 +55,9 @@
 		        <li class="mui-table-view-cell">
 		            <div class="mui-table">
 		                <div class="mui-table-cell mui-col-xs-10">
-		                    <h4 class="mui-ellipsis">门店编号</h4>
-		                    <h5 id="mdbh"></h5>
-		                    
+		                    <h4 class="mui-ellipsis-2">提取码</h4>
+		                    <h5 id="tqm"></h5>
 		                </div>
-		            </div>
-		        </li>
-		        <li class="mui-table-view-cell">
-		            <div class="mui-table">
-		                <div class="mui-table-cell mui-col-xs-10">
-		                    <h4 class="mui-ellipsis-2">序号</h4>
-		                    <h5 id="xh"></h5>
-		                    
-		                </div>
-		                
 		            </div>
 		        </li>
 		        <li class="mui-table-view-cell">
@@ -109,8 +98,7 @@
 				method : 'post',
 				success : function(data) {
 					if (data.success) {
-						$('#mdbh').html(data.mdbh);
-						$('#xh').html(data.xh);
+						$('#tqm').html(data.tqm);
 						$('#jysj').html(data.jysj);
 						$('#ddje').html(data.ddje);
 					}else{
