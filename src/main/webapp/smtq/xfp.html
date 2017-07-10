@@ -108,11 +108,11 @@
         $('#you').click(function () {
             window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
         });
-        // if (urlinfo.indexOf("isAlipay=true") != -1) {
+        if (urlinfo.indexOf("isAlipay=true") != -1) {
             $("#zfb").click(function () {
                 window.location = "../syncAlipay?_t=" + (new Date()).getTime();
             });
-        // }
+        };
 
 
 

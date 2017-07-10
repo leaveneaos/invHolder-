@@ -37,7 +37,7 @@
 <div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
 	<section>
 		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
-			<li class="mui-table-view-cell mui-media mui-col-xs-12 mui-col-sm-12">
+			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
 				<a id="you">
 					<span class="mui-icon iconfont icon-youxiang"></span>
 					<div class="mui-media-body" style="color: #fff;">邮箱</div>
@@ -48,13 +48,13 @@
 					<span class="mui-icon iconfont icon-fapiaoguanli1"></span>
 					<div class="mui-media-body" style="color: #fff;">发票夹</div>
 				</a>
-			</li>
-			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+			</li> -->
+			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
 				<a id="zfb">
 					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
 					<div class="mui-media-body" style="color: #fff;">支付宝</div>
 				</a>
-			</li> -->
+			</li>
 		</ul>
 	</section>
 
@@ -97,7 +97,7 @@
         );
 
         var urlinfo = window.location.href; //获取当前页面的url
-        if (urlinfo.indexOf('code') > -1) {
+       /* if (urlinfo.indexOf('code') > -1) {
             var len = urlinfo.length;//获取url的长度
             var offset = urlinfo.indexOf("?");//设置参数字符串开始的位置
             var newsidinfo = urlinfo.substr(offset, len);//取出参数字符串 这里会获得类似“id=1”这样的字符串
@@ -127,18 +127,19 @@
                 alert('未得到授权');
                 return;
             }
-        }
+        }*/
 
         $('#you').click(function() {
              window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
         });
+        // if (urlinfo.indexOf("isAlipay=true") != -1) {
+            $("#zfb").click(function () {
+                window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+            });
+        // };
         // $('#fpj').click(function() {
         //  	 window.location.href = "../waitting.html?_t=" + new Date().getTime();
         // });
-        // $('#zfb').click(function() {
-        //      window.location.href = "../waitting.html?_t=" + new Date().getTime();
-        // });
-
     })
 </script>
 <script src="../js/mui.min.js"></script>
@@ -146,7 +147,6 @@
 
 <script>
     mui.init();
-
 </script>
 </body>
 </html>
