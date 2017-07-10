@@ -33,6 +33,7 @@ public class InvoiceTitleController extends BaseController {
                  return jsonStatus;
              }
          }
+        System.out.println(JSON.toJSONString(jsonStatus));
 //       JsonStatus jsonStatus = new JsonStatus();
 //       jsonStatus.setSuccess(true);
 //       List<InvoiceTitleVo> voList=new ArrayList<>();
