@@ -152,7 +152,9 @@
                             $('#khh').val(fp.openBankName);
                             $('#yhzh').val(fp.openBankAccount);
                             $('#yx').val(fp.userEmail);
-				     	};
+				     	}else{
+				     		option+="<option selected>"+fp.titleName+"</option>";
+				     	}
 					};
                     $("#getFptt").append(option);
 				};
