@@ -145,7 +145,7 @@
                     for(var i=0;i<dataList.length;i++) {
 			 	   	  	var fp=dataList[i];
 				      	if(fp.default) {
-							option+="<option vaLue='"+fp.titleName+"' selected>"+fp.titleName+"</option>";
+							option+='<option vaLue="'+fp.titleName+'">';
                             $('#fptt').val(fp.titleName);
                             $('#nsrsbh').val(fp.taxRegisterNo);
                             $('#dz').val(fp.userAddress);
@@ -154,9 +154,10 @@
                             $('#yhzh').val(fp.openBankAccount);
                             $('#yx').val(fp.userEmail);
 				     	}else{
-                            option+="<option vaLue='"+fp.titleName+"'>"+fp.titleName+"</option>";
+                            option+='<option vaLue="'+fp.titleName+'">';
 						}
 					};
+                    alert(option);
                     $("#getFptt").append(option);
 				};
             }
