@@ -152,11 +152,11 @@
                             $('#khh').val(fp.openBankName);
                             $('#yhzh').val(fp.openBankAccount);
                             $('#yx').val(fp.userEmail);
-				     	}
-					}
+				     	};
+					};
                     $("#getFptt").append(option);
-				}
-            }
+				};
+            };
         );
 		function changeFptt(obj){
             $.post(
@@ -175,39 +175,37 @@
                                 $('#khh').val(fp.openBankName);
                                 $('#yhzh').val(fp.openBankAccount);
                                 $('#yx').val(fp.userEmail);
-                            }
-                        }
-                    }
-                }
+                            };
+                        };
+                    };
+                };
             );
 		};
 		if(storage.data) {
 			var json=storage.getItem("data");
-			var obj = JSON.parse('['+json+']');
-			for(var i=0;i<obj.length;i++) {
-				if(obj[i].fptt != '') {
-					document.getElementById('fptt').value = obj[i].fptt;
-				}
-				if(obj[i].nsrsbh != '') {
-					document.getElementById('nsrsbh').value = obj[i].nsrsbh;
-				}
-				if(obj[i].dz != '') {
-					document.getElementById('dz').value = obj[i].dz;
-				}
-				if(obj[i].dh != '') {
-					document.getElementById('dh').value = obj[i].dh;
-				}
-				if(obj[i].khh != '') {
-					document.getElementById('khh').value = obj[i].khh;
-				}
-				if(obj[i].yhzh != '') {
-					document.getElementById('yhzh').value = obj[i].yhzh;
-				}
-				if(obj[i].yx != '') {
-					document.getElementById('yx').value = obj[i].yx;
-				}
-			};
-		}	
+			var obj = JSON.parse(json);
+			if(obj.fptt != '') {
+				document.getElementById('fptt').value = obj.fptt;
+			}
+			if(obj.nsrsbh != '') {
+				document.getElementById('nsrsbh').value = obj.nsrsbh;
+			}
+			if(obj.dz != '') {
+				document.getElementById('dz').value = obj.dz;
+			}
+			if(obj.dh != '') {
+				document.getElementById('dh').value = obj.dh;
+			}
+			if(obj.khh != '') {
+				document.getElementById('khh').value = obj.khh;
+			}
+			if(obj.yhzh != '') {
+				document.getElementById('yhzh').value = obj.yhzh;
+			}
+			if(obj.yx != '') {
+				document.getElementById('yx').value = obj.yx;
+			}
+		};	
 		function kp() {
 			var info = document.getElementById("info");
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
