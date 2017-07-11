@@ -152,14 +152,13 @@
                             $('#khh').val(fp.openBankName);
                             $('#yhzh').val(fp.openBankAccount);
                             $('#yx').val(fp.userEmail);
-				     	}else{
-				     		option+="<option selected>"+fp.titleName+"</option>";
-				     	}
+				     	};
 					};
                     $("#getFptt").append(option);
 				};
             }
         );
+
 		function changeFptt(obj){
             $.post(
                 '../getInvoiceTitle',
@@ -177,12 +176,13 @@
                                 $('#khh').val(fp.openBankName);
                                 $('#yhzh').val(fp.openBankAccount);
                                 $('#yx').val(fp.userEmail);
-                            };
-                        };
-                    };
+                            }
+                        }
+                    }
                 }
-            );
+            )
 		};
+
 		if(storage.data) {
 			var json=storage.getItem("data");
 			var obj = JSON.parse(json);
@@ -207,7 +207,8 @@
 			if(obj.yx != '') {
 				document.getElementById('yx').value = obj.yx;
 			}
-		};	
+		};
+
 		function kp() {
 			var info = document.getElementById("info");
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -324,7 +325,7 @@
 					}
 				});
 			}
-		}
+		};
 
 		function CheckAll(obj) {
 		   if ($(obj).prop("checked")) {
@@ -332,11 +333,11 @@
 		   } else {
 		      $('.isCheck').html('');
 		   }
-		} 
+		};
 
 		function tiaozhuan() {
 			window.location.href = "../bangzhu.html?time=" + new Date();
-		}
+		};
 	</script>
 </body>
 </html>
