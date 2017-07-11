@@ -54,8 +54,8 @@
 				</div>
 				<div class="mui-input-row">
 					<label id="fptt2"><span  style="color: red;">*</span>发票抬头</label>
-					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头" list="getFptt" oninput="changeFptt(this.value)">
-					<datalist id="getFptt" >
+					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头" list="getFptt" >
+					<datalist id="getFptt"  onchange="changeFptt(this.value)">
 					  <!-- <option value="getFptt"> -->
 					</datalist>
 				</div>
