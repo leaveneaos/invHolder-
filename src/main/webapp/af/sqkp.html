@@ -66,7 +66,7 @@
 				<div class="mui-input-row">
 					<label><span  style="color: red;" class="isCheck">*</span>购方税号</label>
 					<input id="nsrsbh" maxlength="20"
-					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请输入购方税号">
+					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请输入购方税号" onkeyup="this.value=this.value.replace(/[, ]/g,'')">
 				</div>
 				<div class="mui-input-row">
 					<label>单位地址</label>
