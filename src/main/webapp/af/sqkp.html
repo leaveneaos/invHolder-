@@ -138,21 +138,21 @@
             '../getInvoiceTitle',
             {},
             function(test) {
-				if(!test.success) {
+				if(test.success) {
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {
-				 	   	  var fp=dataList[i];
-  					      if(fp.default) {
-                              option+="<option vaLue='"+fp.titleName+"'>"+fp.titleName+"</option>";
-                              $('#fptt').val(fp.titleName);
-                              $('#nsrsbh').val(fp.taxRegisterNo);
-                              $('#dz').val(fp.userAddress);
-                              $('#dh').val(fp.userMobile);
-                              $('#khh').val(fp.openBankName);
-                              $('#yhzh').val(fp.openBankAccount);
-                              $('#yx').val(fp.userEmail);
-  					      }
+			 	   	  	var fp=dataList[i];
+				      	if(fp.default) {
+                            option+="<option selected>"+fp.titleName+"</option>";
+                            $('#fptt').val(fp.titleName);
+                            $('#nsrsbh').val(fp.taxRegisterNo);
+                            $('#dz').val(fp.userAddress);
+                            $('#dh').val(fp.userMobile);
+                            $('#khh').val(fp.openBankName);
+                            $('#yhzh').val(fp.openBankAccount);
+                            $('#yx').val(fp.userEmail);
+				     	}
 					}
                     $("#getFptt").append(option);
 				}
