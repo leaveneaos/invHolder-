@@ -58,7 +58,7 @@
 			<div class="mui-input-row">
 				<label><font color="red" class="isCheck">*</font>购方税号</label> 
 				<input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20"
-					name="nsrsbh" placeholder="请输入购方税号">
+					name="nsrsbh" placeholder="请输入购方税号" onkeyup="this.value=this.value.replace(/[, ]/g,'')">
 			</div>
 
 			<ul class="mui-table-view">
@@ -121,6 +121,7 @@
 
 	<script type="text/javascript" charset="utf-8">
 		var djh;
+		var storage = window.localStorage;
 		$(function() {
 			$(".toggle dl dd").hide();
 			$(".toggle dl dt").click(function(){
@@ -143,31 +144,30 @@
 		});
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();
-		}
-		var json=storage.getItem("data");
-		//转之前判断是不是标准的字符串格式,不是的话需要转换
-		var obj = JSON.parse('['+json+']');
-		for(var i=0;i<obj.length;i++) {
-			if(obj[i].fptt != '') {
-				document.getElementById('fptt').value = obj[i].fptt;
+		};
+		if(storage.data){
+			var json=storage.getItem("data");
+			var obj = JSON.parse(json);
+			if(obj.fptt != '') {
+				document.getElementById('fptt').value = obj.fptt;
 			}
-			if(obj[i].nsrsbh != '') {
-				document.getElementById('nsrsbh').value = obj[i].nsrsbh;
+			if(obj.nsrsbh != '') {
+				document.getElementById('nsrsbh').value = obj.nsrsbh;
 			}
-			if(obj[i].dz != '') {
-				document.getElementById('dz').value = obj[i].dz;
+			if(obj.dz != '') {
+				document.getElementById('dz').value = obj.dz;
 			}
-			if(obj[i].dh != '') {
-				document.getElementById('dh').value = obj[i].dh;
+			if(obj.dh != '') {
+				document.getElementById('dh').value = obj.dh;
 			}
-			if(obj[i].khh != '') {
-				document.getElementById('khh').value = obj[i].khh;
+			if(obj.khh != '') {
+				document.getElementById('khh').value = obj.khh;
 			}
-			if(obj[i].yhzh != '') {
-				document.getElementById('yhzh').value = obj[i].yhzh;
+			if(obj.yhzh != '') {
+				document.getElementById('yhzh').value = obj.yhzh;
 			}
-			if(obj[i].yx != '') {
-				document.getElementById('yx').value = obj[i].yx;
+			if(obj.yx != '') {
+				document.getElementById('yx').value = obj.yx;
 			}
 		};
 		function tk() {
@@ -234,7 +234,6 @@
 		            var d=JSON.stringify(data);
 		            storage.setItem("data",d);
 		        }
-			//	var sjh = $('#sjh').val();
 				var btnArray = [ '否', '是' ];
 				if (null != nsrsbh && "" != nsrsbh) {
 					firm += "购方税号:" + nsrsbh + "</br>";
