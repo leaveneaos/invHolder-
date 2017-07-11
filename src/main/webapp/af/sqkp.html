@@ -130,9 +130,9 @@
                         $("#kpje").after("<span class='lht'>" + data.je + "</span>")
                     } else {
                         window.location.href = "../smtq/demo.html?time=" + new Date();
-                    }
+                    };
 				}
-			)
+			);
         });
 		$.post(
             '../getInvoiceTitle',
@@ -156,7 +156,7 @@
 					};
                     $("#getFptt").append(option);
 				};
-            };
+            }
         );
 		function changeFptt(obj){
             $.post(
@@ -178,7 +178,7 @@
                             };
                         };
                     };
-                };
+                }
             );
 		};
 		if(storage.data) {
