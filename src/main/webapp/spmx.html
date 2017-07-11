@@ -39,6 +39,16 @@
 				font-size: 14px;
 				color: red;
 			}
+			table{
+				width: 100%;
+				border: 1px solid #000;
+				border-collapse: collapse;
+				text-align: center;
+			}
+			tr th {
+				border: 1px solid #ccc;
+				width: 33%;
+			}
 		</style>
 	</head>
 
@@ -55,6 +65,27 @@
 				</div>
 				<img src="images/spmx.png" alt="" style="height: 50px;"/>
 			</div>
+			<table>
+				<thead>
+					<tr>
+						<th>品名</th>
+						<th>数量</th>
+						<th>金额</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+			<table>
+				<thead>
+					<tr>
+						<th></th>
+						<th>合计</th>
+						<th>总金额</th>
+					</tr>
+				</thead>
+			</table>
 		</section>
 
 		<section class="data-tip">
@@ -77,20 +108,27 @@
 				url : '待定',
 				method : 'post',
 				success : function(data) {
+					console.log(data);
 					if (data.success) {
-						
-					}else{
-						待定
+						var items = 待定;
+						var html='';
+	    				//遍历items 拿到每个人的信息，拼接陈表格 
+	    				for(var i=0;i<items.length;i++){
+	    					html+="<tr>";
+		    					html+="<td>"+ items[i].name+"</td>";
+		    					html+="<td>"+ items[i].sl+"</td>";
+		    					html+="<td>"+ items[i].je+"</td>";
+	    					html+="</tr>";
+	    				}
+	    				//在页面显示数据
+	    				document.querySelector('tbody').innerHTML=html;
 					}
-				},
-				error : function(data) {
-					alert(待定);
 				}
 			});
 		})
 		
 		function queRen(){
-			window.location.href = "spmx.html?time="+new Date();
+			window.location.href = "fptt.html?time="+new Date();
 		}
 	</script>
 </html>
