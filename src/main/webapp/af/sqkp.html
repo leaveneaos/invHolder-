@@ -138,13 +138,14 @@
             '../getInvoiceTitle',
             {},
             function(test) {
+            	console.log(test)
 				if(test.success) {
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {
 			 	   	  	var fp=dataList[i];
 				      	if(fp.default) {
-                            option+="<option selected>"+fp.titleName+"</option>";
+							option+="<option vaLue='"+fp.titleName+"'>"+fp.titleName+"</option>";
                             $('#fptt').val(fp.titleName);
                             $('#nsrsbh').val(fp.taxRegisterNo);
                             $('#dz').val(fp.userAddress);
@@ -152,7 +153,9 @@
                             $('#khh').val(fp.openBankName);
                             $('#yhzh').val(fp.openBankAccount);
                             $('#yx').val(fp.userEmail);
-				     	};
+				     	}else{
+                            option+="<option vaLue='"+fp.titleName+"'>"+fp.titleName+"</option>";
+						}
 					};
                     $("#getFptt").append(option);
 				};
