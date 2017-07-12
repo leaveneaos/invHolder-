@@ -192,7 +192,6 @@
                 }
             )
 		};
-
 		if(storage.data) {
 			$('#getFptt').css('display','none');
 			var json=storage.getItem("data");
@@ -218,6 +217,8 @@
 			if(obj.yx != '') {
 				document.getElementById('yx').value = obj.yx;
 			}
+		}else{
+			$('#getFptt').css('display','none');
 		};
 
 		function kp() {
