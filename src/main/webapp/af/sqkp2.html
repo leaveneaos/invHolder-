@@ -96,7 +96,7 @@
 		<section class="data-tip">
 			备注：自2017年7月1日起，购买方为企业的，索取增值税普通发票时，应向销售方提供纳税人识别号或统一社会信用代码;
 		</section>
-		<button id="sqkp" onclick="kp()" class="mui-btn mui-btn-primary mui-btn-block" style="margin-bottom: 65px;">申请开票</button>
+		<button id="sqkp" onclick="kp()" class="mui-btn mui-btn-primary mui-btn-block" style="margin-bottom: 10px;">申请开票</button>
 		<div id="info" style="margin-bottom: 80px; color: red; margin-left: 2%;"></div>
 
 		<footer>
@@ -165,7 +165,7 @@
 				return;
 			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
 				var btnArray = [ '是' ];
-				firm = "请输购方税号!";
+				firm = "请输入购方税号!";
 				title = "提示";
 				alert(firm, title);
 				return;
@@ -184,7 +184,7 @@
 				var yhzh = $('#yhzh').val();
 				if(null!=nsrsbh&&nsrsbh!=''){
 					if(nsrsbh.length!=15&&nsrsbh.length!=18&&nsrsbh.length!=20){
-						firm = "税号长度不对,税号为15,18,20位中一种";
+						firm = "购方税号(15,18或20位数)";
 						title = "提示";
 						alert(firm, title);
 						return;
