@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>电子发票</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">   
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="../css/app.css" />
+	<style type="text/css">
+		.mui-content-padded {
+			margin: 10px 0px 10px 70px;
+		}
+	   	.confirm {
+   		 	margin: 0 10px;
+		    width: 40px;
+		    height: 40px;
+		    display: inline-block;
+		    background-color: #6555FA;
+		    border: 1px solid #ddd;
+		    border-radius: 20px;
+	   	}
+	   	.mui-icon-checkmarkempty {
+	   		text-align: center;
+	   	}
+	   	.mui-icon-checkmarkempty:before {
+	   		color: #fff;
+	   		font-size: 40px;
+	   		line-height: 33px;
+	   	}
+	   	.atn {
+	   		color: #09ABF4;
+	   		font-size: 16px;
+	   	}
+	   	.mui-btn {
+   		    line-height: 25px;
+	   		margin: 5px 10px;
+	   		width: 35%;
+	   		font-size: 18px;
+	   	}
+	   	.lht {
+	   		line-height: 50px;
+	   	}
+	</style>
+
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+		<h1 class="mui-title">开票信息</h1>
+	</header>
+
+	<div class="mui-content">
+		<section class="mui-content-padded">
+			<a  class="confirm">
+				<span class="mui-icon mui-icon-checkmarkempty"></span>
+			</a>
+			<span>请确认开票信息</span>
+		</section>
+
+		<section>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label id ="fptt2" >发票抬头：</label>
+					<!--<input type="text" class="mui-input-clear" placeholder="">-->
+				</div>
+				<div class="mui-input-row">
+					<label id="fpje2">发票金额：</label>
+					<!--<input type="text"  class="mui-input-clear" placeholder="">-->
+				</div>
+				<div class="mui-input-row">
+					<label  id ="yx2">邮箱地址：</label>
+					<!--<input type="text"  class="mui-input-clear" placeholder="">-->
+				</div>
+    		</form>
+		</section>
+
+		<section style="text-align: center;">
+			<img src="../images/fwh.jpg" alt="" style="width: 80%;padding: 5px;">
+			<p class="atn">关注公众号,及时收到发票信息</p>
+			
+		</section>
+
+		<section style="text-align: center;margin-bottom: 61px;">
+			<button type="button" id="revise" class="mui-btn mui-btn-royal">修 改</button>
+			<button type="button"  id = "queren" class="mui-btn mui-btn-danger">确 认</button>
+		</section>
+
+		<footer>
+			<p class="company">上海容津信息技术有限公司</p>
+			<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript">
+		$(function () {
+            $(function () {
+                $.post(
+                    "../family/qrxxsession",/*确认信息*/
+                    {},
+                    function (data) {
+
+                        $("#fptt2").after("<span class='lht'>" + data.fptt + "<span>")
+                        $("#fpje2").after("<span class='lht'>" + data.je + "<span>")
+                        $("#yx2").after("<span class='lht'>" + data.yx + "<span>")
+
+                    }
+                );
+            });
+
+            $('#revise').on('click', function () {
+                window.location.href = '../fptt.html';
+            });
+
+            $('#queren').on('click',function () {
+				$.post(
+				    "../family/saveLs",
+					{},
+
+					function (data) {
+				        if(data.msg == 1) {
+                            window.location.href = '../af/ysl.html'
+                        }else{
+                            btnArray = [ '确定' ];
+                            firm = data.msg;
+                            title = "提示";
+                            jAlert(firm, title);
+						}
+                    }
+				);
+            })
+		});
+	</script>
+</body>
+</html>

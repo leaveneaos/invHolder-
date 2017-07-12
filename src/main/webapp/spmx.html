@@ -105,23 +105,30 @@
 	<script type="text/javascript">
 		$(function(){
 			$.ajax({
-				url : '待定',
+				url : '../family/spmx',
 				method : 'post',
 				success : function(data) {
 					console.log(data);
 					if (data.success) {
-						var items = 待定;
+						var items = data.listJymxsq;
 						var html='';
-	    				//遍历items 拿到每个人的信息，拼接陈表格 
-	    				for(var i=0;i<items.length;i++){
+                        var zje ;
+	    				//遍历items 拿到每个人的信息，拼接成表格
+	    				for(var i=0;i<items.size();i++){
+	    				    zje += items[i].spje;
 	    					html+="<tr>";
-		    					html+="<td>"+ items[i].name+"</td>";
-		    					html+="<td>"+ items[i].sl+"</td>";
-		    					html+="<td>"+ items[i].je+"</td>";
+		    					html+="<td>"+ items[i].spmc+"</td>";
+		    					html+="<td>"+ items[i].sps+"</td>";
+		    					html+="<td>"+ items[i].spje+"</td>";
 	    					html+="</tr>";
 	    				}
 	    				//在页面显示数据
 	    				document.querySelector('tbody').innerHTML=html;
+					}else {
+                        btnArray = [ '确定' ];
+                        firm = "商品明细暂时未录入请稍后提取,谢谢!";
+                        title = "提示";
+                        jAlert(firm,title);
 					}
 				}
 			});

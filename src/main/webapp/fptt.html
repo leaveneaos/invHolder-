@@ -130,6 +130,24 @@
 	<script src="js/mui.min.js"></script>
 	<script type="text/javascript">
         var djh;
+        $(function () {
+            $.post(
+                "../family/xgxxsession",//修改信息
+                {},
+                function(data) {
+                    djh = data.tqm;
+                    if (djh != null && djh != "") {
+                        $("#fptt").val(data.fptt);
+                        $("#yx").val(data.yx);
+                        $("#nsrsbh").val(data.nsrsbh);
+                        $("#dz").val(data.dz);
+                        $("#dh").val(data.dh);
+                        $("#khh").val(data.khh);
+                        $("#yhzh").val(data.yhzh);
+                    }
+                }
+            )
+        });
         var storage=window.localStorage;
 		$(function () {
     		$.post(
@@ -298,7 +316,7 @@
 				jConfirm(firm,title, function(r) {
 					if(r){
 						$.post(
-							"待定",/*申请开票  信息放入session*/
+							"../family/sqkpsession",
 							{
 								"fptt" : fptt,
 								"nsrsbh" : nsrsbh,
@@ -310,8 +328,7 @@
 							}, 
 							function(data) {
 								if (data.msg == 1) {
-									/*info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';*/
-									window.location.href = "待定.html?time=" + new Date();
+									window.location.href = "../kpxx.html?time=" + new Date();
 								} else {
 									btnArray = [ '确定' ];
 									firm = data.msg;
