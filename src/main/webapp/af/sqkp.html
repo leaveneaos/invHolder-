@@ -41,7 +41,7 @@
 		}
 		#getFptt {
 		    position: absolute;
-    		top: 5px;
+    		top: 6px;
 		}
 	</style>
 </head>
@@ -61,8 +61,8 @@
 				</div>
 				<div class="mui-input-row">
 					<label id="fptt2"><span  style="color: red;">*</span>发票抬头</label>
-					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头" oninput="changeFptt(this.value)" >
-					<select id="getFptt">
+					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头">
+					<select id="getFptt" oninput="changeFptt(this.value)">
 					  <!-- <option value="getFptt"> -->
 					</select>
 				</div>
