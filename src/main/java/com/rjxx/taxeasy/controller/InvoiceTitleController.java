@@ -23,7 +23,7 @@ public class InvoiceTitleController extends BaseController {
     @RequestMapping(value = "/getInvoiceTitle", method = {RequestMethod.POST})
     @ResponseBody
     public JsonStatus getInvoiceTitle() throws Exception {
-         JsonStatus jsonStatus = new JsonStatus();
+        /* JsonStatus jsonStatus = new JsonStatus();
          jsonStatus.setSuccess(false);
        System.out.println(JSON.toJSONString(jsonStatus)+"start  application");
        if (AlipayUtils.isAlipayBrowser(request) && AlipayUtils.isAlipayAuthorized(session)) {
@@ -37,31 +37,31 @@ public class InvoiceTitleController extends BaseController {
                  return jsonStatus;
              }
          }
-        System.out.println(JSON.toJSONString(jsonStatus)+"result  application");
-       // JsonStatus jsonStatus = new JsonStatus();
-       // jsonStatus.setSuccess(true);
-       // List<InvoiceTitleVo> voList=new ArrayList<>();
-       // InvoiceTitleVo invoiceTitleVo=new InvoiceTitleVo();
-       // invoiceTitleVo.setDefault(true);
-       // invoiceTitleVo.setOpenBankAccount("7899588558445");
-       // invoiceTitleVo.setOpenBankName("中国银行");
-       // invoiceTitleVo.setTaxRegisterNo("9102365478945632102");
-       // invoiceTitleVo.setTitleName("张强");
-       // invoiceTitleVo.setUserAddress("上海徐汇");
-       // invoiceTitleVo.setUserEmail("zhangqiang@datarj.com");
-       // invoiceTitleVo.setUserMobile("2345678945");
-       // InvoiceTitleVo invoiceTitleVo2=new InvoiceTitleVo();
-       // invoiceTitleVo2.setDefault(false);
-       // invoiceTitleVo2.setOpenBankAccount("7899588558445-1");
-       // invoiceTitleVo2.setOpenBankName("中国银行2");
-       // invoiceTitleVo2.setTaxRegisterNo("9102365478945632102");
-       // invoiceTitleVo2.setTitleName("张强2");
-       // invoiceTitleVo2.setUserAddress("上海徐汇2");
-       // invoiceTitleVo2.setUserEmail("zhangqiang@datarj.com");
-       // invoiceTitleVo2.setUserMobile("2345678945");
-       // voList.add(invoiceTitleVo);
-       // voList.add(invoiceTitleVo2);
-       // jsonStatus.setData(voList);
+        System.out.println(JSON.toJSONString(jsonStatus)+"result  application");*/
+       JsonStatus jsonStatus = new JsonStatus();
+       jsonStatus.setSuccess(true);
+       List<InvoiceTitleVo> voList=new ArrayList<>();
+       InvoiceTitleVo invoiceTitleVo=new InvoiceTitleVo();
+       invoiceTitleVo.setDefault(true);
+       invoiceTitleVo.setOpenBankAccount("7899588558445");
+       invoiceTitleVo.setOpenBankName("中国银行");
+       invoiceTitleVo.setTaxRegisterNo("9102365478945632102");
+       invoiceTitleVo.setTitleName("张强");
+       invoiceTitleVo.setUserAddress("上海徐汇");
+       invoiceTitleVo.setUserEmail("zhangqiang@datarj.com");
+       invoiceTitleVo.setUserMobile("2345678945");
+       InvoiceTitleVo invoiceTitleVo2=new InvoiceTitleVo();
+       invoiceTitleVo2.setDefault(false);
+       invoiceTitleVo2.setOpenBankAccount("7899588558445-1");
+       invoiceTitleVo2.setOpenBankName("中国银行2");
+       invoiceTitleVo2.setTaxRegisterNo("9102365478945632102");
+       invoiceTitleVo2.setTitleName("张强2");
+       invoiceTitleVo2.setUserAddress("上海徐汇2");
+       invoiceTitleVo2.setUserEmail("zhangqiang@datarj.com");
+       invoiceTitleVo2.setUserMobile("2345678945");
+       voList.add(invoiceTitleVo);
+       voList.add(invoiceTitleVo2);
+       jsonStatus.setData(voList);
        return jsonStatus;
     }
 
