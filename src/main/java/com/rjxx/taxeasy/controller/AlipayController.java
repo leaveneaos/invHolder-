@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
@@ -51,6 +52,7 @@ public class AlipayController extends BaseController {
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
         alipaySystemOauthTokenRequest.setCode(auth_code);
+        System.out.println(JSON.toJSONString(auth_code));
         alipaySystemOauthTokenRequest.setGrantType("authorization_code");
         try {
             AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
@@ -58,6 +60,7 @@ public class AlipayController extends BaseController {
             session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
+            System.out.println(JSON.toJSONString(oauthTokenResponse));
             response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             //处理异常
