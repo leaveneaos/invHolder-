@@ -36,6 +36,13 @@
 		.lht {
 			line-height: 50px;
 		}
+		#fptt {
+			position: relative;
+		}
+		#getFptt {
+		    position: absolute;
+    		top: 5px;
+		}
 	</style>
 </head>
 <body>
@@ -54,10 +61,10 @@
 				</div>
 				<div class="mui-input-row">
 					<label id="fptt2"><span  style="color: red;">*</span>发票抬头</label>
-					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头" list="getFptt" >
-					<datalist id="getFptt"  oninput="changeFptt()">
+					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头" oninput="changeFptt(this.value)" >
+					<select id="getFptt">
 					  <!-- <option value="getFptt"> -->
-					</datalist>
+					</select>
 				</div>
 				<div class="mui-input-row">
 					<label id ="yx2"><span style="color: red;">*</span>邮箱地址</label>
@@ -139,12 +146,14 @@
             {},
             function(test) {
 				if(test.success) {
+				    // $('#fptt').css('visibility','hidden');
+                    // $('#getFptt').css('visibility','');
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {
 			 	   	  	var fp=dataList[i];
 				      	if(fp.default) {
-							option+='<option vaLue="'+fp.titleName+'">';
+							option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
                             $('#fptt').val(fp.titleName);
                             $('#nsrsbh').val(fp.taxRegisterNo);
                             $('#dz').val(fp.userAddress);
@@ -153,7 +162,7 @@
                             $('#yhzh').val(fp.openBankAccount);
                             $('#yx').val(fp.userEmail);
 				     	}else{
-                            option+='<option vaLue="'+fp.titleName+'">';
+                            option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
 						}
 					};
                     alert(option);
@@ -162,8 +171,7 @@
             }
         );
 
-		function changeFptt(){
-		    var fptt=$("#fptt").val();
+		function changeFptt(obj){
             $.post(
                 '../getInvoiceTitle',
                 {},
@@ -173,7 +181,7 @@
                         var dataList = test.data;
                         for(var i=0;i<dataList.length;i++) {
                             var fp = dataList[i];
-                            if (fp.titleName==fptt) {
+                            if (fp.titleName==obj) {
                                 $('#nsrsbh').val(fp.taxRegisterNo);
                                 $('#dz').val(fp.userAddress);
                                 $('#dh').val(fp.userMobile);
