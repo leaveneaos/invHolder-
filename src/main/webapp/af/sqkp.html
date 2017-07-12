@@ -146,8 +146,6 @@
             {},
             function(test) {
 				if(test.success) {
-				    // $('#fptt').css('visibility','hidden');
-                    // $('#getFptt').css('visibility','');
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {
@@ -165,7 +163,7 @@
                             option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
 						}
 					};
-                    alert(option);
+					alert(option);
                     $("#getFptt").append(option);
 				};
             }
