@@ -25,15 +25,19 @@ public class InvoiceTitleController extends BaseController {
     public JsonStatus getInvoiceTitle() throws Exception {
          JsonStatus jsonStatus = new JsonStatus();
          jsonStatus.setSuccess(false);
-         if (AlipayUtils.isAlipayBrowser(request) && AlipayUtils.isAlipayAuthorized(session)) {
+       System.out.println(JSON.toJSONString(jsonStatus)+"start  application");
+       if (AlipayUtils.isAlipayBrowser(request) && AlipayUtils.isAlipayAuthorized(session)) {
+            System.out.println(JSON.toJSONString(jsonStatus)+"middle  application");
              List<InvoiceTitleVo> voList = AlipayUtils.getAlipayInvoiceTitleList(session);
-             if (voList != null && !voList.isEmpty()) {
-                 jsonStatus.setSuccess(true);
+            System.out.println(JSON.toJSONString(jsonStatus)+"middle2  application");
+            if (voList != null && !voList.isEmpty()) {
+               System.out.println(JSON.toJSONString(jsonStatus)+"end  application");
+               jsonStatus.setSuccess(true);
                  jsonStatus.setData(voList);
                  return jsonStatus;
              }
          }
-        System.out.println(JSON.toJSONString(jsonStatus));
+        System.out.println(JSON.toJSONString(jsonStatus)+"result  application");
        // JsonStatus jsonStatus = new JsonStatus();
        // jsonStatus.setSuccess(true);
        // List<InvoiceTitleVo> voList=new ArrayList<>();
