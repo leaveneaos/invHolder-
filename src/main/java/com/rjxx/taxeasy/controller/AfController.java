@@ -101,6 +101,7 @@ public class AfController extends BaseController {
                         + url + "/af/getWx&" + "response_type=code&scope=snsapi_base&state=" + "af"
                         + "#wechat_redirect";
                 logger.info("微信浏览器-------------");
+                logger.info(JSON.toJSONString(ul));
                 response.sendRedirect(ul);
                 return;
             } else {
