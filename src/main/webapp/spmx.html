@@ -73,18 +73,9 @@
 						<th>金额</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody  id="data">
 					
 				</tbody>
-			</table>
-			<table>
-				<thead>
-					<tr>
-						<th></th>
-						<th>合计</th>
-						<th>总金额</th>
-					</tr>
-				</thead>
 			</table>
 		</section>
 
@@ -105,37 +96,25 @@
 	<script type="text/javascript">
 		$(function(){
 			$.ajax({
-				url : '../family/spmx',
+				url : '../base/spmx',
 				method : 'post',
 				success : function(data) {
-					console.log(data);
-					if (data.success) {
-						var items = data.listJymxsq;
+						var items = data.jymxsqList;
 						var html='';
-                        var zje ;
+                        var zje =0;
 	    				//遍历items 拿到每个人的信息，拼接成表格
-	    				for(var i=0;i<items.size();i++){
-	    				    zje += items[i].spje;
-	    					html+="<tr>";
-		    					html+="<td>"+ items[i].spmc+"</td>";
-		    					html+="<td>"+ items[i].sps+"</td>";
-		    					html+="<td>"+ items[i].spje+"</td>";
-	    					html+="</tr>";
+	    				for(var i=0;i<items.length;i++){
+	    				    zje += items[i].spje/1+items[i].spse/1;
+	    					html+="<tr><td>"+ items[i].spmc+"</td><td>"+ items[i].sps+"</td><td>"+ (items[i].spje/1+items[i].spse/1)+"</td></tr>";
 	    				}
+                        html+="<tr><td></td><td>合计</td><td>"+ zje+"</td></tr>";
 	    				//在页面显示数据
-	    				document.querySelector('tbody').innerHTML=html;
-					}else {
-                        btnArray = [ '确定' ];
-                        firm = "商品明细暂时未录入请稍后提取,谢谢!";
-                        title = "提示";
-                        jAlert(firm,title);
-					}
+	    				$("#data").append(html);
 				}
 			});
-		})
-		
+		});
 		function queRen(){
-			window.location.href = "fptt.html?time="+new Date();
+			window.location.href = "../fptt.html?time="+new Date();
 		}
 	</script>
 </html>

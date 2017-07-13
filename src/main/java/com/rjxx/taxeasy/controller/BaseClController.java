@@ -188,7 +188,7 @@ public class BaseClController extends BaseController {
             Jyxxsq jyxxsq=jyxxsqList.get(0);
             String error=(String)resultMap.get("temp");
              /*wait to do*/
-            if(error!=""){
+            if(error!=null){
                 result.put("error",error);
                 return result;
             }
@@ -220,6 +220,9 @@ public class BaseClController extends BaseController {
                     result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
                     request.getSession().setAttribute("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
                 }
+                /**
+                 * num=2表示已经开过票
+                 */
                 result.put("num","2");
                 Tqjl tqjl = new Tqjl();
                 tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
@@ -237,13 +240,13 @@ public class BaseClController extends BaseController {
                 tqjlService.save(tqjl);
             }else if(null != jyls && null !=jyls.getDjh()){
                 result.put("num","6");
-            }else {
+            }else {//跳转发票提取页面
                 request.getSession().setAttribute("resultMap",resultMap);
                 request.getSession().setAttribute("jymxsqList",jymxsqList);
                 request.getSession().setAttribute("tqm",tqm);
                 result.put("num","5");
             }
-        }else {
+        }else {//校验码错误
             result.put("num","4");
         }
         return result;
@@ -280,7 +283,6 @@ public class BaseClController extends BaseController {
         }else {
             result.put("msg","信息保存出现错误,请返回上一级重新操作!");
         }
-
         return  result;
     }
 

@@ -102,22 +102,13 @@
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
 			var code = $('#code').val();
 			$.post(
-				"../family/tqyz",
+				"../base/tqyz",
 				{
 					"tqm" : tqm,
-					"code" : code,
+					"code" : code
 				}, 
 				function(data) {
-					if (data.num == 1) {
-						if (data.clztdm == "00") {
-							window.location.href = "../spmx.html?time=" + new Date();
-						} else {
-							btnArray = [ '确定' ];
-							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-							title = "提示";
-							jAlert(firm,title);
-						}
-					}else if(data.num == 2){
+					 if(data.num == 2){
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
                             window.open("../af/xfp.html?time=" + new Date());
                         }else{
@@ -127,14 +118,14 @@
 						$('#cwts').html("您输入的验证码不正确");
 						loadimage();	
 					}else if(data.num == 5){
-                        window.location.href = "../spmx.html?time=" + new Date();;
+                        window.location.href = "../spmx.html?time=" + new Date();
 					}else if (data.num == 6) {
                         btnArray = [ '确定' ];
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";
                         title = "提示";
                         jAlert(firm, title);
-                    }else if (data.num == 11) {
-                        $('#cwts').html("输入的提取码不正确");
+                    }else if (data.error != null) {
+                        $('#cwts').html("数据错误，请重试！");
                         loadimage();
                     }
 				}

@@ -132,7 +132,7 @@
         var djh;
         $(function () {
             $.post(
-                "../family/xgxxsession",//修改信息
+                "../base/xgxxsession",//修改信息
                 {},
                 function(data) {
                     djh = data.tqm;
@@ -151,7 +151,7 @@
         var storage=window.localStorage;
 		$(function () {
     		$.post(
-	            '/einv/getInvoiceTitle',
+	            '../getInvoiceTitle',
 	            {},
 	            function(test) {
 					if(test.success) {
@@ -179,7 +179,7 @@
         })
 		function changeFptt(obj){
             $.post(
-                '/einv/getInvoiceTitle',
+                '../getInvoiceTitle',
                 {},
                 function(test) {
                     if(test.success) {
@@ -316,7 +316,7 @@
 				jConfirm(firm,title, function(r) {
 					if(r){
 						$.post(
-							"../family/sqkpsession",
+							"../base/sqkpsession",
 							{
 								"fptt" : fptt,
 								"nsrsbh" : nsrsbh,
