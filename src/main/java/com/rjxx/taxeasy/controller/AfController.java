@@ -117,12 +117,12 @@ public class AfController extends BaseController {
                 logger.info(("初始化支付宝授权----end-----"));
                 return;
             }
-            //response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
-            return;
-        }/*else {
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
             return;
-        }*/
+        }else {
+            response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
+            return;
+        }
     }
 
     @RequestMapping(value = "/getWx")
