@@ -92,6 +92,8 @@ public class AfController extends BaseController {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
                         + url + "/af/getWx&" + "response_type=code&scope=snsapi_base&state=" + "af"
                         + "#wechat_redirect";
+                System.out.println("微信浏览器-------------");
+
                 response.sendRedirect(ul);
                 return;
             } else {
