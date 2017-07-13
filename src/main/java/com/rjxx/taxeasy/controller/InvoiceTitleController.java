@@ -5,6 +5,8 @@ import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.taxeasy.vo.InvoiceTitleVo;
 import com.rjxx.web.JsonStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,25 +21,29 @@ import java.util.List;
 @Controller
 public class InvoiceTitleController extends BaseController {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/getInvoiceTitle", method = {RequestMethod.POST})
     @ResponseBody
     public JsonStatus getInvoiceTitle() throws Exception {
          JsonStatus jsonStatus = new JsonStatus();
          jsonStatus.setSuccess(false);
-       System.out.println(JSON.toJSONString(jsonStatus)+"start  application");
+        logger.info(JSON.toJSONString(jsonStatus)+"start  application");
        if (AlipayUtils.isAlipayBrowser(request) && AlipayUtils.isAlipayAuthorized(session)) {
-            System.out.println(JSON.toJSONString(jsonStatus)+"middle  application");
-             List<InvoiceTitleVo> voList = AlipayUtils.getAlipayInvoiceTitleList(session);
-            System.out.println(JSON.toJSONString(jsonStatus)+"middle2  application");
-            if (voList != null && !voList.isEmpty()) {
-               System.out.println(JSON.toJSONString(jsonStatus)+"end  application");
+           logger.info(JSON.toJSONString(jsonStatus)+"middle  application");
+
+           List<InvoiceTitleVo> voList = AlipayUtils.getAlipayInvoiceTitleList(session);
+           logger.info(JSON.toJSONString(jsonStatus)+"middle2  application");
+
+           if (voList != null && !voList.isEmpty()) {
+               logger.info(JSON.toJSONString(jsonStatus)+"end  application");
                jsonStatus.setSuccess(true);
                  jsonStatus.setData(voList);
                  return jsonStatus;
              }
          }
-        System.out.println(JSON.toJSONString(jsonStatus)+"result  application");
+        logger.info(JSON.toJSONString(jsonStatus)+"result  application");
+
        // JsonStatus jsonStatus = new JsonStatus();
        // jsonStatus.setSuccess(true);
        // List<InvoiceTitleVo> voList=new ArrayList<>();

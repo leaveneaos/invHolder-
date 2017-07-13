@@ -15,6 +15,8 @@ import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +30,8 @@ import java.util.List;
  * Created by ZhangBing on 2017-06-26.
  */
 public class AlipayUtils {
+
+    private  static Logger logger = LoggerFactory.getLogger(AlipayUtils.class);
 
     /**
      * 判断是不是支付宝浏览器
@@ -65,7 +69,7 @@ public class AlipayUtils {
     public static void initAlipayAuthorization(HttpServletRequest request, HttpServletResponse response, String returnUrl) throws Exception {
         String redirectUrl = AlipayConstants.AUTH_URL.replace("ENCODED_URL", java.net.URLEncoder.encode(HtmlUtils.finishedUrl(request, AlipayConstants.AFTER_ALIPAY_AUTHORIZED_REDIRECT_URL), "UTF-8"));
         redirectUrl += "&state=" + Base64.encodeBase64String(returnUrl.getBytes("UTF-8"));
-        System.out.println(redirectUrl);
+        logger.info(redirectUrl);
         response.sendRedirect(redirectUrl);
     }
 

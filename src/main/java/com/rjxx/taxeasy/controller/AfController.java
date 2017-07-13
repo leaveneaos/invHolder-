@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.AfFpclService;
 import com.rjxx.taxeasy.bizcomm.utils.SendalEmail;
@@ -18,6 +19,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +76,9 @@ public class AfController extends BaseController {
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
     @RequestMapping
     @ResponseBody
     public void index() throws Exception{
@@ -84,6 +90,8 @@ public class AfController extends BaseController {
             gsxx.setWxappid(APP_ID);
             gsxx.setWxsecret(SECRET);
         }
+        logger.info(JSON.toJSONString("初始化页面-------------"));
+
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
@@ -92,21 +100,21 @@ public class AfController extends BaseController {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
                         + url + "/af/getWx&" + "response_type=code&scope=snsapi_base&state=" + "af"
                         + "#wechat_redirect";
-                System.out.println("微信浏览器-------------");
-
+                logger.info("微信浏览器-------------");
                 response.sendRedirect(ul);
                 return;
             } else {
-                System.out.println("不是支付宝浏览器-------------");
+                logger.info("不是支付宝浏览器-------------");
                 response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
                 return;
             }
         }else if (AlipayUtils.isAlipayBrowser(request)) {
-            System.out.println("判断是否是支付宝浏览器");
+            logger.info("判断是否是支付宝浏览器");
+
             if (!AlipayUtils.isAlipayAuthorized(session)) {
-                System.out.println("初始化支付宝授权----strat-----");
+                logger.info("初始化支付宝授权----strat-----");
                 AlipayUtils.initAlipayAuthorization(request, response, "/af");
-                System.out.println("初始化支付宝授权----end-----");
+                logger.info("初始化支付宝授权----end-----");
                 return;
             }
             //response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());

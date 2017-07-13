@@ -18,6 +18,8 @@ import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,7 @@ public class AlipayController extends BaseController {
 
     @Autowired
     private PpService ppService;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 获取阿里授权
@@ -53,7 +56,7 @@ public class AlipayController extends BaseController {
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
         alipaySystemOauthTokenRequest.setCode(auth_code);
-        System.out.println(JSON.toJSONString(auth_code)+"start application");
+        logger.info(JSON.toJSONString(auth_code)+"start application");
         alipaySystemOauthTokenRequest.setGrantType("authorization_code");
         try {
             AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
@@ -63,7 +66,7 @@ public class AlipayController extends BaseController {
             refreshToken(oauthTokenResponse.getRefreshToken());
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
-            System.out.println(JSON.toJSONString(oauthTokenResponse)+"end application");
+            logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
             response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             //处理异常
@@ -83,6 +86,7 @@ public class AlipayController extends BaseController {
             session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
             session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
             session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
+           logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
     }
 
     /**
