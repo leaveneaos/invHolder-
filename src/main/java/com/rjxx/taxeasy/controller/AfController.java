@@ -95,6 +95,7 @@ public class AfController extends BaseController {
                 response.sendRedirect(ul);
                 return;
             } else {
+                System.out.println("不是支付宝浏览器-------------");
                 response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
                 return;
             }
@@ -106,7 +107,7 @@ public class AfController extends BaseController {
                 System.out.println("初始化支付宝授权----end-----");
                 return;
             }
-            response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
+            //response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
             return;
         }/*else {
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
