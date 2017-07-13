@@ -165,12 +165,12 @@ public class AfController extends BaseController {
             client.getConnectionManager().shutdown();
 
         }
-        if(state.equals("af")){
+        //if(state.equals("af")){
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t="+System.currentTimeMillis() );
             return;
-        }else {
+       /* }else {
             sendHtml(state,gsxx);
-        }
+        }*/
 
     }
 
