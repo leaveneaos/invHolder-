@@ -109,12 +109,12 @@ public class AfController extends BaseController {
                 return;
             }
         }else if (AlipayUtils.isAlipayBrowser(request)) {
-            logger.info("判断是否是支付宝浏览器");
+            logger.info(JSON.toJSONString("判断是否是支付宝浏览器"));
 
             if (!AlipayUtils.isAlipayAuthorized(session)) {
-                logger.info("初始化支付宝授权----strat-----");
+                logger.info(JSON.toJSONString("初始化支付宝授权----strat-----"));
                 AlipayUtils.initAlipayAuthorization(request, response, "/af");
-                logger.info("初始化支付宝授权----end-----");
+                logger.info(("初始化支付宝授权----end-----"));
                 return;
             }
             //response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
