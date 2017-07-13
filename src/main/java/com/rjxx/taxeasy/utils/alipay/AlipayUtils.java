@@ -65,6 +65,7 @@ public class AlipayUtils {
     public static void initAlipayAuthorization(HttpServletRequest request, HttpServletResponse response, String returnUrl) throws Exception {
         String redirectUrl = AlipayConstants.AUTH_URL.replace("ENCODED_URL", java.net.URLEncoder.encode(HtmlUtils.finishedUrl(request, AlipayConstants.AFTER_ALIPAY_AUTHORIZED_REDIRECT_URL), "UTF-8"));
         redirectUrl += "&state=" + Base64.encodeBase64String(returnUrl.getBytes("UTF-8"));
+        System.out.println(redirectUrl);
         response.sendRedirect(redirectUrl);
     }
 
