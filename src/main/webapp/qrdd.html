@@ -11,6 +11,7 @@
 		<meta http-equiv="Cache-control" content="no-cache">
 		<meta http-equiv="Cache" content="no-cache">
 		<link rel="stylesheet" type="text/css" href="css/common.css">
+		<link href="css/jquery.alerts.css" rel="stylesheet" />
 		<!--标准mui.css-->
 		<link rel="stylesheet" href="css/mui.min.css">
 		<!--App自定义的css-->
@@ -83,6 +84,12 @@
 	</body>
 	
 	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/jquery.alerts.js"></script>
+	<script type="text/javascript">
+        jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+	</script>
+	<script src="js/mui.min.js"></script>
 	<script type="text/javascript">
 		var sUserAgent = navigator.userAgent.toLowerCase();
 	    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
@@ -102,7 +109,7 @@
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
 			var code = $('#code').val();
 			$.post(
-				"../base/tqyz",
+				"base/tqyz",
 				{
 					"tqm" : tqm,
 					"code" : code
@@ -118,7 +125,7 @@
 						$('#cwts').html("您输入的验证码不正确");
 						loadimage();	
 					}else if(data.num == 5){
-                        window.location.href = "../spmx.html?time=" + new Date();
+                        window.location.href = "spmx.html?time=" + new Date();
 					}else if (data.num == 6) {
                         btnArray = [ '确定' ];
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";

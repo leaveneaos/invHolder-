@@ -102,7 +102,6 @@
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
 	<script type="text/javascript">
-		$(function () {
             $(function () {
                 $.post(
                     "../af/qrxxsession",/*确认信息*/
@@ -125,7 +124,6 @@
 				$.post(
 				    "../af/saveLs",
 					{},
-
 					function (data) {
 				        if(data.msg == 1) {
                             window.location.href = '../af/ysl.html'
@@ -135,10 +133,9 @@
                             title = "提示";
                             jAlert(firm, title);
 						}
-                    }
-				);
+                    });
             })
-		});
+
 	</script>
 </body>
 </html>
