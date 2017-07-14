@@ -31,7 +31,7 @@
 			text-align: center;
 		}
 		.data-size {
-			font-size: 15px;
+			font-size: 16px;
 		}
 		.mui-icon {
 			margin-right: 8px;
@@ -42,68 +42,74 @@
 	</style>
 </head>
 <body>
-	<header>
+<!-- 	<header>
 		<h3 style="padding: 13px;">增值税电子普通发票</h3>
-	</header>
+	</header> -->
+	<header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+        <h1 class="mui-title">输入发票抬头</h1>
+    </header>
 
-	<section>
-		<form class="mui-input-group" action="tijiao/fpxx" method="post">
-			<div class="cbox">
-				<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
-				<label for="choose">用于报销</label>
-			</div>
-			<div class="mui-input-row">
-				<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-fapiaotaitou"></span>发票抬头</label> 
-				<input type="text" class="mui-input-clear" required="required" maxlength="50"
-					name="fptt" id="fptt" placeholder="必填" list="getFptt" oninput="changeFptt(this.value)">
-				<datalist id="getFptt" >
-				  <!-- <option value="getFptt"> -->
-				</datalist>
-			</div>
-			
-			<div class="mui-input-row">
-				<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-youxiang4"></span>邮箱地址</label>
-				<input type="email" id="yx" class="mui-input-clear" placeholder="必填">
-			</div>
+	<div class="mui-content">
+        <div class="mui-content-padded" style="margin: 5px;">
+			<form class="mui-input-group" action="tijiao/fpxx" method="post">
+				<div class="cbox">
+					<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
+					<label for="choose">用于报销</label>
+				</div>
+				<div class="mui-input-row">
+					<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-fapiaotaitou"></span>发票抬头</label> 
+					<input type="text" class="mui-input-clear" required="required" maxlength="50"
+						name="fptt" id="fptt" placeholder="必填" list="getFptt" oninput="changeFptt(this.value)">
+					<datalist id="getFptt" >
+					  <!-- <option value="getFptt"> -->
+					</datalist>
+				</div>
+				
+				<div class="mui-input-row">
+					<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-youxiang4"></span>邮箱地址</label>
+					<input type="email" id="yx" class="mui-input-clear" placeholder="必填">
+				</div>
 
-			<div class="mui-input-row">
-				<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-dingdanbianhao"></span>购方税号</label> 
-				<input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20"
-					name="nsrsbh" placeholder="用于报销时必填" onkeyup="this.value=this.value.replace(/[, ]/g,'')">
-			</div>
+				<div class="mui-input-row">
+					<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-dingdanbianhao"></span>购方税号</label> 
+					<input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20"
+						name="nsrsbh" placeholder="用于报销时必填" onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+				</div>
 
-			<ul class="mui-table-view">
-				<div class="content">
-		          	<div class="toggle">
-				    	<dl>
-			              	<dt>点击填写更多购方信息</dt>
-			              	<dd>
-			        			<div class="mui-collapse-content">
-									
-									<div class="mui-input-row">
-										<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
-											maxlength="100" name="dz" placeholder="请输入地址">
+				<ul class="mui-table-view">
+					<div class="content">
+			          	<div class="toggle">
+					    	<dl>
+				              	<dt>点击填写更多购方信息</dt>
+				              	<dd>
+				        			<div class="mui-collapse-content">
+										
+										<div class="mui-input-row">
+											<label>地址</label> <input type="text" class="mui-input-clear" id="dz"
+												maxlength="100" name="dz" placeholder="请输入地址">
+										</div>
+										<div class="mui-input-row">
+											<label>电话</label> <input type="text" class="mui-input-clear" id="dh"
+												maxlength="30" name="dh" placeholder="请输入电话">
+										</div>
+										<div class="mui-input-row">
+											<label>开户行</label> <input type="text" class="mui-input-clear"
+												id="khh" maxlength="50" name="khh" placeholder="请输入开户行">
+										</div>
+										<div class="mui-input-row">
+											<label>银行账号</label> <input type="text" class="mui-input-clear"
+												id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
+										</div>
 									</div>
-									<div class="mui-input-row">
-										<label>电话</label> <input type="text" class="mui-input-clear" id="dh"
-											maxlength="30" name="dh" placeholder="请输入电话">
-									</div>
-									<div class="mui-input-row">
-										<label>开户行</label> <input type="text" class="mui-input-clear"
-											id="khh" maxlength="50" name="khh" placeholder="请输入开户行">
-									</div>
-									<div class="mui-input-row">
-										<label>银行账号</label> <input type="text" class="mui-input-clear"
-											id="yhzh" maxlength="50" name="yhzh" placeholder="请输入银行账号">
-									</div>
-								</div>
-				      		</dd>
-			            </dl>
-				  	</div>
-			 	</div>
-			</ul>
-		</form>
-	</section>
+					      		</dd>
+				            </dl>
+					  	</div>
+				 	</div>
+				</ul>
+			</form>
+	  </div>
+    </div>
 	<button id='confirmBtn' type="button" onclick="tk()" class="mui-btn mui-btn-primary mui-btn-block ">
 		确 认
 	</button>
