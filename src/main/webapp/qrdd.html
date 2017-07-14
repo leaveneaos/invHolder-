@@ -109,7 +109,7 @@
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
 			var code = $('#code').val();
 			$.post(
-				"../base/tqyz",
+				"base/tqyz",
 				{
 					"tqm" : tqm,
 					"code" : code
@@ -125,7 +125,7 @@
 						$('#cwts').html("您输入的验证码不正确");
 						loadimage();	
 					}else if(data.num == 5){
-                        window.location.href = "../spmx.html?time=" + new Date();
+                        window.location.href = "spmx.html?time=" + new Date();
 					}else if (data.num == 6) {
                         btnArray = [ '确定' ];
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";

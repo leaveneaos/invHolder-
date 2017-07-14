@@ -104,7 +104,7 @@
 	<script type="text/javascript">
             $(function () {
                 $.post(
-                    "../base/qrxxsession",/*确认信息*/
+                    "base/qrxxsession",/*确认信息*/
                     {},
                     function (data) {
 
@@ -117,12 +117,12 @@
             });
 
             $('#revise').on('click', function () {
-                window.location.href = '../fptt.html';
+                window.location.href = 'fptt.html';
             });
 
             $('#queren').on('click',function () {
 				$.post(
-				    "../base/savels",
+				    "base/savels",
 					{},
 					function (data) {
 				        if(data.msg == 1) {
