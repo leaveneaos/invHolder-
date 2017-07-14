@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -186,6 +187,7 @@ public class BaseClController extends BaseController {
             List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
 
             Jyxxsq jyxxsq=jyxxsqList.get(0);
+            request.getSession().setAttribute("je",jyxxsq.getJshj());
             String error=(String)resultMap.get("temp");
              /*wait to do*/
             if(error!=null){
@@ -288,9 +290,9 @@ public class BaseClController extends BaseController {
 
 
     /*获取购方信息,保存到交易流水*/
-    @RequestMapping(value ="/savels")
+    @RequestMapping(value ="/savels" ,method = RequestMethod.POST)
     @ResponseBody
-    public  Map<String,Object> savels(String fptt,String nsrsbh,String dz,String dh,String khh,String yhzh,String yx){
+    public  Map<String,Object> savels(){
         Map<String,Object> result = new HashMap<String,Object>();
         Map  resultMap=(Map)request.getSession().getAttribute("resultMap");
         String openid = String.valueOf(request.getSession().getAttribute("openid"));
@@ -298,6 +300,13 @@ public class BaseClController extends BaseController {
         List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
         List<Jyzfmx> jyzfmxList=(List)resultMap.get("jyzfmxList");
         Jyxxsq jyxxsq=jyxxsqList.get(0);
+        String fptt=String.valueOf(request.getSession().getAttribute("fptt"));
+        String nsrsbh=String.valueOf(request.getSession().getAttribute("nsrsbh"));
+        String dz=String.valueOf(request.getSession().getAttribute("dz"));
+        String dh=String.valueOf(request.getSession().getAttribute("dh"));
+        String khh=String.valueOf(request.getSession().getAttribute("khh"));
+        String yhzh=String.valueOf(request.getSession().getAttribute("yhzh"));
+        String yx=String.valueOf(request.getSession().getAttribute("yx"));
         jyxxsq.setGfmc(fptt.trim());
         jyxxsq.setGfemail(yx.trim());
         jyxxsq.setGfsh(nsrsbh.trim());
@@ -339,7 +348,6 @@ public class BaseClController extends BaseController {
             }catch (Exception e){
                 e.printStackTrace();
             }
-
             Tqmtq tqmtq1 = new Tqmtq();
             tqmtq1.setDdh(jyxxsq.getTqm());
             tqmtq1.setLrsj(new Date());

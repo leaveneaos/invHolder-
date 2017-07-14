@@ -102,10 +102,9 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script src="js/mui.min.js"></script>
 	<script type="text/javascript">
-		$(function () {
             $(function () {
                 $.post(
-                    "../family/qrxxsession",/*确认信息*/
+                    "base/qrxxsession",/*确认信息*/
                     {},
                     function (data) {
 
@@ -118,14 +117,13 @@
             });
 
             $('#revise').on('click', function () {
-                window.location.href = 'fptt.html';
+                window.location.href = '/fptt.html';
             });
 
             $('#queren').on('click',function () {
 				$.post(
-				    "../family/saveLs",
+				    "base/savels",
 					{},
-
 					function (data) {
 				        if(data.msg == 1) {
                             window.location.href = 'af/ysl.html'
@@ -138,7 +136,7 @@
                     }
 				);
             })
-		});
+
 	</script>
 </body>
 </html>
