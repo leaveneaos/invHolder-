@@ -24,3 +24,15 @@
 .icon-fapiaoguanli1:before { content: "\e61d"; }
 
 .icon-fapiaoguanli2:before { content: "\e610"; }
+
+.icon-fapiaotaitou:before { content: "\e62a"; color: green;font-size:18px;}
+
+.icon-dingdanbianhao:before { content: "\e697"; color: green;font-size:18px;}
+
+.icon-dingdanbianhaoicon:before { content: "\e669"; color: green;font-size:18px;}
+
+.icon-icon-mail:before { content: "\e60a"; color: green;font-size:18px;}
+
+.icon-icon:before { content: "\e60e"; color: green;font-size:18px;}
+
+.icon-youxiang4:before { content: "\e622"; color: green;font-size:18px;}
