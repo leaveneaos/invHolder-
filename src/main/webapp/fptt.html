@@ -132,7 +132,7 @@
         var djh;
         $(function () {
             $.post(
-                "base/xgxxsession",//修改信息
+                "../base/xgxxsession",//修改信息
                 {},
                 function(data) {
                     djh = data.tqm;
@@ -316,7 +316,7 @@
 				jConfirm(firm,title, function(r) {
 					if(r){
 						$.post(
-							"base/sqkpsession",
+							"../base/sqkpsession",
 							{
 								"fptt" : fptt,
 								"nsrsbh" : nsrsbh,
@@ -328,7 +328,7 @@
 							}, 
 							function(data) {
 								if (data.msg == 1) {
-									window.location.href = "kpxx.html?time=" + new Date();
+									window.location.href = "../kpxx.html?time=" + new Date();
 								} else {
 									btnArray = [ '确定' ];
 									firm = data.msg;
