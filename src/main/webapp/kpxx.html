@@ -9,7 +9,7 @@
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
 	<link rel="stylesheet" type="text/css" href="css/common.css">
-
+	<link href="css/jquery.alerts.css" rel="stylesheet" />
 	<!--标准mui.css-->
 	<link rel="stylesheet" href="css/mui.min.css">
 	<!--App自定义的css-->
@@ -101,6 +101,11 @@
 
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/jquery.alerts.js"></script>
+	<script type="text/javascript">
+        jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+	</script>
 	<script type="text/javascript">
             $(function () {
                 $.post(
