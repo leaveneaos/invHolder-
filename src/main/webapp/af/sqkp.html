@@ -152,7 +152,6 @@
             {},
             function(test) {
 				if(test.success) {
-					// $('#fptt').css('visibility','hidden');
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {
@@ -170,7 +169,6 @@
                             option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
 						}
 					};
-					alert(option);
                     $("#getFptt").append(option);
 				};
             }
@@ -182,11 +180,6 @@
                 {},
                 function(test) {
                     if(test.success) {
-                		// $('#getFptt').css('visibility','hidden');
-                		// $('#fptt').css('visibility','visible');
-                		// if($('#fptt').val() == ''){
-                		// 	$('#getFptt').css('visibility','visible');	
-                		// }
                         var option='';
                         var dataList = test.data;
                         for(var i=0;i<dataList.length;i++) {
@@ -206,7 +199,6 @@
             )
 		};
 		if(storage.data) {
-			// $('#getFptt').css('display','none');
 			var json=storage.getItem("data");
 			var obj = JSON.parse(json);
 			if(obj.fptt != '') {
