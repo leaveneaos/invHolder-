@@ -22,7 +22,7 @@
             <JSHJ>${(kpls.jshj?string('#.######'))!}</JSHJ>
             <HJJE>${(kpls.hjje!?string('#.######'))!}</HJJE>
             <HJSE>${(kpls.hjse!?string('#.######'))!}</HJSE>
-            <KCE><KCE>
+            <KCE></KCE>
             <BZ>${kpls.bz!}</BZ>
         </COMMON_FPKJ_FPT>
         <COMMON_FPKJ_XMXXS class="COMMON_FPKJ_XMXX" size="${mxCount!1}">
@@ -32,7 +32,7 @@
                     <SPBM>${kpspmx.spdm}</SPBM>
                     <ZXBM>${kpspmx.zxbm!}</ZXBM>
                     <YHZCBS>${kpspmx.yhzcbs!0}</YHZCBS>
-                    <LSLBS>${kpspmx.lslbz!0}<LSLBS/>
+                    <LSLBS>${kpspmx.lslbz!0}</LSLBS>
                     <ZZSTSGL>${kpspmx.yhzcmc!}</ZZSTSGL>
                     <XMMC>${kpspmx.spmc!}</XMMC>
                     <GGXH>${kpspmx.spggxh!}</GGXH>
