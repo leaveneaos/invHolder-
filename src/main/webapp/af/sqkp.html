@@ -79,7 +79,7 @@
 				<div class="mui-input-row">
 					<label><span  style="color: red;" class="isCheck">*</span>购方税号</label>
 					<input id="nsrsbh" maxlength="20"
-					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请输入购方税号" onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请在半角字符下输入" oninput="this.value=this.value.replace(/[^0-9A-Z]/g,'')">
 				</div>
 				<div class="mui-input-row">
 					<label>单位地址</label>
@@ -265,7 +265,7 @@
 				var yhzh = $('#yhzh').val();
 				if(null!=nsrsbh&&nsrsbh!=''){
 					if(nsrsbh.length!=15&&nsrsbh.length!=18&&nsrsbh.length!=20){
-						firm = "购方税号(15,18或20位数)";
+						firm = "购方税号由(15,18或20位)数字或大写字母组成";
 						title = "提示";
 						alert(firm, title);
 						return;
