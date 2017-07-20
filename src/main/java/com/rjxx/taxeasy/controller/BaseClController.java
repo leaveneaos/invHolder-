@@ -24,7 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.constraints.Null;
 import java.io.IOException;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -182,7 +185,60 @@ public class BaseClController extends BaseController {
             map.put("tqm", tqm);
             map.put("gsdm", gsdm);
             /*调用接口获取jyxxsq等信息*/
-            Map resultMap=getDataService.getData(tqm,gsdm);
+            Map resultMap = new HashMap();
+            Map resultMap1 = new HashMap();
+            /*全家  绿地*/
+            if(map.get("gsdm").equals("family")){
+                 resultMap=getDataService.getData(tqm,gsdm);
+            }else if(map.get("gsdm").equals("ldyx")){
+                 //第一次请求url获取token
+                 resultMap1=getDataService.getldyxFirData(tqm,gsdm);
+                //创建时间
+                Long  crateDateTime = (long) request.getSession().getAttribute("crateDateTime");
+                //过期时间
+                Long  exp  = (long) request.getSession().getAttribute("hmExpiresIn");
+                //当前时间
+                Date dateNow = new Date(System.currentTimeMillis());
+                Long dateNowTime = dateNow.getTime();
+
+                Long sfgq = null;
+                if(exp!= null){
+
+                    //时间差 = 当前时间- 创建时间
+                    Long sjc = dateNowTime - crateDateTime ;
+                    //时间差 - 过期时间
+                    sfgq = sjc - exp ;
+                }
+
+                 //判断token是否为空 是否过期
+                 if ((request.getSession().getAttribute("accessToken")==null&&request.getSession().getAttribute("accessToken").equals(""))&&(sfgq >= 0)){
+                     //放入系统当前时间 直接是毫秒
+
+                     Long dateTime = System.currentTimeMillis();
+                     //token
+                     request.getSession().setAttribute("accessToken",resultMap1.get("accessToken"));
+                     //放进session时间
+                     request.getSession().setAttribute("crateDateTime",dateTime);
+                     //过期时间 直接转成毫秒long型
+                      Long expiresInToLong =  (Long) resultMap1.get("expiresIn");
+                      Long hmExpiresIn = expiresInToLong * 1000;
+                     request.getSession().setAttribute("expiresIn",hmExpiresIn);
+                     //获取第一次发送请求的token
+                     String token = (String) resultMap1.get("accessToken");
+                     //发送第二次请求
+                     resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
+
+                 }else
+                 //session中有token 并且token没有过期
+                     if((request.getSession().getAttribute("accessToken")!=null&&!request.getSession().getAttribute("accessToken").equals(""))&&(sfgq < 0)){
+                     //获取session中的token
+                     String token = (String) request.getSession().getAttribute("accessToken");
+                     //发送第二次请求
+                     resultMap1=getDataService.getldyxSecData(tqm,gsdm,token);
+
+                 }
+            }
+
             List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
             List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
 
