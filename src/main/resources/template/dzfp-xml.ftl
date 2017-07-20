@@ -32,7 +32,7 @@
                     <SPBM>${kpspmx.spdm}</SPBM>
                     <ZXBM>${kpspmx.zxbm!}</ZXBM>
                     <YHZCBS>${kpspmx.yhzcbs!0}</YHZCBS>
-                    <LSLBS>${kpspmx.lslbz!0}</LSLBS>
+                    <LSLBS>${kpspmx.lslbz!}</LSLBS>
                     <ZZSTSGL>${kpspmx.yhzcmc!}</ZZSTSGL>
                     <XMMC>${kpspmx.spmc!}</XMMC>
                     <GGXH>${kpspmx.spggxh!}</GGXH>
