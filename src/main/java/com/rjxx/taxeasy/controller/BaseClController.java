@@ -185,15 +185,14 @@ public class BaseClController extends BaseController {
             Map resultMap=getDataService.getData(tqm,gsdm);
             List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
             List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-
-            Jyxxsq jyxxsq=jyxxsqList.get(0);
-            request.getSession().setAttribute("je",jyxxsq.getJshj());
             String error=(String)resultMap.get("temp");
              /*wait to do*/
             if(error!=null){
                 result.put("error",error);
                 return result;
             }
+            Jyxxsq jyxxsq=jyxxsqList.get(0);
+            request.getSession().setAttribute("je",jyxxsq.getJshj());
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
             if (list.size() > 0) {/*代表申请已完成开票,跳转最终开票页面*/
