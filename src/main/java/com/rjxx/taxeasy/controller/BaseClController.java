@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.service.*;
 import com.rjxx.utils.BeanConvertUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
+import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpEntity;
@@ -364,6 +365,9 @@ public class BaseClController extends BaseController {
         String yx=String.valueOf(request.getSession().getAttribute("yx"));
         jyxxsq.setGfmc(fptt.trim());
         jyxxsq.setGfemail(yx.trim());
+        if (StringUtils.isNotBlank(jyxxsq.getGfemail())) {
+            jyxxsq.setSffsyj("1");
+        }
         jyxxsq.setGfsh(nsrsbh.trim());
         jyxxsq.setGfdz(dz.trim());
         jyxxsq.setGfdh(dh.trim());
