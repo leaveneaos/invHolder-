@@ -55,8 +55,9 @@ public class Hdsc2Controller extends BaseController {
 
     @RequestMapping
     @ResponseBody
-    public String index() throws Exception {
-        return init("hdsc");
+    public String index(String gsdm) throws Exception {
+
+        return init(gsdm);
     }
 
     private String init(String gsdm) throws Exception {
@@ -84,7 +85,11 @@ public class Hdsc2Controller extends BaseController {
                 response.sendRedirect(ul);
                 return null;
             } else {
-                response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+                if(null!=gsdm&&gsdm.equals("hdsc")){
+                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+                }if(null!=gsdm&&gsdm.equals("hongkang")){
+                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+                }
                 return null;
             }
         }
@@ -93,10 +98,15 @@ public class Hdsc2Controller extends BaseController {
 //                AlipayUtils.initAlipayAuthorization(request, response, "/hdsc");
 //                return null;
 //            }
-//            response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+//            response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
 //            return null;
 //        }
-        response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+        if(null!=gsdm&&gsdm.equals("hdsc")){
+            response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+        }if(null!=gsdm&&gsdm.equals("hongkang")){
+            response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+        }
+       // response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?gsdm="+gsdm);
         return null;
     }
 
