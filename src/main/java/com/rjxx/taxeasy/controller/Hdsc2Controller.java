@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by xlm on 2017/6/15.
@@ -155,11 +152,21 @@ public class Hdsc2Controller extends BaseController {
         String gsdm = (String) session.getAttribute(SESSION_KEY_FPTQ_GSDM);
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            Map map = new HashMap<>();
-            map.put("khh", khh);
-            map.put("gsdm", gsdm);
-            map.put("month", "");
-            List<Kpls> list = jylsService.findBykhh(map);
+          List<Kpls> list = new ArrayList<>();
+
+            if(null!=gsdm&&gsdm.equals("hdsc")){
+                Map map = new HashMap<>();
+                map.put("khh", khh);
+                map.put("gsdm", gsdm);
+                map.put("month", "");
+                 list = jylsService.findBykhh(map);
+            }else  if(null!=gsdm&&gsdm.equals("hongkang")){
+                Map map = new HashMap<>();
+                map.put("tqm", khh);
+                map.put("gsdm", gsdm);
+                map.put("month", "");
+                list = jylsService.findBykhh(map);
+            }
             boolean f = true;
             for (int i = 0; i < list.size(); i++) {
                 if (!list.get(0).getFpztdm().equals("00")) {
