@@ -29,7 +29,7 @@
 		}
 	</style>
 </head>
-<body id="index">
+<body id="index" onload="load()">
 	<header>
 		<img src="images/hkyy.png"/>
 	</header>
@@ -74,8 +74,10 @@
 		function loadimage() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
 		}
-		loadimage();
-		$('#code').val('');
+		function load() {
+			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
+			$('#code').val('');
+		}
 		function tiqu() {
 			var khh = $('#khh').val();
 			var code = $('#code').val();
