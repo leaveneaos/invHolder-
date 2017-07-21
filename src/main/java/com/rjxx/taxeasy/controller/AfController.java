@@ -452,9 +452,9 @@ public class AfController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
-            } else if (null != jyls && null != jyls.getDjh()) {
+            } /*else if (null != jyls && null != jyls.getDjh()) {
                 result.put("num", "6");
-            } else if (null != jyxxsq && null != jyxxsq.getSqlsh()) {
+            } */else if (null != jyxxsq && null != jyxxsq.getSqlsh()) {
                 request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute("je", je);
                 request.getSession().setAttribute("jyxxsq", jyxxsq);
