@@ -61,9 +61,6 @@
 					<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-fapiaotaitou"></span>发票抬头</label> 
 					<input type="text" class="mui-input-clear" required="required" maxlength="50"
 						name="fptt" id="fptt" placeholder="必填" list="getFptt" oninput="changeFptt(this.value)">
-					<datalist id="getFptt" >
-					  <!-- <option value="getFptt"> -->
-					</datalist>
 				</div>
 				
 				<div class="mui-input-row">
@@ -155,31 +152,11 @@
 					}
                 });
 		});
-		function changeFptt(obj){
-            $.post(
-                '/einv/getInvoiceTitle',
-                {},
-                function(test) {
-                    if(test.success) {
-                        var option='';
-                        var dataList = test.data;
-                        for(var i=0;i<dataList.length;i++) {
-                            var fp = dataList[i];
-                            if (fp.titleName==obj) {
-                                $('#nsrsbh').val(fp.taxRegisterNo);
-                                $('#dz').val(fp.userAddress);
-                                $('#dh').val(fp.userMobile);
-                                $('#khh').val(fp.openBankName);
-                                $('#yhzh').val(fp.openBankAccount);
-                                $('#yx').val(fp.userEmail);
-                            }
-                        }
-                    }
-                });
-		}
+
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();
-		}
+		};
+
 		if(storage.data) {
 			var json=storage.getItem("data");
 			var obj = JSON.parse('['+json+']');
@@ -327,7 +304,7 @@
 					}
 				});
 			}
-		}
+		};
 
 		function CheckAll(obj) {
 		   if ($(obj).prop("checked")) {
