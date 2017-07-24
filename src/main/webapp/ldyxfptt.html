@@ -136,13 +136,18 @@
 				method : 'post',
 				success : function(data) {
 					var items = data.jymxsqList;
-                    var zje =0;
-    				//遍历items 拿到每个人的信息，拼接成表格
-    				for(var i=0;i<items.length;i++){
-    				    zje += items[i].spje/1+items[i].spse/1;
-    				}
-    				//在页面显示数据
-    				$("#kpje").after("<span class='lht'>" + data.zje + "</span>")
+					if(items == '' || items == null) {
+						return;
+					}else{
+						var zje =0;
+	    				//遍历items 拿到每个人的信息，拼接成表格
+	    				for(var i=0;i<items.length;i++){
+	    				    zje += items[i].spje/1+items[i].spse/1;
+	    				}
+	    				//在页面显示数据
+	    				$("#kpje").after("<span class='lht'>" + data.zje + "</span>")
+					}
+                    
 				}
 			});
 		});
