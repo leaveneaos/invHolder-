@@ -130,20 +130,22 @@
         var djh;
         var storage=window.localStorage;
 
-		$(function () {
-            $.post(
-                "ldyx/spmcAndje",
-				{},
-				function(data) {
-                    djh = data.tqm;
-                    if (djh != null && djh != "") {
-                        $("#kpje").after("<span class='lht'>" + data.je + "</span>")
-                    } else {
-                        window.location.href = "smtq/demo.html?time=" + new Date();
-                    };
+		$(function(){
+			$.ajax({
+				url : 'ldyx/spmx',
+				method : 'post',
+				success : function(data) {
+					var items = data.jymxsqList;
+                    var zje =0;
+    				//遍历items 拿到每个人的信息，拼接成表格
+    				for(var i=0;i<items.length;i++){
+    				    zje += items[i].spje/1+items[i].spse/1;
+    				}
+    				//在页面显示数据
+    				$("#kpje").after("<span class='lht'>" + data.zje + "</span>")
 				}
-			);
-        });
+			});
+		});
 
 		$.post(
             '../getInvoiceTitle',
