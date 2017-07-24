@@ -79,7 +79,7 @@
 				<div class="mui-input-row">
 					<label><span  style="color: red;" class="isCheck">*</span>购方税号</label>
 					<input id="nsrsbh" maxlength="20"
-					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请在半角字符下输入" onchange="CheckSocialCreditCode()">
+					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请在半角字符下输入">
 				</div>
 				<div class="mui-input-row">
 					<label>单位地址</label>
@@ -228,11 +228,11 @@
 		};
 
 		function CheckAll(obj) {
-		   if ($(obj).prop("checked")) {
+		    if ($(obj).prop("checked")) {
 		      $('.isCheck').html('*');
-		   } else {
+		    }else {
 		      $('.isCheck').html('');
-		   }
+		    }
 		} 	
 
 		// 税号校验
@@ -240,16 +240,17 @@
 			var Code = $('#nsrsbh').val();
 　　　　	var patrn = /^[0-9A-Z]+$/;
 			//15，18，20位校验及大写校验
-			if($('.isCheck').html('') && Code.length == 0) {
-				$('#sqkp').removeAttr('disabled');
-				return;
-			}else if ( ((Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) { 
-	　　　　　　alert("税号必须是15,18或20位数字与大写字母组合！"); 
-				$('#sqkp').attr('disabled','true');
+			if ( ((Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) { 
+				var btnArray = [ '是' ];
+				firm = "税号必须是15,18或20位数字与大写字母组合!";
+				title = "提示";
+	　　　　　　alert(firm, title);
 				return;
 	　　　　}else if (Code.substring(0,1).indexOf(0) == 0) {
-				$('#sqkp').attr('disabled','true');
-				alert("税号不符合规定"); 
+				var btnArray = [ '是' ];
+				firm = "购方税号不符合规定";
+				title = "提示";
+	　　　　　　alert(firm, title);
 				return;
 	        }else if(Code.length == 18){ 
 　　　　　　   	var Ancode;//统一社会信用代码的每一个值
@@ -273,13 +274,15 @@
 		　　　　logiccheckcode = Array_Str[logiccheckcode];
 		　　　　var checkcode = Code.substring(17, 18);
 		　　　　if (logiccheckcode != checkcode) { 
-		　　　　　　alert("购方税号不符合规定"); 
-					$('#sqkp').attr('disabled','true');
+					var btnArray = [ '是' ];
+					firm = "购方税号不符合规定";
+					title = "提示";
+		　　　　　　alert(firm, title);
 					return;
 		 　　　 }
 	 　 	}
-	 		$('#sqkp').removeAttr('disabled');
-		}
+		};
+		
 		function kp() {
 			var info = document.getElementById("info");
 			var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -312,17 +315,16 @@
 					title = "提示";
 					alert(firm, title);
 					return;
-			} else {
+			} else if((null!=nsrsbh && nsrsbh!='')){
+				CheckSocialCreditCode();
+			}else {
 				firm = "发票抬头:" + fptt + "</br>";
 				var nsrsbh = $('#nsrsbh').val();
 				var dz = $('#dz').val();
 				var dh = $('#dh').val();
 				var khh = $('#khh').val();
 				var yhzh = $('#yhzh').val();
-				if(null!=nsrsbh&&nsrsbh!=''){
-					CheckSocialCreditCode();
-					return;
-				}
+
 				// 本地缓存
 				if(!window.localStorage){
 		            return false;
@@ -360,7 +362,7 @@
 					firm += "邮箱:" + yx +  "</br>";
 				}
 				title = "信息确认";
-				$("#confirmBtn").attr("disabled",true);
+				$("#sqkp").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
 					if(r){
 						$.post(
