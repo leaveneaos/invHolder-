@@ -302,30 +302,32 @@
 				$("#confirmBtn").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
 					if(r){
-						$.post("dzfp_sqj/saveLs", {
-							"fptt" : fptt,
-							"nsrsbh" : nsrsbh,
-							"dz" : dz,
-							"dh" : dh,
-							"khh" : khh,
-							"khhzh" : yhzh,
-							"yx" :yx
-							//"sj" : sj
-						}, function(data) {
-							if (data.msg == 1) {
-								info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
-								//fpzt();
-								window.location.href = "smtq/smtq3.html?time=" + new Date();
-							} else {
-								btnArray = [ '确定' ];
-								firm = data.msg;
-								info.innerText =firm;
-								$("#confirmBtn").attr("disabled",false);
+						$.post(
+							"ldyx/sqkpsession",/*申请开票  信息放入session*/
+							{
+								"fptt" : fptt,
+								"nsrsbh" : nsrsbh,
+								"dz" : dz,
+								"dh" : dh,
+								"khh" : khh,
+								"yhzh" : yhzh,
+								"yx" :yx
+							}, 
+							function(data) {
+								if (data.msg == 1) {
+									/*info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';*/
+									window.location.href = "af/kpxx.html?time=" + new Date();
+								} else {
+									btnArray = [ '确定' ];
+									firm = data.msg;
+									info.innerText =firm;
+									$("#sqkp").attr("disabled",false);
+								}
 							}
-						});
+						);
 					}else{
 						info.innerText = '请重新确认';
-						$("#confirmBtn").attr("disabled",false);
+						$("#sqkp").attr("disabled",false);
 					}
 				});
 			}
