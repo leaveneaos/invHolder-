@@ -58,20 +58,20 @@
 					<label for="choose">用于报销</label>
 				</div>
 				<div class="mui-input-row">
-					<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-fapiaotaitou"></span>发票抬头</label> 
-					<input type="text" class="mui-input-clear" required="required" maxlength="50"
-						name="fptt" id="fptt" placeholder="必填" list="getFptt" oninput="changeFptt(this.value)">
+					<label id="fptt2"><span  style="color: red;">*</span>发票抬头</label>
+					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头">
+					<!-- <select id="getFptt" oninput="changeFptt(this.value)">
+					  <option value="getFptt">
+					</select> -->
 				</div>
-				
 				<div class="mui-input-row">
-					<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-youxiang4"></span>邮箱地址</label>
-					<input type="email" id="yx" class="mui-input-clear" placeholder="必填">
+					<label id ="yx2"><span style="color: red;">*</span>邮箱地址</label>
+					<input name="yx" id="yx" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
 				</div>
-
 				<div class="mui-input-row">
-					<label  class="data-size" style="padding: 10px 13px;"><span class="mui-icon iconfont icon-dingdanbianhao"></span>购方税号</label> 
-					<input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20"
-						name="nsrsbh" placeholder="用于报销时必填" onkeyup="this.value=this.value.replace(/[, ]/g,'')">
+					<label><span  style="color: red;" class="isCheck">*</span>购方税号</label>
+					<input id="nsrsbh" maxlength="20"
+					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请在半角字符下输入" onchange="CheckSocialCreditCode()">
 				</div>
 
 				<ul class="mui-table-view">
@@ -127,7 +127,7 @@
 				$(this).toggleClass("current");
 				});
 		  	$.post(
-                '/einv/getInvoiceTitle',
+                '../getInvoiceTitle',
                 {},
                 function(test) {
 					if(test.success) {
@@ -155,6 +155,31 @@
 
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();
+		};
+
+		function changeFptt(obj){
+            $.post(
+                '../getInvoiceTitle',
+                {},
+                function(test) {
+                    if(test.success) {
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+                            var fp = dataList[i];
+                            if (fp.titleName==obj) {
+                            	$('#fptt').val(fp.titleName);
+                                $('#nsrsbh').val(fp.taxRegisterNo);
+                                $('#dz').val(fp.userAddress);
+                                $('#dh').val(fp.userMobile);
+                                $('#khh').val(fp.openBankName);
+                                $('#yhzh').val(fp.openBankAccount);
+                                $('#yx').val(fp.userEmail);
+                            }
+                        }
+                    }
+                }
+            )
 		};
 
 		if(storage.data) {
