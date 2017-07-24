@@ -25,7 +25,7 @@
 		}
 	</style>
 </head>
-<body id="index">
+<body id="index" onload="load()">
 	<header>
 		<img src="../images/afq.png"/>
 	</header>
@@ -78,14 +78,14 @@
         var bIsAndroid = sUserAgent.match(/android/i) == "android";
         var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
         var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
-
+       
 		function loadimage() {
 			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
 		};
-
-		loadimage();
-		$('#code').val('');
-		
+		function load() {
+			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
+			$('#code').val('');
+		}	
 		function tiqu() {
 			var tqm = $('#tqm').val();
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
@@ -131,9 +131,6 @@
                         btnArray = [ '确定' ];
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";
                         title = "提示";
-						/* 	mui.confirm(firm, title, btnArray, function(e) {
-
-						 }); */
                         jAlert(firm, title);
                     }else if (data.num == 11) {
                         $('#cwts').html("输入的提取码不正确");
@@ -142,7 +139,6 @@
 				}
 			);
 		}
-
 		function tiaozhuan() {
 			window.location.href = "../bangzhu.html?time=" + new Date();
 		}

@@ -7,7 +7,7 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
-	<title>输入水费册号</title>
+	<title>输入提取码</title>
 	<link rel="stylesheet" type="text/css" href="css/common.css">
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.js"></script>
@@ -29,19 +29,19 @@
 		}
 	</style>
 </head>
-<body id="index">
+<body id="index" onload="load()">
 	<header>
-		<img src="images/hdsc3.png"/>
+		<img src="images/hkyy.png"/>
 	</header>
 
 	<section class="data-tip">
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对上海瀚达水厂的支持，自2017年6月1日起我们将提供"增值税电子普通发票"，电子发票与纸质发票具有同等法律效力，请输入您的水费册号，及时获得电子发票。
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对上海宏康医院的支持，自2017年8月1日起我们将提供"增值税电子普通发票"，电子发票与纸质发票具有同等法律效力，请输入收款收据上提供的发票提取码，及时获得电子发票。
 	</section>
 
 	<section>
 		<form class="mui-input-group">
 			<div class="mui-input-row">
-				<input type="text" id="khh" class="mui-input-clear" placeholder="请输入您的水费册号">
+				<input type="text" id="khh" class="mui-input-clear" placeholder="请输入您的提取码">
 			</div>
 			<div class="mui-input-row">
 				<input type="text" id="code" name="code" placeholder="请输入右侧验证码">
@@ -70,19 +70,14 @@
 	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
 	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
 
-		// $(function() {
-		// 	var url = window.location.href;
-		// 	if (url.indexOf("tqm") != -1) {
-		// 		var tqm = url.substring(url.indexOf("=") + 1, url.indexOf("&"));
-		// 		$('#tqm').val(tqm);
-		// 	}
-		// })
 
 		function loadimage() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
 		}
-		loadimage();
-		$('#code').val('');
+		function load() {
+			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
+			$('#code').val('');
+		}
 		function tiqu() {
 			var khh = $('#khh').val();
 			var code = $('#code').val();

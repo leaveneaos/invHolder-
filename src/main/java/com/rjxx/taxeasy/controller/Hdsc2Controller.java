@@ -55,8 +55,9 @@ public class Hdsc2Controller extends BaseController {
 
     @RequestMapping
     @ResponseBody
-    public String index() throws Exception {
-        return init("hdsc");
+    public String index(String gsdm) throws Exception {
+
+        return init(gsdm);
     }
 
     private String init(String gsdm) throws Exception {
@@ -84,7 +85,11 @@ public class Hdsc2Controller extends BaseController {
                 response.sendRedirect(ul);
                 return null;
             } else {
-                response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+                if(null!=gsdm&&gsdm.equals("hdsc")){
+                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+                }if(null!=gsdm&&gsdm.equals("hongkang")){
+                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+                }
                 return null;
             }
         }
@@ -93,10 +98,15 @@ public class Hdsc2Controller extends BaseController {
 //                AlipayUtils.initAlipayAuthorization(request, response, "/hdsc");
 //                return null;
 //            }
-//            response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+//            response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
 //            return null;
 //        }
-        response.sendRedirect(request.getContextPath() + "/" + gsdm + "2.html?_t=" + System.currentTimeMillis());
+        if(null!=gsdm&&gsdm.equals("hdsc")){
+            response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+        }if(null!=gsdm&&gsdm.equals("hongkang")){
+            response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+        }
+       // response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?gsdm="+gsdm);
         return null;
     }
 
@@ -175,8 +185,9 @@ public class Hdsc2Controller extends BaseController {
             }
             if (f) {
                 if (list.size() > 0) {
-                    result.put("num", "2");
+
                     result.put("khh", khh);
+                    result.put("num", "2");
                     result.put("gsdm", gsdm);
                     request.getSession().setAttribute("khh", khh);
                     request.getSession().setAttribute("gsdm", gsdm);
@@ -199,9 +210,16 @@ public class Hdsc2Controller extends BaseController {
         Map result = new HashMap();
         String openid = (String) session.getAttribute("openid");
         Map map = new HashMap<>();
-        map.put("khh", khh);
-        map.put("gsdm", gsdm);
+
         List<Kpls> list = null;
+        if(null!=gsdm&&gsdm.equals("hdsc")){
+            map.put("khh", khh);
+            map.put("gsdm", gsdm);
+        }
+        if(null!=gsdm&&gsdm.equals("hongkang")){
+            map.put("tqm", khh);
+            map.put("gsdm", gsdm);
+        }
         if (month.equals("this")) {
             map.put("this", "  date_format(b.kprq,'%Y-%m')=date_format(now(),'%Y-%m')");
             list = jylsService.findBykhh(map);
