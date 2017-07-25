@@ -52,6 +52,8 @@
 					<RowType>${jymxsq.fphxz!}</RowType>
 					<Spec>${jymxsq.spggxh!}</Spec>
 					<Unit>${jymxsq.spdw!}</Unit>
+                    <Quantity>${jymxsq.sps?c!}</Quantity>
+                    <UnitPrice>${jymxsq.spdj?c!}</UnitPrice>
 					<Amount>${jymxsq.spje?c!}</Amount>
 					<DeductAmount></DeductAmount>
 					<TaxRate>${jymxsq.spsl?c!}</TaxRate>
