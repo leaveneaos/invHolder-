@@ -388,7 +388,11 @@ public class BaseClController extends BaseController {
             return result;
         }
         try{
-            List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
+
+           String xml=GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList);
+           String resultxml=HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+            logger.info("-------返回值---------"+resultxml);
+           /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
             //复制一个新的list用于生成处理表
             List<Jymxsq> jymxsqTempList = new ArrayList<Jymxsq>();
             jymxsqTempList = BeanConvertUtils.convertList(jymxsqList, Jymxsq.class);
@@ -397,13 +401,13 @@ public class BaseClController extends BaseController {
             List jyxxsqlist=new ArrayList();
             jyxxsqlist.add(jyxxsq);
             List resultList=null;
-                if(jyxxsq.getGsdm().equals("family")){
+                if(jyxxsq.getGsdm().equals("Family")){
                     resultList =  fpclService.skdzfp(jyxxsqlist,"03");
                 }else if(jyxxsq.getGsdm().equals("ldyx")){
                     resultList =  fpclService.zjkp(jyxxsqlist,"01");
                 }
                 request.getSession().setAttribute("serialorder",resultList.get(0));
-                result.put("msg", "1");
+                result.put("msg", "1");*/
             }catch (Exception e){
                 e.printStackTrace();
             }
