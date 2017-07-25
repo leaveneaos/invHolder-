@@ -190,7 +190,7 @@ public class LdyxController extends BaseController {
             Map resultMap1 = new HashMap();
             /*绿地*/
              if(map.get("gsdm").equals("ldyx")){
-                //第一次请求url获取token
+               /* //第一次请求url获取token
                 resultMap1=getDataService.getldyxFirData(tqm,gsdm);
                 //创建时间
                 Long  crateDateTime = (long) request.getSession().getAttribute("crateDateTime");
@@ -207,9 +207,9 @@ public class LdyxController extends BaseController {
                     //时间差 - 过期时间
                     sfgq = sjc - exp ;
                 }
-
+*/
                 //判断token是否为空 是否过期
-                if ((request.getSession().getAttribute("accessToken")==null&&request.getSession().getAttribute("accessToken").equals(""))&&(sfgq >= 0)){
+               /* if ((request.getSession().getAttribute("accessToken")==null&&request.getSession().getAttribute("accessToken").equals(""))&&(sfgq >= 0)){
                     //放入系统当前时间 直接是毫秒
 
                     Long dateTime = System.currentTimeMillis();
@@ -234,7 +234,8 @@ public class LdyxController extends BaseController {
                         //发送第二次请求
                         resultMap1=getDataService.getldyxSecData(tqm,gsdm,token);
 
-                    }
+                    }*/
+                // resultMap1=getDataService.getldyxSecData(tqm,gsdm,token);
             }
 
             List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
@@ -245,8 +246,9 @@ public class LdyxController extends BaseController {
                 result.put("error",error);
                 return result;
             }
-            Jyxxsq jyxxsq=jyxxsqList.get(0);
-            request.getSession().setAttribute("je",jyxxsq.getJshj());
+
+            //Jyxxsq jyxxsq=jyxxsqList.get(0);
+            //request.getSession().setAttribute("je",jyxxsq.getJshj());
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
             if (list.size() > 0) {/*代表申请已完成开票,跳转最终开票页面*/
