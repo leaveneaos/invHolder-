@@ -396,9 +396,7 @@ public class LdyxController extends BaseController {
             List jyxxsqlist=new ArrayList();
             jyxxsqlist.add(jyxxsq);
             List resultList=null;
-            if(jyxxsq.getGsdm().equals("family")){
-                resultList =  fpclService.skdzfp(jyxxsqlist,"03");
-            }else if(jyxxsq.getGsdm().equals("ldyx")){
+           if(jyxxsq.getGsdm().equals("ldyx")){
                 resultList =  fpclService.zjkp(jyxxsqlist,"01");
             }
             request.getSession().setAttribute("serialorder",resultList.get(0));
