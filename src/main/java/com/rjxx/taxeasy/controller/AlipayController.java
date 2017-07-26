@@ -63,7 +63,7 @@ public class AlipayController extends BaseController {
             session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
             session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
             session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
-            refreshToken(oauthTokenResponse.getRefreshToken());
+            //refreshToken(oauthTokenResponse.getRefreshToken());
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
             logger.info(JSON.toJSONString(oauthTokenResponse+"end application"));
