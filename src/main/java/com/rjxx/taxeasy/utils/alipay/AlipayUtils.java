@@ -1,12 +1,16 @@
 package com.rjxx.taxeasy.utils.alipay;
 
+import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.InvoiceTitleModel;
 import com.alipay.api.request.AlipayEbppInvoiceSycnRequest;
 import com.alipay.api.request.AlipayEbppInvoiceTitleListGetRequest;
+import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.response.AlipayEbppInvoiceSycnResponse;
 import com.alipay.api.response.AlipayEbppInvoiceTitleListGetResponse;
+import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Kpspmx;
@@ -51,14 +55,28 @@ public class AlipayUtils {
      * @param session
      * @return
      */
-    public static boolean isAlipayAuthorized(HttpSession session) {
+    public static boolean isAlipayAuthorized(HttpSession session) throws AlipayApiException{
         String userId = (String) session.getAttribute(AlipayConstants.ALIPAY_USER_ID);
+        String expires_in = (String) session.getAttribute("expires_in");
+        String re_expires_in = (String) session.getAttribute("re_expires_in");
         if (StringUtils.isNotBlank(userId)) {
+            refreshToken(session);
             return true;
         }
         return false;
     }
-
+    public static  void refreshToken(HttpSession session) throws AlipayApiException {
+        String refreshToken = (String) session.getAttribute("refresh_token");
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
+        AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
+        alipaySystemOauthTokenRequest.setRefreshToken(refreshToken);
+        alipaySystemOauthTokenRequest.setGrantType("refresh_token");
+        AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
+        session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
+        session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
+        session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
+        logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
+    }
     /**
      * 初始化支付宝授权
      *
