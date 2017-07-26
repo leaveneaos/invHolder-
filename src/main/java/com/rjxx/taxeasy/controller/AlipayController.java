@@ -60,9 +60,11 @@ public class AlipayController extends BaseController {
         alipaySystemOauthTokenRequest.setGrantType("authorization_code");
         try {
             AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
-            session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
-            session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
-            session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
+            session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());//访问令牌
+            session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());//用户id
+            session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());//刷新令牌
+            session.setAttribute("expires_in",oauthTokenResponse.getExpiresIn());//过期时间
+            session.setAttribute("re_expires_in",oauthTokenResponse.getReExpiresIn());//刷新令牌时间
             refreshToken(oauthTokenResponse.getRefreshToken());
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
