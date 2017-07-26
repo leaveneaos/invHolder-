@@ -63,7 +63,7 @@ public class AlipayController extends BaseController {
             session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
             session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
             session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
-            //refreshToken(oauthTokenResponse.getRefreshToken());
+            refreshToken(oauthTokenResponse.getRefreshToken());
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
             logger.info(JSON.toJSONString(oauthTokenResponse+"end application"));
@@ -81,7 +81,7 @@ public class AlipayController extends BaseController {
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
         alipaySystemOauthTokenRequest.setRefreshToken(refreshToken);
-        alipaySystemOauthTokenRequest.setGrantType("authorization_code");
+        alipaySystemOauthTokenRequest.setGrantType("refresh_token");
             AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
             session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
             session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
