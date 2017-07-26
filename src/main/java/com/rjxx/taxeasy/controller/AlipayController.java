@@ -86,7 +86,7 @@ public class AlipayController extends BaseController {
             session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
             session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
             session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
-           logger.info(JSON.toJSONString(oauthTokenResponse+"end application"));
+            logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
     }
 
     /**

@@ -5,31 +5,38 @@ package com.rjxx.taxeasy.utils.alipay;
  */
 public class AlipayConstants {
 
-    public static final String GATEWAY_URL = "https://openapi.alipaydev.com/gateway.do";
+    public static final String GATEWAY_URL = "https://openapi.alipay.com/gateway.do";
 
-//    public static final String URL = "https://openapi.alipay.com/gateway.do";
+//    public static final String URL = "https://openapi.alipaydev.com/gateway.do";
 
     public static final String AUTH_SCOPE = "auth_user,auth_base,auth_invoice_info";
 
     /**
      * 沙箱
      */
-    public static final String APP_ID = "2016080600177722";
+    //public static final String APP_ID = "2016080600177722";
     /**
      * 泰易发票夹
      */
-//    public static final String APP_ID = "2017062207544676";
+    public static final String APP_ID = "2017062207544676";
+    /**
+     * 沙箱
+     */
+   // public static final String AUTH_URL = "https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm?app_id=" + APP_ID + "&scope=" + AUTH_SCOPE + "&redirect_uri=ENCODED_URL";
+    /**
+     * 泰易发票夹
+     */
+    public static final String AUTH_URL = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=" + APP_ID + "&scope=" + AUTH_SCOPE + "&redirect_uri=ENCODED_URL";
 
-    public static final String AUTH_URL = "https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm?app_id=" + APP_ID + "&scope=" + AUTH_SCOPE + "&redirect_uri=ENCODED_URL";
 
     /**
      * 沙箱
      */
-    public static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3Z1dnd/Z6s5gT8Mls39kSs5nGO5F4mrqDKvo9AV/558XEEC0Re1c3Zbmz66b2T9p3NUAb+5GH0VMUI5D5lc4k9pUu4V2L/Bafttuq6daS8+KaqVMye+noA/0XzVJ1C0Roqamk/4D/sRdFhUqeOvevMarSv5ZiN038Ooc9+Eq9Whlz1/2HMl9dDS8JjISrcY3QXSZacrb+daqFnwa5K2qEDwyZ7+moTq4dQ+10fQrp/CYrsUhHeRO5/N3rFjdlxFCIzx/ntReC48jg4MJhSSV+BmX4ezNz+/oS3fnvCataGa3SeM7/c8X5Qf4g0PIUOCpWoxgd5HBW/tFriYbMJhVYwIDAQAB";
+   // public static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3Z1dnd/Z6s5gT8Mls39kSs5nGO5F4mrqDKvo9AV/558XEEC0Re1c3Zbmz66b2T9p3NUAb+5GH0VMUI5D5lc4k9pUu4V2L/Bafttuq6daS8+KaqVMye+noA/0XzVJ1C0Roqamk/4D/sRdFhUqeOvevMarSv5ZiN038Ooc9+Eq9Whlz1/2HMl9dDS8JjISrcY3QXSZacrb+daqFnwa5K2qEDwyZ7+moTq4dQ+10fQrp/CYrsUhHeRO5/N3rFjdlxFCIzx/ntReC48jg4MJhSSV+BmX4ezNz+/oS3fnvCataGa3SeM7/c8X5Qf4g0PIUOCpWoxgd5HBW/tFriYbMJhVYwIDAQAB";
     /**
      * 正式
      */
-//    public static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg5gJd4KO74VYExgBEkifXVsbqjMRv6gP3tQor/O4I3m5kloJazaI4eq4ST8beKtG65dz5qnalT7Epc86F+JOoR2lRrSqYmPz9pyfgHG9+0dOEHaa5Lq56GmUqM7WKAkLBWKMsI8EVV/DVVkenPaLo/rLfpqSYt1YFVnEJEb5xTNVGX6uvwmHhXzqiFwCwa9JYoMUKiWI8REon/wo0GKwftXOXBa/SPmoxcsfJfrnH4WCCNhxHMY/CxjeM4O6skzeLr+wL3TcmjiPiXu0pRc8gYx5ySWgcd+PdvkkJt5LVMSriME/mYiGIBV6/TMgaKJ6wS3MX67PbILjqRj57gdblwIDAQAB";
+    public static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAg5gJd4KO74VYExgBEkifXVsbqjMRv6gP3tQor/O4I3m5kloJazaI4eq4ST8beKtG65dz5qnalT7Epc86F+JOoR2lRrSqYmPz9pyfgHG9+0dOEHaa5Lq56GmUqM7WKAkLBWKMsI8EVV/DVVkenPaLo/rLfpqSYt1YFVnEJEb5xTNVGX6uvwmHhXzqiFwCwa9JYoMUKiWI8REon/wo0GKwftXOXBa/SPmoxcsfJfrnH4WCCNhxHMY/CxjeM4O6skzeLr+wL3TcmjiPiXu0pRc8gYx5ySWgcd+PdvkkJt5LVMSriME/mYiGIBV6/TMgaKJ6wS3MX67PbILjqRj57gdblwIDAQAB";
 
     public static final String PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwexZ5yU0vMCVloBx7G7ERmpqTljWlwlolrGsR2EIq7lnGCa4/ty3eSyUws/MlV9w5m+CijUyORYPR0UAIPY2O63kflPNMPYboV3BU7hfdI8HcCW6wnhHMXNRzRWa93y/hB9VjOnRDVmc22j/1zgiUWavYsbMx3K1cwxSurO3vVbJ7UZZJYhBuJPfVopHjO1INYgPPY4WOaJFHXfXD5l+EcnUrfP1fsvlpql5Ks0x1BEUQdH+X8RuZ2MNMNu8gkovrqcHLEPVtLwBXQDQDhgOv0xO2qct1aNwigsKjF3bMybFqOI+UWpi0ntH11BlSzA4U8qFoK7cPWVrcbBL5rqq4QIDAQAB";
 
