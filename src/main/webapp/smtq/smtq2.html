@@ -68,6 +68,19 @@
         #tab tr {
             background-color: #A1A2A4;
         }
+        #getFptt {
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            -webkit-appearance: normal;
+            top: 13px;
+            right: 15px;
+            background-color: #ccc;
+        }
+        .mui-input-row label  {
+            padding: 17px 0px 17px 13px;
+        }
     </style>
 </head>
 
@@ -88,6 +101,9 @@
                 <div class="mui-input-row">
                     <label><font color="red">*</font>购方名称</label>
                     <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
+                    <select id="getFptt" oninput="changeFptt(this.value)">
+                      <!-- <option value="getFptt"> -->
+                    </select>
                 </div>
                 <div class="mui-input-row">
                     <label><font color="red" class="isCheck">*</font>购方税号</label> 
@@ -178,6 +194,59 @@
                         }
                     })
         });
+
+        $.post(
+            '../getInvoiceTitle',
+            {},
+            function(test) {
+                if(test.success) {
+                    var option='';
+                    var dataList = test.data;
+                    for(var i=0;i<dataList.length;i++) {
+                        var fp=dataList[i];
+                        if(fp.default) {
+                            option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+                            $('#fptt').val(fp.titleName);
+                            $('#nsrsbh').val(fp.taxRegisterNo);
+                            $('#dz').val(fp.userAddress);
+                            $('#dh').val(fp.userMobile);
+                            $('#khh').val(fp.openBankName);
+                            $('#yhzh').val(fp.openBankAccount);
+                            $('#yx').val(fp.userEmail);
+                        }else{
+                            option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+                        }
+                    };
+                    $("#getFptt").append(option);
+                };
+            }
+        );
+
+        function changeFptt(obj){
+            $.post(
+                '../getInvoiceTitle',
+                {},
+                function(test) {
+                    if(test.success) {
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+                            var fp = dataList[i];
+                            if (fp.titleName==obj) {
+                                $('#fptt').val(fp.titleName);
+                                $('#nsrsbh').val(fp.taxRegisterNo);
+                                $('#dz').val(fp.userAddress);
+                                $('#dh').val(fp.userMobile);
+                                $('#khh').val(fp.openBankName);
+                                $('#yhzh').val(fp.openBankAccount);
+                                $('#yx').val(fp.userEmail);
+                            }
+                        }
+                    }
+                }
+            )
+        };
+
         if(storage.data){
             var json=storage.getItem("data");
             var obj = JSON.parse(json);
@@ -339,9 +408,6 @@
                 if (null != yx && "" != yx) {
                     firm += "邮箱:" + yx + "</br>";
                 }
-                /*  if (null != sj && "" != sj) {
-                 firm += "手机:" + sj + "。";
-                 } */
                 title = "信息确认";
                 $("#confirmBtn").attr("disabled", true);
                 jConfirm(firm, title, function (r) {
