@@ -207,7 +207,7 @@ public class AlipayUtils {
         invoiceTitle.setOpen_bank_name(kpls.getGfyh());
         invoiceTitle.setOpen_bank_account(kpls.getGfyhzh());
         invoiceInfo.setInvoice_file_data("");
-        invoiceInfo.setInvoice_fake_code("");
+        invoiceInfo.setInvoice_fake_code(kpls.getJym());
         invoiceInfo.setOut_invoice_id(kpls.getFpdm() + kpls.getFphm());
         invoiceInfo.setFile_download_type("pdf");
         invoiceInfo.setOriginal_blue_invoice_code("");
