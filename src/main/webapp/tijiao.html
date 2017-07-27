@@ -37,6 +37,19 @@
 			padding: 5px 0 0 15px;
 		    color: #007AFF;
 		}
+		#fptt {
+			position: relative;
+		}
+		#getFptt {
+			padding: 0;
+			width: 20px;
+			height: 20px;
+		    position: absolute;
+		    -webkit-appearance: normal;
+    		top: 13px;
+    		right: 15px;
+    		background-color: #ccc;
+		}
 	</style>
 </head>
 <body>
@@ -53,10 +66,10 @@
 			<div class="mui-input-row">
 				<label><font color="red">*</font>发票抬头</label> 
 				<input type="text" class="mui-input-clear" required="required" maxlength="50"
-					name="fptt" id="fptt" placeholder="请输入发票抬头" list="getFptt" oninput="changeFptt(this.value)">
-				<!-- <datalist id="getFptt" >
-				  <option value="getFptt">
-				</datalist> -->
+					name="fptt" id="fptt" placeholder="请输入发票抬头">
+				<select id="getFptt" oninput="changeFptt(this.value)">
+				  <!-- <option value="getFptt"> -->
+				</select>
 			</div>
 			<div class="mui-input-row">
 				<label><font color="red" class="isCheck">*</font>购方税号</label> 
@@ -148,7 +161,7 @@
 				}
 			);
 		  	$.post(
-                '/einv/getInvoiceTitle',
+                '../getInvoiceTitle',
                 {},
                 function(test) {
 					if(test.success) {
@@ -175,7 +188,7 @@
 		});
 		function changeFptt(obj){
             $.post(
-                '/einv/getInvoiceTitle',
+                '../getInvoiceTitle',
                 {},
                 function(test) {
                     if(test.success) {
@@ -200,30 +213,28 @@
 		}
 		if(storage.data) {
 			var json=storage.getItem("data");
-			var obj = JSON.parse('['+json+']');
-			for(var i=0;i<obj.length;i++) {
-				if(obj[i].fptt != '') {
-					document.getElementById('fptt').value = obj[i].fptt;
-				}
-				if(obj[i].nsrsbh != '') {
-					document.getElementById('nsrsbh').value = obj[i].nsrsbh;
-				}
-				if(obj[i].dz != '') {
-					document.getElementById('dz').value = obj[i].dz;
-				}
-				if(obj[i].dh != '') {
-					document.getElementById('dh').value = obj[i].dh;
-				}
-				if(obj[i].khh != '') {
-					document.getElementById('khh').value = obj[i].khh;
-				}
-				if(obj[i].yhzh != '') {
-					document.getElementById('yhzh').value = obj[i].yhzh;
-				}
-				if(obj[i].yx != '') {
-					document.getElementById('yx').value = obj[i].yx;
-				}
-			};
+			var obj = JSON.parse(json);
+			if(obj.fptt != '') {
+				document.getElementById('fptt').value = obj.fptt;
+			}
+			if(obj.nsrsbh != '') {
+				document.getElementById('nsrsbh').value = obj.nsrsbh;
+			}
+			if(obj.dz != '') {
+				document.getElementById('dz').value = obj.dz;
+			}
+			if(obj.dh != '') {
+				document.getElementById('dh').value = obj.dh;
+			}
+			if(obj.khh != '') {
+				document.getElementById('khh').value = obj.khh;
+			}
+			if(obj.yhzh != '') {
+				document.getElementById('yhzh').value = obj.yhzh;
+			}
+			if(obj.yx != '') {
+				document.getElementById('yx').value = obj.yx;
+			}
 		};
 		
 		// 税号校验
@@ -361,9 +372,6 @@
 				if (null != yx && "" != yx) {
 					firm += "邮箱:" + yx +  "</br>";
 				}
-				// if (null != sjh && "" != sjh) {
-				// 	firm += "手机:" + sjh + "。";
-				// }
 				title = "信息确认";
 				$("#confirmBtn").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
