@@ -1,0 +1,16 @@
+.middel ul {
+	width: 80%;
+	height: 50px;
+	line-height: 50px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    border-bottom: 1px dashed #ECECEC;
+}
+.middel li.fl {
+	width: 35%;
+	color: #94969C;
+}
+.middel li.fr {
+	width: 65%;
+	color: #424347;
+}

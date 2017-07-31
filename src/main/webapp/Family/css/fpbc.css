@@ -1,0 +1,56 @@
+
+.middel .right {
+	text-align: center;
+}
+.right img {
+	vertical-align:middle;
+}
+.right span {
+	color: #343434;
+	vertical-align:middle;
+}
+.entry {
+	width: 85%;
+	height: 40px;
+	line-height: 40px;
+	margin: 0px auto;
+    box-sizing: border-box;
+    border-bottom: 1px dashed #ECECEC;
+}
+.entry label {
+	width: 30%;
+	color: #7B7F87;
+	font-size: 14px;
+}
+.entry span {
+	width: 70%;
+	font-size: 14px;
+}
+.ewm {
+	width: 85%;
+	height: 75px;
+	margin: 0 auto 10px;
+	background-color: #F1F8FE;
+	padding: 5px;
+	box-sizing: border-box;
+}
+.ewm img {
+	width: 65px;
+	height: 65px;
+}
+.ewm span {
+	width: 70%;
+	font-size: 14px;
+	padding-top: 10px;
+	color: #343434;
+}
+#sure {
+	width: 50%;
+}
+#revise {
+	width: 30%;
+	background-color: #86C994;
+}
+.fr {
+	color: #ccc;
+}

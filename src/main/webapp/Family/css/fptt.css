@@ -1,0 +1,23 @@
+.entry {
+	width: 90%;
+	height: 40px;
+	line-height: 40px;
+	margin: 0px auto;
+    box-sizing: border-box;
+    border-bottom: 1px dashed #ECECEC;
+}
+.entry:last-child {
+	border-bottom: none;
+}
+.entry label {
+	width: 40%;
+	color: #7B7F87;
+	font-size: 14px;
+	margin-right: 20px;
+}
+.entry input {
+	width: 60%;
+}
+.middel {
+	margin-top: 0px;
+}

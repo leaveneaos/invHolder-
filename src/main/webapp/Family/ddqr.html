@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>订单确认</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/ddqr.css">
+</head>
+<body>
+	<header>
+		<img src="../images/nav.png">
+	</header>
+	<section class="main">
+		<div class="shadow1"></div>
+		<div class="shadow2"></div>
+		<div class="content">
+			<div class="top">
+				<span class="one">订单确认</span><span class="one">&gt;</span>
+				<span>订单明细</span><span>&gt;</span>
+				<span>发票抬头</span><span>&gt;</span>
+				<span>发票保存</span>
+			</div>
+			<div class="middel" style="height: 240px;">
+		        <ul>
+		            <li class="fl">门店编号 :</li>
+		            <li class="fr" id="sn">123</li>
+		        </ul>
+		         <ul>
+		            <li class="fl">序&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号 :</li>
+		            <li class="fr" id="order">4123</li>
+		        </ul>
+		        <ul>
+		            <li class="fl">交易日期 :</li>
+		            <li class="fr" id="orderTime">142513</li>
+		        </ul>
+		        <ul>
+		            <li class="fl">合计金额 :</li>
+		            <li class="fr" id="price">13513513515</li>
+		        </ul>
+			</div>
+			<div class="bottom">
+				<button id="sure" type="submit">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<p class="company fl">上海容津信息技术有限公司</p>
+		<p class="help fr"><a href="bangzhu.html">遇到问题?</a></p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function () {
+
+	        $.post(
+	        	"待定", 
+	        	{}, 
+	        	function (data) {
+		            $('#sn').html(data.orderNo);
+		            $('#order').html(data.order);
+		            $('#orderTime').html(data.orderTime);
+		            $('#price').html(data.price);
+	        	}
+        	)
+	    })
+	    function sure() {
+	        window.location.href = "待定";
+	    }
+	</script>
+</body>
+</html>

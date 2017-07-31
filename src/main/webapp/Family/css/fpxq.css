@@ -1,0 +1,73 @@
+.middel {
+	margin-top: 0;
+}
+.middel ul {
+	width: 80%;
+	height: 30px;
+	font-size: 14px;
+	line-height: 30px;
+	margin: 0 auto;
+    box-sizing: border-box;
+}
+.middel li.fl {
+	width: 35%;
+	color: #7B7F87;
+}
+.middel li.fr {
+	width: 65%;
+}
+.topName {
+    height: 40px;
+    line-height: 40px;
+    background-color: #F7F8FA;
+    padding: 0 10px;
+    border-bottom: 1px dashed #D6D6D6;
+}
+.kprq {
+	border-bottom: 1px dashed #ECECEC;
+}
+.ck {
+	width: 100%;
+	text-align: center;
+	margin: 10px auto;
+}
+.ck button {
+	border-radius: 3px;
+	background-color: #0E8EE7;
+}
+.bottom {
+	height: auto;
+	line-height: normal;
+	text-align: left;
+	border-top: 1px dashed #D7D7D9;
+	padding: 10px;
+	box-sizing: border-box;
+}
+.btoTip {
+	font-size: 13px;
+}
+.save {
+	color: #666;
+}
+.icon {
+   	vertical-align: -10PX;
+  	fill: currentColor;
+   	overflow: hidden;
+}
+.yx .icon {
+	width: 35px;
+	height: 35px;
+}
+.wx .icon {
+	width: 18px;
+	height: 18px;
+}
+.zfb .icon {
+	width: 25px;
+	height: 25px;
+}
+.yx,.wx,.zfb {
+	color: #666;
+	padding: 0 30px;
+	box-sizing: border-box;
+}
