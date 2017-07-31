@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>电子发票</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="../css/iconfont.css">
+
+	<!-- 标准mui.css -->
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<!-- App自定义的css -->
+	<link rel="stylesheet" type="text/css" href="../css/app.css" />
+	<style type="text/css">
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+			border: none;
+			border: 0;
+		}
+		.mui-col-xs-4 {
+			width: 33.33333333%;
+		}
+		.mui-grid-view.mui-grid-9 {
+			border-left: 0;
+		}
+	</style>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav">
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+	<h1 class="mui-title">发票提取</h1>
+</header>
+
+<div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
+	<section>
+		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
+			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+				<a id="you">
+					<span class="mui-icon iconfont icon-youxiang"></span>
+					<div class="mui-media-body" style="color: #fff;">邮箱</div>
+				</a>
+			</li>
+			<!-- <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+				<a id="fpj">
+					<span class="mui-icon iconfont icon-fapiaoguanli1"></span>
+					<div class="mui-media-body" style="color: #fff;">发票夹</div>
+				</a>
+			</li> -->
+			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+				<a id="zfb">
+					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
+					<div class="mui-media-body" style="color: #fff;">支付宝</div>
+				</a>
+			</li>
+		</ul>
+	</section>
+	<input id="gsdm" name="gsdm" type="text"/>
+	<input id="tqm" name="tqm" type="text"/>
+	<section id=parentIndustryUL>
+
+	</section>
+
+	<footer>
+		<p class="company">上海容津信息技术有限公司</p>
+		<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
+	</footer>
+</div>
+
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/wxkb.js"></script>
+<script src="../js/fpj.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var serialorder;
+    var gsdms = location.href.split('?')[1].split('&')[0].split('=')[1];
+    var tqms = location.href.split('?')[1].split('&&')[1].split('=')[1];
+
+
+    $(function() {
+        $('#gsdm').val(gsdms);
+        $('#tqm').val(tqms);
+        var gsdm = $('#gsdm').val();
+        var tqm = $('#tqm').val();
+
+        alert(gsdm);
+        alert(tqm);
+        $.post(
+            "../fpsession",
+            {
+                "tqm" : tqm,
+                "gsdm":  gsdm
+			},
+            function(data) {
+                    serialorder = data.serialorder;
+                    var pdfdzs = data.pdfdzs;
+                    if (serialorder != null && serialorder != "") {
+                      var  pdfdz = pdfdzs.split(",");
+                        $.each(
+                            pdfdz,
+                            function(n, value) {
+                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+                            }
+                        );
+                    } else {
+                        window.location.href = "../smtq/demo.html?time=" + new Date().getTime();
+                    }
+
+            }
+        );
+
+
+        $('#you').click(function() {
+             window.location.href = "../mbyouxiang.html?gsdm="+gsdm+"&&tqm="+tqm+"&&_t=" + new Date().getTime();
+        });
+        // if (urlinfo.indexOf("isAlipay=true") != -1) {
+            $("#zfb").click(function () {
+                window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+            });
+        // };
+        // $('#fpj').click(function() {
+        //  	 window.location.href = "../waitting.html?_t=" + new Date().getTime();
+        // });
+    })
+</script>
+<script src="../js/mui.min.js"></script>
+<script src="../js/mui.zoom.js"></script>
+
+<script>
+    mui.init();
+</script>
+</body>
+</html>
