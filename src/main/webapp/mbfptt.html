@@ -136,9 +136,15 @@
 		$(function(){
             $('#gsdm').val(gsdms);
             $('#tqm').val(tqms);
-			/*$.ajax({
+            var tqm = $('#tqm').val();
+            var gsdm =   $('#gsdm').val();
+			$.ajax({
 				url : '../spmx',
 				method : 'post',
+				data:{
+				    tqm:tqm,
+					gsdm:gsdm
+				},
 				success : function(data) {
 					var items = data.jymxsqList;
 					if(items == '' || items == null) {
@@ -154,7 +160,7 @@
 					}
                     
 				}
-			});*/
+			});
 		});
 
 		$.post(
@@ -387,7 +393,7 @@
 				$("#sqkp").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
 					if(r){
-                        alert(11);
+                        //alert(11);
 						$.post(
 							"../sqkpsession",/*申请开票  信息放入session*/
 							{
