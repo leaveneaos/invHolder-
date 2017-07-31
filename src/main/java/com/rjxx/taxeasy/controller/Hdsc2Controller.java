@@ -55,9 +55,9 @@ public class Hdsc2Controller extends BaseController {
 
     @RequestMapping
     @ResponseBody
-    public String index(String gsdm) throws Exception {
+    public String index() throws Exception {
 
-        return init(gsdm);
+        return init("hdsc");
     }
 
     private String init(String gsdm) throws Exception {
@@ -87,8 +87,6 @@ public class Hdsc2Controller extends BaseController {
             } else {
                 if(null!=gsdm&&gsdm.equals("hdsc")){
                     response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
-                }if(null!=gsdm&&gsdm.equals("hongkang")){
-                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
                 }
                 return null;
             }
@@ -101,12 +99,12 @@ public class Hdsc2Controller extends BaseController {
 //            response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?_t=" + System.currentTimeMillis());
 //            return null;
 //        }
-        if(null!=gsdm&&gsdm.equals("hdsc")){
+       /* if(null!=gsdm&&gsdm.equals("hdsc")){
             response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
         }if(null!=gsdm&&gsdm.equals("hongkang")){
             response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
-        }
-       // response.sendRedirect(request.getContextPath() + "/" + gsdm + ".html?gsdm="+gsdm);
+        }*/
+        response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
         return null;
     }
 
@@ -150,7 +148,7 @@ public class Hdsc2Controller extends BaseController {
             // 关闭连接 ,释放资源
             client.getConnectionManager().shutdown();
         }
-        response.sendRedirect(request.getContextPath() + "/" + state + "1.html?_t=" + System.currentTimeMillis());
+        response.sendRedirect(request.getContextPath() + "/" + state + "_page.html?_t=" + System.currentTimeMillis());
         return;
     }
 
@@ -164,19 +162,19 @@ public class Hdsc2Controller extends BaseController {
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
           List<Kpls> list = new ArrayList<>();
 
-            if(null!=gsdm&&gsdm.equals("hdsc")){
+            //if(null!=gsdm&&gsdm.equals("hdsc")){
                 Map map = new HashMap<>();
                 map.put("khh", khh);
                 map.put("gsdm", gsdm);
                 map.put("month", "");
                  list = jylsService.findBykhh(map);
-            }else  if(null!=gsdm&&gsdm.equals("hongkang")){
+           /* }else  if(null!=gsdm&&gsdm.equals("hongkang")){
                 Map map = new HashMap<>();
                 map.put("tqm", khh);
                 map.put("gsdm", gsdm);
                 map.put("month", "");
                 list = jylsService.findBykhh(map);
-            }
+            }*/
             boolean f = true;
             for (int i = 0; i < list.size(); i++) {
                 if (!list.get(0).getFpztdm().equals("00")) {
@@ -212,14 +210,14 @@ public class Hdsc2Controller extends BaseController {
         Map map = new HashMap<>();
 
         List<Kpls> list = null;
-        if(null!=gsdm&&gsdm.equals("hdsc")){
+        //if(null!=gsdm&&gsdm.equals("hdsc")){
             map.put("khh", khh);
             map.put("gsdm", gsdm);
-        }
-        if(null!=gsdm&&gsdm.equals("hongkang")){
+       // }
+        /*if(null!=gsdm&&gsdm.equals("hongkang")){
             map.put("tqm", khh);
             map.put("gsdm", gsdm);
-        }
+        }*/
         if (month.equals("this")) {
             map.put("this", "  date_format(b.kprq,'%Y-%m')=date_format(now(),'%Y-%m')");
             list = jylsService.findBykhh(map);
