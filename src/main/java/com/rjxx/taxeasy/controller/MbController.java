@@ -1,10 +1,7 @@
 package com.rjxx.taxeasy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjxx.taxeasy.bizcomm.utils.DiscountDealUtil;
-import com.rjxx.taxeasy.bizcomm.utils.FpclService;
-import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
-import com.rjxx.taxeasy.bizcomm.utils.SendalEmail;
+import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
@@ -78,8 +75,9 @@ public class MbController extends BaseController {
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/mb", method = RequestMethod.GET)
-    public void index(String gsdm) throws Exception{
+    @RequestMapping(value = "/m", method = RequestMethod.GET)
+    public void index(String g) throws Exception{
+        String gsdm = g;
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm",gsdm);
         request.getSession().setAttribute("gsdm",gsdm);
@@ -94,14 +92,22 @@ public class MbController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "/ldyx/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
+                        + url + "/m/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
+                //宏康页面已经有了,不跳转模板
+                if(null!=gsdm&&gsdm.equals("hongkang")){
+                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+                }
                 response.sendRedirect(request.getContextPath() + "/mb_page.html?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
                 return;
             }
         } else {
+            //宏康页面已经有了,不跳模板
+            if(null!=gsdm&&gsdm.equals("hongkang")){
+                response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+            }
             response.sendRedirect(request.getContextPath() + "/mb_page.html?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
             return;
         }
@@ -144,10 +150,12 @@ public class MbController extends BaseController {
             //关闭连接,释放资源
             client.getConnectionManager().shutdown();
         }
-        if(state.equals("ldyx")){
-            response.sendRedirect(request.getContextPath() + "/mb_page.html?gsdm="+state+"&&_t="+System.currentTimeMillis() );
+        //宏康页面已经有了,不跳模板
+        if(state.equals("hongkang")){
+            response.sendRedirect(request.getContextPath() + "/" + state + "_page.html?_t=" + System.currentTimeMillis());
             return;
         }
+        response.sendRedirect(request.getContextPath() + "/mb_page.html?gsdm="+state+"&&_t="+System.currentTimeMillis() );
     }
     @RequestMapping(value = "/bangzhu")
     @ResponseBody
@@ -199,17 +207,17 @@ public class MbController extends BaseController {
             Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
             if(null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
                 //需要调用接口获取开票信息
-                System.out.println("开始调用接口+++++++++++");
+                System.out.println("start+++++++++++");
                 //Map resultMap1 = new HashMap();
                 //全家调用接口 解析xml
                 if(null!=gsdm && gsdm.equals("family")){
                     resultMap=getDataService.getData(tqm,gsdm);
                 }
                 //绿地优鲜 解析json
-              /*  else if(map.get("gsdm").equals("ldyx")){
-
+               else if(map.get("gsdm").equals("ldyx")){
+                    System.out.println("ldyx+++++++++++++++++Strat");
                     //第一次请求url获取token 验证
-                    resultMap=getDataService.getldyxFirData(tqm,gsdm);
+                    /*resultMap=getDataService.getldyxFirData(tqm,gsdm);
                     //创建时间
                     Long  crateDateTime = (long) request.getSession().getAttribute("crateDateTime");
                     //过期时间
@@ -253,8 +261,13 @@ public class MbController extends BaseController {
                             //发送第二次请求
                             resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
 
-                        }
-                }*/
+                        }*/
+
+                    //直接获取数据
+                    // http://10.217.223.34:8081/querysale/queryticket
+                    String token ="";
+                    resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
+                }
             }
             List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
             List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
@@ -314,7 +327,7 @@ public class MbController extends BaseController {
                     request.getSession().setAttribute(gsdm+tqm+"resultMap",resultMap);
                 }
                 if(jymxsqList!=null) {
-                    request.getSession().setAttribute(gsdm+tqm + "jymxsqList", jymxsqList);
+                    request.getSession().setAttribute(gsdm+tqm+"jymxsqList", jymxsqList);
                 }
                 request.getSession().setAttribute(gsdm+"|tqm",tqm);
                 //request.getSession().setAttribute(gsdm+tqm+"resultMap","1");
@@ -337,10 +350,10 @@ public class MbController extends BaseController {
      */
     @RequestMapping(value = "/spmx")
     @ResponseBody
-    public Map<String,Object> spmx(){
+    public Map<String,Object> spmx(String tqm,String gsdm){
         Map<String, Object> result = new HashMap<String, Object>();
 
-        List<Jymxsq> jymxsqList = (List)request.getSession().getAttribute("jymxsqList");
+        List<Jymxsq> jymxsqList = (List)request.getSession().getAttribute(gsdm+tqm+"jymxsqList");
         result.put("jymxsqList",jymxsqList);
         return result;
     }
@@ -423,7 +436,10 @@ public class MbController extends BaseController {
             return result;
         }
         try{
-            List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
+            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList);
+            String resultxml=HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+            logger.info("-------返回值---------"+resultxml);
+           /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
             //复制一个新的list用于生成处理表
             List<Jymxsq> jymxsqTempList = new ArrayList<Jymxsq>();
             jymxsqTempList = BeanConvertUtils.convertList(jymxsqList, Jymxsq.class);
@@ -432,11 +448,13 @@ public class MbController extends BaseController {
             List jyxxsqlist=new ArrayList();
             jyxxsqlist.add(jyxxsq);
             List resultList=null;
-            if(jyxxsq.getGsdm().equals("ldyx")){
-                resultList =  fpclService.zjkp(jyxxsqlist,"01");
-            }
-            request.getSession().setAttribute("serialorder",resultList.get(0));
-            result.put("msg", "1");
+                if(jyxxsq.getGsdm().equals("Family")){
+                    resultList =  fpclService.skdzfp(jyxxsqlist,"03");
+                }else if(jyxxsq.getGsdm().equals("ldyx")){
+                    resultList =  fpclService.zjkp(jyxxsqlist,"01");
+                }
+                request.getSession().setAttribute("serialorder",resultList.get(0));
+                result.put("msg", "1");*/
         }catch (Exception e){
             e.printStackTrace();
         }
