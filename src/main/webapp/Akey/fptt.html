@@ -21,6 +21,21 @@
 			border-top-left-radius: 10px; 
 			border-top-right-radius: 10px; 
 		}
+		.mui-input-row.data-bg {
+			background-color: #BFBDBF;
+			border-bottom-left-radius: 10px; 
+			border-bottom-right-radius: 10px; 
+		}
+		.kpje {
+			position: relative;
+		}
+		.mui-input-clear.data-je {
+			background-color: #fff;
+			width: 50%;
+			height: 45px;
+			position: absolute;
+			top: 3px;
+		}
 	</style>
 </head>
 <body>
@@ -30,18 +45,22 @@
 			<form class="mui-input-group">
 				<div class="mui-input-row">
 					<label>购方名称</label>
-					<input type="text" class="mui-input-clear" placeholder="填写准确的抬头名称" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+					<input type="text" class="mui-input-clear" placeholder="填写准确的抬头名称" data-input-clear="5">
 				</div>
 				<div class="mui-input-row">
 					<label>购方税号</label>
-					<input type="text" class="mui-input-clear" placeholder="输入纳税人识别号" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+					<input type="text" class="mui-input-clear" placeholder="输入纳税人识别号" data-input-clear="5">
 				</div>
 				<div class="mui-input-row">
 					<label>邮箱地址</label>
-					<input type="text" class="mui-input-clear" placeholder="收票人电子邮箱" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+					<input type="text" class="mui-input-clear" placeholder="收票人电子邮箱" data-input-clear="5">
 				</div>	
 			</form>
-			<div class="mui-card">
+			<div class="mui-input-row data-bg">
+				<label class="kpje">开票金额</label>
+				<input type="text" class="mui-input-clear data-je" data-input-clear="5">
+			</div>
+			<!-- <div class="mui-card">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell mui-collapse mui-active">
 						<a class="mui-navigate-right" href="#">其他信息</a>
@@ -67,7 +86,7 @@
 						</div>
 					</li>
 				</ul>
-			</div>
+			</div> -->
 		</div>	
 	</section>
 	<script src="../js/mui.min.js"></script>

@@ -23,6 +23,10 @@
 		    background-color: #41B0E8;
 		    border-radius: 6px;
 		    border: none;
+			outline:none;
+		}
+		#btn {
+			vertical-align:middle; 
 		}
 	</style>
 </head>
@@ -36,7 +40,7 @@
 	</section>
 
 	<section class="mui-content">		
-		<div class="mui-content-padded" style="margin: 15px;">
+		<div class="mui-content-padded" style="margin: 10px;">
 			<form class="mui-input-group">
 				<div class="mui-input-row">
 					<input type="text" class="mui-input-clear" placeholder="请点此输入用户名" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
@@ -48,10 +52,11 @@
 		</div>
 		<div class="data-rem">
 			<div class="mui-input-row">
-				<input type="checkbox" name="" id=""><span>记住用户名和密码</span>
+				<input type="checkbox" name="" id="btn">
+				<span>记住用户名和密码</span>
 			</div>
 		</div>
-			<button type="button" class="mui-btn mui-btn-primary mui-btn-block">提交绑定</button>
+		<button type="button" class="mui-btn mui-btn-primary mui-btn-block">提交绑定</button>
 	</section>
 
 	<script src="../js/mui.min.js"></script>

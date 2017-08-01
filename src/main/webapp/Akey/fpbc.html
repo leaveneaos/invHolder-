@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>发票保存</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" href="../css/mui.min.css">
+
+	<style type="text/css">
+		.mui-content-padded {
+			margin: 30px auto;
+			text-align: center;
+		}
+	   	.confirm {
+   		 	margin: 0 10px;
+		    width: 30px;
+		    height: 30px;
+		    display: inline-block;
+		    background-color: #6555FA;
+		    border: 1px solid #ddd;
+		    border-radius: 20px;
+	   	}
+	   	.mui-icon-checkmarkempty {
+	   		text-align: center;
+	   	}
+	   	.mui-icon-checkmarkempty:before {
+	   		color: #fff;
+	   		font-size: 30px;
+	   		line-height: 26px;
+	   	}
+	   	.mui-input-group {
+	   		background-color: transparent;
+	   		text-align: center;
+	   		color: #575757;
+	   	}
+	   	.data-row {
+			width: 75%;
+			height: 40px;
+			line-height: 40px;
+			margin: 0px auto;
+		    box-sizing: border-box;
+		    border-bottom: 1px dashed #ECECEC;
+		}
+		.data-row label {
+			width: 30%;
+			color: #7B7F87;
+			font-size: 14px;
+			float: left;
+		}
+		.data-row span {
+			width: 70%;
+			font-size: 14px;
+			float: right;
+		}
+		.mui-btn-outlined {
+	   		font-size: 16px;
+		    width: 85%;
+		    margin: 10px auto;
+		    padding: 5px 0;
+		    box-sizing: border-box;
+		    background-color: #fff;
+		    border-radius: 6px;
+		    border: none;
+			outline:none;
+		}
+	</style>
+</head>
+<body>
+	<section class="mui-content">
+		<div class="mui-content-padded">
+			<a  class="confirm">
+				<span class="mui-icon mui-icon-checkmarkempty"></span>
+			</a>
+			<span>提交成功</span>
+		</div>
+
+		<div>
+			<form class="mui-input-group">
+				<div class="data-row">
+					<label>发票抬头：</label>
+					<span id="fptt">5155165</span>
+				</div>
+				<div class="data-row">
+					<label>购方税号：</label>
+					<span id="gfsh">5165165455165</span>
+				</div>
+				<div class="data-row">
+					<label>价税合计：</label>
+					<span id="jshj">5</span>	
+				</div>
+				<div class="data-row">
+					<label>邮箱地址：</label>
+					<span id="yxdz">5165165455165</span>	
+				</div>
+    		</form>
+		</div>
+		<button type="button" class="mui-btn mui-btn-outlined mui-btn-block">继续开票</button>
+	</section>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/mui.min.js"></script>
+
+	<script type="text/javascript">
+
+	</script>
+</body>
+</html>
