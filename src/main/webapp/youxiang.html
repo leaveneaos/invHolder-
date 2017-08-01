@@ -71,7 +71,7 @@
 			var youxiang = $('#username').val();
 			if (null == youxiang || "" == youxiang) {
 				$('#cwxx').html("请输入邮箱!");
-			} else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+			} else if (/^([a-zA-Z0-9]|[._])+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 					.test(youxiang)) {
 				$('#cwxx').html("正在发送,请关注您的邮箱!");
 				$('#yjfs').attr('disabled', "true")

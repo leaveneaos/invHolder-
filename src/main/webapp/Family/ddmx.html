@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>订单明细
+	</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/ddmx.css">
+</head>
+<body>
+	<header>
+		<img src="../images/nav.png">
+	</header>
+	<section class="main">
+		<div class="shadow1"></div>
+		<div class="shadow2"></div>
+		<div class="content">
+			<div class="top">
+				<span>订单确认</span><span>&gt;</span>
+				<span class="two">订单明细</span><span class="two">&gt;</span>
+				<span>发票抬头</span><span>&gt;</span>
+				<span>发票保存</span>
+			</div>
+			<div class="middel">
+		    	<div class="title th">
+					<span class="name">品名</span>
+					<span class="num">数量</span>
+					<span class="price">金额</span>
+		    	</div>
+		    	<div class="title">
+					<span class="name">663444444</span>
+					<span class="num">231</span>
+					<span class="price">2133</span>
+		    	</div>
+		    	<div class="title">
+					<span class="name">663444444</span>
+					<span class="num">231</span>
+					<span class="price">2133</span>
+		    	</div>
+			</div>				
+			<div class="bottom btoPrice">
+				<ul>
+		            <li class="total">合计开票金额 :</li>
+		            <li class="totPrice">135114513515</li>
+		        </ul>
+			</div>			 
+		</div>
+	</section>
+	<footer>
+		<button id="sure" type="submit" value="">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/iconfont.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$.ajax({
+				url : 'base/spmx',
+				method : 'post',
+				success : function(data) {
+						var items = data.jymxsqList;
+						var html='';
+                        var zje = 0;
+	    				for(var i = 0; i < items.length; i++){
+
+	    				    zje += items[i].spje/1 + items[i].spse/1;
+
+	    					html+="<div><span>"+ items[i].spmc+"</span><span>"+ items[i].sps+"</span><span>"+ (items[i].spje/1+items[i].spse/1)+"</span></div>";
+	    				}
+	    				$('.totPrice').html(zje);
+	    				//在页面显示数据
+	    				$(".title").append(html);
+				}
+			});
+		});
+		function sure(){
+			window.location.href = "fptt.html?time="+new Date();
+		}
+	</script>
+</body>
+</html>

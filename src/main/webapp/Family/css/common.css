@@ -1,0 +1,168 @@
+html,body {
+	margin: 0 auto;
+	padding: 0;
+	overflow: hidden;
+	overflow-y: auto;
+	height: 100%;
+	max-width: 800px;
+}
+ul,ol {
+	margin: 0;
+	padding: 0;
+}
+header img{
+	width: 100%;
+}
+body {
+	background: url('../../images/img.png') no-repeat;
+	background-size:100% 100%;
+	background-attachment: fixed;
+}
+ul, ol, li, a{
+	list-style: none;
+}
+a {
+	text-decoration:none
+}
+footer {
+	position: fixed;
+	padding: 0px 20px;
+	bottom: 0px;
+	width: 100%;
+    box-sizing: border-box;
+    max-width: 800px;
+}
+button,input {
+	border: none;
+	outline:none;
+}
+button {
+	width: 80%;
+	height: 36px;
+	line-height: 36px;  /*解决在IE下文字显示不出问题*/
+	background-color: #4BB4F7;
+	list-style-type: none; 
+	color: #fff;
+	border-radius: 18px;
+}
+.fl {
+	float: left;
+}
+.fr	{
+	float: right;
+}
+.shadow1 {
+	width: 85%;
+	background-color: #fff;
+	height: 8px;
+	margin: 0 auto;
+	opacity: 0.6;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.shadow2 {
+	width: 92%;
+	background-color: #fff;
+	height: 10px;
+	margin: 0 auto;
+	opacity: 0.8;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.main {
+	margin: 15px auto;
+	width: 85%;
+}
+.content {
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 50px 5px rgb(74,166,229);
+}
+.top {
+	text-align: center;
+	height: 50px;
+	line-height: 50px;
+	background-color: #F7F8FA;
+	font-size: 13px;
+	color: #ccc;
+	padding: 0 10px;
+	border-bottom: 1px solid #D6D6D6;
+}
+.one,.two,.three,.four {
+	color: #4BB4F7;
+}
+.middel {
+	width: 100%;
+	margin-top: 15px;
+	border-bottom: 1px dashed #D7D7D9;
+}
+.bottom {
+	width: 100%;
+	height: 100px;
+	line-height: 100px;
+	text-align: center;
+	position: relative;
+}
+.bottom:before {
+	position: absolute;
+    left: -10px;
+    top: -8px;
+    content: "";
+    width: 16px;
+    height: 16px;
+    background-color: #4AA6E6;
+    border-radius: 8px;
+}
+.bottom:after {
+	position: absolute;
+    right: -10px;
+    top: -8px;
+    content: "";
+    width: 16px;
+    height: 16px;
+    background-color: #4AA6E6;
+    border-radius: 8px;
+}
+.company {
+	color: #4C4C4C;
+}
+.help a {
+	color: #4C4C4C;
+}
+
+/*模态框*/
+.mask {      
+	height: 100%; 
+    position: absolute; 
+    top: 0px; 
+    left: 0px;  
+    filter: alpha(opacity=60); 
+    background-color: #777;     
+    z-index: 1002;      
+    opacity:0.8; 
+    -moz-opacity:0.8;     
+} 
+#loading,.loadingImg {
+    z-index:10001;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+} 
+#loading {
+	width: 70%;
+}
+.loadingImg {
+	top: -50%;
+	width: 40%;
+}   
+.state,.wait{
+	color: #fff;
+	text-align: center;
+}
+.state {
+	font-size: 16px;
+}
+.wait {
+	font-size: 14px;
+}

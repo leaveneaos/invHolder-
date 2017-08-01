@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>发票保存</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/fpbc.css">
+</head>
+<body>
+	<header>
+		<img src="../images/nav.png">
+	</header>
+	<section class="main">
+		<div class="shadow1"></div>
+		<div class="shadow2"></div>
+		<div class="content">
+			<div class="top">
+				<span>订单确认</span><span>&gt;</span>
+				<span>订单明细</span><span>&gt;</span>
+				<span>发票抬头</span><span>&gt;</span>
+				<span class="four">发票保存</span>
+			</div>
+			<div class="middel">
+				<div class="right">
+					<img src="../images/right.png">
+					<span>请确认开票信息</span>
+				</div>
+				<form>
+			        <div class="entry">
+			            <label class="fl">发票抬头:</label>
+			            <span class="fr" id="fptt">123</span>
+			        </div>
+			         <div class="entry">
+			            <label class="fl">购方税号:</label>
+			            <span class="fr" id="gfsh">41567891235647894523</span>
+			        </div>
+			        <div class="entry">
+			            <label class="fl">价税合计:</label>
+			            <span class="fr" id="jshj">142513</span>
+			        </div>
+			        <div class="entry">
+			            <label class="fl">邮箱地址:</label>
+			            <span class="fr" id="yxdz">13513513515</span>
+			        </div>
+				</form>
+				<div class="ewm">
+					<img class="fl" src="../images/fwh.jpg">
+					<span class="fr">长按识别二维码,关注公众号及时收到发票信息</span>
+				</div>
+			</div>
+			<div class="bottom">
+				<button id="revise">修&nbsp;&nbsp;改</button>
+				<button id="sure" type="submit">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<p class="company fl">上海容津信息技术有限公司</p>
+		<p class="help fr"><a href="bangzhu.html">遇到问题?</a></p>
+	</footer>
+	
+	<!-- 遮罩层 -->
+	<div id="mask" class="mask"></div>   
+	<div id="loading"></div> 
+
+	<script src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		// 模态框
+		function showMask(){    
+	        $("#mask").css("height",$(document).height());     
+	        $("#mask").css("width",$(document).width());     
+	        $("#mask").show();  
+	        loading.innerHTML = "<img src='../images/kj.png' class='loadingImg'><p class='state'>发票开具中......</p><p class='wait'>开具时间受网络限制，请耐心等待</p>";   
+	    } 
+	    // $('.company').on('click',function() {
+	    // 	showMask();
+	    // })
+
+		$(function () {
+            $.post(
+                "待定",/*确认信息*/
+                {},
+                function (data) {
+                    $("#fptt").html(data.fptt);
+                    $("#gfsh").html(data.gfsh);
+                    $("#jshj").html(data.jshj);
+                    $("#yxdz").html(data.yxdz);
+                }
+            );           	       
+        }) 
+
+        $('#revise').on('click', function () {
+            window.location.href = 'fptt.html';
+        });    
+
+        $('#sure').on('click',function () {
+			$.post(
+			    "待定",
+				{},
+				function (data) {
+			        if(data.msg == 1) {
+                        window.location.href = 'fpxq.html'
+                    }else{
+                        showMask();
+					}
+                }
+            );
+        })      
+	</script>
+</body>
+</html>

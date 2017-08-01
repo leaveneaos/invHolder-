@@ -1,0 +1,100 @@
+footer {
+	padding: 0;
+}
+button {
+	width: 100%;
+	border-radius: 0px;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+	height: 45px;
+}
+.middel {
+    margin: 0 0 20px;
+    border-bottom: none;
+}
+.title {
+	border-bottom: 1px dashed #ECECEC;
+	font-size: 0;
+    height: 20px;
+	line-height: 20px;
+	color: ;
+}
+.title.th {
+	color: #ccc;
+}
+.name,.num,.price {
+	display: inline-block;
+	text-align: center;
+	font-size: 14px;
+	overflow: hidden;/*裁掉溢出的*/
+	white-space: nowrap;/* 空白区不换行 */
+	text-overflow: ellipsis;/* 溢出的用省略号 */
+}
+.name {
+	width: 50%;
+
+}
+.th .num,.th .price {
+	border-left: 1px dashed #ECECEC;
+	box-sizing:border-box;
+}
+.num {
+	width: 20%;
+}
+.price {
+	width: 30%;
+}
+.bottom {
+	height: auto;
+	line-height: normal;
+	text-align: left;
+	border-top: 1px dashed #D7D7D9;
+	padding: 10px;
+	box-sizing: border-box;
+}
+.btoPrice {
+	text-align: center;
+	height: 85px;
+	font-size: 0;
+	line-height: 65px;
+}
+.btoPrice ul li {
+	display: inline-block;
+}
+.btoPrice .total {
+	font-size: 16px;
+	color: #DE6168;
+}
+.btoPrice .totPrice {
+	font-size: 17px;
+	color: #DE4D4D;
+}
+/*.btoTip {
+	font-size: 13px;
+}
+.payTip {
+
+	color: #ccc;
+}
+.pay {
+
+	background-color: #FEFEE3;
+	padding: 10px;
+	border: 1px solid #F3F0E9;
+	box-sizing: border-box;
+}
+.pay ul {
+	height: 25px;
+	line-height: 25px;
+	border-bottom: 1px dashed #ECECEC;
+}
+.pay ul:last-child {
+	border-bottom: none;
+}
+.icon {
+   	width: 1em;
+  	height: 1em;
+   	vertical-align: -0.15em;
+  	fill: currentColor;
+   	overflow: hidden;
+}*/
