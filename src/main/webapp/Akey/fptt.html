@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>容津信息</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="../css/mui.min.css">
+	<style type="text/css">
+		.mui-card {
+			margin: 0;
+		}
+		header {
+			height: 45px;
+			line-height: 45px;
+			font-weight: bold;
+			margin-top: 15px;
+			text-align: center;
+			background-color: #BFBDBF;
+			color: red;
+			border-top-left-radius: 10px; 
+			border-top-right-radius: 10px; 
+		}
+	</style>
+</head>
+<body>
+	<header>增值税电子普通发票</header>
+	<section class="mui-content">		
+		<div class="mui-content-padded">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>购方名称</label>
+					<input type="text" class="mui-input-clear" placeholder="填写准确的抬头名称" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+				</div>
+				<div class="mui-input-row">
+					<label>购方税号</label>
+					<input type="text" class="mui-input-clear" placeholder="输入纳税人识别号" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+				</div>
+				<div class="mui-input-row">
+					<label>邮箱地址</label>
+					<input type="text" class="mui-input-clear" placeholder="收票人电子邮箱" data-input-clear="5"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+				</div>	
+			</form>
+			<div class="mui-card">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse mui-active">
+						<a class="mui-navigate-right" href="#">其他信息</a>
+						<div class="mui-collapse-content">
+							<form class="mui-input-group">
+								<div class="mui-input-row">
+									<label>单位地址</label>
+									<input type="text" class="mui-input-clear" placeholder="收票单位注册地址" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+								</div>
+								<div class="mui-input-row">
+									<label>电话号码</label>
+									<input type="text" class="mui-input-clear" placeholder="输入公司电话号码" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+								</div>
+								<div class="mui-input-row">
+									<label>开户银行</label>
+									<input type="text" class="mui-input-clear" placeholder="收票单位开户银行" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+								</div>
+								<div class="mui-input-row">
+									<label>银行账号</label>
+									<input type="text" class="mui-input-clear" placeholder="收票单位银行帐号" data-input-clear="3"><span class="mui-icon mui-icon-clear mui-hidden"></span>
+								</div>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>	
+	</section>
+	<script src="../js/mui.min.js"></script>
+</body>
+</html>
