@@ -7,6 +7,8 @@
 	<Drawer>${jyxxsq.kpr!}</Drawer>
 	<Payee>${jyxxsq.skr!}</Payee>
 	<Reviewer>${jyxxsq.fhr!}</Reviewer>
+    <DataSource>${jyxxsq.sjly!}</DataSource>
+    <OpenId>${jyxxsq.openid!}</OpenId>
 	<Seller>
 		<Identifier>${jyxxsq.xfsh!}</Identifier>
 		<Name>${jyxxsq.xfmc!}</Name>
