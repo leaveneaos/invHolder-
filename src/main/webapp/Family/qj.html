@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="css/ddqr.css">
 	<style type="text/css">
 		.middle {
-			padding: 15px 0px;
+			padding: 10px 0px;
 		}
 		.middle form{
 		    padding: 20px;
@@ -38,6 +38,10 @@
 			float: left;
 			border-bottom: 1px solid #ccc;
 		}
+		#cwts {
+			color: red; 
+			margin-left: 23px; 
+		}
 	</style>
 </head>
 <body onload="load()">
@@ -65,6 +69,7 @@
 						<img src="image.jsp" class="data-yzm" name="randImage" id="randImage" onclick="loadimage()"/>
 					</div>
 				</form>
+				<p id="cwts"></p>
 			</div>
 			<div class="bottom">
 				<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
@@ -85,6 +90,36 @@
 			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
 			$('#code').val('');
 		}
+
+		$(function() {
+			function sure() {
+				var tqm = $('#tqm').val();
+				var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+				var code = $('#code').val();
+				$.post(
+					"base/tqyz",
+					{
+						"tqm" : tqm,
+						"code" : code
+					}, 
+					function(data) {
+						if(data.num == 2){
+	                    	window.open("fpxq.html?time=" + new Date());
+						}else if (data.num == 4) {
+							$('#cwts').html("您输入的验证码不正确");
+							loadimage();	
+						}else if(data.num == 5){
+	                        window.location.href = "ddmx.html?time=" + new Date();
+						}else if (data.num == 6) {
+	                        window.location.href = "witting.html?time=" + new Date();
+	                    }else if (data.error != null) {
+	                        $('#cwts').html("数据错误，请重试！");
+	                        loadimage();
+	                    }
+					}
+				);
+			}
+		})
 	</script>
 </body>
 </html>
