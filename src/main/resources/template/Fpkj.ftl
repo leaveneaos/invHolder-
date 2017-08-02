@@ -67,6 +67,14 @@
 				</ProductItem>
 				</#list>
 			</OrderDetails>
+            <Payments>
+                <#list jyzfmxList as jyzfmx>
+                <PaymentItem>
+                    <PayCode>${jyzfmx.zffsDm!}</PayCode>
+                    <PayPrice>${jyzfmx.zfje?c!}</PayPrice>
+                </PaymentItem>
+				</#list>
+            </Payments>
 		</Order>
 	</OrderSize>
 </Request>

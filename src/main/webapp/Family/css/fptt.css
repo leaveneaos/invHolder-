@@ -6,6 +6,9 @@
     box-sizing: border-box;
     border-bottom: 1px dashed #ECECEC;
 }
+.entry:first-child {
+	border-top: 1px solid #ECECEC;
+}
 .entry:last-child {
 	border-bottom: none;
 }
@@ -18,6 +21,34 @@
 .entry input {
 	width: 60%;
 }
-.middel {
+.middle {
 	margin-top: 0px;
+}
+.type {
+    width: 90%;
+    margin: 10px auto;
+	font-size: 0;
+}
+.checkType {
+	font-size: 14px;
+	font-weight: bold;
+    margin: 5px 0px;
+}
+#company,#personal {
+	width: 45%;
+	height: 30px;
+	line-height: 26px;
+	box-sizing: border-box;
+	font-size: 14px;
+	border: 1px solid #ccc;
+}
+#company {
+	margin-right: 5%;
+}
+#personal {
+	margin-left: 5%;
+}
+.checkStyle {
+	background-color: #fff;
+	color: black;
 }

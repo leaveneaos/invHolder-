@@ -1,3 +1,4 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +41,7 @@
 			<div class="mui-input-row">
 				<input type="text" id="tqm" class="mui-input-clear" placeholder="点击此输入发票提取码">
 			</div>
-			<input id="gsdm" name="gsdm" type="text" />
+			<input id="gsdm" name="gsdm" type="hidden" />
 			<div class="mui-input-row">
 				<input type="text" id="code" name="code" placeholder="请输入右侧验证码">
 				<img src="image.jsp" name="randImage" class="data-yzm" id="randImage" onclick="loadimage()"/>

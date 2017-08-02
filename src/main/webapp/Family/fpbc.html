@@ -21,7 +21,7 @@
 				<span>发票抬头</span><span>&gt;</span>
 				<span class="four">发票保存</span>
 			</div>
-			<div class="middel">
+			<div class="middle">
 				<div class="right">
 					<img src="../images/right.png">
 					<span>请确认开票信息</span>
@@ -36,8 +36,8 @@
 			            <span class="fr" id="gfsh">41567891235647894523</span>
 			        </div>
 			        <div class="entry">
-			            <label class="fl">价税合计:</label>
-			            <span class="fr" id="jshj">142513</span>
+			            <label class="fl">发票金额:</label>
+			            <span class="fr" id="fpje">142513</span>
 			        </div>
 			        <div class="entry">
 			            <label class="fl">邮箱地址:</label>
@@ -56,8 +56,8 @@
 		</div>
 	</section>
 	<footer>
-		<p class="company fl">上海容津信息技术有限公司</p>
-		<p class="help fr"><a href="bangzhu.html">遇到问题?</a></p>
+		<p class="company fl">泰易电子发票云服务平台</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
 	
 	<!-- 遮罩层 -->
@@ -73,40 +73,40 @@
 	        $("#mask").show();  
 	        loading.innerHTML = "<img src='../images/kj.png' class='loadingImg'><p class='state'>发票开具中......</p><p class='wait'>开具时间受网络限制，请耐心等待</p>";   
 	    } 
-	    // $('.company').on('click',function() {
-	    // 	showMask();
-	    // })
+	    $('.company').on('click',function() {
+	    	showMask();
+	    })
 
-		$(function () {
-            $.post(
-                "待定",/*确认信息*/
-                {},
-                function (data) {
-                    $("#fptt").html(data.fptt);
-                    $("#gfsh").html(data.gfsh);
-                    $("#jshj").html(data.jshj);
-                    $("#yxdz").html(data.yxdz);
-                }
-            );           	       
-        }) 
+		// $(function () {
+  //           $.post(
+  //               "待定",/*确认信息*/
+  //               {},
+  //               function (data) {
+  //                   $("#fptt").html(data.fptt);
+  //                   $("#gfsh").html(data.gfsh);
+  //                   $("#jshj").html(data.jshj);
+  //                   $("#yxdz").html(data.yxdz);
+  //               }
+  //           );           	       
+  //       }) 
 
-        $('#revise').on('click', function () {
-            window.location.href = 'fptt.html';
-        });    
+  //       $('#revise').on('click', function () {
+  //           window.location.href = 'fptt.html';
+  //       });    
 
-        $('#sure').on('click',function () {
-			$.post(
-			    "待定",
-				{},
-				function (data) {
-			        if(data.msg == 1) {
-                        window.location.href = 'fpxq.html'
-                    }else{
-                        showMask();
-					}
-                }
-            );
-        })      
+  //       $('#sure').on('click',function () {
+		// 	$.post(
+		// 	    "待定",
+		// 		{},
+		// 		function (data) {
+		// 	        if(data.msg == 1) {
+  //                       window.location.href = 'success.html'
+  //                   }else{
+  //                       showMask();
+		// 			}
+  //               }
+  //           );
+  //       })      
 	</script>
 </body>
 </html>

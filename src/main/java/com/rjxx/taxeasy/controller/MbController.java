@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -75,7 +76,7 @@ public class MbController extends BaseController {
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/m", method = RequestMethod.GET)
+    @RequestMapping(value = "/mb", method = RequestMethod.GET)
     public void index(String g) throws Exception{
         String gsdm = g;
         Map<String,Object> params = new HashMap<>();
@@ -92,7 +93,7 @@ public class MbController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "/m/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
+                        + url + "/mb/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
@@ -100,7 +101,7 @@ public class MbController extends BaseController {
                 if(null!=gsdm&&gsdm.equals("hongkang")){
                     response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
                 }
-                response.sendRedirect(request.getContextPath() + "/mb_page.html?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
                 return;
             }
         } else {
@@ -108,7 +109,7 @@ public class MbController extends BaseController {
             if(null!=gsdm&&gsdm.equals("hongkang")){
                 response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
             }
-            response.sendRedirect(request.getContextPath() + "/mb_page.html?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
+            response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
             return;
         }
     }
@@ -155,7 +156,7 @@ public class MbController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/" + state + "_page.html?_t=" + System.currentTimeMillis());
             return;
         }
-        response.sendRedirect(request.getContextPath() + "/mb_page.html?gsdm="+state+"&&_t="+System.currentTimeMillis() );
+        response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+state+"&&_t="+System.currentTimeMillis() );
     }
     @RequestMapping(value = "/bangzhu")
     @ResponseBody
@@ -190,7 +191,6 @@ public class MbController extends BaseController {
             map.put("tqm", tqm);
             map.put("gsdm", gsdm);
 
-
             /*调用接口获取jyxxsq等信息*/
             Map resultMap = new HashMap();
 
@@ -217,18 +217,21 @@ public class MbController extends BaseController {
                else if(map.get("gsdm").equals("ldyx")){
                     System.out.println("ldyx+++++++++++++++++Strat");
                     //第一次请求url获取token 验证
-                    /*resultMap=getDataService.getldyxFirData(tqm,gsdm);
-                    //创建时间
-                    Long  crateDateTime = (long) request.getSession().getAttribute("crateDateTime");
-                    //过期时间
-                    Long  exp  = (long) request.getSession().getAttribute("hmExpiresIn");
-                    //当前时间
-                    Date dateNow = new Date(System.currentTimeMillis());
+                    resultMap=getDataService.getldyxFirData(tqm,gsdm);
+                    if(null!=resultMap.get("accessToken")&&(null==request.getSession().getAttribute("crateDateTime"))){
+                        //放入系统当前时间 直接是毫秒
+                        Long dateTime = System.currentTimeMillis();
+                        request.getSession().setAttribute("crateDateTime",dateTime);//创建时间
+                        request.getSession().setAttribute("accessToken",resultMap.get("accessToken"));//token
+                        request.getSession().setAttribute("expiresIn",resultMap.get("expiresIn"));//过期时间
+                        resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
+                    }
+                    /*Date dateNow = new Date(System.currentTimeMillis());
                     Long dateNowTime = dateNow.getTime();
-
-                    Long sfgq = null;
-                    if(exp!= null){
-
+                    long sfgq = 0;
+                    if(null!=request.getSession().getAttribute("crateDateTime")&&null!=request.getSession().getAttribute("hm")){
+                        Long  crateDateTime = (long) request.getSession().getAttribute("crateDateTime");
+                        Long  exp  = (long) request.getSession().getAttribute("hm");
                         //时间差 = 当前时间- 创建时间
                         Long sjc = dateNowTime - crateDateTime ;
                         //时间差 - 过期时间
@@ -236,23 +239,22 @@ public class MbController extends BaseController {
                     }
 
                     //判断token是否为空 是否过期
-                    if ((request.getSession().getAttribute("accessToken")==null&&request.getSession().getAttribute("accessToken").equals(""))&&(sfgq >= 0)){
+                    if (request.getSession().getAttribute("accessToken")==null
+                            && sfgq >= 0){
                         //放入系统当前时间 直接是毫秒
-
                         Long dateTime = System.currentTimeMillis();
                         //token
                         request.getSession().setAttribute("accessToken",resultMap.get("accessToken"));
                         //放进session时间
                         request.getSession().setAttribute("crateDateTime",dateTime);
                         //过期时间 直接转成毫秒long型
-                        Long expiresInToLong =  (Long) resultMap.get("expiresIn");
-                        Long hmExpiresIn = expiresInToLong * 1000;
-                        request.getSession().setAttribute("expiresIn",hmExpiresIn);
+                        Long ToLong =  (Long) resultMap.get("");
+                        Long hm = ToLong * 1000;
+                        request.getSession().setAttribute("",hm);
                         //获取第一次发送请求的token
                         String token = (String) resultMap.get("accessToken");
                         //发送第二次请求
                         resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
-
                     }else
                         //session中有token 并且token没有过期
                         if((request.getSession().getAttribute("accessToken")!=null&&!request.getSession().getAttribute("accessToken").equals(""))&&(sfgq < 0)){
@@ -260,19 +262,20 @@ public class MbController extends BaseController {
                             String token = (String) request.getSession().getAttribute("accessToken");
                             //发送第二次请求
                             resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
-
                         }*/
 
                     //直接获取数据
                     // http://10.217.223.34:8081/querysale/queryticket
-                    String token ="";
-                    resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
+                    //resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
                 }
             }
             List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
             List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
             List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
-
+            if(null!=jyxxsqList){
+                Jyxxsq jyxxsq=jyxxsqList.get(0);
+                request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
+            }
             if (list.size() > 0) {
                 /*代表申请已完成开票,跳转最终开票页面*/
                 if (opendid != null && !"null".equals(opendid)) {
@@ -329,7 +332,10 @@ public class MbController extends BaseController {
                 if(jymxsqList!=null) {
                     request.getSession().setAttribute(gsdm+tqm+"jymxsqList", jymxsqList);
                 }
-                request.getSession().setAttribute(gsdm+"|tqm",tqm);
+                if(jyzfmxList!=null){
+                    request.getSession().setAttribute(gsdm+tqm+"jyzfmxList",jyzfmxList);
+                }
+                request.getSession().setAttribute(gsdm+"tqm",tqm);
                 //request.getSession().setAttribute(gsdm+tqm+"resultMap","1");
                // request.getSession().setAttribute(gsdm+"|tqm",tqm);
                 //System.out.println(""+session.getAttribute(gsdm+tqm+"resultMap").toString());
@@ -352,9 +358,46 @@ public class MbController extends BaseController {
     @ResponseBody
     public Map<String,Object> spmx(String tqm,String gsdm){
         Map<String, Object> result = new HashMap<String, Object>();
-
         List<Jymxsq> jymxsqList = (List)request.getSession().getAttribute(gsdm+tqm+"jymxsqList");
+        List<Jyzfmx> jyzfmxList = (List)request.getSession().getAttribute(gsdm+tqm+"jyzfmxList");
+        Double zje = (Double) request.getSession().getAttribute(gsdm+tqm+"je");
+        Double bkpje = 0.00;
+        Double sjkpje = 0.00;
+        if(null!=jyzfmxList){
+
+            for (Jyzfmx jyzfmx2 : jyzfmxList){
+                if(jymxsqList.get(0).getDdh().equals(jyzfmx2.getDdh())
+                        &&(jyzfmx2.getZffsDm().equals("A")
+                        ||jyzfmx2.getZffsDm().equals("B")
+                        ||jyzfmx2.getZffsDm().equals("E")
+                        ||jyzfmx2.getZffsDm().equals("F")
+                        ||jyzfmx2.getZffsDm().equals("G")
+                        ||jyzfmx2.getZffsDm().equals("h")
+                        ||jyzfmx2.getZffsDm().equals("I")
+                        ||jyzfmx2.getZffsDm().equals("J")
+                        ||jyzfmx2.getZffsDm().equals("L")
+                        ||jyzfmx2.getZffsDm().equals("N")
+                        ||jyzfmx2.getZffsDm().equals("P")
+                        ||jyzfmx2.getZffsDm().equals("Q")
+                        ||jyzfmx2.getZffsDm().equals("S")
+                        ||jyzfmx2.getZffsDm().equals("V")
+                        ||jyzfmx2.getZffsDm().equals("X")
+                        ||jyzfmx2.getZffsDm().equals("Y")
+                        ||jyzfmx2.getZffsDm().equals("Z"))
+                        ){
+
+                    System.out.println("不开票支付金额为"+jyzfmx2.getZfje());
+                        bkpje+=jyzfmx2.getZfje();
+                }
+                System.out.println("不开票金额为"+bkpje);
+            }
+              sjkpje = zje - bkpje;
+            System.out.println("实际开票金额"+sjkpje);
+        }
+        request.getSession().setAttribute(gsdm+tqm+"sjkpje",sjkpje);
         result.put("jymxsqList",jymxsqList);
+        result.put("jyzfmxList",jyzfmxList);
+        result.put("sjkpje",sjkpje);
         return result;
     }
 
@@ -372,8 +415,6 @@ public class MbController extends BaseController {
         request.getSession().setAttribute(gsdm+tqm+"khh", khh);
         request.getSession().setAttribute(gsdm+tqm+"yhzh", yhzh);
         request.getSession().setAttribute(gsdm+tqm+"yx", yx);
-        ///System.out.println(""+session.getAttribute(gsdm+tqm+"fptt").toString());
-        //System.out.println(""+session.getAttribute(gsdm+tqm+"nsrsbh").toString());
         if(tqm != null && !tqm.equals("")){
             result.put("msg", "1");
             result.put("gsdm",gsdm);
@@ -436,8 +477,8 @@ public class MbController extends BaseController {
             return result;
         }
         try{
-            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList);
-            String resultxml=HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
+            String resultxml=HttpUtils.HttpUrlPost(xml,"RJcb0cb4d18ce7","73e235a15ee5cb022691625a50edae3b");
             logger.info("-------返回值---------"+resultxml);
            /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
             //复制一个新的list用于生成处理表
@@ -461,7 +502,7 @@ public class MbController extends BaseController {
         Tqmtq tqmtq1 = new Tqmtq();
         tqmtq1.setDdh(jyxxsq.getTqm());
         tqmtq1.setLrsj(new Date());
-        tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
+        tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm+tqm+"je"))));
         tqmtq1.setGfmc(fptt);
         tqmtq1.setNsrsbh(nsrsbh);
         tqmtq1.setDz(dz);
@@ -534,6 +575,7 @@ public class MbController extends BaseController {
         result.put("fptt", request.getSession().getAttribute(gsdm+tqm+"fptt"));
         result.put("yx", request.getSession().getAttribute(gsdm+tqm+"yx"));
         result.put("je", request.getSession().getAttribute(gsdm+tqm+"je"));
+        result.put("sjkpje", request.getSession().getAttribute(gsdm+tqm+"sjkpje"));
         System.out.println(""+session.getAttribute(gsdm+tqm+"fptt").toString());
         return  result;
     }

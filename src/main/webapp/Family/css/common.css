@@ -6,17 +6,20 @@ html,body {
 	height: 100%;
 	max-width: 800px;
 }
-ul,ol {
+ul,ol,h1,h2,h3,h4,h5,h6 {
 	margin: 0;
 	padding: 0;
 }
 header img{
 	width: 100%;
 }
-body {
+/*body {
 	background: url('../../images/img.png') no-repeat;
 	background-size:100% 100%;
 	background-attachment: fixed;
+}*/
+body {
+	background-color: #4AA6E6;
 }
 ul, ol, li, a{
 	list-style: none;
@@ -91,7 +94,7 @@ button {
 .one,.two,.three,.four {
 	color: #4BB4F7;
 }
-.middel {
+.middle {
 	width: 100%;
 	margin-top: 15px;
 	border-bottom: 1px dashed #D7D7D9;
@@ -128,6 +131,11 @@ button {
 }
 .help a {
 	color: #4C4C4C;
+}
+.data-yzm {
+	width: 20%;
+	height: 31px;
+	float: right;
 }
 
 /*模态框*/

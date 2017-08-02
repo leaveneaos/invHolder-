@@ -1,7 +1,7 @@
-.middel {
+.middle {
 	margin-top: 0;
 }
-.middel ul {
+.middle ul {
 	width: 80%;
 	height: 30px;
 	font-size: 14px;
@@ -9,11 +9,11 @@
 	margin: 0 auto;
     box-sizing: border-box;
 }
-.middel li.fl {
+.middle li.fl {
 	width: 35%;
 	color: #7B7F87;
 }
-.middel li.fr {
+.middle li.fr {
 	width: 65%;
 }
 .topName {

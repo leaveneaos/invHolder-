@@ -389,7 +389,7 @@ public class LdyxController extends BaseController {
             return result;
         }
         try{
-            String xml=GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList);
+            String xml=GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
             String resultxml=HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
             logger.info("-------返回值---------"+resultxml);
            /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
