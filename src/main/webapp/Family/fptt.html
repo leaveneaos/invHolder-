@@ -22,21 +22,23 @@
 				<span>发票保存</span>
 			</div>
 			<div class="middel">
+				<div class="type">
+					<div class="checkType">抬头类型</div>
+					<button id="company">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
+					<button id="personal" class="checkStyle" type="submit">个人/其他</button>
+				</div>
 		     	<div class="main-msg">
 					<form class="" action="" method="">
 						<div class="entry">
-							<label id="">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
-							<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头">
+							<span style="color: red;">*</span><label id="">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+							<input type="text" name="fptt" id="fptt" placeholder="单位名称(必填)">
 						</div>
 						<div class="entry">
-							<label>购方税号</label>
-							<input id="nsrsbh" maxlength="20"
-							name="nsrsbh" type="text" class="" placeholder="请在半角字符下输入">
+							<span style="color: red;">*</span><label>购方税号</label>
+							<input id="gfsh" maxlength="20"
+							name="gfsh" type="text" class="" placeholder="15,18或20位(必填)">
 						</div>
-						<div class="entry">
-							<label id ="">邮箱地址</label>
-							<input name="yx" id="yx" type="text" class="" placeholder="收票人电子邮箱">
-						</div>
+						
 						
 						<div class="entry">
 							<label>单位地址</label>
@@ -54,6 +56,10 @@
 							<label>银行账号</label>
 							<input id="yhzh" maxlength="50" name="yhzh" type="text" class="" placeholder="收票单位银行帐号">
 						</div>
+						<div class="entry">
+							<label>邮箱地址</label>
+							<input name="yx" id="yx" type="text" class="" placeholder="建议填写，取票更方便">
+						</div>
 		    		</form>
 				</div>
 			</div>
@@ -64,12 +70,34 @@
 	</section>
 	<footer>
 		<p class="company fl">上海容津信息技术有限公司</p>
-		<p class="help fr"><a href="bangzhu.html">遇到问题?</a></p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
 
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
-			
+		$(function() {
+			var fptt = $('#fptt');
+				gfsh = $('#gfsh'),
+				dz = $('#dz'),
+				dh = $('#dh'),
+				khh = $('#khh'),
+				yhzh = $('#yhzh'),
+				yx = $('#yx');
+			var arr = [gfsh,dz,khh,yhzh];
+			$('#personal').on('click',function() {
+				$('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
+				for(var i=0;i<arr.length;i++) {
+					arr[i].parent().css('display','none');
+				}
+
+			})
+			$('#company').on('click',function() {
+				$('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
+				for(var i=0;i<arr.length;i++) {
+					arr[i].parent().css('display','block');
+				}
+			})
+		})
 	</script>
 </body>
 </html>

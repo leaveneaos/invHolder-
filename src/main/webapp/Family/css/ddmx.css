@@ -69,32 +69,3 @@ button {
 	font-size: 17px;
 	color: #DE4D4D;
 }
-/*.btoTip {
-	font-size: 13px;
-}
-.payTip {
-
-	color: #ccc;
-}
-.pay {
-
-	background-color: #FEFEE3;
-	padding: 10px;
-	border: 1px solid #F3F0E9;
-	box-sizing: border-box;
-}
-.pay ul {
-	height: 25px;
-	line-height: 25px;
-	border-bottom: 1px dashed #ECECEC;
-}
-.pay ul:last-child {
-	border-bottom: none;
-}
-.icon {
-   	width: 1em;
-  	height: 1em;
-   	vertical-align: -0.15em;
-  	fill: currentColor;
-   	overflow: hidden;
-}*/
