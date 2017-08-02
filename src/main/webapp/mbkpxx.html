@@ -79,8 +79,8 @@
 					<label  id ="yx2">邮箱地址：</label>
 					<!--<input type="text"  class="mui-input-clear" placeholder="">-->
 				</div>
-				<input id="gsdm" name="gsdm" type="text"/>
-				<input id="tqm" name="tqm" type="text"/>
+				<input id="gsdm" name="gsdm" type="hidden"/>
+				<input id="tqm" name="tqm" type="hidden"/>
     		</form>
 		</section>
 
@@ -120,7 +120,7 @@
                     function (data) {
 
                         $("#fptt2").after("<span class='lht'>" + data.fptt + "<span>")
-                        $("#fpje2").after("<span class='lht'>" + data.je + "<span>")
+                        $("#fpje2").after("<span class='lht'>" + data.sjkpje + "<span>")
                         $("#yx2").after("<span class='lht'>" + data.yx + "<span>")
 
                     }
