@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>订单确认</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/ddqr.css">
+	<style type="text/css">
+		.middle {
+			padding: 15px 0px;
+		}
+		.middle form{
+		    padding: 20px;
+    		box-sizing: border-box;
+		}
+		.qj-img {
+			font-size:0
+		}
+		.qj-img img {
+			width: 100%;
+		}
+		.entry {
+			height: 30px;
+			line-height: 30px;
+		}
+		.entry input {
+			height: 28px;
+			text-indent: 20px;
+		}
+		.entry #tqm {
+			width: 100%;
+			border-top: 1px solid #ccc;
+			border-bottom: 1px solid #ccc;
+		}
+		.entry #code {
+			width: 80%;
+			float: left;
+			border-bottom: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body onload="load()">
+	<header>
+		<img src="../images/nav.png">
+	</header>
+	<section class="main">
+		<div class="shadow1"></div>
+		<div class="shadow2"></div>
+		<div class="content">
+			<div class="top">
+				<span class="one">订单确认</span><span class="one">&gt;</span>
+				<span>订单明细</span><span>&gt;</span>
+				<span>发票抬头</span><span>&gt;</span>
+				<span>发票保存</span>
+			</div>
+			<div class="qj-img"><img src="../images/qj.jpg"></div>
+			<div class="middle">
+		       	<form>
+					<div class="entry">
+						<input type="text" id="tqm" class="mui-input-clear" placeholder="点击此输入发票提取码">
+					</div>
+					<div class="entry">
+						<input type="text" id="code" name="code" placeholder="请输入右侧验证码"> 
+						<img src="image.jsp" class="data-yzm" name="randImage" id="randImage" onclick="loadimage()"/>
+					</div>
+				</form>
+			</div>
+			<div class="bottom">
+				<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<p class="company fl">泰易电子发票云服务平台</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		function loadimage() {
+			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
+		};
+		function load() {
+			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
+			$('#code').val('');
+		}
+	</script>
+</body>
+</html>

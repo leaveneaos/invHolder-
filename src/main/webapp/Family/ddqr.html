@@ -21,10 +21,10 @@
 				<span>发票抬头</span><span>&gt;</span>
 				<span>发票保存</span>
 			</div>
-			<div class="middel" style="height: 240px;">
+			<div class="middle" style="height: 240px;">
 		        <ul>
 		            <li class="fl">门店编号 :</li>
-		            <li class="fr" id="sn">123</li>
+		            <li class="fr" id="orderNo">123</li>
 		        </ul>
 		         <ul>
 		            <li class="fl">序&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号 :</li>
@@ -32,20 +32,20 @@
 		        </ul>
 		        <ul>
 		            <li class="fl">交易日期 :</li>
-		            <li class="fr" id="orderTime">142513</li>
+		            <li class="fr" id="orderTime">0802</li>
 		        </ul>
 		        <ul>
 		            <li class="fl">合计金额 :</li>
-		            <li class="fr" id="price">13513513515</li>
+		            <li class="fr" id="price">200.00</li>
 		        </ul>
 			</div>
 			<div class="bottom">
-				<button id="sure" type="submit">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+				<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
 			</div>
 		</div>
 	</section>
 	<footer>
-		<p class="company fl">上海容津信息技术有限公司</p>
+		<p class="company fl">泰易电子发票云服务平台</p>
 		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
 
@@ -57,7 +57,7 @@
 	        	"待定", 
 	        	{}, 
 	        	function (data) {
-		            $('#sn').html(data.orderNo);
+		            $('#orderNo').html(data.orderNo);
 		            $('#order').html(data.order);
 		            $('#orderTime').html(data.orderTime);
 		            $('#price').html(data.price);
