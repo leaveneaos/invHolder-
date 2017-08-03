@@ -49,6 +49,7 @@
     		top: 13px;
     		right: 15px;
     		background-color: #ccc;
+    		display: none;
 		}
 	</style>
 </head>
@@ -164,6 +165,7 @@
             {},
             function(test) {
 				if(test.success) {
+					$("#getFptt").css('display','block');
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {

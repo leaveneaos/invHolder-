@@ -77,6 +77,7 @@
             top: 13px;
             right: 15px;
             background-color: #ccc;
+            display: none;
         }
         .mui-input-row label  {
             padding: 17px 0px 17px 13px;
@@ -200,6 +201,7 @@
             {},
             function(test) {
                 if(test.success) {
+                    $("#getFptt").css('display','block');
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {
