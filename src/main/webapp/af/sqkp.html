@@ -48,6 +48,7 @@
     		top: 13px;
     		right: 15px;
     		background-color: #ccc;
+    		display: none;
 		}
 		.mui-input-row label  {
 			padding: 17px 0px 17px 13px;
@@ -157,7 +158,7 @@
             {},
             function(test) {
 				if(test.success) {
-
+					$("#getFptt").css('display','block');
                     var option='';
                     var dataList = test.data;
                     for(var i=0;i<dataList.length;i++) {
@@ -249,13 +250,13 @@
 				firm = "税号必须是15,18或20位数字与大写字母组合!";
 				title = "提示";
 	　　　　　　alert(firm, title);
-				return false;
+				return;
 	　　　　}else if (Code.substring(0,1).indexOf(0) == 0) {
 				var btnArray = [ '是' ];
 				firm = "购方税号不符合规定";
 				title = "提示";
 	　　　　　　alert(firm, title);
-				return false;
+				return;
 	        }else if(Code.length == 18){ 
 　　　　　　   	var Ancode;//统一社会信用代码的每一个值
  　　　　　　   var Ancodevalue;//统一社会信用代码每一个值的权重 
@@ -282,7 +283,7 @@
 					firm = "购方税号不符合规定";
 					title = "提示";
 		　　　　　　alert(firm, title);
-					return false;
+					return;
 		 　　　 }
 	 　 	}
 	         return true;
