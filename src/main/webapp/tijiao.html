@@ -246,31 +246,28 @@
 		function CheckSocialCreditCode() { 
 			var Code = $('#nsrsbh').val();
 　　　　	var patrn = /^[0-9A-Z]+$/;
-			//15，18，20位校验及大写校验
 			if ( ((Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) { 
 				var btnArray = [ '是' ];
 				firm = "税号必须是15,18或20位数字与大写字母组合!";
 				title = "提示";
 	　　　　　　alert(firm, title);
-				return;
+				return false;
 	　　　　}else if (Code.substring(0,1).indexOf(0) == 0) {
 				var btnArray = [ '是' ];
 				firm = "购方税号不符合规定";
 				title = "提示";
 	　　　　　　alert(firm, title);
-				return;
+				return false;
 	        }else if(Code.length == 18){ 
 　　　　　　   	var Ancode;//统一社会信用代码的每一个值
  　　　　　　   var Ancodevalue;//统一社会信用代码每一个值的权重 
 		　　　　var total = 0; 
-		　　　　var weightedfactors = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28];//加权因子 
-		　　　　var str = '0123456789ABCDEFGHJKLMNPQRTUWXY';
-		　　　　//不用I、O、S、V、Z 
+		　　　　var weightedfactors = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28];
+		　　　　var str = '0123456789ABCDEFGHJKLMNPQRTUWXY';//不用I、O、S、V、Z
 		　　　　for (var i = 0; i < Code.length - 1; i++) {
 		 　　　　   Ancode = Code.substring(i, i + 1); 
 		　　　　    Ancodevalue = str.indexOf(Ancode); 
 		　　　　    total = total + Ancodevalue * weightedfactors[i];
-		　　　　//权重与加权因子相乘之和 
 		　　　　}
 		 　　　 var logiccheckcode = 31 - total % 31;
 		　　　　if (logiccheckcode == 31){
@@ -285,9 +282,10 @@
 					firm = "购方税号不符合规定";
 					title = "提示";
 		　　　　　　alert(firm, title);
-					return;
+					return false;
 		 　　　 }
 	 　 	}
+	  		return true;
 		};
 		
 		function tk() {
