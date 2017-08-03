@@ -320,9 +320,12 @@
 					title = "提示";
 					alert(firm, title);
 					return;
-			}else if((null!=nsrsbh && nsrsbh!='')){
-				CheckSocialCreditCode();
 			} else {
+				if((null!=nsrsbh && nsrsbh!='')){
+					if(!CheckSocialCreditCode()){
+						return ;
+					}
+				}
 				firm = "发票抬头:" + fptt + "</br>";
 				var nsrsbh = $('#nsrsbh').val();
 				var dz = $('#dz').val();
