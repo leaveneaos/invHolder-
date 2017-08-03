@@ -5,12 +5,8 @@ import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
-import com.rjxx.utils.BeanConvertUtils;
 import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -20,16 +16,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.constraints.Null;
 import java.io.IOException;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 /**
@@ -104,11 +97,11 @@ public class BaseClController extends BaseController {
                 response.sendRedirect(ul);
                 return;
             } else {
-                response.sendRedirect(request.getContextPath() + "/qrdd.html?_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/Family/qj.html?_t=" + System.currentTimeMillis());
                 return;
             }
         } else {
-            response.sendRedirect(request.getContextPath() + "/qrdd.html?_t=" + System.currentTimeMillis());
+            response.sendRedirect(request.getContextPath() + "/Family/qj.html?_t=" + System.currentTimeMillis());
             return;
         }
     }
@@ -174,7 +167,7 @@ public class BaseClController extends BaseController {
     }
 
     /*校验提取码是否正确*/
-    @RequestMapping(value = "/tqyz")
+    @RequestMapping(value = "/tqyz",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Map<String,Object> tqyz(String tqm,String code) {
         String sessionCode = (String) session.getAttribute("rand");
@@ -314,7 +307,7 @@ public class BaseClController extends BaseController {
      *   获取商品明细
      *  获取spmx.html中需要展示的数据
      */
-    @RequestMapping(value = "/spmx")
+    @RequestMapping(value = "/getsp",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Map<String,Object> spmx(){
         Map<String, Object> result = new HashMap<String, Object>();
@@ -346,7 +339,7 @@ public class BaseClController extends BaseController {
 
 
     /*获取购方信息,保存到交易流水*/
-    @RequestMapping(value ="/savels" ,method = RequestMethod.POST)
+    @RequestMapping(value ="/savels" ,method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public  Map<String,Object> savels(){
         Map<String,Object> result = new HashMap<String,Object>();
