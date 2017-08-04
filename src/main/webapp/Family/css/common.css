@@ -137,7 +137,25 @@ button {
 	height: 41px;
 	float: right;
 }
-
+/*二维码*/
+.ewm {
+	width: 85%;
+	height: 75px;
+	margin: 0 auto 10px;
+	background-color: #F1F8FE;
+	padding: 5px;
+	box-sizing: border-box;
+}
+.ewm img {
+	width: 65px;
+	height: 65px;
+}
+.ewm span {
+	width: 70%;
+	font-size: 14px;
+	padding-top: 10px;
+	color: #343434;
+}
 /*模态框*/
 .mask {      
 	height: 100%; 
