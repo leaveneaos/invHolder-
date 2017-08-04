@@ -1,112 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>容津信息</title>
-	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="../css/common.css">
-	<link rel="stylesheet" type="text/css" href="../css/mui.min.css">
-	<style type="text/css">
-		.mui-card {
-			margin: 0;
-		}
-		header {
-			height: 40px;
-			line-height: 40px;
-			font-weight: bold;
-			margin-top: 15px;
-			text-align: center;
-			background-color: #BFBDBF;
-			color: red;
-			border-top-left-radius: 10px; 
-			border-top-right-radius: 10px; 
-		}
-		.mui-input-row.data-bg {
-			height: 40px;
-			background-color: #BFBDBF;
-			border-bottom-left-radius: 10px; 
-			border-bottom-right-radius: 10px; 
-		}
-		.kpje {
-			position: relative;
-			top: -6px;
-		}
-		.mui-input-clear.data-je {
-			background-color: #fff;
-			width: 50%;
-			height: 34px;
-			position: absolute;
-			top: 3px;
-		}
-		.mui-btn-primary {
-			font-size: 16px;
-		    width: 85%;
-		    padding: 5px 0;
-		    box-sizing: border-box;
-		    background-color: #41B0E8;
-		    border-radius: 6px;
-		    border: none;
-			outline:none;
-			position: fixed;
-			bottom: 30px;
-			left: 7%;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <title>容津信息</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css">
+    <style type="text/css">
+        .mui-card {
+            margin: 0;
+        }
+
+        header {
+            height: 40px;
+            line-height: 40px;
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+            background-color: #BFBDBF;
+            color: red;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .mui-input-row.data-bg {
+            height: 40px;
+            background-color: #BFBDBF;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .kpje {
+            position: relative;
+            top: -6px;
+        }
+
+        .mui-input-clear.data-je {
+            background-color: #fff;
+            width: 50%;
+            height: 34px;
+            position: absolute;
+            top: 3px;
+        }
+
+        .mui-btn-primary {
+            font-size: 16px;
+            width: 85%;
+            padding: 5px 0;
+            box-sizing: border-box;
+            background-color: #41B0E8;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+            position: fixed;
+            bottom: 30px;
+            left: 7%;
+        }
+
+        #msg {
+            display: none;
+            color:red;
+        }
+    </style>
 </head>
 <body>
-	<header>增值税电子普通发票</header>
-	<section class="mui-content">		
-		<div class="mui-content-padded">
-			<form class="mui-input-group">
-				<div class="mui-input-row">
-					<label>购方名称</label>
-					<input type="text" id="gfmc" class="mui-input-clear" placeholder="填写准确的抬头名称">
-				</div>
-				<div class="mui-input-row">
-					<label>购方税号</label>
-					<input type="text" id="gfsh" class="mui-input-clear" placeholder="输入纳税人识别号">
-				</div>
-				<div class="mui-input-row">
-					<label>邮箱地址</label>
-					<input type="text" id="yxdz" class="mui-input-clear" placeholder="收票人电子邮箱">
-				</div>	
-			</form>
-			<div class="mui-input-row data-bg">
-				<label class="kpje">开票金额</label>
-				<input type="text" id="kpje" class="mui-input-clear data-je">
-			</div>
-			<!-- <div class="mui-card">
-				<ul class="mui-table-view">
-					<li class="mui-table-view-cell mui-collapse mui-active">
-						<a class="mui-navigate-right" href="#">其他信息</a>
-						<div class="mui-collapse-content">
-							<form class="mui-input-group">
-								<div class="mui-input-row">
-									<label>单位地址</label>
-									<input type="text" class="mui-input-clear" placeholder="收票单位注册地址">
-								</div>
-								<div class="mui-input-row">
-									<label>电话号码</label>
-									<input type="text" class="mui-input-clear" placeholder="输入公司电话号码">
-								</div>
-								<div class="mui-input-row">
-									<label>开户银行</label>
-									<input type="text" class="mui-input-clear" placeholder="收票单位开户银行">
-								</div>
-								<div class="mui-input-row">
-									<label>银行账号</label>
-									<input type="text" class="mui-input-clear" placeholder="收票单位银行帐号">
-								</div>
-							</form>
-						</div>
-					</li>
-				</ul>
-			</div> -->
-		</div>	
-	</section>
-	<button type="button" class="mui-btn mui-btn-primary mui-btn-block">一键开票</button>
+<header>增值税电子普通发票</header>
+<section class="mui-content">
+    <div class="mui-content-padded">
+        <form class="mui-input-group">
+            <div class="mui-input-row">
+                <label>购方名称</label>
+                <input type="text" id="gfmc" class="mui-input-clear" placeholder="填写准确的抬头名称">
+            </div>
+            <div class="mui-input-row">
+                <label>购方税号</label>
+                <input type="text" id="gfsh" class="mui-input-clear" placeholder="输入纳税人识别号">
+            </div>
+            <div class="mui-input-row">
+                <label>邮箱地址</label>
+                <input type="text" id="yxdz" class="mui-input-clear" placeholder="收票人电子邮箱">
+            </div>
+        </form>
+        <div class="mui-input-row data-bg">
+            <label class="kpje">开票金额</label>
+            <input type="text" id="kpje" class="mui-input-clear data-je">
+        </div>
+        <!-- <div class="mui-card">
+            <ul class="mui-table-view">
+                <li class="mui-table-view-cell mui-collapse mui-active">
+                    <a class="mui-navigate-right" href="#">其他信息</a>
+                    <div class="mui-collapse-content">
+                        <form class="mui-input-group">
+                            <div class="mui-input-row">
+                                <label>单位地址</label>
+                                <input type="text" class="mui-input-clear" placeholder="收票单位注册地址">
+                            </div>
+                            <div class="mui-input-row">
+                                <label>电话号码</label>
+                                <input type="text" class="mui-input-clear" placeholder="输入公司电话号码">
+                            </div>
+                            <div class="mui-input-row">
+                                <label>开户银行</label>
+                                <input type="text" class="mui-input-clear" placeholder="收票单位开户银行">
+                            </div>
+                            <div class="mui-input-row">
+                                <label>银行账号</label>
+                                <input type="text" class="mui-input-clear" placeholder="收票单位银行帐号">
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div> -->
+    </div>
+</section>
+<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="fn()">一键开票</button>
+<div id="msg"></div>
 
-	<script src="../js/jquery.min.js"></script>
-	<script src="../js/mui.min.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript">
+    function fn() {
+        var gfmc = $("#gfmc").val(),
+        gfsh = $("#gfsh").val(),
+        yxdz = $("#yxdz").val(),
+        jshj = $("#kpje").val();
+        $.post(
+            "/wechat/invoice",
+            {
+                "purchaserName": gfmc,
+                "purchaserTaxNo": gfsh,
+                "email": yxdz,
+                "amount": jshj
+            },
+            function (obj) {
+                if(obj.msg=="redirect"){
+                    window.location.href = "login.html";
+                }else{
+                    if (obj.code == 1) {
+                        var data = eval("(" + obj.data + ")");
+                        if (data.returnCode == "0000") {
+                            var gfmc = data.purchaserName;
+                            var gfsh = data.purchaserTaxNo;
+                            var yxdz = data.email;
+                            var jshj = data.amount;
+                            localStorage.gfmc = gfmc;
+                            localStorage.gfsh = gfsh;
+                            localStorage.yxdz = yxdz;
+                            localStorage.jshj = jshj;
+                            window.location.href = "fpbc.html";//?gfmc=" + gfmc + "&gfsh=" + gfsh + "&yxdz=" + yxdz + "&jshj=" + jshj
+                        } else if (data.returnCode == null) {
+                            alert("暂不处理");
+                        } else {
+                            $("#msg").html(data.returnMsg).css("display","block");
+                        }
+                    } else {
+                        $("#msg").html(obj.msg).css("display", "block");
+                    }
+                }
+            }
+        );
+    }
+</script>
 </body>
 </html>

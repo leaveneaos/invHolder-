@@ -79,30 +79,39 @@
 			<form class="mui-input-group">
 				<div class="data-row">
 					<label>发票抬头：</label>
-					<span id="fptt">5155165</span>
+					<span id="fptt"></span>
 				</div>
 				<div class="data-row">
 					<label>购方税号：</label>
-					<span id="gfsh">5165165455165</span>
+					<span id="gfsh"></span>
 				</div>
 				<div class="data-row">
 					<label>价税合计：</label>
-					<span id="jshj">5</span>	
+					<span id="jshj"></span>
 				</div>
 				<div class="data-row">
 					<label>邮箱地址：</label>
-					<span id="yxdz">5165165455165</span>	
+					<span id="yxdz"></span>
 				</div>
     		</form>
 		</div>
-		<button type="button" class="mui-btn mui-btn-outlined mui-btn-block">继续开票</button>
+		<button type="button" class="mui-btn mui-btn-outlined mui-btn-block" onclick="fn()">继续开票</button>
 	</section>
 
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
 
 	<script type="text/javascript">
+        $(function() {
+            $("#fptt").html(localStorage.gfmc);
+			$("#gfsh").html(localStorage.gfsh);
+			$("#jshj").html(localStorage.jshj);
+			$("#yxdz").html(localStorage.yxdz);
+        })
 
+		function fn() {
+			window.location.href("fptt.html")
+        }
 	</script>
 </body>
 </html>
