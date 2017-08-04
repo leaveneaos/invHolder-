@@ -5,13 +5,13 @@
 	<title>订单确认</title>
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="css/common.css">
-	<link rel="stylesheet" type="text/css" href="css/ddqr.css">
 	<style type="text/css">
 		.middle {
 			padding: 10px 0px;
+			box-sizing: border-box;
 		}
 		.middle form{
-		    padding: 20px;
+		    padding: 0px 20px;
     		box-sizing: border-box;
 		}
 		.qj-img {
@@ -21,17 +21,18 @@
 			width: 100%;
 		}
 		.entry {
-			height: 30px;
-			line-height: 30px;
+			height: 40px;
+			line-height: 40px;
 		}
 		.entry input {
-			height: 28px;
-			text-indent: 20px;
+			height: 38px;
+			text-indent: 30px;
 		}
 		.entry #tqm {
 			width: 100%;
 			border-top: 1px solid #ccc;
 			border-bottom: 1px solid #ccc;
+			box-sizing: border-box;
 		}
 		.entry #code {
 			width: 80%;
@@ -40,17 +41,21 @@
 		}
 		#cwts {
 			color: red; 
-			margin-left: 23px; 
+			padding: 5px 0px 0px 40px; 
+			font-size: 14px;
+			box-sizing: border-box;
 		}
 	</style>
 </head>
-<body onload="load()">
+<body onload="load()" onresize="document.activeElement.scrollIntoView(true);">
 	<header>
 		<img src="../images/nav.png">
 	</header>
+
 	<section class="main">
 		<div class="shadow1"></div>
 		<div class="shadow2"></div>
+
 		<div class="content">
 			<div class="top">
 				<span class="one">订单确认</span><span class="one">&gt;</span>
@@ -59,6 +64,7 @@
 				<span>发票保存</span>
 			</div>
 			<div class="qj-img"><img src="../images/qj.jpg"></div>
+
 			<div class="middle">
 		       	<form>
 					<div class="entry">
@@ -69,17 +75,20 @@
 						<img src="image.jsp" class="data-yzm" name="randImage" id="randImage" onclick="loadimage()"/>
 					</div>
 				</form>
-				<p id="cwts"></p>
+				<div id="cwts"></div>
 			</div>
+
 			<div class="bottom">
 				<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
 			</div>
+
 		</div>
 	</section>
+
 	<footer>
 		<p class="company fl">泰易电子发票云服务平台</p>
 		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
-	</footer>
+	</footer>	
 
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
@@ -91,35 +100,33 @@
 			$('#code').val('');
 		}
 
-		$(function() {
-			function sure() {
-				var tqm = $('#tqm').val();
-				var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
-				var code = $('#code').val();
-				$.post(
-					"base/tqyz",
-					{
-						"tqm" : tqm,
-						"code" : code
-					}, 
-					function(data) {
-						if(data.num == 2){
-	                    	window.open("fpxq.html?time=" + new Date());
-						}else if (data.num == 4) {
-							$('#cwts').html("您输入的验证码不正确");
-							loadimage();	
-						}else if(data.num == 5){
-	                        window.location.href = "ddmx.html?time=" + new Date();
-						}else if (data.num == 6) {
-	                        window.location.href = "witting.html?time=" + new Date();
-	                    }else if (data.error != null) {
-	                        $('#cwts').html("数据错误，请重试！");
-	                        loadimage();
-	                    }
-					}
-				);
-			}
-		})
+		function sure() {
+			var tqm = $('#tqm').val();
+			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
+			var code = $('#code').val();
+			$.post(
+				"../base/tqyz",
+				{
+					"tqm" : tqm,
+					"code" : code
+				}, 
+				function(data) {
+					if(data.num == 2){
+                    	window.open("fpxq.html?time=" + new Date());
+					}else if (data.num == 4) {
+						$('#cwts').html("您输入的验证码不正确");
+						loadimage();	
+					}else if(data.num == 5){
+                        window.location.href = "ddmx.html?time=" + new Date();
+					}else if (data.num == 6) {
+                        window.location.href = "witting.html?time=" + new Date();
+                    }else if (data.error != null) {
+                        $('#cwts').html("数据错误，请重试！");
+                        loadimage();
+                    }
+				}
+			);
+		}
 	</script>
 </body>
 </html>

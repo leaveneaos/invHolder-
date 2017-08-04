@@ -23,26 +23,16 @@
 				<span>发票保存</span>
 			</div>
 			<div class="middle">
-		    	<div class="title th">
+		    	<div id="th" class="title th">
 					<span class="name">品名</span>
 					<span class="num">数量</span>
 					<span class="price">金额</span>
-		    	</div>
-		    	<div class="title">
-					<span class="name">矿泉水</span>
-					<span class="num">10</span>
-					<span class="price">10.00</span>
-		    	</div>
-		    	<div class="title">
-					<span class="name">方便面</span>
-					<span class="num">20</span>
-					<span class="price">20.00</span>
-		    	</div>
+		    	</div>		    	
 			</div>				
 			<div class="bottom btoPrice">
 				<ul>
 		            <li class="total">合计开票金额 :</li>
-		            <li class="totPrice">30.00</li>
+		            <li class="totPrice"></li>
 		        </ul>
 			</div>			 
 		</div>
@@ -52,25 +42,25 @@
 	</footer>
 
 	<script src="../js/jquery.min.js"></script>
-	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
 		$(function(){
 			$.ajax({
-				url : 'base/spmx',
+				url : '../base/getsp',
 				method : 'post',
 				success : function(data) {
 					var items = data.jymxsqList;
+					console.log(items);
 					var html='';
                     var zje = 0;
     				for(var i = 0; i < items.length; i++){
 
     				    zje += items[i].spje/1 + items[i].spse/1;
 
-    					html+="<div><span>"+ items[i].spmc+"</span><span>"+ items[i].sps+"</span><span>"+ (items[i].spje/1+items[i].spse/1)+"</span></div>";
+    					html+='<div class="title"><span class="name">'+ items[i].spmc+'</span><span class="num">'+ items[i].sps+'</span><span class="price">'+ (items[i].spje/1+items[i].spse/1)+"</span></div>";
     				}
     				$('.totPrice').html(zje);
     				//在页面显示数据
-    				$(".title").append(html);
+    				$("#th").after(html);
 				}
 			});
 		});

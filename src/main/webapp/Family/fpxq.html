@@ -21,35 +21,32 @@
 			<div class="middle" style="height: 240px;">
 		        <ul>
 		            <li class="fl">销方名称</li>
-		            <li class="fr" id="xfmc">123</li>
+		            <li class="fr" id="xfmc"></li>
 		        </ul>
 		         <ul>
 		            <li class="fl">购方名称</li>
-		            <li class="fr" id="gfmx">4123</li>
+		            <li class="fr" id="gfmx"></li>
 		        </ul>
 		        <ul>
 		            <li class="fl">发票金额</li>
-		            <li class="fr" id="fpje">142513</li>
+		            <li class="fr" id="fpje"></li>
 		        </ul>
 		        <ul class="kprq">
 		            <li class="fl">开票日期</li>
-		            <li class="fr" id="kprq">13513513515</li>
+		            <li class="fr" id="kprq"></li>
 		        </ul>
 		        <ul>
 		            <li class="fl">发票代码</li>
-		            <li class="fr" id="fpdm">13513513515</li>
+		            <li class="fr" id="fpdm"></li>
 		        </ul>
 		        <ul>
 		            <li class="fl">发票号码</li>
-		            <li class="fr" id="fphm">13513513515</li>
+		            <li class="fr" id="fphm"></li>
 		        </ul>
 		        <div  class="ck">
 					<button>查看发票</button>
 		        </div>
 			</div>
-			<!-- <div class="bottom">
-				<span>您还可以通过以下方式保存发票</span>
-			</div> -->
 			<div class="bottom btoTip">
 				<h4 class="save">您还可以通过以下方式保存发票：</h4>
 				
@@ -78,7 +75,9 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
-	
+        $("#zfb").click(function () {
+            window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+        });
 	</script>
 </body>
 </html>
