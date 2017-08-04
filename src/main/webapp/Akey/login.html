@@ -57,7 +57,6 @@
 				<div class="mui-input-row mui-password">
 					<input type="password" id="pass" class="mui-input-password" placeholder="请点此输入密码">
 				</div>
-				<div id="msg"></div>
 			</form>
 		</div>
 		<div class="data-rem">
@@ -100,9 +99,9 @@
                 },
                 function(data) {
                     if(data.code=="1"){
-                        window.location.href = "fptt.html";
+                        window.location.href = "fptt.html?time=" + new Date();
 					}else{
-                        $("#msg").html(data.msg).css("display","block");
+                        alert(data.msg);
                     }
                 }
             );
