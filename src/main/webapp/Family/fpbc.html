@@ -32,19 +32,19 @@
 				<form>
 			        <div class="entry">
 			            <label class="fl">发票抬头:</label>
-			            <span class="fr" id="fptt">123</span>
+			            <span class="fr" id="fptt"></span>
 			        </div>
 			         <div class="entry">
 			            <label class="fl">购方税号:</label>
-			            <span class="fr" id="gfsh">41567891235647894523</span>
+			            <span class="fr" id="nsrsbh"></span>
 			        </div>
 			        <div class="entry">
 			            <label class="fl">发票金额:</label>
-			            <span class="fr" id="fpje">142513</span>
+			            <span class="fr" id="je"></span>
 			        </div>
 			        <div class="entry">
 			            <label class="fl">邮箱地址:</label>
-			            <span class="fr" id="yxdz">13513513515</span>
+			            <span class="fr" id="yx"></span>
 			        </div>
 				</form>
 				<div class="ewm">
@@ -76,42 +76,44 @@
 	        $("#mask").css("height",$(document).height());     
 	        $("#mask").css("width",$(document).width());     
 	        $("#mask").show();  
-	        loading.innerHTML = "<img src='../images/kj.png' class='loadingImg'><p class='state'>发票开具中......</p><p class='wait'>开具时间受网络限制，请耐心等待</p>";   
+	        loading.innerHTML = "<img src='../images/kj.png' class='loadingImg'><p class='state'>发票开具中......</p><p class='wait'>开票申请已提交，请注意邮箱查收！</br>或再次扫描二维码查看发票文件</p>";   
 	    } 
-	    $('.company').on('click',function() {
-	    	showMask();
-	    })
+	    // $('#sure').on('click',function() {
+	    // 	showMask()
+	    // })
 
-		// $(function () {
-  //           $.post(
-  //               "待定",/*确认信息*/
-  //               {},
-  //               function (data) {
-  //                   $("#fptt").html(data.fptt);
-  //                   $("#gfsh").html(data.gfsh);
-  //                   $("#jshj").html(data.jshj);
-  //                   $("#yxdz").html(data.yxdz);
-  //               }
-  //           );           	       
-  //       }) 
-
-  //       $('#revise').on('click', function () {
-  //           window.location.href = 'fptt.html';
-  //       });    
-
-  //       $('#sure').on('click',function () {
-		// 	$.post(
-		// 	    "待定",
-		// 		{},
-		// 		function (data) {
-		// 	        if(data.msg == 1) {
-  //                       window.location.href = 'success.html'
-  //                   }else{
-  //                       showMask();
-		// 			}
-  //               }
-  //           );
-  //       })      
+	    // 展示页面内容
+		$(function () {
+            $.post(
+                "../base/qrxxsession",/*确认信息*/
+                {},
+                function (data) {
+                	console.log(data)
+                    $("#fptt").html(data.fptt);
+                    $("#nsrsbh").html(data.nsrsbh);
+                    $("#je").html(data.je);
+                    $("#yx").html(data.yx);
+                }
+            );           	       
+        }) 
+		// 修改
+        $('#revise').on('click', function () {
+           window.history.back();
+        });    
+        // 确定
+        $('#sure').on('click',function () {
+			$.post(
+			    "../base/savels",
+				{},
+				function (data) {
+			        if(data.msg == 1) {
+                        window.location.href = "fpxq.html?time=" + new Date();
+                    }else{
+                        showMask();
+					}
+                }
+            );
+        })      
 	</script>
 </body>
 </html>

@@ -475,6 +475,7 @@ public class BaseClController extends BaseController {
         result.put("fptt", request.getSession().getAttribute("fptt"));
         result.put("yx", request.getSession().getAttribute("yx"));
         result.put("je", request.getSession().getAttribute("je"));
+        result.put("nsrsbh", request.getSession().getAttribute("nsrsbh"));
         return  result;
     }
 }

@@ -78,14 +78,13 @@
 	</footer>
 
 	<script src="../js/jquery.min.js"></script>
-	<script src="../js/jquery-ui.js"></script>
 	<script src="../js/jquery.alerts.js"></script>
-	<script src="../js/mui.min.js"></script>
 	<script type="text/javascript">
 		// 解决browser对象不被支持的问题
 		jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
 
 		var djh;
+		var storage=window.localStorage;
 		$(function() {
 			// 选择抬头类型
 			var $fptt = $('#fptt');
@@ -253,8 +252,6 @@
 						return;
 					}
 				}
-				
-
 				var btnArray = [ '否', '是' ];
 				title = "信息确认";	
 				firm = "发票抬头:" + fptt + "</br>";
