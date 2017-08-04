@@ -478,7 +478,7 @@ public class MbController extends BaseController {
             return result;
         }
         try{
-            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList/*,jyzfmxList*/);
+            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
             String resultxml=HttpUtils.HttpUrlPost(xml,"RJcb0cb4d18ce7","73e235a15ee5cb022691625a50edae3b");
             logger.info("-------返回值---------"+resultxml);
            /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
