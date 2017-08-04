@@ -91,11 +91,11 @@ public class InvoiceService {
                 Spvo oneSpvo = spvoService.findOneSpvo(map);
                 Jymxsq jymxsq = new Jymxsq();
                 jymxsq.setSpdm(oneSpvo.getSpbm());
-                jymxsq.setSps(1d);
+//                jymxsq.setSps(1d);
                 jymxsq.setYhzcmc(oneSpvo.getYhzcmc());
                 jymxsq.setYhzcbs(oneSpvo.getYhzcbs());
                 jymxsq.setLslbz(oneSpvo.getLslbz());
-                jymxsq.setSpdj(100d);
+//                jymxsq.setSpdj(100d);
                 jymxsq.setJshj(amount);
                 jymxsq.setFphxz("0");
                 jymxsq.setSpmc(oneSpvo.getSpmc());
@@ -103,11 +103,10 @@ public class InvoiceService {
                 jymxsq.setXgsj(new Date());
                 jymxsq.setSpsl(oneSpvo.getSl());
                 jymxsq.setSpje(amount);
-//                jymxsq.setSpse((amount/(1+taxRate))*taxRate);
-//                jymxsq.setSpje(jymxsq.getJshj() - jymxsq.getSpse());
                 List<Jymxsq> jymxsqList = new ArrayList<>();
                 jymxsqList.add(jymxsq);
                 List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
+
                 List<Jyzfmx> jyzfmxList = new ArrayList<>();
                 Jyzfmx jyzfmx = new Jyzfmx();
 
@@ -115,9 +114,9 @@ public class InvoiceService {
                 Gsxx oneByGsdm = gsxxJpaDao.findOneByGsdm(gsdm);
                 String appid = oneByGsdm.getAppKey();
                 String key = oneByGsdm.getSecretKey();
-
                 String resultxml = HttpUtils.HttpUrlPost(xml, appid, key);
                 Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
+
                 String json = "";
                 if(resultMap.get("ReturnCode")!=null){
                     String returnMsg=resultMap.get("ReturnMessage").toString();
@@ -129,6 +128,8 @@ public class InvoiceService {
                     map2.put("purchaserTaxNo", purchaserTaxNo);
                     map2.put("email", email);
                     map2.put("amount", amount);
+                    map2.put("users", username);
+                    map2.put("id", openid);
                     json=JSONObject.toJSONString(map2);
                 }else{
                     String serialorder=resultMap.get("Serialorder").toString();
@@ -142,6 +143,8 @@ public class InvoiceService {
                     map3.put("purchaserName", purchaserName);
                     map3.put("amount", amount);
                     map3.put("kprq", kprq);
+                    map3.put("users", username);
+                    map3.put("id", openid);
                     json=JSONObject.toJSONString(map3);
                 }
                 System.out.println(json);

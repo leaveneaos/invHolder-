@@ -15,23 +15,10 @@ public class TaxUtil {
         for (int i = 0; i < jyspmxs.size(); i++) {
             Jymxsq mx = jyspmxs.get(i);
             BigDecimal jshj = new BigDecimal(mx.getJshj());
-//            BigDecimal spje = mx.getSpje();
             BigDecimal spsl = new BigDecimal(mx.getSpsl());
-            BigDecimal spdj = new BigDecimal(mx.getSpdj());
             BigDecimal jeWithoutTax = div(jshj, spsl.add(new BigDecimal(1)));
             BigDecimal jeTax = sub(jshj, jeWithoutTax);
-            // 判断单价是否为空！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！todo
-            //Double djWithoutTax = div(spdj, 1 + spsl, 6);
-            BigDecimal djWithoutTax;
-            if (spdj == null) {
-                djWithoutTax = null;// 单价不含税
-            } else {
-                djWithoutTax = div(spdj, spsl.add(new BigDecimal(1)));
-            }
-//            mx.setSpje(jeWithoutTax.doubleValue());// 商品金额不含税
             mx.setSpse(jeTax.doubleValue());// 税额
-//            mx.setJshj(spje);// 价税合计
-//            mx.setSpdj(djWithoutTax.doubleValue());// 单价不含税
             sepJyspmxs.add(mx);
         }
         return sepJyspmxs;

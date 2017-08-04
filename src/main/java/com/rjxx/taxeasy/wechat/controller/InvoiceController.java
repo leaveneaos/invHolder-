@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.HtmlUtils;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2017/7/31 0031.
@@ -39,23 +38,37 @@ public class InvoiceController extends BaseController {
     public Result send(@RequestParam String purchaserName,
                        @RequestParam String purchaserTaxNo,
                        @RequestParam String email,
-                       @RequestParam Double amount) {
-//        if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
+                       @RequestParam Double amount,
+                       @RequestParam String user,
+                       @RequestParam String id) {
+        String username = "";
+        String openid = "";
+        //如果前台传值
+        if (StringUtils.isNotBlank(user) && StringUtils.isNotBlank(id)
+                &&!"undefined".equals(user) && !"undefined".equals(id)) {
+            username =user;
+            openid = id;
+
+            //如果不传值
+        } else {
+            //如果session中没有
+//            if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
 //            return ResultUtil.error("redirect");
 //        }else{
-            String username = (String) session.getAttribute("username");
-            String openid =
+                username = (String) session.getAttribute("username");
+                openid =
 //                    (String) session.getAttribute("openid");
-                    "openid";
-            String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
+                        "openid";
+//            }
+        }
+        String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
         if ("-1".equals(status)) {
-                return ResultUtil.error("发送失败");
-            } else if ("0".equals(status)) {
-                return ResultUtil.error("所需信息为空");
-            } else {
-                return ResultUtil.success(status);
-            }
-//        }
+            return ResultUtil.error("发送失败");
+        } else if ("0".equals(status)) {
+            return ResultUtil.error("所需信息为空");
+        } else {
+            return ResultUtil.success(status);
+        }
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -123,15 +136,5 @@ public class InvoiceController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @RequestMapping("/submit")
-    public String submit(){
-        Map map = new HashMap<>();
-        map.put("gfmc", request.getSession().getAttribute("gfmc"));
-        map.put("gfsh", request.getSession().getAttribute("gfsh"));
-        map.put("yxdz", request.getSession().getAttribute("yxdz"));
-        map.put("jshj", request.getSession().getAttribute("jshj"));
-        return JSONObject.toJSONString(map);
     }
 }

@@ -54,8 +54,18 @@
 					<RowType>${jymxsq.fphxz!}</RowType>
 					<Spec>${jymxsq.spggxh!}</Spec>
 					<Unit>${jymxsq.spdw!}</Unit>
-					<Quantity>${jymxsq.sps?c!}</Quantity>
-                    <UnitPrice>${jymxsq.spdj?c!}</UnitPrice>
+					<Quantity>
+						<#if (jymxsq.sps)??>
+						${jymxsq.sps?c!}
+						<#else>
+						</#if>
+					</Quantity>
+                    <UnitPrice>
+						<#if (jymxsq.spdj)??>
+						${jymxsq.spdj?c!}
+						<#else>
+						</#if>
+					</UnitPrice>
 					<Amount>${jymxsq.spje?c!}</Amount>
 					<DeductAmount></DeductAmount>
 					<TaxRate>${jymxsq.spsl?c!}</TaxRate>
