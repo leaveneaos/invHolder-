@@ -90,9 +90,17 @@
                 function (data) {
                 	console.log(data)
                     $("#fptt").html(data.fptt);
-                    $("#nsrsbh").html(data.nsrsbh);
                     $("#je").html(data.je);
-                    $("#yx").html(data.yx);
+                    if(null==data.nsrsbh || data.nsrsbh==''){
+                    	$('#nsrsbh').parent().css('display','none')
+                    }else{
+                    	$("#nsrsbh").html(data.nsrsbh);	
+                    }
+                    if(null==data.yx || data.yx==''){
+                    	$('#yx').parent().css('display','none')
+                    }else{
+                    	$("#yx").html(data.yx);	
+                    }
                 }
             );           	       
         }) 
@@ -102,15 +110,14 @@
         });    
         // 确定
         $('#sure').on('click',function () {
+        	showMask();
 			$.post(
 			    "../base/savels",
 				{},
 				function (data) {
 			        if(data.msg == 1) {
                         window.location.href = "fpxq.html?time=" + new Date();
-                    }else{
-                        showMask();
-					}
+                    }
                 }
             );
         })      
