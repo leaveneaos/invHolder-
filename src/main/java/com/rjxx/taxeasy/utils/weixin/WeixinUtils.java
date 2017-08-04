@@ -7,20 +7,12 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 微信工具类
@@ -119,27 +111,63 @@ public class WeixinUtils {
         }
         return  null;
     }
-    /*
-    * 初始化微信授权链接
-    * */
-   /* public  void  initWeiXinAuthorization(HttpServletRequest request, HttpServletResponse response, List lsit){
-
-        WeixinUtils weixinUtils = new WeixinUtils();
-        String accessToken = (String)weixinUtils.hqtk().get("access_token");
-        String url ="https://api.weixin.qq.com/card/invoice/getauthurl?access_token="+accessToken;
-
-        //response.sendRedirect(redirectUrl);
-    }*/
 
     //微信授权跳转
     public static void main(String[] args) {
 
         //Map msp = new HashMap();
         WeixinUtils weixinUtils = new WeixinUtils();
-        //weixinUtils.zdcxstatus();
+
+      /* //解析xml
+            String data="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<xml>"
+                + "<ToUserName>1111</ToUserName>"
+                + "<FromUserName></FromUserName>"
+                + "<CreateTime>1475134700</CreateTime>"
+                + "<MsgType>event</MsgType>"
+                + "<Event>user_authorize_invoice</Event>"
+                + "<SuccOrderId>1231453222001122</SuccOrderId>"
+                + "<FailOrderId></FailOrderId>"
+                + "<AppId>wx9abc729e2b4637ee</AppId>"
+                + "<Source>web</Source>"
+                + "</xml>";
+        Document xmlDoc = null;
+        try {
+            xmlDoc = DocumentHelper.parseText(data);
+            Element rootElt = xmlDoc.getRootElement();
+            System.out.println("根节点：" + rootElt.getName());
+            List<Element> childElements = rootElt.elements();
+            String SuccOrderIdValue = "";
+            String FailOrderIdValue = "";
+            for (Element e:childElements){
+                if(e.getName().equals("SuccOrderId")&&null!=e.getName()){
+                    SuccOrderIdValue = e.getText();
+                    System.out.println("成功的订单id");
+                }
+                if(e.getName().equals("FailOrderId")&&null!=e.getName()){
+                    FailOrderIdValue=e.getText();
+                    System.out.println("失败的订单id");
+                }
+
+            }
+            System.out.println(""+SuccOrderIdValue);
+            System.out.println(""+FailOrderIdValue);
+            if(""!=SuccOrderIdValue&&null!=SuccOrderIdValue){
+                System.out.println("拿到成功的订单id了");
+            }
+            if(""!=FailOrderIdValue&&null!=FailOrderIdValue){
+                System.out.println("拿到失败的订单id了");
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }*/
+
+
+        //weixinUtils.zdcxstatus("1231453222001122");
         //weixinUtils.cksqzd();
         //weixinUtils.sqzd();
-       // weixinUtils.getTicket();
+        //weixinUtils.getTicket();
         //*String url ="https://mp.weixin.qq.com/bizmall/authinvoice?action=list&s_pappid=d3g5YWJjNzI5ZTJiNDYzN2VlX0PARqxCKGk0d1fanZfCN3KxU5K6C-9JRLhQXmLzcptB";
         //String a = url.split("&")[1].split("=")[1];
 
@@ -149,10 +177,10 @@ public class WeixinUtils {
         // String msp=weixinUtils.getTicket();
         // System.out.println("获取微信token-----------"+msp);
 
-        String access_token = (String) weixinUtils.hqtk().get("access_token");//获取token
+         String access_token = (String) weixinUtils.hqtk().get("access_token");//获取token
          String spappid =  weixinUtils.getSpappid();//获取开票平台
          String ticket = weixinUtils.getTicket();
-         String orderid="12314532220011";
+         String orderid="1231453222001122";
          int money = 12;
          int timestamp = 1574875876;
          String  source = "web";
@@ -188,10 +216,9 @@ public class WeixinUtils {
     /*
     * 主动查询授权完成状态
     * */
-    public Map zdcxstatus(){
+    public Map zdcxstatus(String order_id){
 
         Map result = new HashMap();
-        String order_id="1231453222";
         WeixinUtils weixinUtils = new WeixinUtils();
         String s_pappid= weixinUtils.getSpappid();
         String access_token = (String) weixinUtils.hqtk().get("access_token");
@@ -301,10 +328,23 @@ public class WeixinUtils {
                 Map map = jsonparer.readValue(jsonStr3, Map.class);
                 String errmsg = (String) map.get("errmsg");
                 System.out.println("错误类型"+errmsg);
-
+                return ;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+
+    /*拒绝开票*/
+
+    public  String jujuekp(){
+        WeixinUtils weixinUtils = new WeixinUtils();
+        String access_token = (String) weixinUtils.hqtk().get("access_token");
+        String jjkpURL ="https://api.weixin.qq.com/card/invoice/rejectinsert?access_token="+access_token;
+
+    return null;
+    }
+
+
+
 }
