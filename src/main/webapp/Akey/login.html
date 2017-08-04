@@ -33,6 +33,10 @@
 			float: none;
 			padding: 0;
     	}
+		#msg{
+			display: none;
+			color:red;
+		}
 	</style>
 </head>
 <body>
@@ -61,44 +65,47 @@
 				<label for="check">记住用户名和密码</label>
 			</div>
 		</div>
-		<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="fn()">提交绑定</button>
+		<button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="fn()">提交</button>
 	</section>
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/mui.min.js"></script>
 	<script type="text/javascript">	
 	    $(function() {
 	    	// 保存密码和用户名
-	        var user = document.getElementsByTagName("input")[0],
+	        	user = document.getElementsByTagName("input")[0],
 	            pass = document.getElementsByTagName("input")[1],
 	            check = document.getElementsByTagName("input")[2],
-	            loUser = localStorage.getItem("user") || "";
-	            loPass = localStorage.getItem("pass") || "";
-
-	        user.value = loUser;
-	        pass.value = loPass;
-	        if(loUser !== "" && loPass !== ""){
-	            check.setAttribute("checked","");
-	        }
-		    function fn(){
-		        if(check.checked){
-		            localStorage.setItem("user",user.value);
-		            localStorage.setItem("pass",pass.value);
-		        }else{
-		            localStorage.setItem("user","");
-		            localStorage.setItem("pass","");
-		        };
-		        $.post(
-					"待定",
-					{
-						"loUser" : loUser,
-						"loPass" : loPass,
-					}, 
-					function(data) {
-						
-					}
-				);
-		    }
+	            loUser = localStorage.getItem("user"),
+	            loPass = localStorage.getItem("pass");
+            if(loUser !== "" && loPass !== ""){
+                check.setAttribute("checked","");
+                user.value = loUser;
+                pass.value = loPass;
+            }
 	    })
+        function fn(){
+            if(check.checked){
+                localStorage.setItem("user",user.value);
+                localStorage.setItem("pass",pass.value);
+            }else{
+                localStorage.setItem("user","");
+                localStorage.setItem("pass","");
+            };
+            $.post(
+                "/wechat/login",
+                {
+                    "user" : user.value,
+                    "pass" : pass.value
+                },
+                function(data) {
+                    if(data.code=="1"){
+                        window.location.href = "fptt.html?time=" + new Date();
+					}else{
+                        alert(data.msg);
+                    }
+                }
+            );
+        }
 	</script>
 </body>
 </html>

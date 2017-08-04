@@ -1,5 +1,7 @@
 package com.rjxx.taxeasy.comm;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -7,9 +9,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class SigCheck {
-	private static String token = "rjxx1234";
-	
-	public static String valid(String sign, String times, String nonce, String echo){
+//    @Value("${test.token}")
+    @Value("$(prod.token)")
+    private static String token;
+
+    public static String valid(String sign, String times, String nonce, String echo){
 		String[] src = {token, times, nonce};
 		List<String> list = Arrays.asList(src);
 		Collections.sort(list);
