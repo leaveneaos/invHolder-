@@ -52,14 +52,14 @@ public class InvoiceController extends BaseController {
             //如果不传值
         } else {
             //如果session中没有
-//            if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
-//            return ResultUtil.error("redirect");
-//        }else{
+            if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
+            return ResultUtil.error("redirect");
+        }else{
                 username = (String) session.getAttribute("username");
                 openid =
-//                    (String) session.getAttribute("openid");
-                        "openid";
-//            }
+                    (String) session.getAttribute("openid");
+//                        "openid";
+            }
         }
         String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
         if ("-1".equals(status)) {
@@ -106,7 +106,7 @@ public class InvoiceController extends BaseController {
                 return null;
             } else {
                 try {
-                    response.sendRedirect(request.getContextPath() + "/Akey/login.html");
+                    response.sendRedirect(request.getContextPath() + "/Akey/login.html?t="+System.currentTimeMillis());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -115,7 +115,7 @@ public class InvoiceController extends BaseController {
         }
         //不是的话重定向到登录页面
         try {
-            response.sendRedirect(request.getContextPath() + "/Akey/isnotwx.html");
+            response.sendRedirect(request.getContextPath() + "/Akey/isnotwx.html?t="+System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,7 +132,7 @@ public class InvoiceController extends BaseController {
             session.setAttribute("openid", openid);
         }
         try {
-            response.sendRedirect(request.getContextPath() + "/Akey/login.html");
+            response.sendRedirect(request.getContextPath() + "/Akey/login.html?t="+System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
