@@ -205,7 +205,7 @@ public class MbController extends BaseController {
             List<Kpls> list = jylsService.findByTqm(map);
             //查询参数总表url 是否调用接口获取开票信息
             Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
-            if(null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
+            if(list.size()== 0 && null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
                 //需要调用接口获取开票信息
                 System.out.println("start+++++++++++");
                 //Map resultMap1 = new HashMap();
@@ -214,17 +214,23 @@ public class MbController extends BaseController {
                     resultMap=getDataService.getData(tqm,gsdm);
                 }
                 //绿地优鲜 解析json
-               else if(map.get("gsdm").equals("ldyx")){
+                else if(map.get("gsdm").equals("ldyx")){
                     System.out.println("ldyx+++++++++++++++++Strat");
                     //第一次请求url获取token 验证
                     resultMap=getDataService.getldyxFirData(tqm,gsdm);
-                    if(null!=resultMap.get("accessToken")&&(null==request.getSession().getAttribute("crateDateTime"))){
+                    if(null==request.getSession().getAttribute("crateDateTime")){
                         //放入系统当前时间 直接是毫秒
                         Long dateTime = System.currentTimeMillis();
                         request.getSession().setAttribute("crateDateTime",dateTime);//创建时间
                         request.getSession().setAttribute("accessToken",resultMap.get("accessToken"));//token
                         request.getSession().setAttribute("expiresIn",resultMap.get("expiresIn"));//过期时间
                         resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
+                    }else{
+                        resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
+                    }
+                    if(null!=resultMap.get("tmp")){
+                        result.put("msg",resultMap.get("tmp"));
+                        return result;
                     }
                     /*Date dateNow = new Date(System.currentTimeMillis());
                     Long dateNowTime = dateNow.getTime();
@@ -263,10 +269,6 @@ public class MbController extends BaseController {
                             //发送第二次请求
                             resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
                         }*/
-
-                    //直接获取数据
-                    // http://10.217.223.34:8081/querysale/queryticket
-                    //resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
                 }
             }
             List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
@@ -323,7 +325,8 @@ public class MbController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
-            }else if(null != jyls && null !=jyls.getDjh()){
+            }
+            else if(null != jyls && null !=jyls.getDjh()){
                 result.put("num","6");
             }else {//跳转发票提取页面
                 if(resultMap!=null){
@@ -364,7 +367,6 @@ public class MbController extends BaseController {
         Double bkpje = 0.00;
         Double sjkpje = 0.00;
         if(null!=jyzfmxList){
-
             for (Jyzfmx jyzfmx2 : jyzfmxList){
                 if(jymxsqList.get(0).getDdh().equals(jyzfmx2.getDdh())
                         &&(jyzfmx2.getZffsDm().equals("A")
@@ -385,7 +387,6 @@ public class MbController extends BaseController {
                         ||jyzfmx2.getZffsDm().equals("Y")
                         ||jyzfmx2.getZffsDm().equals("Z"))
                         ){
-
                     System.out.println("不开票支付金额为"+jyzfmx2.getZfje());
                         bkpje+=jyzfmx2.getZfje();
                 }
@@ -477,7 +478,7 @@ public class MbController extends BaseController {
             return result;
         }
         try{
-            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
+            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList/*,jyzfmxList*/);
             String resultxml=HttpUtils.HttpUrlPost(xml,"RJcb0cb4d18ce7","73e235a15ee5cb022691625a50edae3b");
             logger.info("-------返回值---------"+resultxml);
            /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
