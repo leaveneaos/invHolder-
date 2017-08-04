@@ -134,10 +134,28 @@ button {
 }
 .data-yzm {
 	width: 20%;
-	height: 31px;
+	height: 41px;
 	float: right;
 }
-
+/*二维码*/
+.ewm {
+	width: 85%;
+	height: 75px;
+	margin: 0 auto 10px;
+	background-color: #F1F8FE;
+	padding: 5px;
+	box-sizing: border-box;
+}
+.ewm img {
+	width: 65px;
+	height: 65px;
+}
+.ewm span {
+	width: 70%;
+	font-size: 14px;
+	padding-top: 10px;
+	color: #343434;
+}
 /*模态框*/
 .mask {      
 	height: 100%; 
@@ -170,6 +188,7 @@ button {
 }
 .state {
 	font-size: 16px;
+	padding: 15px 0;
 }
 .wait {
 	font-size: 14px;

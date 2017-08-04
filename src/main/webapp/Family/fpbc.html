@@ -11,9 +11,11 @@
 	<header>
 		<img src="../images/nav.png">
 	</header>
+
 	<section class="main">
 		<div class="shadow1"></div>
 		<div class="shadow2"></div>
+
 		<div class="content">
 			<div class="top">
 				<span>订单确认</span><span>&gt;</span>
@@ -21,6 +23,7 @@
 				<span>发票抬头</span><span>&gt;</span>
 				<span class="four">发票保存</span>
 			</div>
+
 			<div class="middle">
 				<div class="right">
 					<img src="../images/right.png">
@@ -29,19 +32,19 @@
 				<form>
 			        <div class="entry">
 			            <label class="fl">发票抬头:</label>
-			            <span class="fr" id="fptt">123</span>
+			            <span class="fr" id="fptt"></span>
 			        </div>
 			         <div class="entry">
 			            <label class="fl">购方税号:</label>
-			            <span class="fr" id="gfsh">41567891235647894523</span>
+			            <span class="fr" id="nsrsbh"></span>
 			        </div>
 			        <div class="entry">
 			            <label class="fl">发票金额:</label>
-			            <span class="fr" id="fpje">142513</span>
+			            <span class="fr" id="je"></span>
 			        </div>
 			        <div class="entry">
 			            <label class="fl">邮箱地址:</label>
-			            <span class="fr" id="yxdz">13513513515</span>
+			            <span class="fr" id="yx"></span>
 			        </div>
 				</form>
 				<div class="ewm">
@@ -49,12 +52,14 @@
 					<span class="fr">长按识别二维码,关注公众号及时收到发票信息</span>
 				</div>
 			</div>
+			
 			<div class="bottom">
 				<button id="revise">修&nbsp;&nbsp;改</button>
 				<button id="sure" type="submit">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
 			</div>
 		</div>
 	</section>
+
 	<footer>
 		<p class="company fl">泰易电子发票云服务平台</p>
 		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
@@ -71,42 +76,51 @@
 	        $("#mask").css("height",$(document).height());     
 	        $("#mask").css("width",$(document).width());     
 	        $("#mask").show();  
-	        loading.innerHTML = "<img src='../images/kj.png' class='loadingImg'><p class='state'>发票开具中......</p><p class='wait'>开具时间受网络限制，请耐心等待</p>";   
+	        loading.innerHTML = "<img src='../images/kj.png' class='loadingImg'><p class='state'>发票开具中......</p><p class='wait'>开票申请已提交，请注意邮箱查收！</br>或再次扫描二维码查看发票文件</p>";   
 	    } 
-	    $('.company').on('click',function() {
-	    	showMask();
-	    })
+	    // $('#sure').on('click',function() {
+	    // 	showMask()
+	    // })
 
-		// $(function () {
-  //           $.post(
-  //               "待定",/*确认信息*/
-  //               {},
-  //               function (data) {
-  //                   $("#fptt").html(data.fptt);
-  //                   $("#gfsh").html(data.gfsh);
-  //                   $("#jshj").html(data.jshj);
-  //                   $("#yxdz").html(data.yxdz);
-  //               }
-  //           );           	       
-  //       }) 
-
-  //       $('#revise').on('click', function () {
-  //           window.location.href = 'fptt.html';
-  //       });    
-
-  //       $('#sure').on('click',function () {
-		// 	$.post(
-		// 	    "待定",
-		// 		{},
-		// 		function (data) {
-		// 	        if(data.msg == 1) {
-  //                       window.location.href = 'success.html'
-  //                   }else{
-  //                       showMask();
-		// 			}
-  //               }
-  //           );
-  //       })      
+	    // 展示页面内容
+		$(function () {
+            $.post(
+                "../base/qrxxsession",/*确认信息*/
+                {},
+                function (data) {
+                	console.log(data)
+                    $("#fptt").html(data.fptt);
+                    $("#je").html(data.je);
+                    if(null==data.nsrsbh || data.nsrsbh==''){
+                    	$('#nsrsbh').parent().css('display','none')
+                    }else{
+                    	$("#nsrsbh").html(data.nsrsbh);	
+                    }
+                    if(null==data.yx || data.yx==''){
+                    	$('#yx').parent().css('display','none')
+                    }else{
+                    	$("#yx").html(data.yx);	
+                    }
+                }
+            );           	       
+        }) 
+		// 修改
+        $('#revise').on('click', function () {
+           window.history.back();
+        });    
+        // 确定
+        $('#sure').on('click',function () {
+        	showMask();
+			$.post(
+			    "../base/savels",
+				{},
+				function (data) {
+			        if(data.msg == 1) {
+                        window.location.href = "fpxq.html?time=" + new Date();
+                    }
+                }
+            );
+        })      
 	</script>
 </body>
 </html>
