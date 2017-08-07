@@ -54,8 +54,8 @@ public class InvoiceController extends BaseController {
                 && !"no".equals(user) && !"no".equals(id)) {
             username = user;
             openid = id;
-            logger.error("前台传值username="+user);
-            logger.error("前台传值openid="+id);
+            logger.error("前台传值username="+username);
+            logger.error("前台传值openid="+openid);
             //如果不传值
         } else {
             //如果session中没有
@@ -66,13 +66,13 @@ public class InvoiceController extends BaseController {
                 openid =
                         (String) session.getAttribute("openid");
 //                        "openid";
-                logger.error("前台不传值username="+user);
-                logger.error("前台不传值openid="+id);
+                logger.error("前台不传值username="+username);
+                logger.error("前台不传值openid="+openid);
             }
         }
         String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
         if ("-1".equals(status)) {
-            return ResultUtil.error("发送失败");
+            return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {
             return ResultUtil.error("所需信息为空");
         } else {
