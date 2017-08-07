@@ -45,6 +45,8 @@ public class InvoiceController extends BaseController {
                        @RequestParam Double amount,
                        @RequestParam String user,
                        @RequestParam String id) {
+        logger.error("user="+user);
+        logger.error("id="+id);
         String username = "";
         String openid = "";
         //如果前台传值
@@ -52,7 +54,8 @@ public class InvoiceController extends BaseController {
                 && !"undefined".equals(user) && !"undefined".equals(id)) {
             username = user;
             openid = id;
-
+            logger.error("前台传值username="+user);
+            logger.error("前台传值openid="+id);
             //如果不传值
         } else {
             //如果session中没有
@@ -63,6 +66,8 @@ public class InvoiceController extends BaseController {
                 openid =
                         (String) session.getAttribute("openid");
 //                        "openid";
+                logger.error("前台不传值username="+user);
+                logger.error("前台不传值openid="+id);
             }
         }
         String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
