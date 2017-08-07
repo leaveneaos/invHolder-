@@ -30,8 +30,12 @@ public class InvoiceController extends BaseController {
     @Autowired
     private InvoiceService invoiceService;
 
+    //王亚辉的测试
     private static final String APP_ID = "wx731106a80c032cad";
     private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
+////    正式
+//    private static final String APP_ID = "wx9abc729e2b4637ee";
+//    private static final String SECRET = "e7a53601b6a0e8b4ac194b382eb";
 
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     @ApiOperation(value = "接收抬头")
@@ -93,7 +97,6 @@ public class InvoiceController extends BaseController {
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
-            logger.info(url);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
@@ -129,7 +132,9 @@ public class InvoiceController extends BaseController {
                 + SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
+        logger.info("result="+resultObject.toJSONString());
         String openid = resultObject.getString("openid");
+        logger.info("openid="+openid);
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
