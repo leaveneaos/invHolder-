@@ -381,7 +381,7 @@
 				jConfirm(firm,title, function(r) {
 					if(r){
 						alert(111);
-						$.post("dzfp_sqj/saveLs", {
+						$.post("../dzfp_sqj/saveLs", {
 							"fptt" : fptt,
 							"nsrsbh" : nsrsbh,
 							"dz" : dz,
@@ -393,7 +393,7 @@
 							if (data.msg == 1) {
 								info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
 								//fpzt();
-								window.location.href = "smtq/smtq3.html?time=" + new Date();
+								window.location.href = "../smtq/smtq3.html?time=" + new Date();
 							} else {
 								btnArray = [ '确定' ];
 								firm = data.msg;
