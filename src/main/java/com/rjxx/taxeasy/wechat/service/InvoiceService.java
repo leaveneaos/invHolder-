@@ -119,10 +119,9 @@ public class InvoiceService {
                 String appid = oneByGsdm.getAppKey();
                 String key = oneByGsdm.getSecretKey();
                 String resultxml = HttpUtils.HttpUrlPost(xml, appid, key);
-                Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
-
                 String json = "";
-                if(resultMap.get("ReturnCode")!=null){
+                try {
+                    Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
                     String returnMsg=resultMap.get("ReturnMessage").toString();
                     String returnCode=resultMap.get("ReturnCode").toString();
                     Map map2 = new HashMap();
@@ -135,11 +134,14 @@ public class InvoiceService {
                     map2.put("users", username);
                     map2.put("id", openid);
                     json=JSONObject.toJSONString(map2);
-                }else{
-                    String serialorder=resultMap.get("Serialorder").toString();
+                }catch (Exception e){
+                    String serialorder=resultxml;
                     Kpls oneBySerialorder = kplsJpaDao.findOneBySerialorder(serialorder);
                     String fphm=oneBySerialorder.getFphm();
                     String fpdm = oneBySerialorder.getFpdm();
+                    if(fphm==null || fpdm==null){
+                        return "-1";
+                    }
                     Date kprq = oneBySerialorder.getKprq();
                     Map map3 = new HashMap();
                     map3.put("fphm", fphm);
@@ -151,7 +153,6 @@ public class InvoiceService {
                     map3.put("id", openid);
                     json=JSONObject.toJSONString(map3);
                 }
-                System.out.println(json);
                 return json;
             } catch (Exception e) {
                 e.printStackTrace();

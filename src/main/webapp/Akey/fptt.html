@@ -236,8 +236,6 @@
         var  getval =thisURL.split('?')[1];
         urlId= getval.split("=")[2];
         urlUsers= getval.split("=")[3];
-        alert("openid="+urlId);
-        alert("username="+urlUsers);
         $.post(
             "../wechat/invoice",
             {
