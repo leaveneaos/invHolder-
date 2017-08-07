@@ -1,8 +1,6 @@
 package com.rjxx.taxeasy.wechat.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.itextpdf.text.log.Logger;
-import com.itextpdf.text.log.LoggerFactory;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.service.InvoiceService;
@@ -11,6 +9,8 @@ import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.HtmlUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +25,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/wechat")
 public class InvoiceController extends BaseController {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private InvoiceService invoiceService;
