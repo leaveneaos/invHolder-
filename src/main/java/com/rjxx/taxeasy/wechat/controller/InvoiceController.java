@@ -12,7 +12,6 @@ import com.rjxx.utils.HtmlUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,10 +30,8 @@ public class InvoiceController extends BaseController {
     @Autowired
     private InvoiceService invoiceService;
 
-    @Value("${rjxx.appid}")
-    private String APP_ID;
-    @Value("${rjxx.secret}")
-    private String SECRET ;
+    private static final String APP_ID = "wx731106a80c032cad";
+    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
 
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     @ApiOperation(value = "接收抬头")
@@ -48,19 +45,19 @@ public class InvoiceController extends BaseController {
         String openid = "";
         //如果前台传值
         if (StringUtils.isNotBlank(user) && StringUtils.isNotBlank(id)
-                &&!"undefined".equals(user) && !"undefined".equals(id)) {
-            username =user;
+                && !"undefined".equals(user) && !"undefined".equals(id)) {
+            username = user;
             openid = id;
 
             //如果不传值
         } else {
             //如果session中没有
             if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
-            return ResultUtil.error("redirect");
-        }else{
+                return ResultUtil.error("redirect");
+            } else {
                 username = (String) session.getAttribute("username");
                 openid =
-                    (String) session.getAttribute("openid");
+                        (String) session.getAttribute("openid");
 //                        "openid";
             }
         }
@@ -90,7 +87,7 @@ public class InvoiceController extends BaseController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping
     public String index() {
         String ua = request.getHeader("user-agent").toLowerCase();
         //判断是否是微信浏览器
@@ -110,7 +107,7 @@ public class InvoiceController extends BaseController {
                 return null;
             } else {
                 try {
-                    response.sendRedirect(request.getContextPath() + "/Akey/login.html?t="+System.currentTimeMillis());
+                    response.sendRedirect(request.getContextPath() + "/Akey/login.html?t=" + System.currentTimeMillis());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -119,13 +116,14 @@ public class InvoiceController extends BaseController {
         }
         //不是的话重定向到登录页面
         try {
-            response.sendRedirect(request.getContextPath() + "/Akey/isnotwx.html?t="+System.currentTimeMillis());
+            response.sendRedirect(request.getContextPath() + "/Akey/isnotwx.html?t=" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
-    @RequestMapping(value="/getOpenid",method = RequestMethod.GET)
+
+    @RequestMapping(value = "/getOpenid")
     public void getOpenId(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
                 + SECRET + "&code=" + code + "&grant_type=authorization_code";
@@ -136,7 +134,7 @@ public class InvoiceController extends BaseController {
             session.setAttribute("openid", openid);
         }
         try {
-            response.sendRedirect(request.getContextPath() + "/Akey/login.html?t="+System.currentTimeMillis());
+            response.sendRedirect(request.getContextPath() + "/Akey/login.html?t=" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
