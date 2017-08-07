@@ -37,7 +37,7 @@
 			padding: 5px 0 0 15px;
 		    color: #007AFF;
 		}
-		#fptt {
+		/*#fptt {
 			position: relative;
 		}
 		#getFptt {
@@ -50,7 +50,7 @@
     		right: 15px;
     		background-color: #ccc;
     		display: none;
-		}
+		}*/
 	</style>
 </head>
 <body>
@@ -68,9 +68,9 @@
 				<label><font color="red">*</font>发票抬头</label> 
 				<input type="text" class="mui-input-clear" required="required" maxlength="50"
 					name="fptt" id="fptt" placeholder="请输入发票抬头">
-				<select id="getFptt" oninput="changeFptt(this.value)">
-				  <!-- <option value="getFptt"> -->
-				</select>
+				<!-- <select id="getFptt" oninput="changeFptt(this.value)">
+				  <option value="getFptt">
+				</select> -->
 			</div>
 			<div class="mui-input-row">
 				<label><font color="red" class="isCheck">*</font>购方税号</label> 
@@ -160,58 +160,58 @@
 			})
 		});
 
-		$.post(
-            '../getInvoiceTitle',
-            {},
-            function(test) {
-				if(test.success) {
-					$("#getFptt").css('display','block');
-                    var option='';
-                    var dataList = test.data;
-                    for(var i=0;i<dataList.length;i++) {
-			 	   	  	var fp=dataList[i];
-				      	if(fp.default) {
-							option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
-                            $('#fptt').val(fp.titleName);
-                            $('#nsrsbh').val(fp.taxRegisterNo);
-                            $('#dz').val(fp.userAddress);
-                            $('#dh').val(fp.userMobile);
-                            $('#khh').val(fp.openBankName);
-                            $('#yhzh').val(fp.openBankAccount);
-                            $('#yx').val(fp.userEmail);
-				     	}else{
-                            option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
-						}
-					};
-                    $("#getFptt").append(option);
-				};
-            }
-        );
+		// $.post(
+  //           'getInvoiceTitle',
+  //           {},
+  //           function(test) {
+		// 		if(test.success) {
+		// 			$("#getFptt").css('display','block');
+  //                   var option='';
+  //                   var dataList = test.data;
+  //                   for(var i=0;i<dataList.length;i++) {
+		// 	 	   	  	var fp=dataList[i];
+		// 		      	if(fp.default) {
+		// 					option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+  //                           $('#fptt').val(fp.titleName);
+  //                           $('#nsrsbh').val(fp.taxRegisterNo);
+  //                           $('#dz').val(fp.userAddress);
+  //                           $('#dh').val(fp.userMobile);
+  //                           $('#khh').val(fp.openBankName);
+  //                           $('#yhzh').val(fp.openBankAccount);
+  //                           $('#yx').val(fp.userEmail);
+		// 		     	}else{
+  //                           option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+		// 				}
+		// 			};
+  //                   $("#getFptt").append(option);
+		// 		};
+  //           }
+  //       );
 
-		function changeFptt(obj){
-            $.post(
-                '../getInvoiceTitle',
-                {},
-                function(test) {
-                    if(test.success) {
-                        var option='';
-                        var dataList = test.data;
-                        for(var i=0;i<dataList.length;i++) {
-                            var fp = dataList[i];
-                            if (fp.titleName==obj) {
-                            	$('#fptt').val(fp.titleName);
-                                $('#nsrsbh').val(fp.taxRegisterNo);
-                                $('#dz').val(fp.userAddress);
-                                $('#dh').val(fp.userMobile);
-                                $('#khh').val(fp.openBankName);
-                                $('#yhzh').val(fp.openBankAccount);
-                                $('#yx').val(fp.userEmail);
-                            }
-                        }
-                    }
-                }
-            )
-		};
+		// function changeFptt(obj){
+  //           $.post(
+  //               'getInvoiceTitle',
+  //               {},
+  //               function(test) {
+  //                   if(test.success) {
+  //                       var option='';
+  //                       var dataList = test.data;
+  //                       for(var i=0;i<dataList.length;i++) {
+  //                           var fp = dataList[i];
+  //                           if (fp.titleName==obj) {
+  //                           	$('#fptt').val(fp.titleName);
+  //                               $('#nsrsbh').val(fp.taxRegisterNo);
+  //                               $('#dz').val(fp.userAddress);
+  //                               $('#dh').val(fp.userMobile);
+  //                               $('#khh').val(fp.openBankName);
+  //                               $('#yhzh').val(fp.openBankAccount);
+  //                               $('#yx').val(fp.userEmail);
+  //                           }
+  //                       }
+  //                   }
+  //               }
+  //           )
+		// };
 		
 		function tiaozhuan() {
 			window.location.href = "bangzhu.html?time=" + new Date();
@@ -380,6 +380,7 @@
 				$("#confirmBtn").attr("disabled",true);
 				jConfirm(firm,title, function(r) {
 					if(r){
+						alert(111);
 						$.post("dzfp_sqj/saveLs", {
 							"fptt" : fptt,
 							"nsrsbh" : nsrsbh,
@@ -388,7 +389,6 @@
 							"khh" : khh,
 							"khhzh" : yhzh,
 							"yx" :yx
-							//"sj" : sj
 						}, function(data) {
 							if (data.msg == 1) {
 								info.innerText = '已收到您的开票申请,发票开具完成后会发送到预留邮箱,请关注邮箱或稍候再次提取!';
