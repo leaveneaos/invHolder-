@@ -1,6 +1,8 @@
 package com.rjxx.taxeasy.wechat.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.itextpdf.text.log.Logger;
+import com.itextpdf.text.log.LoggerFactory;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.service.InvoiceService;
@@ -24,6 +26,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/wechat")
 public class InvoiceController extends BaseController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private InvoiceService invoiceService;
@@ -93,10 +96,11 @@ public class InvoiceController extends BaseController {
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
+            logger.info(url);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
-                        + url + "wechat/getOpenid&" + "response_type=code&scope=snsapi_base&state=" + "wljqr"
+                        + url + "wechat/getOpenid&" + "response_type=code&scope=snsapi_base&state=" + "yjkp"
                         + "#wechat_redirect";
                 try {
                     response.sendRedirect(ul);
