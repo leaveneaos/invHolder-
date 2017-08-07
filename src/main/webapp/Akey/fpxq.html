@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>容津信息</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../css/mui.min.css">
+    <style type="text/css">
+        body {
+            padding: 10px;
+        }
+        .mui-input-row.data-bg {
+            height: 40px;
+            background-color: #BFBDBF;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        .mui-btn-outlined {
+            font-size: 16px;
+            width: 85%;
+            margin: 20px auto;
+            padding: 10px 0;
+            box-sizing: border-box;
+            background-color: #fff;
+            border-radius: 6px;
+            border: none;
+            outline:none;
+        }
+        .mui-content {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background-color: #fff;
+        }
+        .data-pd {
+            padding: 5px;
+        }
+        .data-pd span {
+            color: #133169;
+        }
+    </style>
+</head>
+<body>
+    <section class="mui-content"> 
+        <div class="data-pd">
+            <label>开票日期:</label>
+            <span>2017/08/10</span>
+        </div>
+        <div class="data-pd">
+            <label>发票代码:</label>
+            <span>12345</span>
+        </div>
+        <div class="data-pd">
+            <label>发票号码:</label>
+            <span>56789</span>
+        </div>
+        <div class="data-pd">
+            <label>购方名称:</label>
+            <span>56789</span>
+        </div>
+        <div class="data-pd">
+            <label>价税合计:</label>
+            <span>20.00</span>
+        </div>
+    </section>
+    <button type="button" class="mui-btn mui-btn-outlined mui-btn-block" onclick="fn()">继续开票</button>
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/mui.min.js"></script>
+    <script type="text/javascript">
+        function fn() {
+            window.location.href="/Akey/fptt.html?time=" + new Date();
+        }
+    </script>
+</body>
+</html>
