@@ -59,16 +59,16 @@ public class InvoiceController extends BaseController {
             //如果不传值
         } else {
             //如果session中没有
-//            if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
-//                return ResultUtil.error("redirect");
-//            } else {
+            if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
+                return ResultUtil.error("redirect");
+            } else {
                 username = (String) session.getAttribute("username");
                 openid =
-//                        (String) session.getAttribute("openid");
-                        "openid";
+                        (String) session.getAttribute("openid");
+//                        "openid";
                 logger.error("前台不传值username="+username);
                 logger.error("前台不传值openid="+openid);
-//            }
+            }
         }
         String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
         if ("-1".equals(status)) {
