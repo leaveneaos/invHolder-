@@ -44,23 +44,23 @@
     <section class="mui-content"> 
         <div class="data-pd">
             <label>开票日期:</label>
-            <span>2017/08/10</span>
+            <span id="kprq"></span>
         </div>
         <div class="data-pd">
             <label>发票代码:</label>
-            <span>12345</span>
+            <span id="fpdm"></span>
         </div>
         <div class="data-pd">
             <label>发票号码:</label>
-            <span>56789</span>
+            <span id="fphm"></span>
         </div>
         <div class="data-pd">
             <label>购方名称:</label>
-            <span>56789</span>
+            <span id="purchaserName"></span>
         </div>
         <div class="data-pd">
             <label>价税合计:</label>
-            <span>20.00</span>
+            <span id="amount"></span>
         </div>
     </section>
     <button type="button" class="mui-btn mui-btn-outlined mui-btn-block" onclick="fn()">继续开票</button>
@@ -68,8 +68,19 @@
     <script src="../js/jquery.min.js"></script>
     <script src="../js/mui.min.js"></script>
     <script type="text/javascript">
+        $(function() {
+            $("#fphm").html(localStorage.fphm);
+            $("#fpdm").html(localStorage.fpdm);
+            $("#purchaserName").html(localStorage.purchaserName);
+            $("#amount").html(localStorage.amount);
+            $("#kprq").html(localStorage.kprq);
+        })
         function fn() {
-            window.location.href="/Akey/fptt.html?time=" + new Date();
+            var thisURL = document.URL;
+            var  getval =thisURL.split('?')[1];
+            var Id= getval.split("=")[2];
+            var users= getval.split("=")[3];
+            window.location.href="../Akey/fptt.html?time=" + new Date()+"="+Id+"="+users;
         }
     </script>
 </body>
