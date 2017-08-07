@@ -132,9 +132,9 @@ public class InvoiceController extends BaseController {
                 + SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
-        logger.info("result="+resultObject.toJSONString());
+        logger.error("result="+resultObject.toJSONString());
         String openid = resultObject.getString("openid");
-        logger.info("openid="+openid);
+        logger.error("openid="+openid);
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
