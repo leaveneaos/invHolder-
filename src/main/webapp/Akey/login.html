@@ -92,14 +92,14 @@
                 localStorage.setItem("pass","");
             };
             $.post(
-                "einv/wechat/login",
+                "../wechat/login",
                 {
                     "user" : user.value,
                     "pass" : pass.value
                 },
                 function(data) {
                     if(data.code=="1"){
-                        window.location.href = "fptt.html?time=" + new Date();
+                        window.location.href = "../Akey/fptt.html?time=" + new Date();
 					}else{
                         alert(data.msg);
                     }

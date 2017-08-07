@@ -233,7 +233,7 @@
         }
         showMask();
         $.post(
-            "einv/wechat/invoice",
+            "../wechat/invoice",
             {
                 "purchaserName": gfmc,
                 "purchaserTaxNo": gfsh,
@@ -244,7 +244,7 @@
             },
             function (obj) {
                 if (obj.msg == "redirect") {
-                    window.location.href = "error.html?time=" + new Date();
+                    window.location.href = "../Akey/error.html?time=" + new Date();
                 } else {
                     if (obj.code == 1) {
                         var data = eval("(" + obj.data + ")");
@@ -261,7 +261,7 @@
                             localStorage.jshj = jshj;
                             localStorage.users = users;
                             localStorage.id = id;
-                            window.location.href = "fpbc.html?time=" + new Date();
+                            window.location.href = "../Akey/fpbc.html?time=" + new Date();
                         } else if (data.returnCode == null) {
                             alert("暂不处理");
                         } else {
