@@ -11,6 +11,8 @@ import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.XmlUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.util.*;
  */
 @Service
 public class InvoiceService {
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private YhJpaDao yhJpaDao;
@@ -47,6 +50,7 @@ public class InvoiceService {
                 StringUtils.isNotBlank(username) &&
                 StringUtils.isNotBlank(openid)) {
             try {
+                logger.info("service中的openid="+openid);
                 //调接口
                 String gsdm = yhJpaDao.findGsdmByDlyhid(username);
                 Xf xf = xfJpaDao.findOneByGsdm(gsdm);
