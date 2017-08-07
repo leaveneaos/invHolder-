@@ -51,7 +51,7 @@ public class InvoiceController extends BaseController {
         String openid = "";
         //如果前台传值
         if (StringUtils.isNotBlank(user) && StringUtils.isNotBlank(id)
-                && !"undefined".equals(user) && !"undefined".equals(id)) {
+                && !"no".equals(user) && !"no".equals(id)) {
             username = user;
             openid = id;
             logger.error("前台传值username="+user);
