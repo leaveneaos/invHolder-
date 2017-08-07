@@ -267,12 +267,23 @@
                             localStorage.jshj = jshj;
                             window.location.href = "../Akey/fpbc.html?time=" + new Date()+"="+id+"="+users;
                         } else if (data.returnCode == null) {
-                            alert("暂不处理");
+                            var fphm = data.fphm;
+                            var fpdm = data.fpdm;
+                            var purchaserName = data.purchaserName;
+                            var amount = data.amount;
+                            var kprq = data.kprq;
+                            var users = data.users;
+                            var id = data.id;
+                            localStorage.fphm = fphm;
+                            localStorage.fpdm = fpdm;
+                            localStorage.purchaserName = purchaserName;
+                            localStorage.amount = amount;
+                            localStorage.kprq = kprq;
+                            window.location.href = "../Akey/fpxq.html?time=" + new Date()+"="+id+"="+users;
                         } else {
                             alert(data.returnMsg)
                         }
                     } else {
-                        // $("#msg").html(obj.msg).css("display", "block");
                         alert(obj.msg)
                     }
                 }
