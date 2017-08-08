@@ -9,7 +9,6 @@ import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.SpvoService;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
-import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.XmlUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -167,13 +166,7 @@ public class InvoiceService {
     public String login(String username, String password) {
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
             String pass = yhJpaDao.findYhmmByDlyhid(username);
-            String MD5pass = "";
-            try {
-                MD5pass=MD5Util.generatePassword(password);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (MD5pass.equals(pass)) {
+            if (password.equals(pass)) {
                 return "1";
             } else {
                 return "0";
