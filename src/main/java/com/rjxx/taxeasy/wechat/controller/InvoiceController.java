@@ -41,7 +41,6 @@ public class InvoiceController extends BaseController {
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     @ApiOperation(value = "接收抬头")
     public Result send(@RequestParam String purchaserName,
-                       @RequestParam String purchaserTaxNo,
                        @RequestParam String email,
                        @RequestParam Double amount,
                        @RequestParam String user,
@@ -65,6 +64,7 @@ public class InvoiceController extends BaseController {
 //                        "openid";
             }
         }
+        String purchaserTaxNo=request.getParameter("purchaserTaxNo");
         String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
