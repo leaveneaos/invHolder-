@@ -2,7 +2,7 @@ html,body {
 	margin: 0 auto;
 	padding: 0;
 	overflow: hidden;
-	overflow-y: auto;
+	/*overflow-y: auto;*/
 	height: 100%;
 	max-width: 800px;
 }
@@ -101,8 +101,8 @@ button {
 }
 .bottom {
 	width: 100%;
-	height: 100px;
-	line-height: 100px;
+	height: 80px;
+	line-height: 80px;
 	text-align: center;
 	position: relative;
 }
