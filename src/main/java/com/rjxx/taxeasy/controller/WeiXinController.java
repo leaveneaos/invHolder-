@@ -7,6 +7,8 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
+import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Kpls;
@@ -30,6 +32,7 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,7 +61,8 @@ public class WeiXinController extends BaseController {
     @Autowired
     private PpService ppService;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    @Value("${rjxx.pdf_file_url:}")
+    private String pdf_file_url;
     /**
      * 获取微信授权回调
      */
@@ -74,6 +78,8 @@ public class WeiXinController extends BaseController {
             }
         try {
             System.out.println("返回的数据"+data.toString());
+            if(null!=data){
+
             //解析微信返回的消息推送的xml
             xmlDoc = DocumentHelper.parseText(data);
             Element rootElt = xmlDoc.getRootElement();
@@ -94,9 +100,18 @@ public class WeiXinController extends BaseController {
             if(""!=SuccOrderIdValue&&null!=SuccOrderIdValue){
                 System.out.println("拿到成功的订单id了");
               Map resultMap =  weixinUtils.zdcxstatus(SuccOrderIdValue/*,access_token*/);//主动获取授权状态，成功会返回数据
-                if(null!=resultMap.get("msg")){
-                    logger.info("订单编号为"+SuccOrderIdValue+"的提取码,主动获取授权失败,订单没有授权"+resultMap.get("msg"));
+                if(null!=resultMap){
+                    logger.info("订单编号为"+SuccOrderIdValue+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
                     return null;
+                }else{
+                    System.out.println("开始封装数据并进行开票");
+                    logger.info("开始开票");
+                    //封装数据
+
+                    //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
+                    //String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
+                   // String resultxml= HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+
                 }
 
             }
@@ -105,6 +120,7 @@ public class WeiXinController extends BaseController {
                 String re = "微信授权失败,请重新开票";
                String msg= weixinUtils.jujuekp(FailOrderIdValue,re);
 
+            }
             }
         } catch (Exception e) {
             //处理异常
@@ -191,11 +207,11 @@ public class WeiXinController extends BaseController {
        String access_token = (String) request.getSession().getAttribute("access_token");
 
         //判断是否是支付宝内
-//        if (!WeixinUtils.isWeiXinBrowser(request)) {
-//            request.getSession().setAttribute("msg", "请使用支付宝进行该操作");
-//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//            return null;
-//        }
+        /*if (!WeixinUtils.isWeiXinBrowser(request)) {
+            request.getSession().setAttribute("msg", "请使用微信进行该操作");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
+        }*/
         //主动查询授权状态
         WeixinUtils weixinUtils = new WeixinUtils();
         Map weiXinDataMap = weixinUtils.zdcxstatus(order_id);
@@ -215,13 +231,13 @@ public class WeiXinController extends BaseController {
             params2.put("kplsh", kplsh);
             List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
 
-            String s_media_id =weixinUtils.creatPDF(kpls.getPdfurl());
+            String s_media_id =weixinUtils.creatPDF(kpls.getPdfurl(),pdf_file_url);
             if(null==s_media_id&&StringUtils.isBlank(s_media_id)){
                 logger.info("上传PDF失败获取s_media_id为null");
                 return  null;
             }
 
-            //weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,weiXinDataMap,kpspmxList,kpls);
+            weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls);
         }
         return  null;
     }
