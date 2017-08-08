@@ -44,7 +44,6 @@ public class InvoiceService {
     public String send(String purchaserName, String purchaserTaxNo,
                        String email, Double amount, String username, String openid) {
         if (StringUtils.isNotBlank(purchaserName) &&
-                StringUtils.isNotBlank(purchaserTaxNo) &&
                 StringUtils.isNotBlank(email) &&
                 amount != null &&
                 StringUtils.isNotBlank(username) &&
