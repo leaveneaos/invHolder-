@@ -209,6 +209,32 @@
 	 　 	}
 	  		return true;
 		};
+		// 本地存储
+		if(storage.data) {
+			var json=storage.getItem("data");
+			var obj = JSON.parse(json);
+			if(obj.fptt != '') {
+				document.getElementById('fptt').value = obj.fptt;
+			}
+			if(obj.nsrsbh != '') {
+				document.getElementById('nsrsbh').value = obj.nsrsbh;
+			}
+			if(obj.dz != '') {
+				document.getElementById('dz').value = obj.dz;
+			}
+			if(obj.dh != '') {
+				document.getElementById('dh').value = obj.dh;
+			}
+			if(obj.khh != '') {
+				document.getElementById('khh').value = obj.khh;
+			}
+			if(obj.yhzh != '') {
+				document.getElementById('yhzh').value = obj.yhzh;
+			}
+			if(obj.yx != '') {
+				document.getElementById('yx').value = obj.yx;
+			}
+		};
 		// 点击确认
 		function sure() {
 			// 邮箱校验
@@ -252,6 +278,23 @@
 						return;
 					}
 				}
+				// 本地缓存
+				if(!window.localStorage){
+		            return false;
+		        }else{
+		            
+		            var data={
+		                fptt: fptt,
+		                nsrsbh: nsrsbh,
+		                dz: dz,
+		                dh: dh,
+		                khh: khh,
+		                yhzh: yhzh,
+		                yx: yx
+		            };
+		            var d=JSON.stringify(data);
+		            storage.setItem("data",d);
+		        }
 				var btnArray = [ '否', '是' ];
 				title = "信息确认";	
 				firm = "发票抬头:" + fptt + "</br>";
