@@ -17,10 +17,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
@@ -28,6 +26,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.Response;
@@ -39,10 +38,10 @@ import java.util.*;
  * 微信工具类
  * Created by zsq on 2017-08-03.
  */
+
 public class WeixinUtils {
     private  static Logger logger = LoggerFactory.getLogger(WeixinUtils.class);
-   /* @Value("${pdf_url}")
-    private  String pdf;*/
+
 
     /**
      * 判断是不是微信浏览器
@@ -50,7 +49,7 @@ public class WeixinUtils {
      * @param
      * @return
      */
-       /* public static boolean isWeiXinBrowser(HttpServletRequest request) {
+        /*public static boolean isWeiXinBrowser(HttpServletRequest request) {
         String ua = request.getHeader("user-agent").toLowerCase();
         boolean res = ua.contains("micromessenger");
         return res;
@@ -276,11 +275,11 @@ public class WeixinUtils {
         //System.out.println(""+card_id);
 
 
-        weixinUtils.dzfpInCard("1131453220170808",WeiXinConstants.FAMILY_CARD_ID,weixinUtils.zdcxstatus("1131453220170808"));
+        //weixinUtils.dzfpInCard("1131453220170808",WeiXinConstants.FAMILY_CARD_ID,weixinUtils.zdcxstatus("1131453220170808"));
         //String in =  weixinUtils.jujuekp("1131453222001122","微信授权失败，请重新开票");//重新开票
 
         //上传PDF
-        //weixinUtils.creatPDF("http://test.datarj.com/e-invoice-file/500102010003643/20170531/691fe064-80f4-4e81-9ae6-4d16ee0010a5.pdf");
+       // weixinUtils.creatPDF("http://test.datarj.com/e-invoice-file/500102010003643/20170531/691fe064-80f4-4e81-9ae6-4d16ee0010a5.pdf","/usr/local/e-invoice-file");
 
 
     }
@@ -393,10 +392,11 @@ public class WeixinUtils {
         return null;
     }
 
+
     /*
-    * 设置授权页字段
-    * 一次性设置
-    * */
+        * 设置授权页字段
+        * 一次性设置
+        * */
     public void  sqzd(){
         WeixinUtils weixinUtils = new WeixinUtils();
         String access_token = (String) weixinUtils.hqtk().get("access_token");
@@ -425,6 +425,7 @@ public class WeixinUtils {
         biz_field.put("show_title",1);
         biz_field.put("show_tax_no",1);
         biz_field.put("show_addr",0);
+
         biz_field.put("show_phone",0);
         biz_field.put("show_bank_type",0);
         biz_field.put("show_bank_no",0);
@@ -579,7 +580,7 @@ public class WeixinUtils {
     * 将电子发票插入卡包
     * */
 
-    public  void dzfpInCard(String order_id,String card_id,Map weiXinData/*,List<Kpspmx> kpspmxList,Kpls kpls*/){
+    public  String dzfpInCard(String order_id,String card_id,String pdf_file_url,Map weiXinData,List<Kpspmx> kpspmxList,Kpls kpls){
         //String order_id = "";
         //String card_id = "";
         String appid = WeiXinConstants.APP_ID;
@@ -606,7 +607,8 @@ public class WeixinUtils {
         user_card.put("invoice_user_data",invoice_user_data);
 
         weiXinInfo.setTitle((String) weiXinData.get("title"));//发票抬头
-        weiXinInfo.setFee(2);//发票金额
+        weiXinInfo.setFee(kpls.getJshj().intValue());//卡包开票金额,价税合计
+       /* weiXinInfo.setFee(2);//发票金额
         weiXinInfo.setBilling_time(1480342498);//发票开票时间
         weiXinInfo.setBilling_no("150003522222");//发票代码
         weiXinInfo.setBilling_code("3643259");//发票号码
@@ -617,22 +619,22 @@ public class WeixinUtils {
         weiXinInfo.setName("衣服");
         weiXinInfo.setUnit("件");
         weiXinInfo.setNum(1);
-        weiXinInfo.setPrice(12);
-      /*  if(kpspmxList.size()>0){
+        weiXinInfo.setPrice(12);*/
+        if(kpspmxList.size()>0){
             for (Kpspmx kpspmx : kpspmxList){
             weiXinInfo.setName(kpspmx.getSpmc());
             weiXinInfo.setNum(kpspmx.getSps().intValue());
             weiXinInfo.setPrice(kpspmx.getSpdj().intValue());
             weiXinInfo.setUnit(kpspmx.getSpdw());
             }
-        }*/
+        }
 
 
-       /* String pdfUrl = kpls.getPdfurl();
-        String  s_media_id_pdf = weixinUtils.creatPDF(pdfUrl);
+        String pdfUrl = kpls.getPdfurl();
+        String  s_media_id_pdf = weixinUtils.creatPDF(pdfUrl,pdf_file_url);
         if(null!=s_media_id_pdf&& StringUtils.isNotBlank(s_media_id_pdf)){
             weiXinInfo.setS_pdf_media_id(s_media_id_pdf);
-        }*/
+        }
         invoice_user_data.put("fee",weiXinInfo.getFee());
         invoice_user_data.put("title",weiXinInfo.getTitle());
         invoice_user_data.put("billing_time",weiXinInfo.getBilling_time());
@@ -660,23 +662,46 @@ public class WeixinUtils {
         info.put("price",weiXinInfo.getPrice());
 
         System.out.println("封装的数据"+JSON.toJSONString(sj));
-        return ;
+        String jsonStr = WeixinUtil.httpRequest(URL, "POST",JSON.toJSONString(sj));
+        if(null!=jsonStr){
+            ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
+            try {
+                Map map = jsonparer.readValue(jsonStr, Map.class);
+                int errcode = (int) map.get("errcode");
+                String errmsg = (String) map.get("errmsg");
+                System.out.println("错误码"+errcode);
+                if(errcode==0){
+                    String openid = (String) map.get("openid");
+                    logger.info("插入卡包成功,成功返回的openid为"+openid);
+                    System.out.println("插入卡包成功,成功返回openid为"+openid);
+                    return openid;
+                }else{
+                    logger.info("返回的错误信息为"+errmsg);
+                    return null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
     /*
     * 上传PDF
     * */
-    public  String creatPDF(String pdfurl){
+    public  String creatPDF(String pdfurl,String pdf_file_url){
         String pdfUrlPath="";
 
-        /*if(null!=pdfurl&&StringUtils.isNotBlank(pdfurl)){
+        if(null!=pdfurl&&StringUtils.isNotBlank(pdfurl)){
             String p = pdfurl.split("//")[1];
             if(null!=p&&StringUtils.isNoneEmpty(p)){
                 String p1=pdfurl.split("//")[1].split("/")[1];
                 String p2=pdfurl.split("//")[1].split("/")[2];
                 String p3=pdfurl.split("//")[1].split("/")[3];
                 String p4=pdfurl.split("//")[1].split("/")[4];
+                pdfUrlPath= pdf_file_url+"/"+p1+"/"+p2+"/"+p3+"/"+p4;
             }
-        }*/
+        }
+        System.out.println("pdf路径问题"+pdfUrlPath);
         String s_media_id ="";
         WeixinUtils weixinUtils = new WeixinUtils();
         String access_token = (String) weixinUtils.hqtk().get("access_token");
@@ -694,7 +719,7 @@ public class WeixinUtils {
 
         MultipartEntityBuilder builder  = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        FileBody fileBody = new FileBody(new File(pdfurl));
+        FileBody fileBody = new FileBody(new File(pdfUrlPath));
         builder.addPart("pdf", fileBody);
         HttpEntity entit = builder.build();
         httpPost.setEntity(entit);
