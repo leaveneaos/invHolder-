@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.wechat.service.InvoiceService;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.MD5Util;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -31,11 +32,11 @@ public class InvoiceController extends BaseController {
     private InvoiceService invoiceService;
 
     //王亚辉的测试
-    private static final String APP_ID = "wx731106a80c032cad";
-    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
-////    正式
-//    private static final String APP_ID = "wx9abc729e2b4637ee";
-//    private static final String SECRET = "e7a53601b6a0e8b4ac194b382eb";
+//    private static final String APP_ID = "wx731106a80c032cad";
+//    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
+//    正式
+    private static final String APP_ID = "wx9abc729e2b4637ee";
+    private static final String SECRET = "e7a53601b6a0e8b4ac194b382eb";
 
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     @ApiOperation(value = "接收抬头")
@@ -45,8 +46,6 @@ public class InvoiceController extends BaseController {
                        @RequestParam Double amount,
                        @RequestParam String user,
                        @RequestParam String id) {
-        logger.error("user="+user);
-        logger.error("id="+id);
         String username = "";
         String openid = "";
         //如果前台传值
@@ -54,8 +53,6 @@ public class InvoiceController extends BaseController {
                 && !"no".equals(user) && !"no".equals(id)) {
             username = user;
             openid = id;
-            logger.error("前台传值username="+username);
-            logger.error("前台传值openid="+openid);
             //如果不传值
         } else {
             //如果session中没有
@@ -66,8 +63,6 @@ public class InvoiceController extends BaseController {
                 openid =
                         (String) session.getAttribute("openid");
 //                        "openid";
-                logger.error("前台不传值username="+username);
-                logger.error("前台不传值openid="+openid);
             }
         }
         String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
@@ -84,11 +79,17 @@ public class InvoiceController extends BaseController {
     @ApiOperation(value = "登录")
     public Result login(@RequestParam String user,
                         @RequestParam String pass) {
-        String status = invoiceService.login(user, pass);
+        String password = "";
+        try {
+            password=MD5Util.generatePassword(pass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String status = invoiceService.login(user, password);
         if ("1".equals(status)) {
             session.setMaxInactiveInterval(45 * 60);
             session.setAttribute("username", user);
-            session.setAttribute("password", pass);
+            session.setAttribute("password", password);
             return ResultUtil.success();
         } else {
             return ResultUtil.error("用户名不存在或密码错误");
