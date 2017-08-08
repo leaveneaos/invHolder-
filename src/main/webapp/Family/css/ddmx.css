@@ -54,9 +54,9 @@ button {
 }
 .btoPrice {
 	text-align: center;
-	height: 85px;
+	height: 65px;
 	font-size: 0;
-	line-height: 65px;
+	line-height: 45px;
 }
 .btoPrice ul li {
 	display: inline-block;
