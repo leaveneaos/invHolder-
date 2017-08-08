@@ -7,7 +7,7 @@ import com.rjxx.taxeasy.wechat.service.InvoiceService;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.MD5Util;
+import com.rjxx.utils.PasswordUtils;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -81,7 +81,7 @@ public class InvoiceController extends BaseController {
                         @RequestParam String pass) {
         String password = "";
         try {
-            password=MD5Util.generatePassword(pass);
+           password = PasswordUtils.encrypt(pass);
         } catch (Exception e) {
             e.printStackTrace();
         }
