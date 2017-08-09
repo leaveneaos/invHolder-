@@ -450,21 +450,6 @@ public class BaseClController extends BaseController {
            String xml=GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
            String resultxml=HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
             logger.info("-------返回值---------"+resultxml);
-           /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
-            //复制一个新的list用于生成处理表
-            List<Jymxsq> jymxsqTempList = new ArrayList<Jymxsq>();
-            jymxsqTempList = BeanConvertUtils.convertList(jymxsqList, Jymxsq.class);
-            jymxsqClList = discountDealUtil.dealDiscount(jymxsqTempList, 0d, jyxxsq.getJshj(),jyxxsq.getHsbz());
-            Integer sqlsh=jyxxsqService.saveJyxxsq(jyxxsq, jymxsqList,jymxsqClList,jyzfmxList);
-            List jyxxsqlist=new ArrayList();
-            jyxxsqlist.add(jyxxsq);
-            List resultList=null;
-                if(jyxxsq.getGsdm().equals("Family")){
-                    resultList =  fpclService.skdzfp(jyxxsqlist,"03");
-                }else if(jyxxsq.getGsdm().equals("ldyx")){
-                    resultList =  fpclService.zjkp(jyxxsqlist,"01");
-                }
-                */
             request.getSession().setAttribute("serialorder",jyxxsq.getJylsh()+jyxxsq.getDdh());
             result.put("msg", "1");
             }catch (Exception e){
