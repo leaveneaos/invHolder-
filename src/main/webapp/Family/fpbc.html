@@ -85,7 +85,7 @@
 	    // 展示页面内容
 		$(function () {
             $.post(
-                "../base/qrxxsession",/*确认信息*/
+                "../family/qrxxsession",/*确认信息*/
                 {},
                 function (data) {
                 	console.log(data)
@@ -112,10 +112,11 @@
         $('#sure').on('click',function () {
         	showMask();
 			$.post(
-			    "../base/savels",
+			    "../family/savels",
 				{},
 				function (data) {
 			        if(data.msg == 1) {
+
                         window.location.href = "fpxq.html?time=" + new Date();
                     }
                 }
