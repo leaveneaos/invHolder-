@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>信息确认</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <!--标准mui.css-->
+    <link rel="stylesheet" href="../css/mui.min.css">
+    <!--App自定义的css-->
+    <link rel="stylesheet" type="text/css" href="../css/app.css"/>
+    <style>
+        body {
+            background-image: url(../images/2016-11-25_143009.png); 
+            background-size: 100% 100%; 
+            background-attachment: fixed;
+            max-width: 800px; 
+            margin: 0 auto;
+        }
+        header img {
+            width: 100%;
+        }
+        footer {
+            position: fixed; 
+            bottom: 10px; 
+            width: 100%; 
+            z-index: 99;
+            max-width: 800px;
+        }
+        footer .fl {
+            float: left;
+            width: 70%;
+        }
+        footer .fr {
+            float: right;
+            width: 30%;
+            text-align: right;
+        }
+        .main {
+            width: 96%; 
+            margin: 0 auto;
+        }
+        .mui-table h4, .mui-table h5, .mui-table .mui-h5, .mui-table .mui-h6,
+        .mui-table p {
+            margin-top: 0;
+        }
+
+        .mui-table h4 {
+            line-height: 21px;
+            font-weight: 500;
+        }
+
+        .mui-table .oa-icon {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .mui-table .oa-icon-star-filled {
+            color: #f14e41;
+        }
+        .data-list {
+            width: 100%; 
+            margin-bottom: 15px;
+        }
+        .data-list h4 {
+            color: #D1AC38;
+        }
+        .data-list h5 {
+            color: #FFFFFF;
+        }
+        #confirmBtn {
+            width: 96%; 
+            margin-left: 2%; 
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="logo/lrf.png"/>
+    </header>
+
+    <section class="main">
+        <div class="data-list">
+            <h4 class="mui-ellipsis">订单号</h4>
+            <h5 id="orderNo"></h5>
+        </div>
+        <div class="data-list">
+            <h4 class="mui-ellipsis">门店编号</h4>
+            <h5 id="sn"></h5>
+        </div>
+        <div class="data-list">
+            <h4 class="mui-ellipsis">交易日期</h4>
+            <h5 id="orderTime"></h5>
+        </div>
+        <div class="data-list">
+            <h4 class="mui-ellipsis">订单金额</h4>
+            <h5 id="price"></h5>
+        </div>
+    </section>
+
+    <button id='confirmBtn' type="button" onclick="tk()" class="mui-btn mui-btn-primary mui-btn-block">确认</button>
+
+
+    <footer>
+        <div class="fl">泰易电子发票云服务平台</div>
+        <div class="fr"><a href="bangzhu.html">遇到问题?</a></div>
+    </footer>
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/fpj.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $.post(
+                "../dzfp_sqj/getSmsj", 
+                {}, 
+                function (data) {
+                    $('#orderNo').html(data.orderNo);
+                    $('#orderTime').html(data.orderTime);
+                    $('#price').html(data.price);
+                    $('#sn').html(data.sn);
+                }
+            )
+        })
+        function tk() {
+            window.location.href = "../dzfp_sqj/smtq2";
+        }
+    </script>
+</body>
+</html>

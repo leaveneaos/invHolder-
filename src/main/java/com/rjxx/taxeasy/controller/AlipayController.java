@@ -98,15 +98,15 @@ public class AlipayController extends BaseController {
      */
     @RequestMapping(value = "/syncAlipay")
     @ResponseBody
-    public String syncAlipay(@RequestParam(required = false) Integer djh) throws Exception {
-        if (djh == null) {
-            Object djhObject = session.getAttribute("djh");
-            if (djhObject == null) {
+    public String syncAlipay(@RequestParam(required = false) String serialorder) throws Exception {
+        if (serialorder == null) {
+            Object serialorderObject = session.getAttribute("serialorder");
+            if (serialorderObject == null) {
                 request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-            djh = Integer.valueOf(djhObject.toString());
+            serialorder = serialorderObject.toString();
         }
         //判断是否是支付宝内
         if (!AlipayUtils.isAlipayBrowser(request)) {
@@ -119,7 +119,7 @@ public class AlipayController extends BaseController {
             return null;
         }
         Map params = new HashMap();
-        params.put("djh", djh);
+        params.put("serialorder", serialorder);
         List<Kpls> kplsList = kplsService.findAll(params);
         String redirectUrl = null;
         for (Kpls kpls : kplsList) {

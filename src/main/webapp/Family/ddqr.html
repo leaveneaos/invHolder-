@@ -53,7 +53,7 @@
 	<script type="text/javascript">
 		$(function () {
 	        $.post(
-	        	"待定", 
+	        	"../family/qrxxsession",
 	        	{}, 
 	        	function (data) {
 		            $('#orderNo').html(data.orderNo);
@@ -64,7 +64,7 @@
         	)
 	    })
 	    function sure() {
-	        window.location.href = "待定";
+	        window.location.href = "../family/ddmx.html?time=" + new Date();
 	    }
 	</script>
 </body>
