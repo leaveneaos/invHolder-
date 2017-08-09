@@ -272,7 +272,7 @@ public class BaseClController extends BaseController {
             //关闭连接,释放资源
             client.getConnectionManager().shutdown();
         }
-        if (state.equals("")||null==state) {
+        if (null==state) {
             response.sendRedirect(request.getContextPath() + "/Family/qj.html?_t=" + System.currentTimeMillis());
             return;
         }else{
