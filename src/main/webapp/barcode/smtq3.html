@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<title>开票信息已受理</title>
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="../css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="../css/app.css" />
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+		<h1 class="mui-title">开票信息已受理</h1>
+	</header>
+
+	<section class="mui-content">
+		<div style="width: 96%; margin-left: 2%;">
+
+
+			<h4 class="step">电子发票开票申请成功，请耐心等待！</h4>
+
+
+			<span class="step">审核通过后您可以通过以下途径获得电子发票</span>
+
+
+			<h4 class="step">1:通过预留邮箱</h4>
+
+			<h4 class="step">2:再次扫描二维码</h4>
+
+			<p id="lifpj">
+				<span id="fpj" style="font-size: 18px; font-weight: 600; color: #000000;">3:关注我们的公众号,您可以及时收到开票成功通知</span>
+			</p>
+		</div>
+		<ul class="mui-table-view">
+			<li class="mui-table-view-cell">
+				<a href="../smtq/xgyx.html" class="mui-navigate-right"> 重新输入邮箱号 </a>
+			</li>
+			<li class="mui-table-view-cell">
+				<a href="ewm.html" class="mui-navigate-right"> 公众号 </a>
+			</li>
+		</ul>
+	</section>
+
+	<footer>
+		<p class="company">上海容津信息技术有限公司</p>
+		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
+	</footer>
+</body>
+
+<script src="../js/mui.min.js"></script>
+<script type="text/javascript">
+	var ua = navigator.userAgent.toLowerCase();
+	if (ua.match(/MicroMessenger/i) != "micromessenger") {
+		$('#lifpj').html("");
+	}
+	mui.init({
+		swipeBack : true
+	//启用右滑关闭功能
+	});
+</script>
+</html>
