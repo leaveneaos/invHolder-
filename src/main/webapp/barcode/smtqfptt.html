@@ -141,11 +141,14 @@
             
         </div>
     </div>
+
     <button id='confirmBtn' type="button" onclick="tk()"
             class="mui-btn mui-btn-primary mui-btn-block"
             style="width: 96%; margin-left: 2%;">确 &nbsp;&nbsp;认
     </button>
+
     <div id="info" style="margin-bottom: 80px; color: red; margin-left: 2%;"></div>
+
     <footer>
         <p class="company">上海容津信息技术有限公司</p>
         <p class="help"><a href="bangzhu.html">遇到问题?</a></p>
@@ -225,7 +228,6 @@
                         return;
                     }
                 }
-                //  var sj = $('#sj').val();
                 var btnArray = ['否', '是'];
                 if (null != nsrsbh && "" != nsrsbh) {
                     firm += "纳税人识别号:" + nsrsbh + "</br>";
@@ -245,9 +247,6 @@
                 if (null != yx && "" != yx) {
                     firm += "邮箱:" + yx + "</br>";
                 }
-                /*  if (null != sj && "" != sj) {
-                 firm += "手机:" + sj + "。";
-                 } */
                 title = "信息确认";
                 $("#confirmBtn").attr("disabled", true);
                 jConfirm(firm, title, function (r) {
@@ -260,7 +259,6 @@
                             "khh": khh,
                             "khhzh": yhzh,
                             "yx": yx
-                            //"sj" : sj
                         }, function (data) {
                             if (data.failure) {
                                 info.innerText = data.xx;
