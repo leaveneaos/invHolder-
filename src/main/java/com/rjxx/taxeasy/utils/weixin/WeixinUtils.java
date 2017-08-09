@@ -150,16 +150,14 @@ public class WeixinUtils {
     拿到数据,调用微信接口获取微信授权链接,
     如果成功跳转页面,失败返回null
     */
-    public String getTiaoURL(String orderid,int money,int timestamp,String menDianId) throws Exception {
+    public String getTiaoURL(String orderid,String money,long timestamp,String menDianId) throws Exception {
 
+        String auth_url ="";
         WeixinUtils weixinUtils = new WeixinUtils();
 
-        String access_token = (String) weixinUtils.hqtk().get("access_token");//获取token
         String spappid =  weixinUtils.getSpappid();//获取开票平台
         String ticket = weixinUtils.getTicket();
-        //String orderid="123145322200112234";
-        //int money = 12;
-        //int timestamp = 1574875876;
+
         String  source = "web";
         String redirect_url = "https://baidu.com";
         int type = 1;//填写抬头申请开票类型
@@ -172,8 +170,18 @@ public class WeixinUtils {
         nvps.put("redirect_url",redirect_url);
         nvps.put("ticket",ticket);
         nvps.put("type",type);
+        if(null==orderid&&StringUtils.isBlank(orderid)){
+            logger.info("获取微信授权链接,订单编号为null");
+            return null;
+        }
+        if(null==money&&StringUtils.isBlank(money)){
+            logger.info("获取微信授权链接,金额为null");
+            return  null;
+        }
+
         String sj = JSON.toJSONString(nvps);
         System.out.println("封装数据"+sj);
+        String access_token = (String) weixinUtils.hqtk().get("access_token");//获取token
         String urls ="https://api.weixin.qq.com/card/invoice/getauthurl?access_token="+access_token;
         String jsonStr3 = WeixinUtil.httpRequest(urls, "POST", sj);
         System.out.println("返回信息"+jsonStr3.toString());
@@ -181,21 +189,20 @@ public class WeixinUtils {
             ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
             try {
                 Map map = jsonparer.readValue(jsonStr3, Map.class);
-                String auth_url = (String) map.get("auth_url");
+                 auth_url = (String) map.get("auth_url");
                 System.out.println("授权链接"+auth_url);
                 logger.info("跳转url"+auth_url);
-                return auth_url;//返回跳转连接
                 //response.sendRedirect(auth_url);
                 //request.getSession().setAttribute(orderid+"auth_url",auth_url);//跳转url放进session
             } catch (Exception e) {
                 //处理异常
                 logger.error("Get Ali Access_token error", e);
-                return null;
+                return auth_url;
                 //request.getSession().setAttribute("msg", "获取微信授权出现异常!");
                 //response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             }
         }
-        return null;
+        return auth_url;
     }
     //微信授权跳转
     public static void main(String[] args) {
