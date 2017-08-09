@@ -5,9 +5,11 @@ import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.weixin.WeixinUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.WeixinUtil;
 import org.apache.commons.codec.binary.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
@@ -108,6 +110,33 @@ public class BaseClController extends BaseController {
             sendHtml(str, gsxx);
         }
     }
+
+
+    //判断是否微信浏览器
+    @RequestMapping(value = "/isWeiXin")
+    @ResponseBody
+    public  Map isWeiXin(String orderNo,String order,int orderTime,int price){
+        String redirectUrl ="";
+        String ua = request.getHeader("user-agent").toLowerCase();
+        Map resultMap = new HashMap();
+        if(WeixinUtils.isWeiXinBrowser(request)){
+            logger.info("微信浏览器--------------");
+            WeixinUtils weixinUtils = new WeixinUtils();
+            try {
+             redirectUrl = weixinUtils.getTiaoURL(order,price,orderTime,orderNo);
+             resultMap.put("num","0");
+             resultMap.put("redirectUrl",redirectUrl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            logger.info("不是微信浏览器-------------");
+            resultMap.put("num" ,"1");
+        }
+        return resultMap;
+    }
+
+
     @RequestMapping(value = "/sendHtml")
     @ResponseBody
     public void sendHtml(String state, Gsxx gsxx) throws IOException {

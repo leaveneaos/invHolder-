@@ -49,11 +49,11 @@ public class WeixinUtils {
      * @param
      * @return
      */
-        /*public static boolean isWeiXinBrowser(HttpServletRequest request) {
+        public static boolean isWeiXinBrowser(HttpServletRequest request) {
         String ua = request.getHeader("user-agent").toLowerCase();
         boolean res = ua.contains("micromessenger");
         return res;
-        }*/
+        }
 
     /*
     * 获取微信token
@@ -201,11 +201,10 @@ public class WeixinUtils {
     public static void main(String[] args) {
 
         //Map msp = new HashMap();
-        WeixinUtils weixinUtils = new WeixinUtils();
-
+        //WeixinUtils weixinUtils = new WeixinUtils();
 
         //System.out.println(""+in);
-      /* //解析xml
+        /* //解析xml
             String data="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<xml>"
                 + "<ToUserName>1111</ToUserName>"
@@ -587,9 +586,8 @@ public class WeixinUtils {
 
         WeiXinInfo weiXinInfo = new WeiXinInfo();
         WeixinUtils weixinUtils = new WeixinUtils();
-        String access_token = (String) weixinUtils.hqtk().get("access_token");
-        String URL =WeiXinConstants.dzfpInCard_url+access_token;
-        System.out.println("电子发票插入卡包url++++"+URL);
+
+
         Map sj = new HashMap();
         Map card_ext = new HashMap();
         Map user_card = new HashMap();
@@ -662,8 +660,75 @@ public class WeixinUtils {
         info.put("price",weiXinInfo.getPrice());
 
         System.out.println("封装的数据"+JSON.toJSONString(sj));
+        if(null==sj.get("order_id")){
+            logger.info("订单order_id为空");
+            return  null;
+        }
+        if(null==sj.get("card_id")){
+            logger.info("发票card_id为null");
+            return  null;
+        }
+        if(null==sj.get("appid")){
+            logger.info("商户appid为null");
+            return  null;
+        }
+        if(null==card_ext.get("nonce_str")){
+            logger.info("随机字符串nonce_str为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("fee")){
+            logger.info("发票金额fee为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("title")){
+            logger.info("发票抬头title为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("billing_time")){
+            logger.info("发票的开票时间billing_time为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("billing_no")){
+            logger.info("发票的发票代码billing_no为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("billing_code")){
+            logger.info("发票的发票号码billing_code为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("fee_without_tax")){
+            logger.info("不含税金额fee_without_tax为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("s_pdf_media_id")){
+            logger.info("上传PDF的s_pdf_media_id为null");
+            return  null;
+        }
+        if(null==invoice_user_data.get("check_code")){
+            logger.info("校验码check_code为null");
+            return  null;
+        }
+        if(null==info.get("name")){
+            logger.info("商品name为null");
+            return  null;
+        }
+        if(null==info.get("name")){
+            logger.info("商品name为null");
+            return  null;
+        }
+        if(null==info.get("unit")){
+            logger.info("商品unit为null");
+            return  null;
+        }
+        if(null==info.get("price")){
+            logger.info("商品price为null");
+            return  null;
+        }
+        String access_token = (String) weixinUtils.hqtk().get("access_token");
+        String URL =WeiXinConstants.dzfpInCard_url+access_token;
+        System.out.println("电子发票插入卡包url++++"+URL);
         String jsonStr = WeixinUtil.httpRequest(URL, "POST",JSON.toJSONString(sj));
-        if(null!=jsonStr){
+       if(null!=jsonStr){
             ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
             try {
                 Map map = jsonparer.readValue(jsonStr, Map.class);
@@ -691,6 +756,14 @@ public class WeixinUtils {
     public  String creatPDF(String pdfurl,String pdf_file_url){
         String pdfUrlPath="";
 
+        if(null==pdf_file_url){
+            logger.info("上传PDF路径pdf_file_url为null");
+            return  null;
+        }
+        if(null==pdfurl){
+            logger.info("上传PDF的url路径pdfurl为null");
+            return  null;
+        }
         if(null!=pdfurl&&StringUtils.isNotBlank(pdfurl)){
             String p = pdfurl.split("//")[1];
             if(null!=p&&StringUtils.isNoneEmpty(p)){
@@ -701,6 +774,7 @@ public class WeixinUtils {
                 pdfUrlPath= pdf_file_url+"/"+p1+"/"+p2+"/"+p3+"/"+p4;
             }
         }
+
         System.out.println("pdf路径问题"+pdfUrlPath);
         String s_media_id ="";
         WeixinUtils weixinUtils = new WeixinUtils();

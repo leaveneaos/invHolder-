@@ -96,7 +96,7 @@
 			var code = $('#code').val();
             var gsdm =   $('#gsdm').val();
 			$.post(
-				"/tqyz",
+				"tqyz",
 				{
 					"tqm" : tqm,
 					"code" : code,
