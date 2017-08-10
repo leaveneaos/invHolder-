@@ -587,8 +587,6 @@ public class WeixinUtils {
     * */
 
     public  String dzfpInCard(String order_id,String card_id,String pdf_file_url,Map weiXinData,List<Kpspmx> kpspmxList,Kpls kpls){
-        //String order_id = "";
-        //String card_id = "";
         String appid = WeiXinConstants.APP_ID;
 
         WeiXinInfo weiXinInfo = new WeiXinInfo();
@@ -613,6 +611,7 @@ public class WeixinUtils {
 
         weiXinInfo.setTitle((String) weiXinData.get("title"));//发票抬头
         weiXinInfo.setFee(kpls.getJshj().intValue());//卡包开票金额,价税合计
+
        /* weiXinInfo.setFee(2);//发票金额
         weiXinInfo.setBilling_time(1480342498);//发票开票时间
         weiXinInfo.setBilling_no("150003522222");//发票代码

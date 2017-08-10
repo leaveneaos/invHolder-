@@ -1,3 +1,4 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -53,7 +54,7 @@
 	<p id="cwts">验证码输入错误</p>
 
 	<button id="Button1" onclick="tiqu()" class="mui-btn mui-btn-primary mui-btn-block">提&nbsp;&nbsp;交</button>
-
+	<input id="gsdm" name="gsdm" type="hidden" />
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
 		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
@@ -69,7 +70,7 @@
 	    var bIsAndroid = sUserAgent.match(/android/i) == "android";
 	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
 	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
-
+        var gsdm = location.href.split('?')[1].split('&')[0].split('=')[1];
 
 		function loadimage() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
@@ -77,35 +78,34 @@
 		function load() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
 			$('#code').val('');
+            $('#gsdm').val(gsdm);
 		}
 		function tiqu() {
 			var khh = $('#khh').val();
 			var code = $('#code').val();
+            var gsdm =   $('#gsdm').val();
 			$.post(
-				"hdsc/fptq",
+				"tqyz",
 				{
-					"khh" : khh,
-					"code" : code
+                    "tqm" : khh,
+                    "code" : code,
+                    "gsdm":  gsdm
 				},
 				function(data) {
 					if (data.num == 2) {
-					    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-					    	window.open("dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date());
-					    }else{
-					    	window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date();
-					    }
-					} else if (data.num == 3) {
-						btnArray = [ '确定' ];
-						firm = "您提取的发票尚未开具,请检查客户号是否正确,或稍后再试!";
-						title = "提示";
-						alert(firm, title);
-					} else if (data.num == 4) {
-						$('#cwts').css('opacity','1');
-					} else if (data.num == 5) {
-						btnArray = [ '确定' ];
-						firm = data.msg;
-						title = "提示";
-						alert(firm, title);
+                        if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+                            window.open("mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date());
+                        }else{
+                            window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date();
+                        }
+					} else if (data.num == 6) {
+                        btnArray = [ '确定' ];
+                        firm = "您提取的申请已提交,我们正在处理,请稍等!";
+                        title = "提示";
+                        jAlert(firm, title);
+					}  else if (data.num == 4) {
+                        $('#cwts').html("您输入的验证码不正确");
+                        loadimage();
 					}
 				}
 			);

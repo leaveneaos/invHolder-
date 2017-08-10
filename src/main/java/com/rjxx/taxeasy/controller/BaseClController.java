@@ -131,6 +131,7 @@ public class BaseClController extends BaseController {
              redirectUrl = weixinUtils.getTiaoURL(order,price,dateTime.getTime(),orderNo);
              if(null==redirectUrl||redirectUrl.equals("")){
                  resultMap.put("msg","获取微信授权失败!请重试");
+                 resultMap.put("num","2");
                  return resultMap;
              }
              resultMap.put("num","0");
@@ -359,8 +360,9 @@ public class BaseClController extends BaseController {
             Map map = new HashMap<>();
             map.put("tqm", tqm);
             map.put("gsdm", gsdm);
-            if(!tqm.equals(IMEIGenUtils.genCode(tqm.substring(0,tqm.length()-1)))){
-                result.put("num","2");
+            if(!tqm.equals((tqm.substring(0,tqm.length()-1))+IMEIGenUtils.genCode(tqm.substring(0,tqm.length()-1)))){
+                result.put("num","3");
+                return result;
             }
             /*调用接口获取jyxxsq等信息*/
             Map resultMap = new HashMap();
