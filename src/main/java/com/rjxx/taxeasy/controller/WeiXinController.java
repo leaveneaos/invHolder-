@@ -7,17 +7,12 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
-import com.rjxx.taxeasy.domains.Jyls;
-import com.rjxx.taxeasy.domains.Kpls;
-import com.rjxx.taxeasy.domains.Kpspmx;
-import com.rjxx.taxeasy.domains.Pp;
-import com.rjxx.taxeasy.service.JylsService;
-import com.rjxx.taxeasy.service.KplsService;
-import com.rjxx.taxeasy.service.KpspmxService;
-import com.rjxx.taxeasy.service.PpService;
+import com.rjxx.taxeasy.domains.*;
+import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.taxeasy.utils.weixin.WeiXinConstants;
@@ -38,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,12 +50,15 @@ public class WeiXinController extends BaseController {
     @Autowired
     private JylsService jylsService;
 
+    @Autowired
+    private GetDataService getDataService;
 
     @Autowired
     private KpspmxService kpspmxService;
 
     @Autowired
-    private PpService ppService;
+    private TqmtqService tqmtqService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
@@ -71,7 +70,7 @@ public class WeiXinController extends BaseController {
     public String getWeiXin(String data) throws Exception {
             Document xmlDoc = null;
             WeixinUtils weixinUtils = new WeixinUtils();
-
+            String openid = String.valueOf(request.getSession().getAttribute("openid"));
         try {
             System.out.println("返回的数据"+data.toString());
             if(null!=data){
@@ -93,11 +92,11 @@ public class WeiXinController extends BaseController {
                     System.out.println("失败的订单id"+FailOrderIdValue);
                 }
             }
-            String  access_token=(String)weixinUtils.hqtk().get("access_token");
+            String  access_token = (String)weixinUtils.hqtk().get("access_token");
             request.setAttribute("access_token",access_token);
             if(""!=SuccOrderIdValue&&null!=SuccOrderIdValue){
                 System.out.println("拿到成功的订单id了");
-                Map resultMap =  weixinUtils.zdcxstatus(SuccOrderIdValue/*,access_token*/);//主动获取授权状态，成功会返回数据
+                Map resultMap =  weixinUtils.zdcxstatus(SuccOrderIdValue,access_token);//主动获取授权状态，成功会返回数据
                 if(null==resultMap){
                     logger.info("订单编号为"+SuccOrderIdValue+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
                     return null;
@@ -106,12 +105,71 @@ public class WeiXinController extends BaseController {
                     System.out.println("开始封装数据并进行开票"+resultMap.toString());
                     logger.info("开始开票");
                     //先取数据
-
+                    Map resultSjMap = new HashMap();
+                    resultSjMap = getDataService.getData(SuccOrderIdValue, "Family");
+                    List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
+                    List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
+                    List<Jyzfmx> jyzfmxList=(List)resultSjMap.get("jyzfmxList");
                     //封装数据
-
+                    Jyxxsq jyxxsq=jyxxsqList.get(0);
+                    jyxxsq.setGfmc((String) resultMap.get("title"));
+                    jyxxsq.setGfemail((String) resultMap.get("email"));
+                    jyxxsq.setSffsyj("1");
+                    jyxxsq.setGfsh((String) resultMap.get("tax_no"));
+                    jyxxsq.setGfdz((String) resultMap.get("addr"));
+                    jyxxsq.setGfdh((String) resultMap.get("phone"));
+                    jyxxsq.setGfyh((String) resultMap.get("bank_type"));
+                    jyxxsq.setGfyhzh((String) resultMap.get("bank_no"));
+                    Map map = new HashMap<>();
+                    map.put("tqm",SuccOrderIdValue);
+                    map.put("je",jyxxsq.getJshj());
+                    map.put("gsdm",jyxxsq.getGsdm());
+                    Tqmtq tqmtq = tqmtqService.findOneByParams(map);
+                    Jyls jyls1 = jylsService.findOne(map);
+                    if(tqmtq != null && tqmtq.getId() != null){
+                        logger.info("该提取码已提交过申请!");
+                        String reason="该提取码已提交过申请!";
+                        //拒绝开票
+                        weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        return null;
+                    }
+                    if(jyls1 != null){
+                        logger.info("该订单正在开票!");
+                        String reason="该订单正在开票!";
+                        //拒绝开票
+                        weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        return null;
+                    }
                     //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
-                    //String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-                   // String resultxml= HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+                    try {
+                        String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
+                        String resultxml= HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+                        logger.info("-------返回值---------"+resultxml);
+                        //插入表
+                        Tqmtq tqmtq1 = new Tqmtq();
+                        tqmtq1.setDdh(jyxxsq.getTqm());
+                        tqmtq1.setLrsj(new Date());
+                        tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
+                        tqmtq1.setGfmc((String) resultMap.get("title"));
+                        tqmtq1.setNsrsbh((String) resultMap.get("tax_no"));
+                        tqmtq1.setDz((String) resultMap.get("addr"));
+                        tqmtq1.setDh((String) resultMap.get("phone"));
+                        tqmtq1.setKhh((String) resultMap.get("bank_type"));
+                        tqmtq1.setKhhzh((String) resultMap.get("bank_no"));
+                        tqmtq1.setFpzt("0");
+                        tqmtq1.setYxbz("1");
+                        tqmtq1.setGfemail((String) resultMap.get("email"));
+                        tqmtq1.setGsdm(jyxxsq.getGsdm());
+                        String llqxx = request.getHeader("User-Agent");
+                        tqmtq1.setLlqxx(llqxx);
+                        if(openid != null && !"null".equals(openid)){
+                            tqmtq1.setOpenid(openid);
+                        }
+                        tqmtqService.save(tqmtq1);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -119,7 +177,7 @@ public class WeiXinController extends BaseController {
             if(""!=FailOrderIdValue&&null!=FailOrderIdValue){
                 System.out.println("拿到失败的订单id了...拒绝开票");
                 String re = "微信授权失败,请重新开票";
-               String msg= weixinUtils.jujuekp(FailOrderIdValue,re);
+               String msg= weixinUtils.jujuekp(FailOrderIdValue,re,access_token);
 
             }
             }
@@ -215,7 +273,7 @@ public class WeiXinController extends BaseController {
         }*/
         //主动查询授权状态
         WeixinUtils weixinUtils = new WeixinUtils();
-        Map weiXinDataMap = weixinUtils.zdcxstatus(order_id);
+        Map weiXinDataMap = weixinUtils.zdcxstatus(order_id,access_token);
         if(null==weiXinDataMap){
             logger.info("主动查询授权失败++++++++++++");
             return null;

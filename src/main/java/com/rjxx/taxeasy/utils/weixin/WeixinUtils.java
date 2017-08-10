@@ -293,12 +293,12 @@ public class WeixinUtils {
     /*
     * 主动查询授权完成状态
     * */
-    public Map zdcxstatus(String order_id/*,String access_token*/){
+    public Map zdcxstatus(String order_id,String access_token){
 
         Map resultMap = new HashMap();
         WeixinUtils weixinUtils = new WeixinUtils();
         String s_pappid= weixinUtils.getSpappid();
-        String access_token = (String) weixinUtils.hqtk().get("access_token");
+        //String access_token = (String) weixinUtils.hqtk().get("access_token");
         String URL = "https://api.weixin.qq.com/card/invoice/getauthdata?access_token="+access_token;
 
         Map nvps = new HashMap();
@@ -374,14 +374,14 @@ public class WeixinUtils {
                                 System.out.println("value"+value);
                             }
                         }
-                        resultMap.put("title",title);
-                        resultMap.put("tax_no",tax_no);
-                        resultMap.put("addr",addr);
-                        resultMap.put("phone",phone);
-                        resultMap.put("bank_type",bank_type);
-                        resultMap.put("bank_no",bank_no);
-                        resultMap.put("key",key);
-                        resultMap.put("value",value);
+                        resultMap.put("title",title);//抬头
+                        resultMap.put("tax_no",tax_no);//税号
+                        resultMap.put("addr",addr);//地址
+                        resultMap.put("phone",phone);//电话
+                        resultMap.put("bank_type",bank_type);//开户类型
+                        resultMap.put("bank_no",bank_no);//银行账号
+                        resultMap.put("key",key);//其他
+                        resultMap.put("value",value);//
                         return  resultMap;
                     }
 
@@ -481,14 +481,12 @@ public class WeixinUtils {
 
     /*拒绝开票*/
 
-    public  String jujuekp(String order_id,String reason){
+    public  String jujuekp(String order_id,String reason,String access_token){
         WeixinUtils weixinUtils = new WeixinUtils();
-        String access_token = (String) weixinUtils.hqtk().get("access_token");
+        //String access_token = (String) weixinUtils.hqtk().get("access_token");
         String jjkpURL ="https://api.weixin.qq.com/card/invoice/rejectinsert?access_token="+access_token;
         Map mapInfo = new HashMap();
         String s_pappid = weixinUtils.getSpappid();
-        //String order_id ="1131453222001122";
-        //String reason ="微信授权失败";
         String url =WeiXinConstants.RJXX_REDIRECT_URL;
         mapInfo.put("s_pappid",s_pappid);
         mapInfo.put("order_id",order_id);
