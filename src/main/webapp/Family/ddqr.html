@@ -63,8 +63,29 @@
 	        	}
         	)
 	    })
+	    var orderNo = $('#orderNo').val(),
+	    	order = $('#order').val(),
+	    	orderTime = $('#orderTime').val(),
+	    	price = $('#price').val();
 	    function sure() {
-	        window.location.href = "../family/ddmx.html?time=" + new Date();
+	    	$.post(
+				"../family/isWeiXin",
+				{
+					"orderNo" : orderNo,
+					"order" : order,
+					"orderTime" : orderTime,
+					"price" : price
+				}, 
+				function(data) {
+					if (data.num == 0) {
+						window.location.href = "data.redirectUrl" + new Date();
+					}else if(num == 1) {
+						window.location.href = "../family/ddmx.html?time=" + new Date();
+					}else if(data.msg != '' || data.msg != null) {
+						alert(data.msg);
+					}
+				}
+			);
 	    }
 	</script>
 </body>

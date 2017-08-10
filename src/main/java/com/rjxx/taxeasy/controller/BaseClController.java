@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.constraints.Null;
 import java.io.IOException;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -114,15 +116,23 @@ public class BaseClController extends BaseController {
     //判断是否微信浏览器
     @RequestMapping(value = "/isWeiXin")
     @ResponseBody
-    public  Map isWeiXin(String orderNo,String order,int orderTime,int price){
+    public  Map isWeiXin(String orderNo,String order,String orderTime,String price){
         String redirectUrl ="";
+        Date dateTime = null;
+        if(null!=orderTime&&!orderTime.equals("")){
+             dateTime= TimeUtil.getSysDateInDate(orderTime,"yyyy-MM-dd HH:mm:ss");
+        }
         String ua = request.getHeader("user-agent").toLowerCase();
         Map resultMap = new HashMap();
         if(WeixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
             WeixinUtils weixinUtils = new WeixinUtils();
             try {
-             redirectUrl = weixinUtils.getTiaoURL(order,price,orderTime,orderNo);
+             redirectUrl = weixinUtils.getTiaoURL(order,price,dateTime.getTime(),orderNo);
+             if(null==redirectUrl||redirectUrl.equals("")){
+                 resultMap.put("msg","获取微信授权失败!请重试");
+                 return resultMap;
+             }
              resultMap.put("num","0");
              resultMap.put("redirectUrl",redirectUrl);
             } catch (Exception e) {
@@ -320,7 +330,7 @@ public class BaseClController extends BaseController {
     }
 
     public static void main(String[] args) {
-        String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
+       String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
         byte[] bt = null;
         String sign="on=061402100101123456781&si=89b7438f74359f027c9f3b601e410ad2";
         String s=null;

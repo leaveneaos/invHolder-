@@ -78,10 +78,10 @@
 	        $("#mask").show();  
 	        loading.innerHTML = "<img src='../images/kj.png' class='loadingImg'><p class='state'>发票开具中......</p><p class='wait'>开票申请已提交，请注意邮箱查收！</br>或再次扫描二维码查看发票文件</p>";   
 	    } 
-	    // $('#sure').on('click',function() {
-	    // 	showMask()
-	    // })
-
+	    function hideMask(){  
+	        $("#mask").hide(); 
+	        loading.innerHTML = '';    
+	    }
 	    // 展示页面内容
 		$(function () {
             $.post(
@@ -116,8 +116,10 @@
 				{},
 				function (data) {
 			        if(data.msg == 1) {
-
                         window.location.href = "fpxq.html?time=" + new Date();
+                    }else{
+                    	hideMask();
+                    	alert(data.msg);
                     }
                 }
             );
