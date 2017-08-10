@@ -527,7 +527,7 @@ public class BaseClController extends BaseController {
             Tqmtq tqmtq1 = new Tqmtq();
             tqmtq1.setDdh(jyxxsq.getTqm());
             tqmtq1.setLrsj(new Date());
-            tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
+            tqmtq1.setZje(Double.valueOf(jyxxsq.getJshj()));
             tqmtq1.setGfmc(fptt);
             tqmtq1.setNsrsbh(nsrsbh);
             tqmtq1.setDz(dz);
