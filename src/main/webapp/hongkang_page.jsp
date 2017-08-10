@@ -99,17 +99,13 @@
                             window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date();
                         }
 					} else if (data.num == 6) {
-						btnArray = [ '确定' ];
-						firm = "您提取的发票尚未开具,请检查客户号是否正确,或稍后再试!";
-						title = "提示";
-						alert(firm, title);
-					} else if (data.num == 4) {
-						$('#cwts').css('opacity','1');
-					} else if (data.num == 4) {
-						btnArray = [ '确定' ];
-						firm = data.msg;
-						title = "提示";
-						alert(firm, title);
+                        btnArray = [ '确定' ];
+                        firm = "您提取的申请已提交,我们正在处理,请稍等!";
+                        title = "提示";
+                        jAlert(firm, title);
+					}  else if (data.num == 4) {
+                        $('#cwts').html("您输入的验证码不正确");
+                        loadimage();
 					}
 				}
 			);
