@@ -2,11 +2,12 @@ package com.rjxx.taxeasy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.*;
+import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
-import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.MD5Util;
+import com.rjxx.taxeasy.utils.weixin.WeixinUtils;
+import com.rjxx.utils.*;
 import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.binary.*;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.constraints.Null;
 import java.io.IOException;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -108,6 +111,41 @@ public class BaseClController extends BaseController {
             sendHtml(str, gsxx);
         }
     }
+
+
+    //判断是否微信浏览器
+    @RequestMapping(value = "/isWeiXin")
+    @ResponseBody
+    public  Map isWeiXin(String orderNo,String order,String orderTime,String price){
+        String redirectUrl ="";
+        Date dateTime = null;
+        if(null!=orderTime&&!orderTime.equals("")){
+             dateTime= TimeUtil.getSysDateInDate(orderTime,"yyyy-MM-dd HH:mm:ss");
+        }
+        String ua = request.getHeader("user-agent").toLowerCase();
+        Map resultMap = new HashMap();
+        if(WeixinUtils.isWeiXinBrowser(request)){
+            logger.info("微信浏览器--------------");
+            WeixinUtils weixinUtils = new WeixinUtils();
+            try {
+             redirectUrl = weixinUtils.getTiaoURL(order,price,dateTime.getTime(),orderNo);
+             if(null==redirectUrl||redirectUrl.equals("")){
+                 resultMap.put("msg","获取微信授权失败!请重试");
+                 return resultMap;
+             }
+             resultMap.put("num","0");
+             resultMap.put("redirectUrl",redirectUrl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            logger.info("不是微信浏览器-------------");
+            resultMap.put("num" ,"1");
+        }
+        return resultMap;
+    }
+
+
     @RequestMapping(value = "/sendHtml")
     @ResponseBody
     public void sendHtml(String state, Gsxx gsxx) throws IOException {
@@ -127,6 +165,11 @@ public class BaseClController extends BaseController {
                 String[] cssz = csc.split("&");
                 String tqm = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
                 String sign = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
+                if(!tqm.equals((tqm.substring(0,tqm.length()-1))+IMEIGenUtils.genCode(tqm.substring(0,tqm.length()-1)))){
+                    request.getSession().setAttribute("msg", "提取码校验不正确!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
                 if (null == gsxx) {
                     request.getSession().setAttribute("msg", "公司信息不正确!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -287,16 +330,21 @@ public class BaseClController extends BaseController {
     }
 
     public static void main(String[] args) {
-        String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
+       String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
         byte[] bt = null;
+        String sign="on=061402100101123456781&si=89b7438f74359f027c9f3b601e410ad2";
+        String s=null;
         try {
             sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
+            sun.misc.BASE64Encoder Eecoder = new sun.misc.BASE64Encoder();
             bt = decoder.decodeBuffer(str);
+            s=Eecoder.encode(sign.getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
         String csc = new String(bt);
         System.out.println(csc);
+        System.out.println(s);
     }
 
     /*校验提取码是否正确*/
@@ -311,6 +359,9 @@ public class BaseClController extends BaseController {
             Map map = new HashMap<>();
             map.put("tqm", tqm);
             map.put("gsdm", gsdm);
+            if(!tqm.equals(IMEIGenUtils.genCode(tqm.substring(0,tqm.length()-1)))){
+                result.put("num","2");
+            }
             /*调用接口获取jyxxsq等信息*/
             Map resultMap = new HashMap();
             resultMap=getDataService.getData(tqm,gsdm);

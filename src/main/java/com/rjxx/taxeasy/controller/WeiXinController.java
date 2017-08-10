@@ -71,11 +71,9 @@ public class WeiXinController extends BaseController {
     public String getWeiXin(String data) throws Exception {
             Document xmlDoc = null;
             WeixinUtils weixinUtils = new WeixinUtils();
-            String access_token = (String) request.getSession().getAttribute("access_token");
-            if(null==access_token){
-                access_token=(String)weixinUtils.hqtk().get("access_token");
-                request.setAttribute("access_token",access_token);
-            }
+
+
+
         try {
             System.out.println("返回的数据"+data.toString());
             if(null!=data){
@@ -97,15 +95,20 @@ public class WeiXinController extends BaseController {
                     System.out.println("失败的订单id"+FailOrderIdValue);
                 }
             }
+            String  access_token=(String)weixinUtils.hqtk().get("access_token");
+            request.setAttribute("access_token",access_token);
             if(""!=SuccOrderIdValue&&null!=SuccOrderIdValue){
                 System.out.println("拿到成功的订单id了");
-              Map resultMap =  weixinUtils.zdcxstatus(SuccOrderIdValue/*,access_token*/);//主动获取授权状态，成功会返回数据
-                if(null!=resultMap){
+                Map resultMap =  weixinUtils.zdcxstatus(SuccOrderIdValue/*,access_token*/);//主动获取授权状态，成功会返回数据
+                if(null==resultMap){
                     logger.info("订单编号为"+SuccOrderIdValue+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
                     return null;
-                }else{
-                    System.out.println("开始封装数据并进行开票");
+                }
+                if(null!=resultMap){
+                    System.out.println("开始封装数据并进行开票"+resultMap.toString());
                     logger.info("开始开票");
+                    //先取数据
+
                     //封装数据
 
                     //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
@@ -225,6 +228,7 @@ public class WeiXinController extends BaseController {
         Map params = new HashMap();
         params.put("djh",jyls.getDjh());
         List<Kpls> kplsList = kplsService.findAll(params);
+        String openid=null;
         for (Kpls kpls : kplsList) {
             int kplsh = kpls.getKplsh();
             Map params2 = new HashMap();
@@ -237,7 +241,20 @@ public class WeiXinController extends BaseController {
                 return  null;
             }
 
-            weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls);
+           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls);
+            if(null==openid){
+                request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+        }
+
+        if(null==openid){
+            request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
+        }else {
+
         }
         return  null;
     }
