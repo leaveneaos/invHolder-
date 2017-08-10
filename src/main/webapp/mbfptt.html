@@ -104,8 +104,8 @@
 				<div class="mui-input-row">
 					<label id="kpje">开票金额</label>
 				</div>
-				<input id="gsdm" name="gsdm" type="text"/>
-				<input id="tqm" name="tqm" type="text"/>
+				<input id="gsdm" name="gsdm" type="hidden"/>
+				<input id="tqm" name="tqm" type="hidden"/>
 			</form>
 		</section>
 		<section class="data-tip">
@@ -139,7 +139,7 @@
             var tqm = $('#tqm').val();
             var gsdm =   $('#gsdm').val();
 			$.ajax({
-				url : '../spmx',
+				url : 'spmx',
 				method : 'post',
 				data:{
 				    tqm:tqm,
@@ -159,7 +159,10 @@
 	    				//$("#kpje").after("<span class='lht'>" + data.zje + "</span>")
 	    				$("#kpje").after("<span class='lht'>" + data.sjkpje + "</span>")
 					}
-                    
+                    if(data.num==12){
+                        $("#sqkp").hide();
+                        $(".lht").after("<span class='2ht' style='color:red'>(开票金额为0元,不能申请开票)</span>")
+					}
 				}
 			});
 		});
@@ -396,7 +399,7 @@
 					if(r){
                         //alert(11);
 						$.post(
-							"../sqkpsession",/*申请开票  信息放入session*/
+							"sqkpsession",/*申请开票  信息放入session*/
 							{
 								"fptt" : fptt,
 								"nsrsbh" : nsrsbh,

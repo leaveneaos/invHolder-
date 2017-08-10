@@ -132,7 +132,9 @@
                     }else if (data.num == 11) {
                         $('#cwts').html("输入的提取码不正确");
                         loadimage();
-                    }
+                    }else  if(data.num ==12){
+					    alert(data.msg);
+					}
 				}
 			);
 		}
