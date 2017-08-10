@@ -202,7 +202,7 @@ public class MbController extends BaseController {
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
             //查询参数总表url 是否调用接口获取开票信息
-            Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
+
 
             if (list.size() > 0) {
                 /*代表申请已完成开票,跳转最终开票页面*/
@@ -257,7 +257,7 @@ public class MbController extends BaseController {
                 result.put("num","6");
             }else {
                 //跳转发票提取页面
-
+                Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                 if(list.size()== 0 && null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
                     //需要调用接口获取开票信息
                     System.out.println("start+++++++++++");
