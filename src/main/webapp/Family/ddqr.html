@@ -63,30 +63,30 @@
 	        	}
         	)
 	    })
-	    var orderNo = $('#orderNo').val(),
-	    	order = $('#order').val(),
-	    	orderTime = $('#orderTime').val(),
-	    	price = $('#price').val();
-	    function sure() {
-	    	$.post(
-				"../family/isWeiXin",
-				{
-					"orderNo" : orderNo,
-					"order" : order,
-					"orderTime" : orderTime,
-					"price" : price
-				}, 
-				function(data) {
-					if (data.num == 0) {
-						window.location.href = "data.redirectUrl" + new Date();
-					}else if(num == 1) {
-						window.location.href = "../family/ddmx.html?time=" + new Date();
-					}else if(data.msg != '' || data.msg != null) {
-						alert(data.msg);
-					}
-				}
-			);
-	    }
+        function sure() {
+            var orderNo = $('#orderNo').text(),
+                order = $('#order').text(),
+                orderTime = $('#orderTime').text(),
+                price = $('#price').text();
+            $.post(
+                "../family/isWeiXin",
+                {
+                    "orderNo" : orderNo,
+                    "order" : order,
+                    "orderTime" : orderTime,
+                    "price" : price
+                },
+                function(data) {
+                    if (data.num == 0) {
+                        window.location.href = data.redirectUrl + new Date();
+                    }else if(data.num == 1) {
+                        window.location.href = "../Family/ddmx.html?time=" + new Date();
+                    }else if(data.num == 2) {
+                        alert(data.msg);
+                    }
+                }
+            );
+        }
 	</script>
 </body>
 </html>
