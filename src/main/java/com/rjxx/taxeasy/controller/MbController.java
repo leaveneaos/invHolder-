@@ -99,7 +99,7 @@ public class MbController extends BaseController {
             } else {
                 //宏康页面已经有了,不跳转模板
                 if(null!=gsdm&&gsdm.equals("hongkang")){
-                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.jsp?gsdm="+gsdm+"&&_t=" + System.currentTimeMillis());
                 }
                 response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
                 return;
@@ -107,7 +107,7 @@ public class MbController extends BaseController {
         } else {
             //宏康页面已经有了,不跳模板
             if(null!=gsdm&&gsdm.equals("hongkang")){
-                response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.html?_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.jsp?gsdm="+gsdm+"&&_t=" + System.currentTimeMillis());
             }
             response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
             return;
@@ -153,7 +153,7 @@ public class MbController extends BaseController {
         }
         //宏康页面已经有了,不跳模板
         if(state.equals("hongkang")){
-            response.sendRedirect(request.getContextPath() + "/" + state + "_page.html?_t=" + System.currentTimeMillis());
+            response.sendRedirect(request.getContextPath() + "/" + state + "_page.jsp?gsdm="+state+"&&_t=" + System.currentTimeMillis());
             return;
         }
         response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+state+"&&_t="+System.currentTimeMillis() );
@@ -184,7 +184,6 @@ public class MbController extends BaseController {
         String sessionCode = (String) session.getAttribute("rand");
 
         String opendid = (String) session.getAttribute("openid");
-        //String gsdm = (String) session.getAttribute("gsdm");
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             Map map = new HashMap<>();
@@ -193,7 +192,6 @@ public class MbController extends BaseController {
 
             /*调用接口获取jyxxsq等信息*/
             Map resultMap = new HashMap();
-
             String error=(String)resultMap.get("temp");
              /*wait to do*/
             if(error!=null){
@@ -205,79 +203,7 @@ public class MbController extends BaseController {
             List<Kpls> list = jylsService.findByTqm(map);
             //查询参数总表url 是否调用接口获取开票信息
             Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
-            if(list.size()== 0 && null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
-                //需要调用接口获取开票信息
-                System.out.println("start+++++++++++");
-                //Map resultMap1 = new HashMap();
-                //全家调用接口 解析xml
-                if(null!=gsdm && gsdm.equals("family")){
-                    resultMap=getDataService.getData(tqm,gsdm);
-                }
-                //绿地优鲜 解析json
-                else if(map.get("gsdm").equals("ldyx")){
-                    System.out.println("ldyx+++++++++++++++++Strat");
-                    //第一次请求url获取token 验证
-                    resultMap=getDataService.getldyxFirData(tqm,gsdm);
-                    if(null==request.getSession().getAttribute("crateDateTime")){
-                        //放入系统当前时间 直接是毫秒
-                        Long dateTime = System.currentTimeMillis();
-                        request.getSession().setAttribute("crateDateTime",dateTime);//创建时间
-                        request.getSession().setAttribute("accessToken",resultMap.get("accessToken"));//token
-                        request.getSession().setAttribute("expiresIn",resultMap.get("expiresIn"));//过期时间
-                        resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
-                    }else{
-                        resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
-                    }
-                    if(null!=resultMap.get("tmp")){
-                        result.put("msg",resultMap.get("tmp"));
-                        return result;
-                    }
-                    /*Date dateNow = new Date(System.currentTimeMillis());
-                    Long dateNowTime = dateNow.getTime();
-                    long sfgq = 0;
-                    if(null!=request.getSession().getAttribute("crateDateTime")&&null!=request.getSession().getAttribute("hm")){
-                        Long  crateDateTime = (long) request.getSession().getAttribute("crateDateTime");
-                        Long  exp  = (long) request.getSession().getAttribute("hm");
-                        //时间差 = 当前时间- 创建时间
-                        Long sjc = dateNowTime - crateDateTime ;
-                        //时间差 - 过期时间
-                        sfgq = sjc - exp ;
-                    }
 
-                    //判断token是否为空 是否过期
-                    if (request.getSession().getAttribute("accessToken")==null
-                            && sfgq >= 0){
-                        //放入系统当前时间 直接是毫秒
-                        Long dateTime = System.currentTimeMillis();
-                        //token
-                        request.getSession().setAttribute("accessToken",resultMap.get("accessToken"));
-                        //放进session时间
-                        request.getSession().setAttribute("crateDateTime",dateTime);
-                        //过期时间 直接转成毫秒long型
-                        Long ToLong =  (Long) resultMap.get("");
-                        Long hm = ToLong * 1000;
-                        request.getSession().setAttribute("",hm);
-                        //获取第一次发送请求的token
-                        String token = (String) resultMap.get("accessToken");
-                        //发送第二次请求
-                        resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
-                    }else
-                        //session中有token 并且token没有过期
-                        if((request.getSession().getAttribute("accessToken")!=null&&!request.getSession().getAttribute("accessToken").equals(""))&&(sfgq < 0)){
-                            //获取session中的token
-                            String token = (String) request.getSession().getAttribute("accessToken");
-                            //发送第二次请求
-                            resultMap=getDataService.getldyxSecData(tqm,gsdm,token);
-                        }*/
-                }
-            }
-            List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
-            List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-            List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
-            if(null!=jyxxsqList){
-                Jyxxsq jyxxsq=jyxxsqList.get(0);
-                request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
-            }
             if (list.size() > 0) {
                 /*代表申请已完成开票,跳转最终开票页面*/
                 if (opendid != null && !"null".equals(opendid)) {
@@ -296,14 +222,14 @@ public class MbController extends BaseController {
                     }
                 }
                 String pdfdzs = "";
-                //request.getSession().setAttribute(gsdm+"|djh",list.get(0).getDjh());
-                //request.getSession().setAttribute(gsdm+"|serialorder",list.get(0).getSerialorder());
+                request.getSession().setAttribute("djh",list.get(0).getDjh());
+                request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
                 for (Kpls kpls2: list) {
                     pdfdzs += kpls2.getPdfurl().replace(".pdf",",jpg") + ",";
                 }
                 if(pdfdzs.length() > 0){
                     result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
-                    //request.getSession().setAttribute(gsdm+"|pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
+                    request.getSession().setAttribute("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
                 }
                 /**
                  * num=2表示已经开过票
@@ -325,10 +251,52 @@ public class MbController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
+
             }
             else if(null != jyls && null !=jyls.getDjh()){
                 result.put("num","6");
-            }else {//跳转发票提取页面
+            }else {
+                //跳转发票提取页面
+
+                if(list.size()== 0 && null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
+                    //需要调用接口获取开票信息
+                    System.out.println("start+++++++++++");
+                    //Map resultMap1 = new HashMap();
+                    //全家调用接口 解析xml
+                    if(null!=gsdm && gsdm.equals("family")){
+                        resultMap=getDataService.getData(tqm,gsdm);
+                    }
+                    //绿地优鲜 解析json
+                    else if(map.get("gsdm").equals("ldyx")){
+                        System.out.println("ldyx+++++++++++++++++Strat");
+                        //第一次请求url获取token 验证
+                        resultMap=getDataService.getldyxFirData(tqm,gsdm);
+                        if(null==request.getSession().getAttribute("crateDateTime")){
+                            //放入系统当前时间 直接是毫秒
+                            Long dateTime = System.currentTimeMillis();
+                            request.getSession().setAttribute("crateDateTime",dateTime);//创建时间
+                            request.getSession().setAttribute("accessToken",resultMap.get("accessToken"));//token
+                            request.getSession().setAttribute("expiresIn",resultMap.get("expiresIn"));//过期时间
+                            resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
+                        }else{
+                            resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
+                        }
+                        if(null!=resultMap.get("tmp")){
+                            result.put("num","12");
+                            result.put("msg",resultMap.get("tmp"));
+                            return result;
+                        }
+
+                    }
+                }
+
+                List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+                List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+                List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+                if(null!=jyxxsqList){
+                    Jyxxsq jyxxsq=jyxxsqList.get(0);
+                    request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
+                }
                 if(resultMap!=null){
                     request.getSession().setAttribute(gsdm+tqm+"resultMap",resultMap);
                 }
@@ -339,10 +307,7 @@ public class MbController extends BaseController {
                     request.getSession().setAttribute(gsdm+tqm+"jyzfmxList",jyzfmxList);
                 }
                 request.getSession().setAttribute(gsdm+"tqm",tqm);
-                //request.getSession().setAttribute(gsdm+tqm+"resultMap","1");
-               // request.getSession().setAttribute(gsdm+"|tqm",tqm);
-                //System.out.println(""+session.getAttribute(gsdm+tqm+"resultMap").toString());
-                //System.out.println(""+session.getAttribute(gsdm+tqm+"jymxsqList").toString());
+
                 result.put("num","5");
                 result.put("tqm",tqm);
                 result.put("gsdm",gsdm);
@@ -394,6 +359,9 @@ public class MbController extends BaseController {
             }
               sjkpje = zje - bkpje;
             System.out.println("实际开票金额"+sjkpje);
+        }
+        if(sjkpje==0.00){
+            result.put("num","12");
         }
         request.getSession().setAttribute(gsdm+tqm+"sjkpje",sjkpje);
         result.put("jymxsqList",jymxsqList);

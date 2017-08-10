@@ -72,8 +72,6 @@ public class WeiXinController extends BaseController {
             Document xmlDoc = null;
             WeixinUtils weixinUtils = new WeixinUtils();
 
-
-
         try {
             System.out.println("返回的数据"+data.toString());
             if(null!=data){
