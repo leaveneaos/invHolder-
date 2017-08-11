@@ -62,7 +62,7 @@ public class BarcodeServiceImpl implements BarcodeService {
             String ppdm = "";
             String ppurl = "";
             if (pid != null) {
-                Pp pp = ppJpaDao.findOne(pid);
+                Pp pp = ppJpaDao.findOneById(pid);
                 ppdm = pp.getPpdm();
                 ppurl = pp.getPpurl();
             } else {
@@ -137,7 +137,7 @@ public class BarcodeServiceImpl implements BarcodeService {
             try {
                 Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
                 Integer xfid = skp.getXfid(); //销方id
-                Xf xf = xfJpaDao.findOne(xfid);
+                Xf xf = xfJpaDao.findOneById(xfid);
                 Integer kpdid = skp.getId();//税控盘id(开票点id)
                 Jyxxsq jyxxsq = new Jyxxsq();
                 jyxxsq.setDdh(orderNo);
