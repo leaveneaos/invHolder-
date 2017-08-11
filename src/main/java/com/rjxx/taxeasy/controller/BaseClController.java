@@ -92,7 +92,7 @@ public class BaseClController extends BaseController {
         logger.info("参数p的值为"+str);
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","Family");
-        request.getSession().setAttribute("gsdm",gsdm);
+        request.getSession().setAttribute("gsdm","Family");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
             gsxx.setWxappid(APP_ID);
@@ -103,7 +103,7 @@ public class BaseClController extends BaseController {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
                              + url + "family/getWx&" + "response_type=code&scope=snsapi_base&state=" + str + "#wechat_redirect";
                 response.sendRedirect(ul);
                 logger.info("转发的url为"+ul);
