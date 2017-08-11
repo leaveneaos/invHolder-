@@ -84,7 +84,7 @@
 <body>
 
     <header>
-        <img src="logo/lrf.png"/>
+        <img id="logo" src=""/>
     </header>
 
     <section class="main">
@@ -94,7 +94,7 @@
         </div>
         <div class="data-list">
             <h4 class="mui-ellipsis">门店编号</h4>
-            <h5 id="sn"></h5>
+            <h5 id="storeNo"></h5>
         </div>
         <div class="data-list">
             <h4 class="mui-ellipsis">交易日期</h4>
@@ -119,19 +119,36 @@
 
     <script type="text/javascript">
         $(function () {
+            var thisURL = document.URL;
+            var  getval =thisURL.split('?')[1];
+            var ppdm= getval.split("=")[1];
+            if(ppdm!="no"){
+                $("#logo").attr("src", "../QR/logo/" + ppdm + ".png");
+            }
             $.post(
-                "../dzfp_sqj/getSmsj", 
+                "../scan/scanConfirm",
                 {}, 
-                function (data) {
-                    $('#orderNo').html(data.orderNo);
-                    $('#orderTime').html(data.orderTime);
-                    $('#price').html(data.price);
-                    $('#sn').html(data.sn);
+                function (obj) {
+                    if(obj.code=="1"){
+                        var data = eval("(" + obj.data + ")");
+                        $('#orderNo').html(data.orderNo);
+                        $('#orderTime').html(data.orderTime);
+                        $('#price').html(data.price);
+                        $('#storeNo').html(data.storeNo);
+                        price = data.price;
+                        spsl = data.spsl;
+                        spmc = data.spmc;
+                    }else{
+                        var msg=obj.msg;
+                        var myurl = "../QR/error.html?msg="+new Date+"="+msg;
+                        window.location.assign(encodeURI(myurl));
+                    }
                 }
             )
         })
         function tk() {
-            window.location.href = "../dzfp_sqj/smtq2";
+            var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;
+            window.location.assign(encodeURI(myurl));
         }
     </script>
 </body>

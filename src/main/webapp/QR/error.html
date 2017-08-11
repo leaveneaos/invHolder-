@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>出错了</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="stylesheet" type="text/css" href="../css/error_all.css?t=201303212934">
+</head>
+<body class="error-404">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+
+<div id="doc_main">
+
+    <section class="bd clearfix">
+        <div class="module-error">
+            <div class="error-main clearfix">
+                <div class="label"></div>
+                <div class="info">
+                    <h3 class="title"><b></b>提示</h3>
+                    <div class="reason">
+                        <p id="msg"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var thisURL = document.URL;
+        var myurl=decodeURI(thisURL);
+        var getval =myurl.split('?')[1];
+        var msg= getval.split("=")[2];
+        $("#msg").html(msg);
+    })
+</script>
+</body>
+</html>
