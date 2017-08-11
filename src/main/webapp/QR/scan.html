@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>电子发票</title>
+	<title>发票扫描</title>
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="Expires" content="0">
 	<meta http-equiv="Pragma" content="no-cache">
@@ -26,34 +26,38 @@
 		.mui-grid-view.mui-grid-9 {
 			border-left: 0;
 		}
+		#innerImg {
+			width: 100%;
+		}
 	</style>
 </head>
 <body>
 <header class="mui-bar mui-bar-nav">
-	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
-	<h1 class="mui-title">发票提取</h1>
+	<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>-->
+	<h1 class="mui-title">发票扫描</h1>
 </header>
 
 <div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
 	<section>
 		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
 			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
-				<a id="you">
-					<span class="mui-icon iconfont icon-youxiang"></span>
-					<div class="mui-media-body" style="color: #fff;">邮箱</div>
-				</a>
+				<!--<a id="you">-->
+					<!--<span class="mui-icon iconfont icon-youxiang"></span>-->
+					<!--<div class="mui-media-body" style="color: #fff;">邮箱</div>-->
+				<!--</a>-->
 			</li>
 			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
-				<a id="zfb">
-					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
-					<div class="mui-media-body" style="color: #fff;">支付宝</div>
-				</a>
+				<!--<a id="zfb">-->
+					<!--<span class="mui-icon iconfont icon-jikediancanicon23"></span>-->
+					<!--<div class="mui-media-body" style="color: #fff;">支付宝</div>-->
+				<!--</a>-->
 			</li>
 		</ul>
 	</section>
 
 	<section id=parentIndustryUL>
-
+		<img id="innerImg" src="http://test.datarj.com/e-invoice-file/500102010003699/20170810/fa75aa69-3ed3-4614-88fe-27e5640cdd9e.jpg"/>
+		<div id="innerMsg"></div>
 	</section>
 
 	<footer>
@@ -67,35 +71,20 @@
 <script type="text/javascript" src="../js/wxkb.js"></script>
 <script src="../js/fpj.js" type="text/javascript"></script>
 <script type="text/javascript">
-    var serialorder;
-    $(function() {
-        $.post(
-            "待定",
-            {},
-            function(data) {
-                    serialorder = data.serialorder;
-                    var pdfdzs = data.pdfdzs;
-                    if (serialorder != null && serialorder != "") {
-                      var  pdfdz = pdfdzs.split(",");
-                        $.each(
-                            pdfdz,
-                            function(n, value) {
-                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-                            }
-                        );
-                    } else {
-                        window.location.href = "../smtq/demo.html?time=" + new Date().getTime();
-                    }
-
-            }
-        );
-    })
 </script>
 <script src="../js/mui.min.js"></script>
 <script src="../js/mui.zoom.js"></script>
-
 <script>
-    mui.init();
+    $(function(){
+        var thisURL = document.URL;
+        var getval =thisURL.split('?')[1];
+        var msg= getval.split("=")[2];
+        if(msg=="ing"){
+            $("#innerMsg").html("努力开具中");
+        }else{
+            $("#innerImg").attr("src", msg);
+		}
+	})
 </script>
 </body>
 </html>

@@ -86,7 +86,8 @@ public class InvoiceService {
                 jyxxsq.setFhr(xf.getFhr());
                 jyxxsq.setSkr(xf.getSkr());
 
-                Integer kpdid = skpJpaDao.findIdByKpddm(kpddm);
+                Skp oneByKpddmAndGsdm = skpJpaDao.findOneByKpddmAndGsdm(kpddm, gsdm);
+                Integer kpdid=oneByKpddmAndGsdm.getId();
                 Cszb cszb = cszbService.getSpbmbbh(gsdm, jyxxsq.getXfid(), kpdid, "dyspbmb");
                 Map map = new HashMap();
                 map.put("gsdm", gsdm);

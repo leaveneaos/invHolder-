@@ -48,12 +48,15 @@ public class BarcodeController extends BaseController {
                         }
                         break;
                     case "开具中":
-                        //FIXME
-                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");
+                        response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "=ing");
                         break;
                     default:
-                        //FIXME
-                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");
+                        if(status.indexOf("pdf")!=-1){
+                            String img=status.replace("pdf", "jpg");
+                            response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+img);
+                        }else{
+                            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=发票图片发生错误");
+                        }
                 }
             } else {
                     response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");
