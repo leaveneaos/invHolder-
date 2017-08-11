@@ -49,7 +49,7 @@ public class WeixinUtils {
      * @param
      * @return
      */
-        public static boolean isWeiXinBrowser(HttpServletRequest request) {
+       public static boolean isWeiXinBrowser(HttpServletRequest request) {
         String ua = request.getHeader("user-agent").toLowerCase();
         boolean res = ua.contains("micromessenger");
         return res;
@@ -208,7 +208,7 @@ public class WeixinUtils {
     public static void main(String[] args) {
 
         //Map msp = new HashMap();
-        //WeixinUtils weixinUtils = new WeixinUtils();
+        WeixinUtils weixinUtils = new WeixinUtils();
 
         //System.out.println(""+in);
         /* //解析xml
@@ -267,11 +267,11 @@ public class WeixinUtils {
         // System.out.println("获取微信token-----------"+msp);
 
 
-        /*try {
-            weixinUtils.getTiaoURL("1131453220170808",1,1474875876,"1");//获取微信授权
+        try {
+            weixinUtils.getTiaoURL("1122201","10",1474875876,"1");//获取微信授权
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
         //weixinUtils.zdcxstatus("1131453220170808");//查询用户授权状态
         //weixinUtils.cksqzd();//查看授权字段
         //weixinUtils.sqzd();//授权字段--只设一次
@@ -482,6 +482,7 @@ public class WeixinUtils {
     /*拒绝开票*/
 
     public  String jujuekp(String order_id,String reason,String access_token){
+        String msg="";
         WeixinUtils weixinUtils = new WeixinUtils();
         //String access_token = (String) weixinUtils.hqtk().get("access_token");
         String jjkpURL ="https://api.weixin.qq.com/card/invoice/rejectinsert?access_token="+access_token;
@@ -503,17 +504,20 @@ public class WeixinUtils {
                 String errmsg = (String) map.get("errmsg");
                 System.out.println("错误码"+errcode);
                 if(errcode==0){
-                    return "拒绝开票成功";
-                }else if(errcode ==72035){
-                    logger.info("返回的错误信息为"+errmsg);
-                    return "该发票已经被拒绝开票";
+                    logger.info("拒绝开票成功");
+                     msg = "1";
+
+                }else {
+                    logger.info("该发票已被拒绝开票，返回的错误信息为"+errmsg);
+                    msg="0";
+
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    return null;
+    return msg;
     }
 
     /*
@@ -566,18 +570,18 @@ public class WeixinUtils {
                     resultMap.put("card_id",card_id);
                     resultMap.put("msg","发票卡券设置成功");
                     System.out.println("成功"+resultMap.toString());
-                    return resultMap;
+
                 }else{
                     resultMap.put("msg","发票卡券模板设置错误");
                     logger.info("返回的错误信息为"+errmsg);
                     System.out.println("卡券模板设置失败"+resultMap.toString());
-                    return resultMap;
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return  null;
+        return  resultMap;
     }
 
     /*
@@ -730,7 +734,7 @@ public class WeixinUtils {
         }
         String access_token = (String) weixinUtils.hqtk().get("access_token");
         String URL =WeiXinConstants.dzfpInCard_url+access_token;
-        System.out.println("电子发票插入卡包url++++"+URL);
+        System.out.println("电子发票插入卡包url为++++"+URL);
         String jsonStr = WeixinUtil.httpRequest(URL, "POST",JSON.toJSONString(sj));
        if(null!=jsonStr){
             ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
@@ -826,7 +830,49 @@ public class WeixinUtils {
         return  null;
     }
 
+    /*
+    *更新发票卡券状态
+    *
+    * */
+    public  String updateStatus(String card_id,String code,String reimburse_status ){
+        String msg="";
+        WeixinUtils weixinUtils = new WeixinUtils();
+        //String reimburse_status = "";
+        Map map = new HashMap();
+        map.put("card_id",card_id);
+        map.put("code",code);
+        map.put("reimburse_status",reimburse_status);
+        System.out.println("封装数据"+JSON.toJSONString(map));
 
+        String access_token = (String) weixinUtils.hqtk().get("access_token");
+        String updeatStatusURL="https://api.weixin.qq.com/card/invoice/platform/updatestatus?access_token="+access_token;
+        System.out.println("电子发票插入卡包url为++++"+updeatStatusURL);
 
+        String jsonStr = WeixinUtil.httpRequest(updeatStatusURL, "POST",JSON.toJSONString(map));
+        if(null!=jsonStr){
+            ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
+            try {
+                Map maps = jsonparer.readValue(jsonStr, Map.class);
+                int errcode = (int) maps.get("errcode");
+                String errmsg = (String) maps.get("errmsg");
+                if(errcode==0){
+                    msg="1";
+                    System.out.println("错误码"+errmsg);
+
+                }else{
+                    msg="0";
+                    logger.info("返回的错误信息为"+errmsg);
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    return msg;
+    }
+
+    /*
+    *
+    * */
 
 }
