@@ -130,14 +130,16 @@ public class WeiXinController extends BaseController {
                         logger.info("该提取码已提交过申请!");
                         String reason="该提取码已提交过申请!";
                         //拒绝开票
-                        weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                       String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        logger.info("拒绝开票状态"+str);
                         return null;
                     }
                     if(jyls1 != null){
                         logger.info("该订单正在开票!");
                         String reason="该订单正在开票!";
                         //拒绝开票
-                        weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                      String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                      logger.info("拒绝开票状态"+str);
                         return null;
                     }
                     //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
@@ -266,11 +268,11 @@ public class WeiXinController extends BaseController {
        String access_token = (String) request.getSession().getAttribute("access_token");
 
         //判断是否是支付宝内
-        /*if (!WeixinUtils.isWeiXinBrowser(request)) {
+        if (!WeixinUtils.isWeiXinBrowser(request)) {
             request.getSession().setAttribute("msg", "请使用微信进行该操作");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return null;
-        }*/
+        }
         //主动查询授权状态
         WeixinUtils weixinUtils = new WeixinUtils();
         Map weiXinDataMap = weixinUtils.zdcxstatus(order_id,access_token);
