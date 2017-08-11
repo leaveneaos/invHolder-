@@ -83,7 +83,7 @@
 	color: #fff;
 	border-radius: 18px;
 }
-#xfmc {
+#xfmc,#gfmc {
 	overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
