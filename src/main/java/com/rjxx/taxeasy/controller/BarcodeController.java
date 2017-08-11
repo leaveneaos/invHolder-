@@ -48,12 +48,10 @@ public class BarcodeController extends BaseController {
                         }
                         break;
                     case "开具中":
-                        //FIXME
-                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");
+                        response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "=ing");
                         break;
                     default:
-                        //FIXME
-                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");
+                        response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+status);
                 }
             } else {
                     response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");

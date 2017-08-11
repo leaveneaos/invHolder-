@@ -173,6 +173,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setLrsj(new Date());
                 jyxxsq.setXgsj(new Date());
                 jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
+                jyxxsq.setTqm(orderNo);
 
                 List<Jymxsq> jymxsqList = new ArrayList<>();
                 Jymxsq jymxsq = new Jymxsq();
@@ -235,7 +236,7 @@ public class BarcodeServiceImpl implements BarcodeService {
     }
 
     @Override
-    public String checkStatus(String gsdm, String tqm) {
+    public String checkStatus(String tqm, String gsdm) {
         Integer djh = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
         if(djh!=null){
             Kpls kpls = kplsJpaDao.findOneByDjh(djh);
