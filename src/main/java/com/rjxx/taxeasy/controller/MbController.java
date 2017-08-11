@@ -100,6 +100,7 @@ public class MbController extends BaseController {
                 //宏康页面已经有了,不跳转模板
                 if(null!=gsdm&&gsdm.equals("hongkang")){
                     response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.jsp?gsdm="+gsdm+"&&_t=" + System.currentTimeMillis());
+                    return;
                 }
                 response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
                 return;
@@ -108,6 +109,7 @@ public class MbController extends BaseController {
             //宏康页面已经有了,不跳模板
             if(null!=gsdm&&gsdm.equals("hongkang")){
                 response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.jsp?gsdm="+gsdm+"&&_t=" + System.currentTimeMillis());
+                return;
             }
             response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
             return;
@@ -157,11 +159,13 @@ public class MbController extends BaseController {
             return;
         }
         response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+state+"&&_t="+System.currentTimeMillis() );
+        return;
     }
     @RequestMapping(value = "/bangzhu")
     @ResponseBody
     public void bangzhu() throws IOException {
         response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
+        return;
     }
 
     public static void main(String[] args) {
