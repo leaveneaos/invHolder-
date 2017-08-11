@@ -87,6 +87,7 @@ public class BaseClController extends BaseController {
     @ResponseBody
     public void index(String gsdm) throws Exception{
         String str = request.getParameter("q");
+        logger.info("参数p的值为"+str);
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","Family");
         request.getSession().setAttribute("gsdm",gsdm);
@@ -103,6 +104,7 @@ public class BaseClController extends BaseController {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
                              + url + "/base/getWx&" + "response_type=code&scope=snsapi_base&state=" + str + "#wechat_redirect";
                 response.sendRedirect(ul);
+                logger.info("转发的url为"+ul);
                 return;
             } else {
                 sendHtml(str, gsxx);
@@ -291,6 +293,7 @@ public class BaseClController extends BaseController {
         }
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
                        + gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+        logger.info("微信请求url+++"+turl);
         HttpClient client = new DefaultHttpClient();
         HttpGet get  = new HttpGet(turl);
         ObjectMapper jsonparer = new ObjectMapper();
@@ -303,7 +306,9 @@ public class BaseClController extends BaseController {
             //将json字符串转为json对象
             if(res.getStatusLine().getStatusCode()== HttpStatus.SC_OK){
                 if(map.get("errcode") != null){
+                    logger.info("微信获取失败");
                 }else{
+                    logger.info("微信获取失败");
                     session.setAttribute("access_token", map.get("access_token"));
                     session.setAttribute("openid", map.get("openid"));
                     logger.info(session.getAttribute("openid").toString());
@@ -317,9 +322,11 @@ public class BaseClController extends BaseController {
             client.getConnectionManager().shutdown();
         }
         if (null==state) {
+            logger.info("重定向到qj.httml");
             response.sendRedirect(request.getContextPath() + "/Family/qj.html?_t=" + System.currentTimeMillis());
             return;
         }else{
+            logger.info("进入sendHTML");
             sendHtml(state, gsxx);
         }
 
