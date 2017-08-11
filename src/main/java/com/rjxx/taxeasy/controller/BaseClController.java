@@ -286,15 +286,17 @@ public class BaseClController extends BaseController {
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state,String code) throws IOException{
+        logger.info("state"+state);
+        logger.info("code"+code);
         Map params = new HashMap<>();
-        params.put("gsdm",state);
+        params.put("gsdm","Family");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx.getWxappid() == null || gsxx.getWxsecret() ==null){
             gsxx.setWxappid(APP_ID);
             gsxx.setWxsecret(SECRET);
         }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
-                       + gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
+                       + SECRET + "&code=" + code + "&grant_type=authorization_code";
         logger.info("微信请求url+++"+turl);
         HttpClient client = new DefaultHttpClient();
         HttpGet get  = new HttpGet(turl);
