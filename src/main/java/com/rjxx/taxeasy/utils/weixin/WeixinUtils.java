@@ -24,6 +24,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +54,7 @@ public class WeixinUtils {
      * @param
      * @return
      */
-      public static boolean isWeiXinBrowser(HttpServletRequest request) {
+     public static boolean isWeiXinBrowser(HttpServletRequest request) {
         String ua = request.getHeader("user-agent").toLowerCase();
         boolean res = ua.contains("micromessenger");
         return res;
@@ -164,7 +167,6 @@ public class WeixinUtils {
         if(null!=timestamp&&!timestamp.equals("")){
             dateTime= TimeUtil.getSysDateInDate(timestamp,"yyyy-MM-dd HH:mm:ss");
         }
-
         String  source = "web";
         int type = 1;//填写抬头申请开票类型
         Map nvps = new HashMap();
@@ -222,8 +224,8 @@ public class WeixinUtils {
         WeixinUtils weixinUtils = new WeixinUtils();
 
         //System.out.println(""+in);
-        /* //解析xml
-            String data="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+         //解析xml
+           /* String data="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<xml>"
                 + "<ToUserName>1111</ToUserName>"
                 + "<FromUserName></FromUserName>"
@@ -244,17 +246,15 @@ public class WeixinUtils {
             String SuccOrderIdValue = "";
             String FailOrderIdValue = "";
             for (Element e:childElements){
-                if(e.getName().equals("SuccOrderId")&&null!=e.getName()){
-                    SuccOrderIdValue = e.getText();
-                    System.out.println("成功的订单id");
-                }
-                if(e.getName().equals("FailOrderId")&&null!=e.getName()){
-                    FailOrderIdValue=e.getText();
-                    System.out.println("失败的订单id");
-                }
+                    if(e.getName().equals("SuccOrderId")&&null!=e.getName()){
+                        SuccOrderIdValue = e.getText();
+                        System.out.println("成功的订单id"+SuccOrderIdValue);
+                    }
+                    if(e.getName().equals("FailOrderId")&&null!=e.getName()){
+                        FailOrderIdValue=e.getText();
+                        System.out.println("失败的订单id"+FailOrderIdValue);
+                    }
             }
-            System.out.println(""+SuccOrderIdValue);
-            System.out.println(""+FailOrderIdValue);
             if(""!=SuccOrderIdValue&&null!=SuccOrderIdValue){
                 System.out.println("拿到成功的订单id了");
             }
@@ -278,12 +278,12 @@ public class WeixinUtils {
         // System.out.println("获取微信token-----------"+msp);
 
 
-        try {
+       /* try {
 
             weixinUtils.getTiaoURL("1122203","10", "2011-05-09 11:49:45","1");//获取微信授权
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         //weixinUtils.zdcxstatus("1131453220170808");//查询用户授权状态
         //weixinUtils.cksqzd();//查看授权字段
         //weixinUtils.sqzd();//授权字段--只设一次
