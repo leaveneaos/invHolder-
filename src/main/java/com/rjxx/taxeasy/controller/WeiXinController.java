@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.comm.SigCheck;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +44,7 @@ import java.util.Map;
  * Created by Administrator on 2017-06-26.
  */
 @Controller
+
 public class WeiXinController extends BaseController {
 
     @Autowired
@@ -68,6 +71,21 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL)
     @ResponseBody
     public String getWeiXin(String data) throws Exception {
+        System.out.println("进入回调验证token");
+            //响应token
+            String sign = request.getParameter("signature");
+            String times = request.getParameter("timestamp");
+            String nonce = request.getParameter("nonce");
+            String echo = request.getParameter("echostr");
+            if (SigCheck.checkSignature(sign, times, nonce)) {
+                try {
+                    response.getOutputStream().print(request.getParameter("echostr"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                logger.info("isSuccess:" + echo);
+            }
+            System.out.println("token验证成功，开始回调xml");
             Document xmlDoc = null;
             WeixinUtils weixinUtils = new WeixinUtils();
             String openid = String.valueOf(request.getSession().getAttribute("openid"));
