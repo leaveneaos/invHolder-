@@ -32,10 +32,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -71,8 +73,7 @@ public class WeiXinController extends BaseController {
     /**
      * 获取微信授权回调
      */
-    @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL)
-    @ResponseBody
+    @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.GET)
     public String getWeiXin() throws Exception {
         System.out.println("进入回调验证token");
             //响应token
@@ -83,15 +84,13 @@ public class WeiXinController extends BaseController {
             if (SigCheck.checkSignature(sign, times, nonce)) {
                 try {
                     response.getOutputStream().print(request.getParameter("echostr"));
+                    test(request,response);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 logger.info("isSuccess:" + echo);
             }
-        System.out.println("token验证-----------------回调xml");
-        System.out.println("时间类型++++"+request.getParameter("Event"));
-        System.out.println("成功的id++++++++"+request.getParameter("SuccOrderId"));
-        System.out.println(request.getParameter("FailOrderId"));
+
         /*// 将解析结果存储在HashMap中
              Map<String, String> resultmap = new HashMap<String, String>();
         // 从request中取得输入流
@@ -220,7 +219,12 @@ public class WeiXinController extends BaseController {
         }*/
         return null;
     }
-
+private void test(HttpServletRequest request, HttpServletResponse response ){
+    System.out.println("token验证-----------------回调xml");
+    System.out.println("时间类型++++"+request.getParameter("Event"));
+    System.out.println("成功的id++++++++"+request.getParameter("SuccOrderId"));
+    System.out.println(request.getParameter("FailOrderId"));
+}
 
     /**
      * 获取微信授权链接
