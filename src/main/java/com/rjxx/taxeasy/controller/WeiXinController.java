@@ -74,7 +74,7 @@ public class WeiXinController extends BaseController {
      * 获取微信授权回调
      */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.GET)
-    public String getWeiXin() throws Exception {
+    public void getWeiXin() throws Exception {
         System.out.println("进入回调验证token");
             //响应token
             String sign = request.getParameter("signature");
@@ -217,7 +217,7 @@ public class WeiXinController extends BaseController {
             request.getSession().setAttribute("msg", "获取微信授权出现异常!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
         }*/
-        return null;
+
     }
 private void test(HttpServletRequest request, HttpServletResponse response ){
     System.out.println("token验证-----------------回调xml");
