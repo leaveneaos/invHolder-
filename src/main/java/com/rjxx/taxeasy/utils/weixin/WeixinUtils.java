@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.Response;
 import java.io.*;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -159,18 +160,18 @@ public class WeixinUtils {
         String spappid =  weixinUtils.getSpappid();//获取开票平台
         String ticket = weixinUtils.getTicket();
         double d = Double.valueOf(money)*100;
-        Date dateTime = null;
+        /*Date dateTime = null;
         if(null!=timestamp&&!timestamp.equals("")){
             dateTime= TimeUtil.getSysDateInDate(timestamp,"yyyy-MM-dd HH:mm:ss");
-        }
-        System.out.println("时间戳"+dateTime.getTime());
+        }*/
+        System.out.println("时间戳"+ Timestamp.valueOf(timestamp));
         String  source = "web";
         int type = 1;//填写抬头申请开票类型
         Map nvps = new HashMap();
         nvps.put("s_pappid",spappid);
         nvps.put("order_id",orderid);
         nvps.put("money",d);
-        nvps.put("timestamp",dateTime.getTime());
+        nvps.put("timestamp",Timestamp.valueOf(timestamp));
         nvps.put("source",source);
         nvps.put("redirect_url",WeiXinConstants.SUCCESS_REDIRECT_URL);
         nvps.put("ticket",ticket);
