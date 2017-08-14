@@ -72,10 +72,9 @@ public class WeiXinController extends BaseController {
             WeixinUtils weixinUtils = new WeixinUtils();
             String openid = String.valueOf(request.getSession().getAttribute("openid"));
         try {
-            System.out.println("返回的数据"+data.toString());
             if(null!=data){
-
-            //解析微信返回的消息推送的xml
+             System.out.println("返回的数据"+data.toString());
+             //解析微信返回的消息推送的xml
             xmlDoc = DocumentHelper.parseText(data);
             Element rootElt = xmlDoc.getRootElement();
             System.out.println("根节点：" + rootElt.getName());
@@ -185,7 +184,7 @@ public class WeiXinController extends BaseController {
             }
         } catch (Exception e) {
             //处理异常
-            logger.error("Get Ali Access_token error", e);
+            logger.error("微信接口回调错误", e);
             request.getSession().setAttribute("msg", "获取微信授权出现异常!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
         }
@@ -262,10 +261,25 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = "/syncWeiXin")
     @ResponseBody
     public String syncWeiXin(@RequestParam(required = false) String order_id) throws Exception {
-        if(null==order_id){
-            return  null;
+        if (order_id == null) {
+            Object orderObject = session.getAttribute("order");
+            if (orderObject == null) {
+                request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            order_id = orderObject.toString();
         }
-       String access_token = (String) request.getSession().getAttribute("access_token");
+        logger.info("order_id++++++++++"+order_id);
+        String serialorder= "";
+        Object serialorderObject = session.getAttribute("serialorder");
+        if (serialorderObject == null) {
+            request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
+        }
+        serialorder = serialorderObject.toString();
+        logger.info("serialorder++++++++"+serialorder);
 
         //判断是否是支付宝内
         if (!WeixinUtils.isWeiXinBrowser(request)) {
@@ -275,17 +289,17 @@ public class WeiXinController extends BaseController {
         }
         //主动查询授权状态
         WeixinUtils weixinUtils = new WeixinUtils();
+        String  access_token = (String)weixinUtils.hqtk().get("access_token");
+        request.setAttribute("access_token",access_token);
         Map weiXinDataMap = weixinUtils.zdcxstatus(order_id,access_token);
         if(null==weiXinDataMap){
             logger.info("主动查询授权失败++++++++++++");
             return null;
         }
         Map para = new HashMap();
-        para.put("tqm",order_id);
-        Jyls jyls = jylsService.findByTqm(order_id,"family");
-        Map params = new HashMap();
-        params.put("djh",jyls.getDjh());
-        List<Kpls> kplsList = kplsService.findAll(params);
+        para.put("serialorder", serialorder);
+        List<Kpls> kplsList = kplsService.findAll(para);
+
         String openid=null;
         for (Kpls kpls : kplsList) {
             int kplsh = kpls.getKplsh();
@@ -299,7 +313,7 @@ public class WeiXinController extends BaseController {
                 return  null;
             }
 
-           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls);
+           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls,access_token);
             if(null==openid){
                 request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
