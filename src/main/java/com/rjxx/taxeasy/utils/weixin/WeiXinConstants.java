@@ -35,6 +35,6 @@ public class WeiXinConstants {
     public  static  final String INVOICE_STATUS_LOCK = "INVOICE_REIMBURSE_LOCK";//发票已锁定
     public  static  final String INVOICE_STATUS_CLOUSE = "INVOICE_REIMBURSE_CLOSURE";//发票已核销
 
-    //申请开票完成跳转url
-    public  static final String SUCCESS_REDIRECT_URL = "https://fpjtest.datarj.com/einv/witting.html";//测试地址等待页面
+    //申请开票完成跳转url     http://fpj.datarj.com/einv/Family/witting.html
+    public  static final String SUCCESS_REDIRECT_URL = "http://fpjtest.datarj.com/einv/Family/witting.html";//测试地址等待页面
 }

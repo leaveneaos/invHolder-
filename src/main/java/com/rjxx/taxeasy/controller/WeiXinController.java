@@ -25,6 +25,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +73,7 @@ public class WeiXinController extends BaseController {
      */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL)
     @ResponseBody
-    public String getWeiXin(String data) throws Exception {
+    public String getWeiXin(HttpServletRequest request) throws Exception {
         System.out.println("进入回调验证token");
             //响应token
             String sign = request.getParameter("signature");
@@ -86,17 +89,22 @@ public class WeiXinController extends BaseController {
                 logger.info("isSuccess:" + echo);
             }
             System.out.println("token验证成功，开始回调xml");
-            Document xmlDoc = null;
+        // 将解析结果存储在HashMap中
+             Map<String, String> resultmap = new HashMap<String, String>();
+        // 从request中取得输入流
+            InputStream inputStream = request.getInputStream();
+        // 读取输入流
+            SAXReader reader = new SAXReader();
             WeixinUtils weixinUtils = new WeixinUtils();
             String openid = String.valueOf(request.getSession().getAttribute("openid"));
         try {
-            if(null!=data){
-             System.out.println("返回的数据"+data.toString());
+            if(null!=inputStream){
              //解析微信返回的消息推送的xml
-            xmlDoc = DocumentHelper.parseText(data);
-            Element rootElt = xmlDoc.getRootElement();
-            System.out.println("根节点：" + rootElt.getName());
-            List<Element> childElements = rootElt.elements();
+            Document document = reader.read(inputStream);
+            // 得到xml根元素
+            Element root = document.getRootElement();
+            System.out.println("根节点：" + root.getName());
+            List<Element> childElements = root.elements();
             String SuccOrderIdValue = "";
             String FailOrderIdValue = "";
             for (Element e:childElements){
@@ -108,6 +116,7 @@ public class WeiXinController extends BaseController {
                     FailOrderIdValue=e.getText();
                     System.out.println("失败的订单id"+FailOrderIdValue);
                 }
+                resultmap.put(e.getName(), e.getText());
             }
             String  access_token = (String)weixinUtils.hqtk().get("access_token");
             request.setAttribute("access_token",access_token);
