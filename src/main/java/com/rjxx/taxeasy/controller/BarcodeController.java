@@ -55,16 +55,16 @@ public class BarcodeController extends BaseController {
                             String img=status.replace("pdf", "jpg");
                             response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+img);
                         }else{
-                            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=发票图片发生错误");
+                            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=ImgError");
                         }
                 }
             } else {
-                    response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");
+                    response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=QRCodeFail");
             }
         } catch (IOException e) {
             e.printStackTrace();
             try {
-                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=重定向出错,请联系管理员");
+                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=RedirectError");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
