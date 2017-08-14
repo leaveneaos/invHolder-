@@ -73,7 +73,7 @@ public class WeiXinController extends BaseController {
      */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL)
     @ResponseBody
-    public String getWeiXin(HttpServletRequest request) throws Exception {
+    public String getWeiXin() throws Exception {
         System.out.println("进入回调验证token");
             //响应token
             String sign = request.getParameter("signature");
@@ -89,6 +89,9 @@ public class WeiXinController extends BaseController {
                 logger.info("isSuccess:" + echo);
             }
             System.out.println("token验证成功，开始回调xml");
+        System.out.println("时间类型++++"+request.getParameter("Event"));
+        System.out.println("成功的id++++++++"+request.getParameter("SuccOrderId"));
+        System.out.println(request.getParameter("FailOrderId"));
         // 将解析结果存储在HashMap中
              Map<String, String> resultmap = new HashMap<String, String>();
         // 从request中取得输入流
