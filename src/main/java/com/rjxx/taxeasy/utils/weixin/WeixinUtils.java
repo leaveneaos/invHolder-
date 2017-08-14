@@ -157,14 +157,14 @@ public class WeixinUtils {
 
         String spappid =  weixinUtils.getSpappid();//获取开票平台
         String ticket = weixinUtils.getTicket();
-        int   i = (int) Double.parseDouble(money);
+        double d = Double.valueOf(money)*100;
         String  source = "web";
         String redirect_url = "https://baidu.com";
         int type = 1;//填写抬头申请开票类型
         Map nvps = new HashMap();
         nvps.put("s_pappid",spappid);
         nvps.put("order_id",orderid);
-        nvps.put("money",i);
+        nvps.put("money",d);
         nvps.put("timestamp",timestamp);
         nvps.put("source",source);
         nvps.put("redirect_url",redirect_url);
