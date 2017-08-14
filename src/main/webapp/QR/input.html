@@ -68,6 +68,36 @@
         #tab tr {
             background-color: #A1A2A4;
         }
+         /*模态框*/
+        .mask {      
+            height: 100%; 
+            position: absolute; 
+            top: 0px; 
+            left: 0px;  
+            filter: alpha(opacity=60); 
+            background-color: #777;     
+            z-index: 1002;      
+            opacity:0.8; 
+            -moz-opacity:0.8;     
+        } 
+        #loading,.loadingImg {
+            z-index:10001;
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+        } 
+        #loading {
+            width: 70%;
+        }
+        .loadingImg {
+            top: -150%;
+            width: 30%;
+        }   
+        .state{
+            color: #fff;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -153,6 +183,9 @@
         <p class="company">上海容津信息技术有限公司</p>
         <p class="help"><a href="bangzhu.html">遇到问题?</a></p>
     </footer>
+    <!-- 遮罩层 -->
+    <div id="mask" class="mask"></div>   
+    <div id="loading"></div> 
 
     <script type="text/javascript">
         $(function () {
@@ -171,6 +204,18 @@
             var price= getval.split("=")[4];
             $('#tab').append("<tr><td>"+spmc+"</td><td>" + price + "</td><td>" + spsl + "%</td></tr>");
         })
+
+        // 模态框
+        function showMask(){    
+            $("#mask").css("height",$(document).height());     
+            $("#mask").css("width",$(document).width());     
+            $("#mask").show();  
+            loading.innerHTML = "<img src='../images/loading1.gif' class='loadingImg'><p class='state'>正在提交......</p>";   
+        } 
+        function hideMask(){  
+            $("#mask").hide(); 
+            loading.innerHTML = '';    
+        }
 
         function tk() {
             var info = document.getElementById("info");
@@ -241,8 +286,10 @@
                 }
                 title = "信息确认";
                 $("#confirmBtn").attr("disabled", true);
+
                 jConfirm(firm, title, function (r) {
                     if (r) {
+                        showMask();
                         $.post("../scan/submit", {
                             "gfmc": fptt,
                             "gfsh": nsrsbh,
@@ -253,6 +300,7 @@
                             "email": yx
                         }, function (obj) {
                             if(obj.msg=="成功"){
+                                hideMask();
                                 var data = eval("(" + obj.data + ")");
                                 if(data.returnCode=="0000"||data.returnCode==null){
                                     window.location.href = "../QR/result.html";
