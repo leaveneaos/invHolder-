@@ -122,17 +122,13 @@ public class BaseClController extends BaseController {
     @ResponseBody
     public  Map isWeiXin(String orderNo,String order,String orderTime,String price){
         String redirectUrl ="";
-        Date dateTime = null;
-        if(null!=orderTime&&!orderTime.equals("")){
-             dateTime= TimeUtil.getSysDateInDate(orderTime,"yyyy-MM-dd HH:mm:ss");
-        }
         String ua = request.getHeader("user-agent").toLowerCase();
         Map resultMap = new HashMap();
         if(WeixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
             WeixinUtils weixinUtils = new WeixinUtils();
             try {
-             redirectUrl = weixinUtils.getTiaoURL(order,price,dateTime.getTime(),orderNo);
+             redirectUrl = weixinUtils.getTiaoURL(order,price,orderTime,orderNo);
              if(null==redirectUrl||redirectUrl.equals("")){
                  resultMap.put("msg","获取微信授权失败!请重试");
                  resultMap.put("num","2");
