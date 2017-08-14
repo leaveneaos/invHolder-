@@ -216,7 +216,6 @@
             $("#mask").hide(); 
             loading.innerHTML = '';    
         }
-        showMask();
 
         function tk() {
             var info = document.getElementById("info");
@@ -287,9 +286,10 @@
                 }
                 title = "信息确认";
                 $("#confirmBtn").attr("disabled", true);
-                showMask();
+
                 jConfirm(firm, title, function (r) {
                     if (r) {
+                        showMask();
                         $.post("../scan/submit", {
                             "gfmc": fptt,
                             "gfsh": nsrsbh,
