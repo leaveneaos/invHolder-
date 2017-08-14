@@ -51,7 +51,7 @@ public class WeixinUtils {
      * @param
      * @return
      */
-       public static boolean isWeiXinBrowser(HttpServletRequest request) {
+      public static boolean isWeiXinBrowser(HttpServletRequest request) {
         String ua = request.getHeader("user-agent").toLowerCase();
         boolean res = ua.contains("micromessenger");
         return res;
@@ -160,18 +160,18 @@ public class WeixinUtils {
         String spappid =  weixinUtils.getSpappid();//获取开票平台
         String ticket = weixinUtils.getTicket();
         double d = Double.valueOf(money)*100;
-        /*Date dateTime = null;
+        Date dateTime = null;
         if(null!=timestamp&&!timestamp.equals("")){
             dateTime= TimeUtil.getSysDateInDate(timestamp,"yyyy-MM-dd HH:mm:ss");
-        }*/
-        System.out.println("时间戳"+ Timestamp.valueOf(timestamp));
+        }
+
         String  source = "web";
         int type = 1;//填写抬头申请开票类型
         Map nvps = new HashMap();
         nvps.put("s_pappid",spappid);
         nvps.put("order_id",orderid);
         nvps.put("money",d);
-        nvps.put("timestamp",Timestamp.valueOf(timestamp));
+        nvps.put("timestamp",dateTime.getTime()/1000);
         nvps.put("source",source);
         nvps.put("redirect_url",WeiXinConstants.SUCCESS_REDIRECT_URL);
         nvps.put("ticket",ticket);
@@ -279,7 +279,8 @@ public class WeixinUtils {
 
 
         try {
-            weixinUtils.getTiaoURL("1122201","10","1474875876","1");//获取微信授权
+
+            weixinUtils.getTiaoURL("1122203","10", "2011-05-09 11:49:45","1");//获取微信授权
         } catch (Exception e) {
             e.printStackTrace();
         }
