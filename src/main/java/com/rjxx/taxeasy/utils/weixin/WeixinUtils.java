@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Kpspmx;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.TimeUtil;
 import com.rjxx.utils.WeixinUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -150,7 +151,7 @@ public class WeixinUtils {
     拿到数据,调用微信接口获取微信授权链接,
     如果成功跳转页面,失败返回null
     */
-    public String getTiaoURL(String orderid,String money,long timestamp,String menDianId) throws Exception {
+    public String getTiaoURL(String orderid,String money,String timestamp,String menDianId) throws Exception {
 
         String auth_url ="";
         WeixinUtils weixinUtils = new WeixinUtils();
@@ -158,6 +159,11 @@ public class WeixinUtils {
         String spappid =  weixinUtils.getSpappid();//获取开票平台
         String ticket = weixinUtils.getTicket();
         double d = Double.valueOf(money)*100;
+        Date dateTime = null;
+        if(null!=timestamp&&!timestamp.equals("")){
+            dateTime= TimeUtil.getSysDateInDate(timestamp,"yyyy-MM-dd HH:mm:ss");
+        }
+        System.out.println("时间戳"+dateTime.getTime());
         String  source = "web";
         String redirect_url = "https://baidu.com";
         int type = 1;//填写抬头申请开票类型
@@ -165,7 +171,7 @@ public class WeixinUtils {
         nvps.put("s_pappid",spappid);
         nvps.put("order_id",orderid);
         nvps.put("money",d);
-        nvps.put("timestamp",timestamp);
+        nvps.put("timestamp",dateTime.getTime());
         nvps.put("source",source);
         nvps.put("redirect_url",redirect_url);
         nvps.put("ticket",ticket);
@@ -273,7 +279,7 @@ public class WeixinUtils {
 
 
         try {
-            weixinUtils.getTiaoURL("1122201","10",1474875876,"1");//获取微信授权
+            weixinUtils.getTiaoURL("1122201","10","1474875876","1");//获取微信授权
         } catch (Exception e) {
             e.printStackTrace();
         }
