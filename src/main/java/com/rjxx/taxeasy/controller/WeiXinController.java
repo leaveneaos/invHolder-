@@ -88,11 +88,11 @@ public class WeiXinController extends BaseController {
                 }
                 logger.info("isSuccess:" + echo);
             }
-            System.out.println("token验证成功，开始回调xml");
+        System.out.println("token验证-----------------回调xml");
         System.out.println("时间类型++++"+request.getParameter("Event"));
         System.out.println("成功的id++++++++"+request.getParameter("SuccOrderId"));
         System.out.println(request.getParameter("FailOrderId"));
-        // 将解析结果存储在HashMap中
+        /*// 将解析结果存储在HashMap中
              Map<String, String> resultmap = new HashMap<String, String>();
         // 从request中取得输入流
             InputStream inputStream = request.getInputStream();
@@ -217,7 +217,7 @@ public class WeiXinController extends BaseController {
             logger.error("微信接口回调错误", e);
             request.getSession().setAttribute("msg", "获取微信授权出现异常!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-        }
+        }*/
         return null;
     }
 
