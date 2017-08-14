@@ -165,7 +165,6 @@ public class WeixinUtils {
         }
         System.out.println("时间戳"+dateTime.getTime());
         String  source = "web";
-        String redirect_url = "https://baidu.com";
         int type = 1;//填写抬头申请开票类型
         Map nvps = new HashMap();
         nvps.put("s_pappid",spappid);
@@ -173,7 +172,7 @@ public class WeixinUtils {
         nvps.put("money",d);
         nvps.put("timestamp",dateTime.getTime());
         nvps.put("source",source);
-        nvps.put("redirect_url",redirect_url);
+        nvps.put("redirect_url",WeiXinConstants.SUCCESS_REDIRECT_URL);
         nvps.put("ticket",ticket);
         nvps.put("type",type);
         if(null==orderid&&StringUtils.isBlank(orderid)){
