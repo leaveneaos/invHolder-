@@ -122,17 +122,13 @@ public class BaseClController extends BaseController {
     @ResponseBody
     public  Map isWeiXin(String orderNo,String order,String orderTime,String price){
         String redirectUrl ="";
-        Date dateTime = null;
-        if(null!=orderTime&&!orderTime.equals("")){
-             dateTime= TimeUtil.getSysDateInDate(orderTime,"yyyy-MM-dd HH:mm:ss");
-        }
         String ua = request.getHeader("user-agent").toLowerCase();
         Map resultMap = new HashMap();
         if(WeixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
             WeixinUtils weixinUtils = new WeixinUtils();
             try {
-             redirectUrl = weixinUtils.getTiaoURL(order,price,dateTime.getTime(),orderNo);
+             redirectUrl = weixinUtils.getTiaoURL(order,price,orderTime,orderNo);
              if(null==redirectUrl||redirectUrl.equals("")){
                  resultMap.put("msg","获取微信授权失败!请重试");
                  resultMap.put("num","2");
@@ -191,6 +187,7 @@ public class BaseClController extends BaseController {
                 String jylsh = tqm.substring(12, 20);//交易流水号
                 request.getSession().setAttribute("orderNo", mdh);
                 request.getSession().setAttribute("order", jylsh);
+                request.getSession().setAttribute(gsxx.getGsdm()+"tqm",tqm);
                 String opendid = (String) session.getAttribute("openid");
                 Map map = new HashMap<>();
                 map.put("tqm", tqm);
@@ -312,7 +309,7 @@ public class BaseClController extends BaseController {
                 if(map.get("errcode") != null){
                     logger.info("微信获取失败");
                 }else{
-                    logger.info("微信获取失败");
+                    logger.info("微信获取成功");
                     session.setAttribute("access_token", map.get("access_token"));
                     session.setAttribute("openid", map.get("openid"));
                     logger.info(session.getAttribute("openid").toString());

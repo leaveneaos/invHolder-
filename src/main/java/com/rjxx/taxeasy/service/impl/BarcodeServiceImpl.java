@@ -48,33 +48,38 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public Map sm(String gsdm, String q) {
-        Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
-        String secretKey = gsxx.getSecretKey();
-        Boolean b = RJCheckUtil.checkMD5(secretKey, q);
-        if (b) {
-            Map decode = RJCheckUtil.decode(q);
-            String storeNo = decode.get("storeNo").toString();
-            String orderNo = decode.get("orderNo").toString();
-            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
-            Integer pid = skp.getPid();
-            Integer xfid = skp.getXfid(); //销方id
-            Integer kpdid = skp.getId();//税控盘id(开票点id)
-            String ppdm = "";
-            String ppurl = "";
-            if (pid != null) {
-                Pp pp = ppJpaDao.findOneById(pid);
-                ppdm = pp.getPpdm();
-                ppurl = pp.getPpurl();
+        try {
+            Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
+            String secretKey = gsxx.getSecretKey();
+            Boolean b = RJCheckUtil.checkMD5(secretKey, q);
+            if (b) {
+                Map decode = RJCheckUtil.decode(q);
+                String storeNo = decode.get("storeNo").toString();
+                String orderNo = decode.get("orderNo").toString();
+                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
+                Integer pid = skp.getPid();
+                Integer xfid = skp.getXfid(); //销方id
+                Integer kpdid = skp.getId();//税控盘id(开票点id)
+                String ppdm = "";
+                String ppurl = "";
+                if (pid != null) {
+                    Pp pp = ppJpaDao.findOneById(pid);
+                    ppdm = pp.getPpdm();
+                    ppurl = pp.getPpurl();
+                } else {
+                    Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "mrmburlid");
+                    ppurl = cszb.getCsz();
+                }
+                Map map = new HashMap();
+                map.put("ppdm", ppdm);
+                map.put("ppurl", ppurl);
+                map.put("orderNo", orderNo);
+                return map;
             } else {
-                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "mrmburlid");
-                ppurl = cszb.getCsz();
+                return null;
             }
-            Map map = new HashMap();
-            map.put("ppdm", ppdm);
-            map.put("ppurl", ppurl);
-            map.put("orderNo", orderNo);
-            return map;
-        } else {
+        } catch(Exception e){
+            e.printStackTrace();
             return null;
         }
     }
@@ -237,19 +242,23 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public String checkStatus(String tqm, String gsdm) {
-        Integer djh = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
-        if(djh!=null){
-            Kpls kpls = kplsJpaDao.findOneByDjh(djh);
-            String fpztdm = kpls.getFpztdm();
-            String pdfurl = kpls.getPdfurl();
-            String fphm = kpls.getFphm();
-            if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
-                return pdfurl;
+        try {
+            Integer djh = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
+            if(djh!=null){
+                Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                String fpztdm = kpls.getFpztdm();
+                String pdfurl = kpls.getPdfurl();
+                String fphm = kpls.getFphm();
+                if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
+                    return pdfurl;
+                }else{
+                    return "开具中";
+                }
             }else{
-                return "开具中";
+                return "可开具";
             }
-        }else{
-            return "可开具";
+        } catch(Exception e){
+            return null;
         }
     }
 }

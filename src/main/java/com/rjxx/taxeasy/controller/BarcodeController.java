@@ -39,32 +39,44 @@ public class BarcodeController extends BaseController {
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
                 String status = barcodeService.checkStatus(orderNo, gsdm);
-                switch (status) {
-                    case "可开具":
-                        if (StringUtils.isNotBlank(ppdm)) {
-                            response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=" + ppdm + "=" + System.currentTimeMillis());
-                        } else {
-                            response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=no=" + System.currentTimeMillis());
-                        }
-                        break;
-                    case "开具中":
-                        response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "=ing");
-                        break;
-                    default:
-                        if(status.indexOf("pdf")!=-1){
-                            String img=status.replace("pdf", "jpg");
-                            response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+img);
-                        }else{
-                            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=发票图片发生错误");
-                        }
+                if(status!=null){
+                    switch (status) {
+                        case "可开具":
+                            if (StringUtils.isNotBlank(ppdm)) {
+                                //有品牌代码对应的url
+                                response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=" + ppdm + "=" + System.currentTimeMillis());
+                            } else {
+                                //无品牌对应的url
+                                response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=no=" + System.currentTimeMillis());
+                            }
+                            break;
+                        case "开具中":
+                            //开具中对应的url
+                            response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "=ing");
+                            break;
+                        default:
+                            if(status.indexOf("pdf")!=-1){
+                                String img=status.replace("pdf", "jpg");
+                                //有pdf对应的url
+                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+img);
+                            }else{
+                                //无pdf对应的url
+                                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_ERROR");
+                            }
+                    }
+                }else{
+                    //获取pdf状态码失败的url
+                    response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_STATE_ERROR");
                 }
             } else {
-                    response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=二维码验签失败");
+                    //验签失败url
+                    response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=QRCODE_VALIDATION_FAILED");
             }
         } catch (IOException e) {
             e.printStackTrace();
             try {
-                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=重定向出错,请联系管理员");
+                //重定向报错url
+                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=REDIRECT_ERROR");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

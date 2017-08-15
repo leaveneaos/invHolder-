@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Kpspmx;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.TimeUtil;
 import com.rjxx.utils.WeixinUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,6 +24,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +35,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.Response;
 import java.io.*;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -49,7 +54,7 @@ public class WeixinUtils {
      * @param
      * @return
      */
-       public static boolean isWeiXinBrowser(HttpServletRequest request) {
+     public static boolean isWeiXinBrowser(HttpServletRequest request) {
         String ua = request.getHeader("user-agent").toLowerCase();
         boolean res = ua.contains("micromessenger");
         return res;
@@ -150,24 +155,27 @@ public class WeixinUtils {
     拿到数据,调用微信接口获取微信授权链接,
     如果成功跳转页面,失败返回null
     */
-    public String getTiaoURL(String orderid,String money,long timestamp,String menDianId) throws Exception {
+    public String getTiaoURL(String orderid,String money,String timestamp,String menDianId) throws Exception {
 
         String auth_url ="";
         WeixinUtils weixinUtils = new WeixinUtils();
 
         String spappid =  weixinUtils.getSpappid();//获取开票平台
         String ticket = weixinUtils.getTicket();
-
+        double d = Double.valueOf(money)*100;
+        Date dateTime = null;
+        if(null!=timestamp&&!timestamp.equals("")){
+            dateTime= TimeUtil.getSysDateInDate(timestamp,"yyyy-MM-dd HH:mm:ss");
+        }
         String  source = "web";
-        String redirect_url = "https://baidu.com";
         int type = 1;//填写抬头申请开票类型
         Map nvps = new HashMap();
         nvps.put("s_pappid",spappid);
         nvps.put("order_id",orderid);
-        nvps.put("money",money);
-        nvps.put("timestamp",timestamp);
+        nvps.put("money",d);
+        nvps.put("timestamp",dateTime.getTime()/1000);
         nvps.put("source",source);
-        nvps.put("redirect_url",redirect_url);
+        nvps.put("redirect_url",WeiXinConstants.SUCCESS_REDIRECT_URL);
         nvps.put("ticket",ticket);
         nvps.put("type",type);
         if(null==orderid&&StringUtils.isBlank(orderid)){
@@ -189,15 +197,20 @@ public class WeixinUtils {
             ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
             try {
                 Map map = jsonparer.readValue(jsonStr3, Map.class);
-                 auth_url = (String) map.get("auth_url");
-                System.out.println("授权链接"+auth_url);
-                logger.info("跳转url"+auth_url);
-                //response.sendRedirect(auth_url);
-                //request.getSession().setAttribute(orderid+"auth_url",auth_url);//跳转url放进session
+
+                int errcode = (int) map.get("errcode");
+                if(errcode==0){
+                    auth_url = (String) map.get("auth_url");
+                    logger.info("跳转url"+auth_url);
+                    System.out.println("授权链接"+auth_url);
+                    return  auth_url;
+                }else {
+                    logger.info("获取微信授权链接失败!");
+                    return  null;
+                }
             } catch (Exception e) {
                 //处理异常
                 logger.error("Get Ali Access_token error", e);
-                return auth_url;
                 //request.getSession().setAttribute("msg", "获取微信授权出现异常!");
                 //response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             }
@@ -211,8 +224,8 @@ public class WeixinUtils {
         WeixinUtils weixinUtils = new WeixinUtils();
 
         //System.out.println(""+in);
-        /* //解析xml
-            String data="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+         //解析xml
+           /* String data="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<xml>"
                 + "<ToUserName>1111</ToUserName>"
                 + "<FromUserName></FromUserName>"
@@ -233,17 +246,15 @@ public class WeixinUtils {
             String SuccOrderIdValue = "";
             String FailOrderIdValue = "";
             for (Element e:childElements){
-                if(e.getName().equals("SuccOrderId")&&null!=e.getName()){
-                    SuccOrderIdValue = e.getText();
-                    System.out.println("成功的订单id");
-                }
-                if(e.getName().equals("FailOrderId")&&null!=e.getName()){
-                    FailOrderIdValue=e.getText();
-                    System.out.println("失败的订单id");
-                }
+                    if(e.getName().equals("SuccOrderId")&&null!=e.getName()){
+                        SuccOrderIdValue = e.getText();
+                        System.out.println("成功的订单id"+SuccOrderIdValue);
+                    }
+                    if(e.getName().equals("FailOrderId")&&null!=e.getName()){
+                        FailOrderIdValue=e.getText();
+                        System.out.println("失败的订单id"+FailOrderIdValue);
+                    }
             }
-            System.out.println(""+SuccOrderIdValue);
-            System.out.println(""+FailOrderIdValue);
             if(""!=SuccOrderIdValue&&null!=SuccOrderIdValue){
                 System.out.println("拿到成功的订单id了");
             }
@@ -267,11 +278,12 @@ public class WeixinUtils {
         // System.out.println("获取微信token-----------"+msp);
 
 
-        try {
-            weixinUtils.getTiaoURL("1122201","10",1474875876,"1");//获取微信授权
+       /* try {
+
+            weixinUtils.getTiaoURL("1122203","10", "2011-05-09 11:49:45","1");//获取微信授权
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         //weixinUtils.zdcxstatus("1131453220170808");//查询用户授权状态
         //weixinUtils.cksqzd();//查看授权字段
         //weixinUtils.sqzd();//授权字段--只设一次
@@ -588,12 +600,11 @@ public class WeixinUtils {
     * 将电子发票插入卡包
     * */
 
-    public  String dzfpInCard(String order_id,String card_id,String pdf_file_url,Map weiXinData,List<Kpspmx> kpspmxList,Kpls kpls){
+    public  String dzfpInCard(String order_id,String card_id,String pdf_file_url,Map weiXinData,List<Kpspmx> kpspmxList,Kpls kpls,String access_token){
         String appid = WeiXinConstants.APP_ID;
 
         WeiXinInfo weiXinInfo = new WeiXinInfo();
         WeixinUtils weixinUtils = new WeixinUtils();
-
 
         Map sj = new HashMap();
         Map card_ext = new HashMap();
@@ -732,7 +743,11 @@ public class WeixinUtils {
             logger.info("商品price为null");
             return  null;
         }
-        String access_token = (String) weixinUtils.hqtk().get("access_token");
+        if(null==access_token){
+            logger.info("获取token错误");
+            return  null;
+        }
+        //String access_token = (String) weixinUtils.hqtk().get("access_token");
         String URL =WeiXinConstants.dzfpInCard_url+access_token;
         System.out.println("电子发票插入卡包url为++++"+URL);
         String jsonStr = WeixinUtil.httpRequest(URL, "POST",JSON.toJSONString(sj));
