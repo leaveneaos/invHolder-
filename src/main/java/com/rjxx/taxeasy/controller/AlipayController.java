@@ -56,7 +56,7 @@ public class AlipayController extends BaseController {
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
         alipaySystemOauthTokenRequest.setCode(auth_code);
-        logger.info(JSON.toJSONString(auth_code+"start application"));
+        logger.info(JSON.toJSONString(auth_code+"-----start application-------"));
         alipaySystemOauthTokenRequest.setGrantType("authorization_code");
         try {
             AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
@@ -68,7 +68,7 @@ public class AlipayController extends BaseController {
             refreshToken(oauthTokenResponse.getRefreshToken());
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
-            logger.info(JSON.toJSONString(oauthTokenResponse+"end application"));
+            logger.info(JSON.toJSONString(oauthTokenResponse+"-------end application---------"));
             response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             //处理异常
