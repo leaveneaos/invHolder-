@@ -73,7 +73,7 @@ public class WeiXinController extends BaseController {
     /**
      * 获取微信授权回调
      */
-    @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.GET)
+    @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL)
     public void getWeiXin() throws Exception {
         System.out.println("进入回调验证token");
             //响应token
