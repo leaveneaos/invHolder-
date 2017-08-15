@@ -176,7 +176,7 @@ public class WeiXinController extends BaseController {
                                 Tqmtq tqmtq1 = new Tqmtq();
                                 tqmtq1.setDdh(jyxxsq.getTqm());
                                 tqmtq1.setLrsj(new Date());
-                                tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
+                                tqmtq1.setZje(Double.valueOf(jyxxsq.getJshj()));
                                 tqmtq1.setGfmc((String) resultMap.get("title"));
                                 tqmtq1.setNsrsbh((String) resultMap.get("tax_no"));
                                 tqmtq1.setDz((String) resultMap.get("addr"));
@@ -193,6 +193,7 @@ public class WeiXinController extends BaseController {
                                     tqmtq1.setOpenid(openid);
                                 }
                                 tqmtqService.save(tqmtq1);
+
 
                             } catch (Exception e) {
                                 e.printStackTrace();
