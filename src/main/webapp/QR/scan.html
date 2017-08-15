@@ -29,6 +29,10 @@
 		#innerImg {
 			width: 100%;
 		}
+		#innerMsg{
+			align-content: center;
+			text-align: center;
+		}
 	</style>
 </head>
 <body>
@@ -56,7 +60,7 @@
 	</section>
 
 	<section id=parentIndustryUL>
-		<img id="innerImg" src=""/>
+		<img id="innerImg"/>
 		<div id="innerMsg"></div>
 	</section>
 
@@ -75,16 +79,16 @@
 <script src="../js/mui.min.js"></script>
 <script src="../js/mui.zoom.js"></script>
 <script>
-    $(function(){
+    $(function () {
         var thisURL = document.URL;
-        var getval =thisURL.split('?')[1];
-        var msg= getval.split("=")[2];
-        if(msg=="ing"){
-            $("#innerMsg").html("<h3>努力开具中,请稍后再试</h3>");
-        }else{
+        var getval = thisURL.split('?')[1];
+        var msg = getval.split("=")[2];
+        if (msg == "ing") {
+            $("#innerMsg").html("<h3 style='color:#8f8f94'>努力开具中,请稍后再试</h3>");
+        } else {
             $("#innerImg").attr("src", msg);
-		}
-	})
+        }
+    });
 </script>
 </body>
 </html>
