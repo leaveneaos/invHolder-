@@ -22,6 +22,7 @@ import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.StringUtils;
 import com.rjxx.utils.WeixinUtil;
 import org.apache.commons.codec.binary.Base64;
+import org.aspectj.bridge.MessageUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -84,7 +85,7 @@ public class WeiXinController extends BaseController {
             if (SigCheck.checkSignature(sign, times, nonce)) {
                 try {
                     response.getOutputStream().print(request.getParameter("echostr"));
-                    test(request,response);
+                    test(request);//取消关注事件推送
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -219,12 +220,73 @@ public class WeiXinController extends BaseController {
         }*/
 
     }
-private void test(HttpServletRequest request, HttpServletResponse response ){
-    System.out.println("token验证-----------------回调xml");
-    System.out.println("时间类型++++"+request.getParameter("Event"));
-    System.out.println("成功的id++++++++"+request.getParameter("SuccOrderId"));
-    System.out.println(request.getParameter("FailOrderId"));
+private void test(HttpServletRequest request){
+
+    System.out.println("进入微信事件推送");
+    Map<String, String> requestMap = null;
+    try {
+        requestMap = parseXml(request);
+        System.out.println("接收微信返回xml变map"+requestMap.toString());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
 }
+
+
+
+    public Map<String, String> parseXml(HttpServletRequest request) throws Exception {
+        System.out.println("解析微信推送xml————————————");
+        // 将解析结果存储在HashMap中
+        Map<String, String> map = new HashMap<String, String>();
+        // 从request中取得输入流
+        InputStream inputStream = request.getInputStream();
+        // 读取输入流
+
+        SAXReader reader = new SAXReader();
+
+        Document document = reader.read(inputStream);
+
+        String requestXml = document.asXML();
+
+        String subXml = requestXml.split(">")[0] + ">";
+
+        requestXml = requestXml.substring(subXml.length());
+
+        // 得到xml根元素
+
+        Element root = document.getRootElement();
+
+        // 得到根元素的全部子节点
+
+        List<Element> elementList = root.elements();
+
+        // 遍历全部子节点
+
+        for (Element e : elementList) {
+
+            map.put(e.getName(), e.getText());
+
+        }
+
+        map.put("requestXml", requestXml);
+
+        // 释放资源
+
+        inputStream.close();
+        inputStream = null;
+
+        return map;
+
+    }
+
+
+
+
+
+
+
+
 
     /**
      * 获取微信授权链接
