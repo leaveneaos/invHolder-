@@ -74,7 +74,7 @@ public class WeiXinController extends BaseController {
     /**
      * 获取微信授权回调
      */
-    @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL)
+    @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.GET)
     public void getWeiXin() throws Exception {
         System.out.println("进入回调验证token");
             //响应token
@@ -85,7 +85,6 @@ public class WeiXinController extends BaseController {
             if (SigCheck.checkSignature(sign, times, nonce)) {
                 try {
                     response.getOutputStream().print(request.getParameter("echostr"));
-                    test(request);//取消关注事件推送
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -220,18 +219,22 @@ public class WeiXinController extends BaseController {
         }*/
 
     }
-private void test(HttpServletRequest request){
 
-    System.out.println("进入微信事件推送");
-    Map<String, String> requestMap = null;
-    try {
-        requestMap = parseXml(request);
-        System.out.println("接收微信返回xml变map"+requestMap.toString());
-    } catch (Exception e) {
-        e.printStackTrace();
+    @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
+    public void postWeiXin() throws Exception {
+        System.out.println("微信发送的post请求");
+
+        Map<String, String> requestMap = null;
+        try {
+            System.out.println("微信推送事件");
+            requestMap = parseXml(request);
+            System.out.println("接收微信返回xml变map"+requestMap.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-}
 
 
 
