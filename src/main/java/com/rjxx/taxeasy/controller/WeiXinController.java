@@ -75,18 +75,18 @@ public class WeiXinController extends BaseController {
     public void getWeiXin() throws Exception {
         System.out.println("进入回调验证token");
             //响应token
-            String sign = request.getParameter("signature");
-            String times = request.getParameter("timestamp");
-            String nonce = request.getParameter("nonce");
-            String echo = request.getParameter("echostr");
-            if (SigCheck.checkSignature(sign, times, nonce)) {
-                try {
-                    response.getOutputStream().print(request.getParameter("echostr"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                logger.info("isSuccess:" + echo);
+        String sign = request.getParameter("signature");
+        String times = request.getParameter("timestamp");
+        String nonce = request.getParameter("nonce");
+        String echo = request.getParameter("echostr");
+        if (SigCheck.checkSignature(sign, times, nonce)) {
+            try {
+                response.getOutputStream().print(request.getParameter("echostr"));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            logger.info("isSuccess:" + echo);
+        }
 
 
 
