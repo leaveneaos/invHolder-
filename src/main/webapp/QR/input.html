@@ -351,10 +351,12 @@
                                 if(data.returnCode=="0000"||data.returnCode==null){
                                     window.location.href = "../QR/result.html";
                                 }else {
-                                    window.location.href = "../QR/error.html?msg="+new Date+"="+data.returnMsg;
+                                   var str = "../QR/error.html?msg="+new Date+"="+data.returnMsg;
+                                    window.location.assign(encodeURI(str));
                                 }
                             }else{
-                                window.location.href = "../QR/error.html?msg="+new Date+"="+obj.msg;
+                                var str = "../QR/error.html?msg="+new Date+"="+obj.msg;
+                                window.location.assign(encodeURI(str));
                             }
                         });
                     } else {
