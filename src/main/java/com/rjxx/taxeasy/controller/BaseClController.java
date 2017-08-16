@@ -110,9 +110,11 @@ public class BaseClController extends BaseController {
                 return;
             } else {
                 sendHtml(str, gsxx);
+                return;
             }
         } else {
             sendHtml(str, gsxx);
+            return;
         }
     }
 
