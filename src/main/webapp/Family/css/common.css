@@ -188,3 +188,9 @@ button {
 .wait {
 	font-size: 14px;
 }
+/*单行溢出*/
+.omit {
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
