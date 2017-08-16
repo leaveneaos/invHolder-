@@ -76,14 +76,15 @@ public class BaseClController extends BaseController {
     private GetDataService getDataService;
     @Autowired
     private DiscountDealUtil discountDealUtil;
-
-   // public static final String APP_ID ="wx9abc729e2b4637ee";
-    public static final String APP_ID ="wx8c2a4c2289e10ffb";
+    //正式
+    public static final String APP_ID ="wx9abc729e2b4637ee";
+    //沙箱测试
+    //public static final String APP_ID ="wx8c2a4c2289e10ffb";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
 
-    //public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
-    public static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
+    //public static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
 
     @RequestMapping
     @ResponseBody
