@@ -161,23 +161,25 @@
                 var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;
                 window.location.assign(encodeURI(myurl));
             }else if(isWeixin){
-                $.post(
-                    "../common/isBrowser",
-                    {
-                        "orderNo":orderNo,
-                        "orderTime":orderTime,
-                        "storeNo":storeNo,
-                        "price":price
-                    },
-                    function (obj) {
-                        var num = obj.num;
-                        if(num=="0"){
-                            window.location.href=obj.redirectUrl+new Date();
-                        }else{
-                            redirect(obj.msg);
-                        }
-                    }
-                )
+                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + price;
+//                $.post(
+//                    "../common/isBrowser",
+//                    {
+//                        "orderNo":orderNo,
+//                        "orderTime":orderTime,
+//                        "storeNo":storeNo,
+//                        "price":price
+//                    },
+//                    function (obj) {
+//                        var num = obj.num;
+//                        if(num=="0"){
+//                            window.location.href=obj.redirectUrl+new Date();
+//                        }else{
+//                            redirect(obj.msg);
+//                        }
+//                    }
+//                )
             }else{
                 redirect("请用微信或支付宝扫码");
             }
