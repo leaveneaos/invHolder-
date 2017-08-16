@@ -26,8 +26,8 @@ public class MyInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session=request.getSession();
         String[] url=request.getServletPath().split("/");
-        logger.info("-----初始化URL----end-----"+JSON.toJSONString(url));
-        if(url.length<3){
+        logger.info("-----初始化URL----end-----"+url.length);
+        if(url.length==2){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
