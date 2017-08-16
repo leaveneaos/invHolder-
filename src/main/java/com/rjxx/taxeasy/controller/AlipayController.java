@@ -84,11 +84,11 @@ public class AlipayController extends BaseController {
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
         alipaySystemOauthTokenRequest.setRefreshToken(refreshToken);
         alipaySystemOauthTokenRequest.setGrantType("refresh_token");
-            AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
-            session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
-            session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
-            session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
-            logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
+        AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
+        session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
+        session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
+        session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
+        logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
     }
 
     /**
