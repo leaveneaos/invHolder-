@@ -137,34 +137,33 @@
 					};
 	            }
 	        );
-			// 选择支付宝抬头信息
-			function changeFptt(obj){
-	            $.post(
-	                '../getInvoiceTitle',
-	                {},
-	                function(test) {
-	                    if(test.success) {
-	                        var option='';
-	                        var dataList = test.data;
-	                        for(var i=0;i<dataList.length;i++) {
-	                            var fp = dataList[i];
-	                            if (fp.titleName==obj) {
-	                            	$('#fptt').val(fp.titleName);
-	                                $('#nsrsbh').val(fp.taxRegisterNo);
-	                                $('#dz').val(fp.userAddress);
-	                                $('#dh').val(fp.userMobile);
-	                                $('#khh').val(fp.openBankName);
-	                                $('#yhzh').val(fp.openBankAccount);
-	                                $('#yx').val(fp.userEmail);
-	                            }
-	                        }
-	                    }
-	                }
-	            )
-			};					
 		})
-
-		// 税号校验
+        // 选择支付宝抬头信息
+        function changeFptt(obj){
+            $.post(
+                '../getInvoiceTitle',
+                {},
+                function(test) {
+                    if(test.success) {
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+                            var fp = dataList[i];
+                            if (fp.titleName==obj) {
+                                $('#fptt').val(fp.titleName);
+                                $('#nsrsbh').val(fp.taxRegisterNo);
+                                $('#dz').val(fp.userAddress);
+                                $('#dh').val(fp.userMobile);
+                                $('#khh').val(fp.openBankName);
+                                $('#yhzh').val(fp.openBankAccount);
+                                $('#yx').val(fp.userEmail);
+                            }
+                        }
+                    }
+                }
+            )
+        };
+        // 税号校验
 		function CheckSocialCreditCode() { 
 			var Code = $('#nsrsbh').val();
 　　　　	var patrn = /^[0-9A-Z]+$/;
