@@ -111,6 +111,7 @@ public class WeiXinController extends BaseController {
 
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
                 logger.info("access_token-----"+access_token);
+                System.out.println("传递的token----"+access_token);
                 request.setAttribute("access_token",access_token);
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");
@@ -335,7 +336,7 @@ public class WeiXinController extends BaseController {
         serialorder = serialorderObject.toString();
         logger.info("serialorder++++++++"+serialorder);
 
-        //判断是否是支付宝内
+        //判断是否是微信浏览
         if (!WeixinUtils.isWeiXinBrowser(request)) {
             request.getSession().setAttribute("msg", "请使用微信进行该操作");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
