@@ -6,6 +6,8 @@ import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.*;
 import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -454,7 +456,7 @@ public class BaseClController extends BaseController {
     public  Map<String,Object> savels(){
         Map<String,Object> result = new HashMap<String,Object>();
         Map  resultMap=(Map)request.getSession().getAttribute("resultMap");
-        String openid = String.valueOf(request.getSession().getAttribute("openid"));
+        String openid = String.valueOf(request.getSession().getAttribute("openid"));//微信openid
         List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
         List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
         List<Jyzfmx> jyzfmxList=(List)resultMap.get("jyzfmxList");
@@ -470,6 +472,14 @@ public class BaseClController extends BaseController {
         jyxxsq.setGfemail(yx.trim());
         if (StringUtils.isNotBlank(jyxxsq.getGfemail())) {
             jyxxsq.setSffsyj("1");
+        }
+        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
+        if(AlipayUtils.isAlipayBrowser(request)){
+            jyxxsq.setOpenid(userId);
+            jyxxsq.setSjly("5");//数据来源
+        }else{
+            jyxxsq.setOpenid(openid);
+            jyxxsq.setSjly("4");//数据来源
         }
         jyxxsq.setGfsh(nsrsbh.trim());
         jyxxsq.setGfdz(dz.trim());

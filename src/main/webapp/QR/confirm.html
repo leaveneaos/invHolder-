@@ -119,16 +119,20 @@
     <script src="../js/fpj.js"></script>
 
     <script type="text/javascript">
+        function redirect(errorMsg){
+            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            window.location.assign(encodeURI(myurl));
+        }
         $(function () {
             var thisURL = document.URL;
             var  getval =thisURL.split('?')[1];
-            var ppdm= getval.split("=")[1];
+            var ppdm= getval.split("=")[2];
             if(ppdm!="no"){
                 $("#logo").attr("src", "../QR/logo/" + ppdm + ".png");
             }
             $.post(
                 "../scan/scanConfirm",
-                {}, 
+                {},
                 function (obj) {
                     if(obj.code=="1"){
                         var data = eval("(" + obj.data + ")");
@@ -136,20 +140,47 @@
                         $('#orderTime').html(data.orderTime);
                         $('#price').html(data.price);
                         $('#storeNo').html(data.storeNo);
+                        orderNo = data.orderNo;
+                        orderTime = data.orderTime;
+                        storeNo = data.storeNo;
                         price = data.price;
                         spsl = data.spsl;
                         spmc = data.spmc;
                     }else{
-                        var msg=obj.msg;
-                        var myurl = "../QR/error.html?msg="+new Date+"="+msg;
-                        window.location.assign(encodeURI(myurl));
+                        redirect(obj.msg)
                     }
                 }
             )
         })
+
         function tk() {
-            var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;
-            window.location.assign(encodeURI(myurl));
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            if(isAlipay){
+                var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;
+                window.location.assign(encodeURI(myurl));
+            }else if(isWeixin){
+                $.post(
+                    "../common/isBrowser",
+                    {
+                        "orderNo":orderNo,
+                        "orderTime":orderTime,
+                        "storeNo":storeNo,
+                        "price":price
+                    },
+                    function (obj) {
+                        var num = obj.num;
+                        if(num=="0"){
+                            window.location.href(obj.redirectUrl);
+                        }else{
+                            redirect(obj.msg);
+                        }
+                    }
+                )
+            }else{
+                redirect("请用微信或支付宝扫码");
+            }
         }
     </script>
 </body>

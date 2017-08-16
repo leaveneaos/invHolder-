@@ -44,17 +44,17 @@
 <div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
 	<section>
 		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
-			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+			<!--<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">-->
 				<!--<a id="you">-->
 					<!--<span class="mui-icon iconfont icon-youxiang"></span>-->
 					<!--<div class="mui-media-body" style="color: #fff;">邮箱</div>-->
 				<!--</a>-->
-			</li>
-			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
-				<!--<a id="zfb">-->
-					<!--<span class="mui-icon iconfont icon-jikediancanicon23"></span>-->
-					<!--<div class="mui-media-body" style="color: #fff;">支付宝</div>-->
-				<!--</a>-->
+			<!--</li>-->
+			<li class="mui-table-view-cell mui-media mui-col-xs-12 mui-col-sm-12">
+				<a id="zfb" onclick="sync()">
+					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
+					<div class="mui-media-body" style="color: #fff;">支付宝</div>
+				</a>
 			</li>
 		</ul>
 	</section>
@@ -83,12 +83,11 @@
         var thisURL = document.URL;
         var getval = thisURL.split('?')[1];
         var msg = getval.split("=")[2];
-        if (msg == "ing") {
-            $("#innerMsg").html("<h3 style='color:#8f8f94'>努力开具中,请稍后再试</h3>");
-        } else {
-            $("#innerImg").attr("src", msg);
-        }
+		$("#innerImg").attr("src", msg);
     });
+    function sync() {
+        window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+    };
 </script>
 </body>
 </html>

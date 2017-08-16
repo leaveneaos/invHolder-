@@ -1,5 +1,7 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.taxeasy.wechat.dto.Result;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/scan")
-public class ScanController extends BaseController{
+public class ScanController extends BaseController {
 
     @Autowired
     private BarcodeService barcodeService;
@@ -29,10 +31,10 @@ public class ScanController extends BaseController{
         if (gsdm == null || q == null) {
             return ResultUtil.error("session过期,请重新扫码");
         }
-        String jsonData=barcodeService.getSpxx(gsdm, q);
-        if(jsonData!=null){
+        String jsonData = barcodeService.getSpxx(gsdm, q);
+        if (jsonData != null) {
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
-        }else{
+        } else {
             return ResultUtil.error("二维码信息获取失败");
         }
     }
@@ -51,16 +53,22 @@ public class ScanController extends BaseController{
         if (gsdm == null || q == null) {
             return ResultUtil.error("redirect");
         }
-        String gfdz=request.getParameter("gfdz");
-        String gfdh=request.getParameter("gfdh");
-        String gfyhzh= request.getParameter("gfyhzh");
-        String gfyh=request.getParameter("gfyh");
-        String status=barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email,gfyh,gfyhzh,gfdz,gfdh);
+        //非必须参数
+        String gfdz = request.getParameter("gfdz");
+        String gfdh = request.getParameter("gfdh");
+        String gfyhzh = request.getParameter("gfyhzh");
+        String gfyh = request.getParameter("gfyh");
+        String tqm = request.getParameter("tqm");
+
+        //开票
+        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm);
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {
             return ResultUtil.error("所需信息为空");
         } else {
+            JSONObject jsonObject = JSON.parseObject(status);
+            session.setAttribute("serialorder", jsonObject.getString("serialorder"));
             return ResultUtil.success(status);
         }
     }

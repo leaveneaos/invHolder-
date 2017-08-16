@@ -127,7 +127,7 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm) {
         Map decode = RJCheckUtil.decode(q);
         String orderNo = decode.get("orderNo").toString();
         String orderTime = decode.get("orderTime").toString();
@@ -178,7 +178,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setLrsj(new Date());
                 jyxxsq.setXgsj(new Date());
                 jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
-                jyxxsq.setTqm(orderNo);
+                jyxxsq.setTqm(gsdm+orderNo);
 
                 List<Jymxsq> jymxsqList = new ArrayList<>();
                 Jymxsq jymxsq = new Jymxsq();
@@ -216,6 +216,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                     Map map2 = new HashMap();
                     map2.put("returnMsg", returnMsg);
                     map2.put("returnCode", returnCode);
+                    map2.put("serialorder",  jyxxsq.getJylsh()+jyxxsq.getDdh());
                     json=JSONObject.toJSONString(map2);
                 }catch (Exception e){
                     String serialorder=resultxml;
@@ -228,6 +229,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                     Map map3 = new HashMap();
                     map3.put("fphm", fphm);
                     map3.put("fpdm", fpdm);
+                    map3.put("serialorder", jyxxsq.getJylsh()+jyxxsq.getDdh());
                     json=JSONObject.toJSONString(map3);
                 }
                 return json;

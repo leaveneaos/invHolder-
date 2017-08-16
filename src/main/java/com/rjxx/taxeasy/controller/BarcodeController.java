@@ -44,15 +44,15 @@ public class BarcodeController extends BaseController {
                         case "可开具":
                             if (StringUtils.isNotBlank(ppdm)) {
                                 //有品牌代码对应的url
-                                response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=" + ppdm + "=" + System.currentTimeMillis());
+                                response.sendRedirect(request.getContextPath() + ppurl + "?t="+ System.currentTimeMillis()+ "=" +ppdm );
                             } else {
                                 //无品牌对应的url
-                                response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=no=" + System.currentTimeMillis());
+                                response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis()+"=no");
                             }
                             break;
                         case "开具中":
                             //开具中对应的url
-                            response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "=ing");
+                            response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                             break;
                         default:
                             if(status.indexOf("pdf")!=-1){

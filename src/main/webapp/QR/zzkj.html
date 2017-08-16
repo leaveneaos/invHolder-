@@ -4,11 +4,11 @@
 	<meta charset="UTF-8">
 	<title>订单确认</title>
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
 	<style type="text/css">
 		.content {
 			height: 400px;
-			padding: 50px 0px 20px;
+			padding: 50px 0px 0px;
 			box-sizing: border-box;
 			font-size: 14px;
 		}
@@ -18,15 +18,35 @@
 		.content .kj {
 			width: 40%;
 		}
+		/*二维码*/
+		.ewm {
+			width: 85%;
+			height: 75px;
+			margin: 0 auto 10px;
+			background-color: #F1F8FE;
+			padding: 5px;
+			box-sizing: border-box;
+		}
+		.ewm img {
+			width: 65px;
+			height: 65px;
+			float: left;
+		}
+		.ewm span {
+			width: 70%;
+			font-size: 14px;
+			padding-top: 10px;
+			color: #343434;
+			float: right;
+		}
+		footer {
+			border: none;
+			background-color: #fff;
+		}
 	</style>
 </head>
 <body>
-	<header>
-		<img src="../images/nav.png">
-	</header>
 	<section class="main">
-		<div class="shadow1"></div>
-		<div class="shadow2"></div>
 		<div class="content">
 			<div class="kjz">
 				<img class="kj" src='../images/kj.png'>
@@ -35,15 +55,15 @@
 			</div>
 			
 			<div class="ewm">
-				<img class="fl" src="../images/fwh.jpg">
-				<span class="fr">长按识别二维码,关注公众号及时收到发票信息</span>
+				<img src="../images/fwh.jpg">
+				<span>长按识别二维码,关注公众号及时收到发票信息</span>
 			</div>
 		</div>
 
 	</section>
 	<footer>
-		<p class="company fl">泰易电子发票云服务平台</p>
-		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+		<p class="company">泰易电子发票云服务平台</p>
+		<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
 </body>
 </html>
