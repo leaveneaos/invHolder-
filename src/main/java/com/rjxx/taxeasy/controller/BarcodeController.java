@@ -44,10 +44,10 @@ public class BarcodeController extends BaseController {
                         case "可开具":
                             if (StringUtils.isNotBlank(ppdm)) {
                                 //有品牌代码对应的url
-                                response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=" + ppdm + "=" + System.currentTimeMillis());
+                                response.sendRedirect(request.getContextPath() + ppurl + "?t="+ System.currentTimeMillis()+ "=" +ppdm );
                             } else {
                                 //无品牌对应的url
-                                response.sendRedirect(request.getContextPath() + ppurl + "?ppdm=no=" + System.currentTimeMillis());
+                                response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis()+"=no");
                             }
                             break;
                         case "开具中":
