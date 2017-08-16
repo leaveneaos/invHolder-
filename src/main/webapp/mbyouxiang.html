@@ -21,12 +21,12 @@
 <body>
 	
 
-	<header class="mui-bar mui-bar-nav" style="max-width: 450px; margin: 0 auto; margin-bottom: 50px;">
+	<header class="mui-bar mui-bar-nav" style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
 		<h1 class="mui-title">发送到邮箱</h1>
 	</header>
 
-	<section class="mui-content" style="max-width: 450px; margin: 0 auto; margin-bottom: 50px;">
+	<section class="mui-content" style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
 
 		<div class="mui-content-padded" style="margin: 5px;">
 			<form class="mui-input-group" id="yxform">
@@ -35,8 +35,8 @@
 						placeholder="请输入您的邮箱">
 
 				</div>
-				<input id="gsdm" name="gsdm" type="text"/>
-				<input id="tqm" name="tqm" type="text"/>
+				<input id="gsdm" name="gsdm" type="hidden"/>
+				<input id="tqm" name="tqm" type="hidden"/>
 			</form>
 		</div>
 
@@ -59,13 +59,10 @@
             $('#tqm').val(tqms);
 		});
 		function fpfs() {
-		    alert(11);
 			var youxiang = $('#username').val();
             var gsdm = $('#gsdm').val();
             var tqm = $('#tqm').val();
-            alert(youxiang);
-            alert(gsdm);
-            alert(tqm);
+            
 			if (null == youxiang || "" == youxiang) {
 				$('#cwxx').html("请输入邮箱!");
 			} else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
@@ -74,8 +71,8 @@
 				$('#yjfs').attr('disabled', "true")
 				$.post("xyxfs", {
 					"yx" : youxiang,
-						"gsdm" : gsdm,
-                        "tqm"  : tqm
+					"gsdm" : gsdm,
+                    "tqm"  : tqm
 				},
 				function(data) {
 					$('#yjfs').removeAttr("disabled");
