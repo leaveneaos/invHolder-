@@ -1,12 +1,5 @@
 package com.rjxx.taxeasy.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipaySystemOauthTokenRequest;
-import com.alipay.api.response.AlipaySystemOauthTokenResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
@@ -14,28 +7,19 @@ import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
-import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
-import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
-import com.rjxx.taxeasy.utils.weixin.WeiXinConstants;
-import com.rjxx.taxeasy.utils.weixin.WeixinUtils;
-import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.StringUtils;
-import com.rjxx.utils.WeixinUtil;
-import org.apache.commons.codec.binary.Base64;
-import org.aspectj.bridge.MessageUtil;
 import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -347,11 +331,11 @@ public class WeiXinController extends BaseController {
         logger.info("serialorder++++++++"+serialorder);
 
         //判断是否是微信浏览
-        /*if (!WeixinUtils.isWeiXinBrowser(request)) {
+        if (!WeixinUtils.isWeiXinBrowser(request)) {
             request.getSession().setAttribute("msg", "请使用微信进行该操作");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return null;
-        }*/
+        }
         //主动查询授权状态
         WeixinUtils weixinUtils = new WeixinUtils();
         String  access_token = (String)weixinUtils.hqtk().get("access_token");

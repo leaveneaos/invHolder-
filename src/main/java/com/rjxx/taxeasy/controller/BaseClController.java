@@ -6,10 +6,8 @@ import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
-import com.rjxx.taxeasy.utils.weixin.WeixinUtils;
 import com.rjxx.utils.*;
 import com.rjxx.utils.StringUtils;
-import org.apache.commons.codec.binary.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,11 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.constraints.Null;
 import java.io.IOException;
 
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

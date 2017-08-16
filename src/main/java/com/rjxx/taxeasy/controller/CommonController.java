@@ -1,7 +1,7 @@
 package com.rjxx.taxeasy.controller;
 
 import com.rjxx.taxeasy.comm.BaseController;
-import com.rjxx.taxeasy.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.WeixinUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
