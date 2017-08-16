@@ -102,12 +102,13 @@ public class WeiXinController extends BaseController {
                 String openid = String.valueOf(request.getSession().getAttribute("openid"));
 
                 String gsdm = String.valueOf(request.getSession().getAttribute("gsdm"));
+                logger.info("公司代码"+gsdm);
                 String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+                logger.info("提取码"+tqm);
                 String q = String.valueOf(request.getSession().getAttribute("q"));//扫码参数
-
+                logger.info("q为"+q);
 
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
-                logger.info("access_token-----"+access_token);
                 System.out.println("传递的token----"+access_token);
                 request.setAttribute("access_token",access_token);
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
@@ -144,7 +145,7 @@ public class WeiXinController extends BaseController {
                                 resultSjMap = getDataService.getData(tqm, "Family");
                             }
                             if(null!=gsdm && gsdm.equals("chamate")){
-                                System.out.println("进入一茶一坐");
+                                logger.info("进入一茶一坐开票处理");
                                 String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
                                         (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
                                         ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid,"4");
@@ -362,7 +363,7 @@ public class WeiXinController extends BaseController {
         logger.info("serialorder++++++++"+serialorder);
 
         //判断是否是微信浏览
-        if (!WeixinUtils.isWeiXinBrowser(request)) {
+       if (!WeixinUtils.isWeiXinBrowser(request)) {
             request.getSession().setAttribute("msg", "请使用微信进行该操作");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return null;
