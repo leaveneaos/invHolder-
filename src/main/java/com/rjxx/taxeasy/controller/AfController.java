@@ -90,8 +90,6 @@ public class AfController extends BaseController {
             gsxx.setWxappid(APP_ID);
             gsxx.setWxsecret(SECRET);
         }
-        logger.info(JSON.toJSONString("初始化页面-------------"));
-
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
@@ -105,11 +103,10 @@ public class AfController extends BaseController {
                 response.sendRedirect(ul);
                 return;
             } else {
-                logger.info("不是支付宝浏览器-------------");
                 response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
                 return;
             }
-        }else if (AlipayUtils.isAlipayBrowser(request)) {
+        }/*else if (AlipayUtils.isAlipayBrowser(request)) {
             logger.info(JSON.toJSONString("判断是否是支付宝浏览器"));
             if (!AlipayUtils.isAlipayAuthorized(session)) {
                 logger.info(JSON.toJSONString("初始化支付宝授权----strat-----"));
@@ -119,10 +116,12 @@ public class AfController extends BaseController {
             }
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
             return;
-        }else {
+        }*//*else {
             response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
             return;
-        }
+        }*/
+        response.sendRedirect(request.getContextPath() + "/af/af.html?_t=" + System.currentTimeMillis());
+        return;
     }
 
     @RequestMapping(value = "/getWx")
