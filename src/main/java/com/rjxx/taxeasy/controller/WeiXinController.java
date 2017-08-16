@@ -100,7 +100,7 @@ public class WeiXinController extends BaseController {
 
 
                 String openid = String.valueOf(request.getSession().getAttribute("openid"));
-
+                logger.info("opedid"+openid);
                 String gsdm = String.valueOf(request.getSession().getAttribute("gsdm"));
                 logger.info("公司代码"+gsdm);
                 String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
@@ -120,12 +120,12 @@ public class WeiXinController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return;
                     }
-                    if(null==q && q.equals("")){
+                    if(null==q || q.equals("")){
                         logger.info("参数去q 为空");
                         System.out.println("q为空");
                         return;
                     }
-                    if(null==gsdm && gsdm.equals("")){
+                    if(null==gsdm || gsdm.equals("")){
                         logger.info("公司代码为空");
                         System.out.println("公司代码为空");
                         return;
