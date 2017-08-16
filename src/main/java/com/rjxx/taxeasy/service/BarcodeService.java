@@ -8,7 +8,7 @@ import java.util.Map;
 public interface BarcodeService {
     String makeInvoice(String gsdm,String p,String gfmc,
                        String gfsh,String email,String gfyh,
-                       String gfyhzh,String gfdz,String gfdh,String tqm);
+                       String gfyhzh,String gfdz,String gfdh,String tqm,String openid);
 
     Map sm(String gsdm, String q);
 
