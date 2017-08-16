@@ -118,36 +118,6 @@ public class BaseClController extends BaseController {
     }
 
 
-    //判断是否微信浏览器
-    @RequestMapping(value = "/isWeiXin")
-    @ResponseBody
-    public  Map isWeiXin(String orderNo,String order,String orderTime,String price){
-        String redirectUrl ="";
-        String ua = request.getHeader("user-agent").toLowerCase();
-        Map resultMap = new HashMap();
-        if(WeixinUtils.isWeiXinBrowser(request)){
-            logger.info("微信浏览器--------------");
-            WeixinUtils weixinUtils = new WeixinUtils();
-            try {
-             redirectUrl = weixinUtils.getTiaoURL(order,price,orderTime,orderNo);
-             if(null==redirectUrl||redirectUrl.equals("")){
-                 resultMap.put("msg","获取微信授权失败!请重试");
-                 resultMap.put("num","2");
-                 return resultMap;
-             }
-             resultMap.put("num","0");
-             resultMap.put("redirectUrl",redirectUrl);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else {
-            logger.info("不是微信浏览器-------------");
-            resultMap.put("num" ,"1");
-        }
-        return resultMap;
-    }
-
-
     @RequestMapping(value = "/sendHtml")
     @ResponseBody
     public void sendHtml(String state, Gsxx gsxx) throws IOException {
