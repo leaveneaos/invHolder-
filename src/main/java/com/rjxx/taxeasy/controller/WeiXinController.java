@@ -100,14 +100,21 @@ public class WeiXinController extends BaseController {
             requestMap = parseXml(request);
             System.out.println("接收微信返回xml变map"+requestMap.toString());
 
-            String openid = String.valueOf(request.getSession().getAttribute("openid"));
-            String tqm = String.valueOf(request.getSession().getAttribute("Familytqm"));
+
 
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
                 System.out.println("进入开票处理----");
                 String SuccOrderId = requestMap.get("SuccOrderId");
                 String FailOrderId = requestMap.get("FailOrderId");
+
+
+                String openid = String.valueOf(request.getSession().getAttribute("openid"));
+
+                String gsdm = String.valueOf(request.getSession().getAttribute(SuccOrderId));
+                String tqm = String.valueOf(request.getSession().getAttribute(gsdm+"tqm"));
+
+
 
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
                 logger.info("access_token-----"+access_token);
@@ -133,7 +140,10 @@ public class WeiXinController extends BaseController {
                             logger.info("开始开票");
                             //先取数据
                             Map resultSjMap = new HashMap();
-                            resultSjMap = getDataService.getData(tqm, "Family");
+                            if(null!=gsdm&&gsdm.equals("Family")){
+                                resultSjMap = getDataService.getData(tqm, "Family");
+                            }
+
                             List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                             List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
                             List<Jyzfmx> jyzfmxList=(List)resultSjMap.get("jyzfmxList");
@@ -337,11 +347,11 @@ public class WeiXinController extends BaseController {
         logger.info("serialorder++++++++"+serialorder);
 
         //判断是否是微信浏览
-        if (!WeixinUtils.isWeiXinBrowser(request)) {
+        /*if (!WeixinUtils.isWeiXinBrowser(request)) {
             request.getSession().setAttribute("msg", "请使用微信进行该操作");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return null;
-        }
+        }*/
         //主动查询授权状态
         WeixinUtils weixinUtils = new WeixinUtils();
         String  access_token = (String)weixinUtils.hqtk().get("access_token");
