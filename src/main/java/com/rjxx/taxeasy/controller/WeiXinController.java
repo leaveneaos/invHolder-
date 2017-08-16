@@ -99,13 +99,13 @@ public class WeiXinController extends BaseController {
                 String FailOrderId = requestMap.get("FailOrderId");
 
 
-                String openid = String.valueOf(request.getSession().getAttribute("openid"));
+                String openid = (String) session.getAttribute("openid");
                 logger.info("opedid"+openid);
-                String gsdm = String.valueOf(request.getSession().getAttribute("gsdm"));
+                String gsdm = (String) session.getAttribute("gsdm");
                 logger.info("公司代码"+gsdm);
-                String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+                String tqm = (String) session.getAttribute("tqm");
                 logger.info("提取码"+tqm);
-                String q = String.valueOf(request.getSession().getAttribute("q"));//扫码参数
+                String q = (String) session.getAttribute("q");//扫码参数
                 logger.info("q为"+q);
 
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
