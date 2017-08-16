@@ -1,5 +1,7 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
@@ -7,6 +9,7 @@ import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.StringUtils;
@@ -48,6 +51,9 @@ public class WeiXinController extends BaseController {
 
     @Autowired
     private TqmtqService tqmtqService;
+
+    @Autowired
+    private  BarcodeService barcodeService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
@@ -95,9 +101,9 @@ public class WeiXinController extends BaseController {
 
                 String openid = String.valueOf(request.getSession().getAttribute("openid"));
 
-                String gsdm = String.valueOf(request.getSession().getAttribute(SuccOrderId));
-                String tqm = String.valueOf(request.getSession().getAttribute(gsdm+"tqm"));
-
+                String gsdm = String.valueOf(request.getSession().getAttribute("gsdm"));
+                String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+                String q = String.valueOf(request.getSession().getAttribute("q"));//扫码参数
 
 
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
@@ -113,7 +119,16 @@ public class WeiXinController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return;
                     }
-
+                    if(null==q && q.equals("")){
+                        logger.info("参数去q 为空");
+                        System.out.println("q为空");
+                        return;
+                    }
+                    if(null==gsdm && gsdm.equals("")){
+                        logger.info("公司代码为空");
+                        System.out.println("公司代码为空");
+                        return;
+                    }
                     Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);//主动获取授权状态，成功会返回数据
 
                     if(null==resultMap){
@@ -124,11 +139,26 @@ public class WeiXinController extends BaseController {
                             logger.info("开始开票");
                             //先取数据
                             Map resultSjMap = new HashMap();
+                            //全家进行开票
                             if(null!=gsdm&&gsdm.equals("Family")){
                                 resultSjMap = getDataService.getData(tqm, "Family");
                             }
-
-                            List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
+                            if(null!=gsdm && gsdm.equals("chamate")){
+                                System.out.println("进入一茶一坐");
+                                String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
+                                        (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
+                                        ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid);
+                                if ("-1".equals(status)) {
+                                    logger.info("开具失败");
+                                } else if ("0".equals(status)) {
+                                   logger.info("所需数据为空");
+                                }else {
+                                    logger.info("开具成功");
+                                    System.out.println("开票成功");
+                                }
+                                return;
+                            }
+                            /*List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                             List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
                             List<Jyzfmx> jyzfmxList=(List)resultSjMap.get("jyzfmxList");
                             //封装数据
@@ -141,6 +171,7 @@ public class WeiXinController extends BaseController {
                             jyxxsq.setGfdh((String) resultMap.get("phone"));
                             jyxxsq.setGfyh((String) resultMap.get("bank_type"));
                             jyxxsq.setGfyhzh((String) resultMap.get("bank_no"));
+                            jyxxsq.setOpenid(openid);
                             Map map = new HashMap<>();
                             map.put("tqm",jyxxsq.getTqm());
                             map.put("je",jyxxsq.getJshj());
@@ -194,7 +225,7 @@ public class WeiXinController extends BaseController {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
+*/
                     }
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
