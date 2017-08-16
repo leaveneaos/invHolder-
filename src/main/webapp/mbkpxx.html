@@ -8,12 +8,12 @@
 	<meta http-equiv="Pragma" content="no-cache">   
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
-	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
 
 	<!--标准mui.css-->
-	<link rel="stylesheet" href="../css/mui.min.css">
+	<link rel="stylesheet" href="css/mui.min.css">
 	<!--App自定义的css-->
-	<link rel="stylesheet" type="text/css" href="../css/app.css" />
+	<link rel="stylesheet" type="text/css" href="css/app.css" />
 	<style type="text/css">
 		.mui-content-padded {
 			margin: 10px 0px 10px 70px;
@@ -85,7 +85,7 @@
 		</section>
 
 		<section style="text-align: center;">
-			<img src="../images/fwh.jpg" alt="" style="width: 80%;padding: 5px;">
+			<img src="images/fwh.jpg" alt="" style="width: 80%;padding: 5px;">
 			<p class="atn">关注公众号,及时收到发票信息</p>
 			
 		</section>
@@ -97,12 +97,12 @@
 
 		<footer>
 			<p class="company">上海容津信息技术有限公司</p>
-			<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
+			<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
 		</footer>
 	</div>
 
-	<script type="text/javascript" src="../js/jquery.min.js"></script>
-	<script src="../js/mui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script src="js/mui.min.js"></script>
 	<script type="text/javascript">
         var gsdms = location.href.split('?')[1].split('&')[0].split('=')[1];
         var tqms = location.href.split('?')[1].split('&&')[1].split('=')[1];
@@ -130,7 +130,7 @@
             $('#revise').on('click', function () {
                 var tqm = $('#tqm').val();
                 var gsdm =   $('#gsdm').val();
-                window.location.href = "../mbfptt.html?gsdm="+gsdm+"&&tqm="+tqm+"&&_t=" + new Date().getTime();
+                window.location.href = "mbfptt.html?gsdm="+gsdm+"&&tqm="+tqm+"&&_t=" + new Date().getTime();
             });
 
             $('#queren').on('click',function () {
@@ -144,7 +144,7 @@
 					},
 					function (data) {
 				        if(data.msg == 1) {
-                            window.location.href = '../af/ysl.html'
+                            window.location.href = 'af/ysl.html'
                         }else{
                             btnArray = [ '确定' ];
                             firm = data.msg;

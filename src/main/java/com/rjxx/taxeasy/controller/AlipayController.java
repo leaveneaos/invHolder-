@@ -51,7 +51,7 @@ public class AlipayController extends BaseController {
      */
     @RequestMapping(value = AlipayConstants.AFTER_ALIPAY_AUTHORIZED_REDIRECT_URL)
     @ResponseBody
-    public String getAlipay(String auth_code) throws Exception {
+    public String getAlipay(String state, String auth_code) throws Exception {
         //获取access_token
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
@@ -66,10 +66,10 @@ public class AlipayController extends BaseController {
             session.setAttribute("expires_in",oauthTokenResponse.getExpiresIn());//过期时间
             session.setAttribute("re_expires_in",oauthTokenResponse.getReExpiresIn());//刷新令牌时间
             refreshToken(oauthTokenResponse.getRefreshToken());
-            //String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
-            //String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
+            String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
+            String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
             logger.info(JSON.toJSONString(oauthTokenResponse+"-------end application---------"));
-            //response.sendRedirect(redirectUrl);
+            response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             //处理异常
             logger.error("Get Ali Access_token error", e);
@@ -84,11 +84,11 @@ public class AlipayController extends BaseController {
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
         alipaySystemOauthTokenRequest.setRefreshToken(refreshToken);
         alipaySystemOauthTokenRequest.setGrantType("refresh_token");
-            AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
-            session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
-            session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
-            session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
-            logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
+        AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
+        session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
+        session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
+        session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
+        logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
     }
 
     /**
@@ -115,8 +115,8 @@ public class AlipayController extends BaseController {
             return null;
         }
         if (!AlipayUtils.isAlipayAuthorized(session)) {
-            AlipayUtils.initAlipayAuthorization(request, response);
-           // return null;
+            AlipayUtils.initAlipayAuthorization(request, response, "/syncAlipay");
+            return null;
         }
         Map params = new HashMap();
         params.put("serialorder", serialorder);
