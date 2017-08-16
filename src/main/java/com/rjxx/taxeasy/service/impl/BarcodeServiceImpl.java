@@ -127,7 +127,7 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid) {
         Map decode = RJCheckUtil.decode(q);
         String orderNo = decode.get("orderNo").toString();
         String orderTime = decode.get("orderTime").toString();
@@ -175,6 +175,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setZsfs("0");
                 jyxxsq.setHsbz("1");
                 jyxxsq.setSjly("5");
+                jyxxsq.setOpenid(openid);
                 jyxxsq.setLrsj(new Date());
                 jyxxsq.setXgsj(new Date());
                 jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));

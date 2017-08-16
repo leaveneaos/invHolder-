@@ -172,7 +172,7 @@
                     function (obj) {
                         var num = obj.num;
                         if(num=="0"){
-                            window.location.href(obj.redirectUrl);
+                            window.location.href=obj.redirectUrl+new Date();
                         }else{
                             redirect(obj.msg);
                         }

@@ -64,6 +64,7 @@ public class ScanController extends BaseController {
     public Result submit(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email) {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
+        String openid=(String) session.getAttribute("openid");
         if (gsdm == null || q == null) {
             return ResultUtil.error("redirect");
         }
@@ -75,7 +76,7 @@ public class ScanController extends BaseController {
         String tqm = request.getParameter("tqm");
 
         //开票
-        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm);
+        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm,openid);
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {
@@ -116,7 +117,6 @@ public class ScanController extends BaseController {
                 if(status!=null){
                     switch (status) {
                         case "可开具":
-                            logger.info("openid="+session.getAttribute("openid"));
                             if (StringUtils.isNotBlank(ppdm)) {
                                 //有品牌代码对应的url
                                 response.sendRedirect(request.getContextPath() + ppurl + "?t="+ System.currentTimeMillis()+ "=" +ppdm );
