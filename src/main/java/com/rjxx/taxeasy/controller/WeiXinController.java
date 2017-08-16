@@ -110,6 +110,7 @@ public class WeiXinController extends BaseController {
                 String FailOrderId = requestMap.get("FailOrderId");
 
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
+                logger.info("access_token-----"+access_token);
                 request.setAttribute("access_token",access_token);
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");

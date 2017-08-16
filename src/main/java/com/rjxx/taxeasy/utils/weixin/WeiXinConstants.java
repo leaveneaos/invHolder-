@@ -6,13 +6,13 @@ package com.rjxx.taxeasy.utils.weixin;
 public class WeiXinConstants {
 
     //微信appid
-    //public static final String APP_ID = "wx9abc729e2b4637ee";
+    public static final String APP_ID = "wx9abc729e2b4637ee";
     //沙箱appid
-    public static final String APP_ID = "wx8c2a4c2289e10ffb";
+    //public static final String APP_ID = "wx8c2a4c2289e10ffb";
     //沙箱appSecret
-    public static  final  String APP_SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    //public static  final  String APP_SECRET = "ad706ca065a0d384414ae3b568e030fb";
     //微信AppSecret
-    //public static  final  String APP_SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
+    public static  final  String APP_SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
     //微信回调地址
     public static final String AFTER_WEIXIN_REDIRECT_URL = "/getWeiXinURL";
     //微信授权成功后跳转url
