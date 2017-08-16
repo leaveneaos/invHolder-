@@ -126,26 +126,37 @@
             if(ppdm!="no"){
                 $("#logo").attr("src", "../QR/logo/" + ppdm + ".png");
             }
-            $.post(
-                "../scan/scanConfirm",
-                {}, 
-                function (obj) {
-                    if(obj.code=="1"){
-                        var data = eval("(" + obj.data + ")");
-                        $('#orderNo').html(data.orderNo);
-                        $('#orderTime').html(data.orderTime);
-                        $('#price').html(data.price);
-                        $('#storeNo').html(data.storeNo);
-                        price = data.price;
-                        spsl = data.spsl;
-                        spmc = data.spmc;
-                    }else{
-                        var msg=obj.msg;
-                        var myurl = "../QR/error.html?msg="+new Date+"="+msg;
-                        window.location.assign(encodeURI(myurl));
+
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            if(isAlipay){
+                $.post(
+                    "../scan/scanConfirm",
+                    {},
+                    function (obj) {
+                        if(obj.code=="1"){
+                            var data = eval("(" + obj.data + ")");
+                            $('#orderNo').html(data.orderNo);
+                            $('#orderTime').html(data.orderTime);
+                            $('#price').html(data.price);
+                            $('#storeNo').html(data.storeNo);
+                            price = data.price;
+                            spsl = data.spsl;
+                            spmc = data.spmc;
+                        }else{
+                            var msg=obj.msg;
+                            var myurl = "../QR/error.html?msg="+new Date+"="+msg;
+                            window.location.assign(encodeURI(myurl));
+                        }
                     }
-                }
-            )
+                )
+            }else if(isWeixin){
+
+            }else{
+                var myurl = "../QR/error.html?msg="+new Date+"=请用微信或者支付宝扫码";
+                window.location.assign(encodeURI(myurl));
+            }
         })
         function tk() {
             var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;

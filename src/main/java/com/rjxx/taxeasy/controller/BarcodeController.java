@@ -52,7 +52,7 @@ public class BarcodeController extends BaseController {
                             break;
                         case "开具中":
                             //开具中对应的url
-                            response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "=ing");
+                            response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                             break;
                         default:
                             if(status.indexOf("pdf")!=-1){
