@@ -216,7 +216,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                     Map map2 = new HashMap();
                     map2.put("returnMsg", returnMsg);
                     map2.put("returnCode", returnCode);
-                    map2.put("serialorder", jyxxsq.getDdh() + jyxxsq.getJylsh());
+                    map2.put("serialorder",  jyxxsq.getJylsh()+jyxxsq.getDdh());
                     json=JSONObject.toJSONString(map2);
                 }catch (Exception e){
                     String serialorder=resultxml;
@@ -229,7 +229,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                     Map map3 = new HashMap();
                     map3.put("fphm", fphm);
                     map3.put("fpdm", fpdm);
-                    map3.put("serialorder", jyxxsq.getDdh() + jyxxsq.getJylsh());
+                    map3.put("serialorder", jyxxsq.getJylsh()+jyxxsq.getDdh());
                     json=JSONObject.toJSONString(map3);
                 }
                 return json;

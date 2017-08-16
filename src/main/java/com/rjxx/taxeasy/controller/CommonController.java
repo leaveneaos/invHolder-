@@ -19,15 +19,14 @@ public class CommonController extends BaseController {
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
     @ResponseBody
-    public Map isWeiXin(String orderNo, String order, String orderTime, String price){
+    public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price){
         String redirectUrl ="";
-        String ua = request.getHeader("user-agent").toLowerCase();
         Map resultMap = new HashMap();
         if(WeixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
             WeixinUtils weixinUtils = new WeixinUtils();
             try {
-                redirectUrl = weixinUtils.getTiaoURL(order,price,orderTime,orderNo);
+                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo);
                 if(null==redirectUrl||redirectUrl.equals("")){
                     resultMap.put("msg","获取微信授权失败!请重试");
                     resultMap.put("num","2");
