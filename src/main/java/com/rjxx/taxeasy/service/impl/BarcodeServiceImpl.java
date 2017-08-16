@@ -113,6 +113,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 result.put("price", price);
                 result.put("spsl", spsl);
                 result.put("spmc", spmc);
+                result.put("tqm", gsdm + orderNo);
                 return JSONObject.toJSONString(result);
             } catch(Exception e){
                 e.printStackTrace();
@@ -127,7 +128,7 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly) {
         Map decode = RJCheckUtil.decode(q);
         String orderNo = decode.get("orderNo").toString();
         String orderTime = decode.get("orderTime").toString();
@@ -174,12 +175,14 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setSffsyj("1");
                 jyxxsq.setZsfs("0");
                 jyxxsq.setHsbz("1");
-                jyxxsq.setSjly("5");
+                jyxxsq.setSjly(sjly);
                 jyxxsq.setOpenid(openid);
                 jyxxsq.setLrsj(new Date());
                 jyxxsq.setXgsj(new Date());
                 jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
-                jyxxsq.setTqm(gsdm+orderNo);
+                if(tqm==null){
+                    jyxxsq.setTqm(gsdm+orderNo);
+                }
 
                 List<Jymxsq> jymxsqList = new ArrayList<>();
                 Jymxsq jymxsq = new Jymxsq();

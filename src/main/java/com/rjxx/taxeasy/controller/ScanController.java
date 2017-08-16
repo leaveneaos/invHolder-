@@ -47,6 +47,8 @@ public class ScanController extends BaseController {
         }
         String jsonData = barcodeService.getSpxx(gsdm, q);
         if (jsonData != null) {
+            JSONObject jsonObject = JSON.parseObject(jsonData);
+            session.setAttribute("tqm",jsonObject.getString("tqm"));
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
             return ResultUtil.error("二维码信息获取失败");
@@ -73,10 +75,8 @@ public class ScanController extends BaseController {
         String gfdh = request.getParameter("gfdh");
         String gfyhzh = request.getParameter("gfyhzh");
         String gfyh = request.getParameter("gfyh");
-        String tqm = request.getParameter("tqm");
-
         //开票
-        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm,openid);
+        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, null,openid,"5");
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {
