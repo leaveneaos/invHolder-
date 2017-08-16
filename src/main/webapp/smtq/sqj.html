@@ -54,7 +54,7 @@
 		}
 	</style>
 </head>
-<body id="index"  style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
+<body id="index" onload="load()" style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
 	<header>
 		<img src="../images/sqj1.png"/>
 	</header>
@@ -100,8 +100,10 @@
 			document.getElementById("randImage").src = "../image.jsp?"
 					+ Math.random();
 		}
-		loadimage();
-		$('#code').val('');
+		function load() {
+			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
+			$('#code').val('');
+		}
 		function tiqu() {
 			var tqm = $('#tqm').val();
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;
@@ -124,9 +126,6 @@
 						btnArray = [ '确定' ];
 						firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
 						title = "提示";
-					/* 	mui.confirm(firm, title, btnArray, function(e) {
-
-						}); */
 						jAlert(firm, title);
 					}
 				} else if (data.num == 2) {
@@ -141,9 +140,6 @@
 					btnArray = [ '确定' ];
 					firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
 					title = "提示";
-				/* 	mui.confirm(firm, title, btnArray, function(e) {
-
-					}); */
 					jAlert(firm, title);
 				} else if (data.num == 4) {
 					$('#cwts').html("验证码输入错误");
@@ -157,17 +153,11 @@
 					btnArray = [ '确定' ];
 					firm = "您提取的申请已提交,我们正在处理,请稍等!";
 					title = "提示";
-				/* 	mui.confirm(firm, title, btnArray, function(e) {
-
-					}); */
 					jAlert(firm, title);
 				} else if (data.num == 7) {
 					btnArray = [ '确定' ];
 					firm = "您提取的申请已提交,我们正在处理,请稍等!";
 					title = "提示";
-				/* 	mui.confirm(firm, title, btnArray, function(e) {
-
-					}); */
 					jAlert(firm, title);
 				} else if (data.num == 11) {
                     $('#cwts').html("输入的提取码不正确");
