@@ -70,13 +70,15 @@ public class AlipayController extends BaseController {
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
             logger.info(JSON.toJSONString(oauthTokenResponse+"-------end application---------"));
             response.sendRedirect(redirectUrl);
+            return null;
         } catch (Exception e) {
             //处理异常
             logger.error("Get Ali Access_token error", e);
             request.getSession().setAttribute("msg", "获取支付宝授权出现异常!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
         }
-        return null;
+
     }
 
     private void refreshToken(String refreshToken) throws AlipayApiException {

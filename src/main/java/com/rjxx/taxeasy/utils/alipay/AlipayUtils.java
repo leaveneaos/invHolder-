@@ -89,6 +89,7 @@ public class AlipayUtils {
         redirectUrl += "&state=" + Base64.encodeBase64String(returnUrl.getBytes("UTF-8"));
         logger.info(redirectUrl);
         response.sendRedirect(redirectUrl);
+        return;
     }
 
     /**
