@@ -26,13 +26,9 @@ button {
 	display: inline-block;
 	text-align: center;
 	font-size: 14px;
-	overflow: hidden;/*裁掉溢出的*/
-	white-space: nowrap;/* 空白区不换行 */
-	text-overflow: ellipsis;/* 溢出的用省略号 */
 }
 .name {
 	width: 50%;
-
 }
 .th .num,.th .price {
 	border-left: 1px dashed #ECECEC;
