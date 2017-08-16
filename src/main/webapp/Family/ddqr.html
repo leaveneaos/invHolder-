@@ -69,7 +69,7 @@
                 orderTime = $('#orderTime').text(),
                 price = $('#price').text();
             $.post(
-                "../family/isWeiXin",
+                "../common/isBrowser",
                 {
                     "orderNo" : orderNo,
                     "order" : order,

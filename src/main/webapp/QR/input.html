@@ -98,6 +98,18 @@
             color: #fff;
             text-align: center;
         }
+        #getFptt {
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            -webkit-appearance: normal;
+            top: 13px;
+            right: 15px;
+            background-color: #ccc;
+            display: none;
+        }
+
     </style>
 </head>
 
@@ -118,6 +130,9 @@
                 <div class="mui-input-row">
                     <label><font color="red">*</font>购方名称</label>
                     <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
+                    <select id="getFptt" oninput="changeFptt(this.value)">
+                       <!-- <option value="getFptt"> -->
+                    </select>
                 </div>
                 <div class="mui-input-row">
                     <label><font color="red" class="isCheck">*</font>纳税人识别号</label> 
@@ -203,6 +218,60 @@
             var spmc= getval.split("=")[3];
             var price= getval.split("=")[4];
             $('#tab').append("<tr><td>"+spmc+"</td><td>" + price + "</td><td>" + spsl + "%</td></tr>");
+
+            // 获取支付宝默认抬头信息
+            $.post(
+                '../getInvoiceTitle',
+                {},
+                function(test) {
+                    if(test.success) {
+                        $("#getFptt").css('display','block');
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+                            var fp=dataList[i];
+                            if(fp.default) {
+                                option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+                                $('#fptt').val(fp.titleName);
+                                $('#nsrsbh').val(fp.taxRegisterNo);
+                                $('#dz').val(fp.userAddress);
+                                $('#dh').val(fp.userMobile);
+                                $('#khh').val(fp.openBankName);
+                                $('#yhzh').val(fp.openBankAccount);
+                                $('#yx').val(fp.userEmail);
+                            }else{
+                                option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+                            }
+                        };
+                        $("#getFptt").append(option);
+                    };
+                }
+            );
+            // 选择支付宝抬头信息
+            function changeFptt(obj){
+                $.post(
+                    '../getInvoiceTitle',
+                    {},
+                    function(test) {
+                        if(test.success) {
+                            var option='';
+                            var dataList = test.data;
+                            for(var i=0;i<dataList.length;i++) {
+                                var fp = dataList[i];
+                                if (fp.titleName==obj) {
+                                    $('#fptt').val(fp.titleName);
+                                    $('#nsrsbh').val(fp.taxRegisterNo);
+                                    $('#dz').val(fp.userAddress);
+                                    $('#dh').val(fp.userMobile);
+                                    $('#khh').val(fp.openBankName);
+                                    $('#yhzh').val(fp.openBankAccount);
+                                    $('#yx').val(fp.userEmail);
+                                }
+                            }
+                        }
+                    }
+                )
+            };                  
         })
 
         // 模态框
