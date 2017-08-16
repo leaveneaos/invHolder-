@@ -40,7 +40,7 @@ public class MyInterceptor implements HandlerInterceptor {
                     AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath());
                     logger.info("-----初始化支付宝授权----end------");
                     logger.info("-----初始化URL----end-----"+request.getServletPath());
-
+                    return;
                 }
             }
         }
