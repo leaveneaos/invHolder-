@@ -325,7 +325,7 @@ public class AfController extends BaseController {
     @RequestMapping(value = "/bangzhu")
     @ResponseBody
     public void bangzhu() throws IOException {
-        response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
+        response.sendRedirect(request.getContextPath() + "bangzhu.html?_t=" + System.currentTimeMillis());
     }
 
 
