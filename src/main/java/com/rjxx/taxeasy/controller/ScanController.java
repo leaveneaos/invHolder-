@@ -6,6 +6,7 @@ import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.WxFpxx;
 import com.rjxx.taxeasy.service.BarcodeService;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
@@ -52,7 +53,7 @@ public class ScanController extends BaseController {
         logger.warn("存入数据库时候openid ="+openid );
         String orderNo = (String) session.getAttribute("orderNo");
         logger.warn("存入数据库时候orderNo="+orderNo);
-        if (gsdm == null || q == null || openid == null|| orderNo == null) {
+        if (gsdm == null || q == null ) {
             return ResultUtil.error("session过期,请重新扫码");
         }
         String jsonData = barcodeService.getSpxx(gsdm, q);
@@ -88,17 +89,18 @@ public class ScanController extends BaseController {
     public Result submit(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email) {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
-        String openid=(String) session.getAttribute("openid");
         if (gsdm == null || q == null) {
             return ResultUtil.error("redirect");
         }
+        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
         //非必须参数
         String gfdz = request.getParameter("gfdz");
         String gfdh = request.getParameter("gfdh");
         String gfyhzh = request.getParameter("gfyhzh");
         String gfyh = request.getParameter("gfyh");
         String tqm = request.getParameter("tqm");
-        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm,openid,"5");
+
+        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm,userId,"5");
         //开票
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
