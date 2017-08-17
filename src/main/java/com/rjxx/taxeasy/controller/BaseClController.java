@@ -87,9 +87,9 @@ public class BaseClController extends BaseController {
 
     @RequestMapping
     @ResponseBody
-    public void index(String gsdm) throws Exception{
+    public void index() throws Exception{
         String str = request.getParameter("q");
-        logger.info("参数p的值为"+str);
+        logger.info("参数q的值为"+str);
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","Family");
         request.getSession().setAttribute("gsdm","Family");
