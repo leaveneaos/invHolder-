@@ -66,10 +66,10 @@ public class AlipayController extends BaseController {
             session.setAttribute("expires_in",oauthTokenResponse.getExpiresIn());//过期时间
             session.setAttribute("re_expires_in",oauthTokenResponse.getReExpiresIn());//刷新令牌时间
             //refreshToken(oauthTokenResponse.getRefreshToken());
-           // String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
-           // String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
+            String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
+            String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
             logger.info(JSON.toJSONString(oauthTokenResponse)+"-------end application---------");
-           //response.sendRedirect(redirectUrl);
+            response.sendRedirect(redirectUrl);
             return null;
         } catch (Exception e) {
             //处理异常

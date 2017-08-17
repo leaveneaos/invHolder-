@@ -22,12 +22,12 @@ public class MyInterceptor implements HandlerInterceptor {
         HttpSession session=request.getSession();
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
-        if(url.equals("/family")||url.equals("/af")||url.equals("/barcode")){
+        if(url.equals("/family")||url.equals("/af")||url.equals("/scan/scanConfirm")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
                     logger.info("-----初始化支付宝授权----strat-----");
-                    AlipayUtils.initAlipayAuthorization(request, response, "sendhtml");
+                    AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath());
 
                     logger.info("-----初始化支付宝授权----end------");
                     logger.info("-----初始化URL----end-----"+request.getServletPath());
