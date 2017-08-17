@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
@@ -55,6 +56,9 @@ public class WeiXinController extends BaseController {
     @Autowired
     private  BarcodeService barcodeService;
 
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
@@ -95,24 +99,35 @@ public class WeiXinController extends BaseController {
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
                 System.out.println("进入开票处理----");
-                String SuccOrderId = requestMap.get("SuccOrderId");
-                String FailOrderId = requestMap.get("FailOrderId");
-                String openid = requestMap.get("FromUserName");
+                String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
+                String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
+                String openid = requestMap.get("FromUserName");    //opendid
 
                 logger.info("拿到的opedid是---------"+openid);
-                String gsdm = (String) session.getAttribute("gsdm");
-                logger.info("公司代码"+gsdm);
-                String tqm = (String) session.getAttribute("tqm");
-                logger.info("提取码"+tqm);
-                String q = (String) session.getAttribute("q");//扫码参数
-                logger.info("q为"+q);
-
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
                 System.out.println("传递的token----"+access_token);
                 request.setAttribute("access_token",access_token);
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");
-
+                    WxFpxx oneByOrderNo = wxfpxxJpaDao.findOneByOrderNo(SuccOrderId, openid);
+                    String gsdm = oneByOrderNo.getGsdm();
+                    logger.info("拿到公司代码"+gsdm);
+                    if(null==gsdm && gsdm.equals("")){
+                        logger.info("公司代码为空！");
+                        return;
+                    }
+                    String q = oneByOrderNo.getQ();
+                    logger.info("拿到的q参数为"+q);
+                    if (null==q && q.equals("")){
+                        logger.info("参数q为空");
+                        return;
+                    }
+                    String tqm = oneByOrderNo.getTqm();
+                    logger.info("拿到的提取码为"+tqm);
+                    if (null==tqm && tqm.equals("")){
+                        logger.info("提取码为空");
+                        return;
+                    }
                     //主动获取授权状态，成功会返回数据
                     Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
                     if(null==resultMap){
