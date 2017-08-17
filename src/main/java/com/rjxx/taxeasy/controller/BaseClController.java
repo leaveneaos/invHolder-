@@ -148,9 +148,9 @@ public class BaseClController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return;
                 }
-                String newsign = cssz[0] += "key=" + gsxx.getSecretKey();
+                String newsign = cssz[0] += "&key=" + gsxx.getSecretKey();
                 String key1 = DigestUtils.md5Hex(newsign);
-                logger.info(sign+"---------"+gsxx.getSecretKey()+"---------"+key1);
+                logger.info("---------"+cssz[0]+"------------"+sign+"---------"+gsxx.getSecretKey()+"---------"+key1);
                 if (!sign.equals(key1.toLowerCase())) {
                     request.getSession().setAttribute("msg", "秘钥不匹配!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
