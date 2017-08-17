@@ -152,7 +152,7 @@ public class BaseClController extends BaseController {
                 }
                 logger.info("---------提取码参数值-----"+cssz[0]+"---------");
                 logger.info("---------签名参数值-----"+cssz[1]+"---------");
-                String newsign = cssz[0] += "&key=" + gsxx.getSecretKey();
+                String newsign = cssz[0]+"&key=" + gsxx.getSecretKey();
                 String key1 = DigestUtils.md5Hex(newsign);
                 logger.info("---------"+cssz[0]+"------------"+sign+"---------"+gsxx.getSecretKey()+"---------"+key1);
                 if (!sign.equals(key1.toLowerCase())) {
