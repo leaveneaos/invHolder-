@@ -45,8 +45,11 @@ public class ScanController extends BaseController {
     @RequestMapping("/scanConfirm")
     public Result smConfirm() {
         String gsdm = (String) session.getAttribute("gsdm");
+        logger.warn("存入数据库时候gsdm="+gsdm);
         String q = (String) session.getAttribute("q");
+        logger.warn("存入数据库时候q="+q);
         String openid = (String) session.getAttribute("openid");
+        logger.warn("存入数据库时候openid ="+openid );
         String orderNo = (String) session.getAttribute("orderNo");
         logger.warn("存入数据库时候orderNo="+orderNo);
         if (gsdm == null || q == null || openid == null|| orderNo == null) {
@@ -117,15 +120,15 @@ public class ScanController extends BaseController {
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
         String openid = resultObject.getString("openid");
-        logger.error("openid="+openid);
+        logger.info("存入session时候的openid"+openid);
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
         int index = state.indexOf("$");
         String gsdm = state.substring(0, index);
         String q = state.substring(index+1, state.length());
-        logger.info(gsdm);
-        logger.info(q);
+        logger.info("存入session时候的gsdm"+gsdm);
+        logger.info("存入session时候的q"+q);
         Map result = barcodeService.sm(gsdm, q);
         try {
             if (result != null) {
