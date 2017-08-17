@@ -77,8 +77,9 @@ public class ScanController extends BaseController {
         String gfdh = request.getParameter("gfdh");
         String gfyhzh = request.getParameter("gfyhzh");
         String gfyh = request.getParameter("gfyh");
+        String tqm = request.getParameter("tqm");
+        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm,openid,"5");
         //开票
-        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, null,openid,"5");
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {

@@ -181,7 +181,11 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setXgsj(new Date());
                 jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
                 if(tqm==null){
-                    jyxxsq.setTqm(gsdm+orderNo);
+                    Integer pid=skp.getPid();
+                    Pp pp = ppJpaDao.findOneById(pid);
+                    jyxxsq.setTqm(pp.getPpdm()+orderNo);
+                }else{
+                    jyxxsq.setTqm(tqm);
                 }
 
                 List<Jymxsq> jymxsqList = new ArrayList<>();
