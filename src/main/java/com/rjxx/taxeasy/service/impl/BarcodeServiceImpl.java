@@ -5,13 +5,12 @@ import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
-import com.rjxx.taxeasy.service.BarcodeService;
-import com.rjxx.taxeasy.service.CszbService;
-import com.rjxx.taxeasy.service.SpvoService;
+import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.XmlUtil;
+import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,10 @@ public class BarcodeServiceImpl implements BarcodeService {
     private SkpJpaDao skpJpaDao;
     @Autowired
     private JylsJpaDao jylsJpaDao;
-
+    @Autowired
+    private TqmtqService tqmtqService;
+    @Autowired
+    private JylsService jylsService;
     @Override
     public Map sm(String gsdm, String q) {
         try {
@@ -249,6 +251,92 @@ public class BarcodeServiceImpl implements BarcodeService {
             return "0";
         }
     }
+
+
+    @Override
+    public String pullInvioce(Map resultSjMap,String gsdm,  String gfmc, String gfsh, String email,
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly,String access_token) {
+        WeixinUtils weixinUtils = new WeixinUtils();
+            try {
+                List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
+                List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
+                List<Jyzfmx> jyzfmxList=(List)resultSjMap.get("jyzfmxList");
+                //封装数据
+                Jyxxsq jyxxsq=jyxxsqList.get(0);
+                jyxxsq.setGfmc(gfmc);
+                jyxxsq.setGfemail(email);
+                jyxxsq.setSffsyj("1");
+                jyxxsq.setGfsh(gfsh);
+                jyxxsq.setGfdz(gfdz);
+                jyxxsq.setGfdh(gfdh);
+                jyxxsq.setGfyh(gfyh);
+                jyxxsq.setGfyhzh(gfyhzh);
+                jyxxsq.setOpenid(openid);
+                jyxxsq.setSjly(sjly);
+                Map map = new HashMap<>();
+                map.put("tqm",jyxxsq.getTqm());
+                map.put("je",jyxxsq.getJshj());
+                map.put("gsdm",jyxxsq.getGsdm());
+                Tqmtq tqmtq = tqmtqService.findOneByParams(map);
+                Jyls jyls1 = jylsService.findOne(map);
+                if(tqmtq != null && tqmtq.getId() != null){
+                    logger.info("该提取码已提交过申请!");
+                    String reason="该提取码已提交过申请!";
+                    //拒绝开票
+                    String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                    logger.info("拒绝开票状态"+str);
+                    return "-2";
+                }
+                if(jyls1 != null){
+                    logger.info("该订单正在开票!");
+                    String reason="该订单正在开票!";
+                    //拒绝开票
+                    String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                    logger.info("拒绝开票状态"+str);
+                    return "-2";
+                }
+                //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
+                try {
+                    String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
+                    String resultxml= HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+                    logger.info("-------返回值---------"+resultxml);
+                    //插入表
+                    Tqmtq tqmtq1 = new Tqmtq();
+                    tqmtq1.setDdh(jyxxsq.getTqm());
+                    tqmtq1.setLrsj(new Date());
+                    tqmtq1.setZje(Double.valueOf(jyxxsq.getJshj()));
+                    tqmtq1.setGfmc(gfmc);
+                    tqmtq1.setNsrsbh(gfsh);
+                    tqmtq1.setDz(gfdz);
+                    tqmtq1.setDh(gfdh);
+                    tqmtq1.setKhh(gfyh);
+                    tqmtq1.setKhhzh(gfyhzh);
+                    tqmtq1.setFpzt("0");
+                    tqmtq1.setYxbz("1");
+                    tqmtq1.setGfemail(email);
+                    tqmtq1.setGsdm(jyxxsq.getGsdm());
+                    /*String llqxx = request.getHeader("User-Agent");
+                    tqmtq1.setLlqxx(llqxx);*/
+                    if(openid != null && !"null".equals(openid)){
+                        tqmtq1.setOpenid(openid);
+                    }
+                    tqmtqService.save(tqmtq1);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "-1";
+            }
+            return "0";
+
+    }
+
+
 
     @Override
     public String checkStatus(String tqm, String gsdm) {
