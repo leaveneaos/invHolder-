@@ -65,11 +65,11 @@ public class AlipayController extends BaseController {
             session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());//刷新令牌
             session.setAttribute("expires_in",oauthTokenResponse.getExpiresIn());//过期时间
             session.setAttribute("re_expires_in",oauthTokenResponse.getReExpiresIn());//刷新令牌时间
-            refreshToken(oauthTokenResponse.getRefreshToken());
+            //refreshToken(oauthTokenResponse.getRefreshToken());
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
-            logger.info(JSON.toJSONString(oauthTokenResponse+"-------end application---------"));
-            //response.sendRedirect(redirectUrl);
+            logger.info(JSON.toJSONString(oauthTokenResponse)+"-------end application---------");
+           //response.sendRedirect(redirectUrl);
             return null;
         } catch (Exception e) {
             //处理异常
@@ -82,6 +82,7 @@ public class AlipayController extends BaseController {
     }
 
     private void refreshToken(String refreshToken) throws AlipayApiException {
+        logger.info("--------刷新令牌----Start application---------");
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);
         AlipaySystemOauthTokenRequest alipaySystemOauthTokenRequest = new AlipaySystemOauthTokenRequest();
         alipaySystemOauthTokenRequest.setRefreshToken(refreshToken);
@@ -90,7 +91,7 @@ public class AlipayController extends BaseController {
         session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());
         session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());
         session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());
-        logger.info(JSON.toJSONString(oauthTokenResponse)+"end application");
+        logger.info(JSON.toJSONString(oauthTokenResponse)+"--------刷新令牌----end application---------");
     }
 
     /**
