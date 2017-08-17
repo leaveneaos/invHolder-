@@ -30,5 +30,5 @@ public interface BarcodeService {
 
     String getSpxx(String gsdm, String q);
 
-    String checkStatus(String gsdm,String tqm);
+    String checkStatus(String tqm,String gsdm);
 }
