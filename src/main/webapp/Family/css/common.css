@@ -3,7 +3,6 @@ html,body {
 	padding: 0;
 	overflow: hidden;
 	overflow-y: auto;
-	height: 100%;
 	max-width: 800px;
 }
 ul,ol,h1,h2,h3,h4,h5,h6 {
@@ -28,12 +27,11 @@ a {
 	text-decoration:none
 }
 footer {
-	position: fixed;
 	padding: 0px 20px;
-	bottom: 0px;
 	width: 100%;
     box-sizing: border-box;
     max-width: 800px;
+    margin-top: 2%;
 }
 button,input {
 	border: none;
