@@ -27,11 +27,12 @@ a {
 	text-decoration:none
 }
 footer {
+	position: fixed;
 	padding: 0px 20px;
 	width: 100%;
+	bottom: 0;
     box-sizing: border-box;
     max-width: 800px;
-    margin-top: 2%;
 }
 button,input {
 	border: none;
@@ -71,7 +72,7 @@ button {
     border-top-right-radius: 3px;
 }
 .main {
-	margin: 15px auto;
+	margin: 15px auto 30px;
 	width: 85%;
 }
 .content {
