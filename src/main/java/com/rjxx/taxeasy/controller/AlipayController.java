@@ -50,7 +50,7 @@ public class AlipayController extends BaseController {
     /**
      * 获取阿里授权
      */
-    @RequestMapping(value = AlipayConstants.AFTER_ALIPAY_AUTHORIZED_REDIRECT_URL,method = RequestMethod.GET)
+    @RequestMapping(value = AlipayConstants.AFTER_ALIPAY_AUTHORIZED_REDIRECT_URL,method = RequestMethod.POST)
     @ResponseBody
     public String getAlipay(String state, String auth_code) throws Exception {
         //获取access_token
