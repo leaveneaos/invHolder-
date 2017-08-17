@@ -479,11 +479,14 @@ public class BaseClController extends BaseController {
         String khh=String.valueOf(request.getSession().getAttribute("khh"));
         String yhzh=String.valueOf(request.getSession().getAttribute("yhzh"));
         String yx=String.valueOf(request.getSession().getAttribute("yx"));
+        String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+
         jyxxsq.setGfmc(fptt.trim());
         jyxxsq.setGfemail(yx.trim());
         if (StringUtils.isNotBlank(jyxxsq.getGfemail())) {
             jyxxsq.setSffsyj("1");
         }
+        jyxxsq.setTqm(tqm);
         String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
         if(AlipayUtils.isAlipayBrowser(request)){
             jyxxsq.setOpenid(userId);
