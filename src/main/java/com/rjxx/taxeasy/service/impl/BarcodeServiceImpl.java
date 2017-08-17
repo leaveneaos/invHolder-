@@ -142,8 +142,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 StringUtils.isNotBlank(orderTime) &&
                 StringUtils.isNotBlank(price) &&
                 StringUtils.isNotBlank(storeNo) &&
-                StringUtils.isNotBlank(gfmc) &&
-                StringUtils.isNotBlank(email)) {
+                StringUtils.isNotBlank(gfmc)) {
             try {
                 Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
                 Integer xfid = skp.getXfid(); //销方id
