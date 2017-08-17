@@ -48,6 +48,7 @@ public class ScanController extends BaseController {
         String q = (String) session.getAttribute("q");
         String openid = (String) session.getAttribute("openid");
         String orderNo = (String) session.getAttribute("orderNo");
+        logger.warn("存入数据库时候orderNo="+orderNo);
         if (gsdm == null || q == null || openid == null|| orderNo == null) {
             return ResultUtil.error("session过期,请重新扫码");
         }
@@ -133,8 +134,9 @@ public class ScanController extends BaseController {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
+                logger.warn("存入session时候orderNo="+orderNo);
                 session.setAttribute("orderNo", orderNo);
-                String status = barcodeService.checkStatus(orderNo, gsdm);
+                String status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 if(status!=null){
                     switch (status) {
                         case "可开具":

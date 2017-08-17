@@ -65,7 +65,7 @@ public class BarcodeController extends BaseController {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
-                String status = barcodeService.checkStatus(orderNo, gsdm);
+                String status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 if (status != null) {
                     switch (status) {
                         case "可开具":
