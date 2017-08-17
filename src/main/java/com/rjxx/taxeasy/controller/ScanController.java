@@ -60,7 +60,7 @@ public class ScanController extends BaseController {
             wxFpxx.setTqm(tqm);
             wxFpxx.setGsdm(gsdm);
             wxFpxx.setQ(q);
-            wxFpxx.setOpendId(openid);
+            wxFpxx.setOpenId(openid);
             wxFpxx.setOrderNo(orderNo);
             try {
                 wxfpxxJpaDao.save(wxFpxx);
