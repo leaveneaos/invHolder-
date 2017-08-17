@@ -18,6 +18,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -511,9 +514,23 @@ public class BaseClController extends BaseController {
         try{
            String xml=GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
            String resultxml=HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
-            logger.info("-------返回值---------"+resultxml);
-            request.getSession().setAttribute("serialorder",resultxml);
-            result.put("msg", "1");
+            Document document = DocumentHelper.parseText(resultxml);
+            Element root = document.getRootElement();
+            List<Element> childElements = root.elements();
+            Map xmlMap = new HashMap();
+            for (Element child : childElements) {
+                xmlMap.put(child.getName(),child.getText());
+            }
+            String returncode=(String)xmlMap.get("ReturnCode");
+            String ReturnMessage=(String)xmlMap.get("ReturnMessage");
+            if(returncode.equals("9999")){
+                result.put("msg",ReturnMessage);
+                return result;
+            }else {
+                logger.info("-------返回值---------" + resultxml);
+                request.getSession().setAttribute("serialorder", ReturnMessage);
+                result.put("msg", "1");
+               }
             }catch (Exception e){
                 e.printStackTrace();
             }
