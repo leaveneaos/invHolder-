@@ -115,7 +115,9 @@ public class BarcodeServiceImpl implements BarcodeService {
                 result.put("price", price);
                 result.put("spsl", spsl);
                 result.put("spmc", spmc);
-                result.put("tqm", gsdm + orderNo);
+                Integer pid=skp.getPid();
+                Pp pp = ppJpaDao.findOneById(pid);
+                result.put("tqm", pp.getPpdm() + orderNo);
                 return JSONObject.toJSONString(result);
             } catch(Exception e){
                 e.printStackTrace();
