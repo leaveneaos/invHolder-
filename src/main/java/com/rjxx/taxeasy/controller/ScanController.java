@@ -42,6 +42,8 @@ public class ScanController extends BaseController {
     public Result smConfirm() {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
+        logger.info(gsdm);
+        logger.info(q);
         if (gsdm == null || q == null) {
             return ResultUtil.error("session过期,请重新扫码");
         }
@@ -96,7 +98,6 @@ public class ScanController extends BaseController {
                 + SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
-        logger.error("result="+resultObject.toJSONString());
         String openid = resultObject.getString("openid");
         logger.error("openid="+openid);
         if (openid != null) {
@@ -105,6 +106,8 @@ public class ScanController extends BaseController {
         int index = state.indexOf("$");
         String gsdm = state.substring(0, index);
         String q = state.substring(index+1, state.length());
+        logger.info(gsdm);
+        logger.info(q);
         Map result = barcodeService.sm(gsdm, q);
         try {
             if (result != null) {
