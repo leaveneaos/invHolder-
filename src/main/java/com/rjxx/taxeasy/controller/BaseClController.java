@@ -75,11 +75,11 @@ public class BaseClController extends BaseController {
     @Autowired
     private DiscountDealUtil discountDealUtil;
     //正式
-    //public static final String APP_ID ="wx9abc729e2b4637ee";
-    //public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
+    public static final String APP_ID ="wx9abc729e2b4637ee";
+    public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
     //沙箱测试
-    public static final String APP_ID ="wx8c2a4c2289e10ffb";
-    public static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    //public static final String APP_ID ="wx8c2a4c2289e10ffb";
+   // public static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
 
 
@@ -87,9 +87,9 @@ public class BaseClController extends BaseController {
 
     @RequestMapping
     @ResponseBody
-    public void index(String gsdm) throws Exception{
+    public void index() throws Exception{
         String str = request.getParameter("q");
-        logger.info("参数p的值为"+str);
+        logger.info("参数q的值为"+str);
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","Family");
         request.getSession().setAttribute("gsdm","Family");
@@ -110,9 +110,11 @@ public class BaseClController extends BaseController {
                 return;
             } else {
                 sendHtml(str, gsxx);
+                return;
             }
         } else {
             sendHtml(str, gsxx);
+            return;
         }
     }
 
@@ -133,6 +135,8 @@ public class BaseClController extends BaseController {
               }else {
                 byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(state);
                 String csc = new String(bytes);
+                logger.info("---------参数值-----"+csc+"---------");
+
                 String[] cssz = csc.split("&");
                 String tqm = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
                 String sign = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
@@ -146,8 +150,11 @@ public class BaseClController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return;
                 }
-                String newsign = cssz[0] += "key=" + gsxx.getSecretKey();
+                logger.info("---------提取码参数值-----"+cssz[0]+"---------");
+                logger.info("---------签名参数值-----"+cssz[1]+"---------");
+                String newsign = cssz[0]+"&key=" + gsxx.getSecretKey();
                 String key1 = DigestUtils.md5Hex(newsign);
+                logger.info("---------"+cssz[0]+"------------"+sign+"---------"+gsxx.getSecretKey()+"---------"+key1);
                 if (!sign.equals(key1.toLowerCase())) {
                     request.getSession().setAttribute("msg", "秘钥不匹配!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());

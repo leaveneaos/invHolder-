@@ -3,6 +3,8 @@ package com.rjxx.taxeasy.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.domains.WxFpxx;
 import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
@@ -23,17 +25,19 @@ import java.util.Map;
 @RequestMapping("/scan")
 public class ScanController extends BaseController {
     //王亚辉的测试
-    private static final String APP_ID = "wx731106a80c032cad";
-    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
+//    private static final String APP_ID = "wx731106a80c032cad";
+//    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
     //张松强的测试
-//    private static final String APP_ID = "wx8c2a4c2289e10ffb";
-//    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    private static final String APP_ID = "wx8c2a4c2289e10ffb";
+    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
 //    正式
 //    private static final String APP_ID = "wx9abc729e2b4637ee";
 //    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
     @Autowired
     private BarcodeService barcodeService;
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
 
     /**
      * 确认扫码中传递的信息
@@ -42,13 +46,28 @@ public class ScanController extends BaseController {
     public Result smConfirm() {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
-        if (gsdm == null || q == null) {
+        String openid = (String) session.getAttribute("openid");
+        String orderNo = (String) session.getAttribute("orderNo");
+        logger.warn("存入数据库时候orderNo="+orderNo);
+        if (gsdm == null || q == null || openid == null|| orderNo == null) {
             return ResultUtil.error("session过期,请重新扫码");
         }
         String jsonData = barcodeService.getSpxx(gsdm, q);
         if (jsonData != null) {
             JSONObject jsonObject = JSON.parseObject(jsonData);
-            session.setAttribute("tqm",jsonObject.getString("tqm"));
+            String tqm=jsonObject.getString("tqm");
+            session.setAttribute("tqm",tqm);
+            WxFpxx wxFpxx = new WxFpxx();
+            wxFpxx.setTqm(tqm);
+            wxFpxx.setGsdm(gsdm);
+            wxFpxx.setQ(q);
+            wxFpxx.setOpenId(openid);
+            wxFpxx.setOrderNo(orderNo);
+            try {
+                wxfpxxJpaDao.save(wxFpxx);
+            }catch (Exception e){
+                return ResultUtil.error("交易信息保存失败");
+            }
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
             return ResultUtil.error("二维码信息获取失败");
@@ -75,8 +94,9 @@ public class ScanController extends BaseController {
         String gfdh = request.getParameter("gfdh");
         String gfyhzh = request.getParameter("gfyhzh");
         String gfyh = request.getParameter("gfyh");
+        String tqm = request.getParameter("tqm");
+        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm,openid,"5");
         //开票
-        String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, null,openid,"5");
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {
@@ -96,7 +116,6 @@ public class ScanController extends BaseController {
                 + SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
-        logger.error("result="+resultObject.toJSONString());
         String openid = resultObject.getString("openid");
         logger.error("openid="+openid);
         if (openid != null) {
@@ -105,6 +124,8 @@ public class ScanController extends BaseController {
         int index = state.indexOf("$");
         String gsdm = state.substring(0, index);
         String q = state.substring(index+1, state.length());
+        logger.info(gsdm);
+        logger.info(q);
         Map result = barcodeService.sm(gsdm, q);
         try {
             if (result != null) {
@@ -113,7 +134,9 @@ public class ScanController extends BaseController {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
-                String status = barcodeService.checkStatus(orderNo, gsdm);
+                logger.warn("存入session时候orderNo="+orderNo);
+                session.setAttribute("orderNo", orderNo);
+                String status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 if(status!=null){
                     switch (status) {
                         case "可开具":

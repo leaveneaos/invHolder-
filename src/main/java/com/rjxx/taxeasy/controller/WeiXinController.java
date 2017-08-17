@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
@@ -55,6 +56,9 @@ public class WeiXinController extends BaseController {
     @Autowired
     private  BarcodeService barcodeService;
 
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
@@ -95,54 +99,62 @@ public class WeiXinController extends BaseController {
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
                 System.out.println("进入开票处理----");
-                String SuccOrderId = requestMap.get("SuccOrderId");
-                String FailOrderId = requestMap.get("FailOrderId");
+                String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
+                String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
+                String openid = requestMap.get("FromUserName");    //opendid
 
-
-                String openid = String.valueOf(request.getSession().getAttribute("openid"));
-
-                String gsdm = String.valueOf(request.getSession().getAttribute("gsdm"));
-                logger.info("公司代码"+gsdm);
-                String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
-                logger.info("提取码"+tqm);
-                String q = String.valueOf(request.getSession().getAttribute("q"));//扫码参数
-                logger.info("q为"+q);
-
+                logger.info("拿到的opedid是---------"+openid);
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
                 System.out.println("传递的token----"+access_token);
                 request.setAttribute("access_token",access_token);
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");
-
-                    if(null==tqm||tqm.equals("")){
-                        logger.info("提取码为空，会话超时，请重新开始操作");
-                        request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                        return;
-                    }
-                    if(null==q && q.equals("")){
-                        logger.info("参数去q 为空");
-                        System.out.println("q为空");
-                        return;
-                    }
+                    WxFpxx oneByOrderNo = wxfpxxJpaDao.findOneByOrderNo(SuccOrderId, openid);
+                    String gsdm = oneByOrderNo.getGsdm();
+                    logger.info("拿到公司代码"+gsdm);
                     if(null==gsdm && gsdm.equals("")){
-                        logger.info("公司代码为空");
-                        System.out.println("公司代码为空");
+                        logger.info("公司代码为空！");
                         return;
                     }
-                    Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);//主动获取授权状态，成功会返回数据
-
+                    String q = oneByOrderNo.getQ();
+                    logger.info("拿到的q参数为"+q);
+                    if (null==q && q.equals("")){
+                        logger.info("参数q为空");
+                        return;
+                    }
+                    String tqm = oneByOrderNo.getTqm();
+                    logger.info("拿到的提取码为"+tqm);
+                    if (null==tqm && tqm.equals("")){
+                        logger.info("提取码为空");
+                        return;
+                    }
+                    //主动获取授权状态，成功会返回数据
+                    Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
                     if(null==resultMap){
                         logger.info("订单编号为"+SuccOrderId+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
                         return ;
                     }else {
                             System.out.println("开始封装数据并进行开票"+resultMap.toString());
                             logger.info("开始开票");
-                            //先取数据
-                            Map resultSjMap = new HashMap();
                             //全家进行开票
                             if(null!=gsdm&&gsdm.equals("Family")){
-                                resultSjMap = getDataService.getData(tqm, "Family");
+                                logger.info("进入全家开票");
+                                //拉取数据
+                                Map   resultSjMap = getDataService.getData(tqm, "Family");
+                                logger.info("全家拉取数据成功--------开始开票");
+                                String   status = barcodeService.pullInvioce(resultSjMap,gsdm,(String)resultMap.get("title"),
+                                        (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
+                                        ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),
+                                        tqm,openid,"4",access_token);
+                                if ("-1".equals(status)) {
+                                    logger.info("开具失败");
+                                } else if ("-2".equals(status)) {
+                                    logger.info("开具失败，拒绝开票");
+                                }else {
+                                    logger.info("开具成功");
+                                    System.out.println("开票成功");
+                                }
+                                return;
                             }
                             if(null!=gsdm && gsdm.equals("chamate")){
                                 logger.info("进入一茶一坐开票处理");
@@ -159,74 +171,7 @@ public class WeiXinController extends BaseController {
                                 }
                                 return;
                             }
-                            /*List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
-                            List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
-                            List<Jyzfmx> jyzfmxList=(List)resultSjMap.get("jyzfmxList");
-                            //封装数据
-                            Jyxxsq jyxxsq=jyxxsqList.get(0);
-                            jyxxsq.setGfmc((String) resultMap.get("title"));
-                            jyxxsq.setGfemail((String) resultMap.get("email"));
-                            jyxxsq.setSffsyj("1");
-                            jyxxsq.setGfsh((String) resultMap.get("tax_no"));
-                            jyxxsq.setGfdz((String) resultMap.get("addr"));
-                            jyxxsq.setGfdh((String) resultMap.get("phone"));
-                            jyxxsq.setGfyh((String) resultMap.get("bank_type"));
-                            jyxxsq.setGfyhzh((String) resultMap.get("bank_no"));
-                            jyxxsq.setOpenid(openid);
-                            Map map = new HashMap<>();
-                            map.put("tqm",jyxxsq.getTqm());
-                            map.put("je",jyxxsq.getJshj());
-                            map.put("gsdm",jyxxsq.getGsdm());
-                            Tqmtq tqmtq = tqmtqService.findOneByParams(map);
-                            Jyls jyls1 = jylsService.findOne(map);
-                            if(tqmtq != null && tqmtq.getId() != null){
-                                logger.info("该提取码已提交过申请!");
-                                String reason="该提取码已提交过申请!";
-                                //拒绝开票
-                                String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                                logger.info("拒绝开票状态"+str);
-                                return ;
-                            }
-                            if(jyls1 != null){
-                                logger.info("该订单正在开票!");
-                                String reason="该订单正在开票!";
-                                //拒绝开票
-                                String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                                logger.info("拒绝开票状态"+str);
-                                return ;
-                            }
-                            //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
-                            try {
-                                String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-                                String resultxml= HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
-                                logger.info("-------返回值---------"+resultxml);
-                                //插入表
-                                Tqmtq tqmtq1 = new Tqmtq();
-                                tqmtq1.setDdh(jyxxsq.getTqm());
-                                tqmtq1.setLrsj(new Date());
-                                tqmtq1.setZje(Double.valueOf(jyxxsq.getJshj()));
-                                tqmtq1.setGfmc((String) resultMap.get("title"));
-                                tqmtq1.setNsrsbh((String) resultMap.get("tax_no"));
-                                tqmtq1.setDz((String) resultMap.get("addr"));
-                                tqmtq1.setDh((String) resultMap.get("phone"));
-                                tqmtq1.setKhh((String) resultMap.get("bank_type"));
-                                tqmtq1.setKhhzh((String) resultMap.get("bank_no"));
-                                tqmtq1.setFpzt("0");
-                                tqmtq1.setYxbz("1");
-                                tqmtq1.setGfemail((String) resultMap.get("email"));
-                                tqmtq1.setGsdm(jyxxsq.getGsdm());
-                                String llqxx = request.getHeader("User-Agent");
-                                tqmtq1.setLlqxx(llqxx);
-                                if(openid != null && !"null".equals(openid)){
-                                    tqmtq1.setOpenid(openid);
-                                }
-                                tqmtqService.save(tqmtq1);
 
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-*/
                     }
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){

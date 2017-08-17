@@ -20,11 +20,11 @@ import java.util.Map;
 @RequestMapping("/barcode")
 public class BarcodeController extends BaseController {
     //王亚辉的测试
-    private static final String APP_ID = "wx731106a80c032cad";
-    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
+//    private static final String APP_ID = "wx731106a80c032cad";
+//    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
 //    张松强的测试
-//    private static final String APP_ID = "wx8c2a4c2289e10ffb";
-//    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    private static final String APP_ID = "wx8c2a4c2289e10ffb";
+    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
 //    正式
 //    private static final String APP_ID = "wx9abc729e2b4637ee";
 //    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
@@ -65,7 +65,7 @@ public class BarcodeController extends BaseController {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
-                String status = barcodeService.checkStatus(orderNo, gsdm);
+                String status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 if (status != null) {
                     switch (status) {
                         case "可开具":

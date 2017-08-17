@@ -20,16 +20,18 @@ public class MyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session=request.getSession();
-        String[] url=request.getServletPath().split("/");
-        logger.info("-----初始化URL----end-----"+url.length);
-        if(request.getServletPath().equals("/family")){
+        String url=request.getServletPath();
+        logger.info("-----初始化URL----Start-----"+url);
+        if(url.equals("/family")||url.equals("/af")||url.equals("/barcode/chamate")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
                     logger.info("-----初始化支付宝授权----strat-----");
                     AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath());
+
                     logger.info("-----初始化支付宝授权----end------");
                     logger.info("-----初始化URL----end-----"+request.getServletPath());
+                    return true;
                 }
             }
         }
