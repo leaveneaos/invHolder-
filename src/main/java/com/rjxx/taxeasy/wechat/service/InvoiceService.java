@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by Administrator on 2017/7/31 0031.
+ * Created by wangyahui on 2017/8/17 0017
  */
 @Service
 public class InvoiceService {
@@ -40,6 +40,8 @@ public class InvoiceService {
     private GsxxJpaDao gsxxJpaDao;
     @Autowired
     private SpvoService spvoService;
+    @Autowired
+    private GroupJpaDao groupJpaDao;
 
     public String send(String purchaserName, String purchaserTaxNo,
                        String email, Double amount, String username, String openid) {
@@ -51,20 +53,20 @@ public class InvoiceService {
             try {
                 logger.info("service中的openid="+openid);
                 //调接口
+                Integer yhid=yhJpaDao.findIdByDlyhid(username);
+                Group group = groupJpaDao.findOneByYhid(yhid);
+                Integer skpid = group.getSkpid();
+                Integer xfid = group.getXfid();
+                Xf xf = xfJpaDao.findOneById(xfid);
+                Skp skp = skpJpaDao.findOneById(skpid);
                 String gsdm = yhJpaDao.findGsdmByDlyhid(username);
-                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
-                String kpddm = skpJpaDao.findKpddmByGsdm(gsdm);
                 Jyxxsq jyxxsq = new Jyxxsq();
                 jyxxsq.setDdh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
                 jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
                 jyxxsq.setGsdm(gsdm);
-                jyxxsq.setKpddm(kpddm);
-                jyxxsq.setXfmc(xf.getXfmc());
-                jyxxsq.setXfdh(xf.getXfdh());
-                jyxxsq.setXfdz(xf.getXfdz());
-                jyxxsq.setXfid(xf.getId());
+                jyxxsq.setKpddm(skp.getKpddm());
+                jyxxsq.setXfid(xfid);
                 jyxxsq.setXflxr(xf.getXflxr());
-                jyxxsq.setXfsh(xf.getXfsh());
                 jyxxsq.setXfyb(xf.getXfyb());
                 jyxxsq.setXfyhzh(xf.getXfyhzh());
                 jyxxsq.setXfyh(xf.getXfyh());
@@ -82,24 +84,24 @@ public class InvoiceService {
                 jyxxsq.setXgsj(new Date());
                 jyxxsq.setOpenid(openid);
                 jyxxsq.setSjly("4");
-                jyxxsq.setKpr(xf.getKpr());
-                jyxxsq.setFhr(xf.getFhr());
-                jyxxsq.setSkr(xf.getSkr());
+                jyxxsq.setXfsh(xf.getXfsh());
+                jyxxsq.setXfmc(xf.getXfmc());
+                jyxxsq.setKpr(skp.getKpr());
+                jyxxsq.setFhr(skp.getFhr());
+                jyxxsq.setSkr(skp.getSkr());
+                jyxxsq.setXfdh(skp.getLxdh());
+                jyxxsq.setXfdz(skp.getLxdz());
 
-                Skp oneByKpddmAndGsdm = skpJpaDao.findOneByKpddmAndGsdm(kpddm, gsdm);
-                Integer kpdid=oneByKpddmAndGsdm.getId();
-                Cszb cszb = cszbService.getSpbmbbh(gsdm, jyxxsq.getXfid(), kpdid, "dyspbmb");
+                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "dyspbmb");
                 Map map = new HashMap();
                 map.put("gsdm", gsdm);
                 map.put("spdm", cszb.getCsz());
                 Spvo oneSpvo = spvoService.findOneSpvo(map);
                 Jymxsq jymxsq = new Jymxsq();
                 jymxsq.setSpdm(oneSpvo.getSpbm());
-//                jymxsq.setSps(1d);
                 jymxsq.setYhzcmc(oneSpvo.getYhzcmc());
                 jymxsq.setYhzcbs(oneSpvo.getYhzcbs());
                 jymxsq.setLslbz(oneSpvo.getLslbz());
-//                jymxsq.setSpdj(100d);
                 jymxsq.setJshj(amount);
                 jymxsq.setFphxz("0");
                 jymxsq.setSpmc(oneSpvo.getSpmc());
@@ -112,7 +114,6 @@ public class InvoiceService {
                 List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
 
                 List<Jyzfmx> jyzfmxList = new ArrayList<>();
-                Jyzfmx jyzfmx = new Jyzfmx();
 
                 String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqs,jyzfmxList);
                 Gsxx oneByGsdm = gsxxJpaDao.findOneByGsdm(gsdm);
