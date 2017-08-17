@@ -92,7 +92,7 @@ public class InvoiceService {
                 jyxxsq.setXfdh(skp.getLxdh());
                 jyxxsq.setXfdz(skp.getLxdz());
 
-                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "dyspbmb");
+                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, null, "dyspbmb");
                 Map map = new HashMap();
                 map.put("gsdm", gsdm);
                 map.put("spdm", cszb.getCsz());
