@@ -135,6 +135,8 @@ public class BaseClController extends BaseController {
               }else {
                 byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(state);
                 String csc = new String(bytes);
+                logger.info("---------参数值-----"+csc+"---------");
+
                 String[] cssz = csc.split("&");
                 String tqm = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
                 String sign = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
@@ -148,6 +150,8 @@ public class BaseClController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return;
                 }
+                logger.info("---------提取码参数值-----"+cssz[0]+"---------");
+                logger.info("---------签名参数值-----"+cssz[1]+"---------");
                 String newsign = cssz[0] += "&key=" + gsxx.getSecretKey();
                 String key1 = DigestUtils.md5Hex(newsign);
                 logger.info("---------"+cssz[0]+"------------"+sign+"---------"+gsxx.getSecretKey()+"---------"+key1);
