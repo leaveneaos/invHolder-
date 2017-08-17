@@ -3,6 +3,8 @@ package com.rjxx.taxeasy.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.domains.WxFpxx;
 import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
@@ -34,6 +36,8 @@ public class ScanController extends BaseController {
 
     @Autowired
     private BarcodeService barcodeService;
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
 
     /**
      * 确认扫码中传递的信息
@@ -42,15 +46,27 @@ public class ScanController extends BaseController {
     public Result smConfirm() {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
-        logger.info(gsdm);
-        logger.info(q);
-        if (gsdm == null || q == null) {
+        String openid = (String) session.getAttribute("openid");
+        String orderNo = (String) session.getAttribute("orderNo");
+        if (gsdm == null || q == null || openid == null|| orderNo == null) {
             return ResultUtil.error("session过期,请重新扫码");
         }
         String jsonData = barcodeService.getSpxx(gsdm, q);
         if (jsonData != null) {
             JSONObject jsonObject = JSON.parseObject(jsonData);
-            session.setAttribute("tqm",jsonObject.getString("tqm"));
+            String tqm=jsonObject.getString("tqm");
+            session.setAttribute("tqm",tqm);
+            WxFpxx wxFpxx = new WxFpxx();
+            wxFpxx.setTqm(tqm);
+            wxFpxx.setGsdm(gsdm);
+            wxFpxx.setQ(q);
+            wxFpxx.setOpendId(openid);
+            wxFpxx.setOrderNo(orderNo);
+            try {
+                wxfpxxJpaDao.save(wxFpxx);
+            }catch (Exception e){
+                return ResultUtil.error("交易信息保存失败");
+            }
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
             return ResultUtil.error("二维码信息获取失败");
@@ -117,6 +133,7 @@ public class ScanController extends BaseController {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
+                session.setAttribute("orderNo", orderNo);
                 String status = barcodeService.checkStatus(orderNo, gsdm);
                 if(status!=null){
                     switch (status) {
