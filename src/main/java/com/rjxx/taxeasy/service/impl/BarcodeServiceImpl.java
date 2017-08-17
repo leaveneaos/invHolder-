@@ -194,7 +194,7 @@ public class BarcodeServiceImpl implements BarcodeService {
 
                 List<Jymxsq> jymxsqList = new ArrayList<>();
                 Jymxsq jymxsq = new Jymxsq();
-                Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "dyspbmb");
+                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
                 Map map = new HashMap();
                 map.put("gsdm", gsdm);
                 map.put("spdm", cszb.getCsz());

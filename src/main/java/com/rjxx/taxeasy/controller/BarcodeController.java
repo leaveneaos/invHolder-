@@ -44,8 +44,6 @@ public class BarcodeController extends BaseController {
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
-            String openid = String.valueOf(session.getAttribute("openid"));
-            if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
                         + url + "scan/getOpenid&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "$" + q
                         + "#wechat_redirect";
@@ -55,8 +53,8 @@ public class BarcodeController extends BaseController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
         }
+
         Map result = barcodeService.sm(gsdm, q);
         try {
             if (result != null) {
@@ -65,11 +63,11 @@ public class BarcodeController extends BaseController {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
+                session.setAttribute("orderNo", orderNo);
                 String status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 if (status != null) {
                     switch (status) {
                         case "可开具":
-                            logger.info("openid=" + session.getAttribute("openid"));
                             if (StringUtils.isNotBlank(ppdm)) {
                                 //有品牌代码对应的url
                                 response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
