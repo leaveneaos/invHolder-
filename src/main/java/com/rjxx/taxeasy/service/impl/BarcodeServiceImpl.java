@@ -256,7 +256,8 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public String pullInvioce(Map resultSjMap,String gsdm,  String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly,String access_token) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
+                              String openid,String sjly,String access_token,String AppId,String key) {
         WeixinUtils weixinUtils = new WeixinUtils();
             try {
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
@@ -299,7 +300,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
                 try {
                     String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-                    String resultxml= HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+                    String resultxml= HttpUtils.HttpUrlPost(xml,AppId,key);
                     logger.info("-------返回值---------"+resultxml);
                     //插入表
                     Tqmtq tqmtq1 = new Tqmtq();
