@@ -23,11 +23,11 @@ public class BarcodeController extends BaseController {
 //    private static final String APP_ID = "wx731106a80c032cad";
 //    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
 //    张松强的测试
-//    private static final String APP_ID = "wx8c2a4c2289e10ffb";
-//    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    private static final String APP_ID = "wx8c2a4c2289e10ffb";
+    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
 //    正式
-    private static final String APP_ID = "wx9abc729e2b4637ee";
-    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
+//    private static final String APP_ID = "wx9abc729e2b4637ee";
+//    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
     @Autowired
     private BarcodeService barcodeService;
@@ -43,9 +43,11 @@ public class BarcodeController extends BaseController {
         String ua = request.getHeader("user-agent").toLowerCase();
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
+            session.setAttribute("gsdm", gsdm);
+            session.setAttribute("q", q);
             String url = HtmlUtils.getBasePath(request);
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
-                        + url + "scan/getOpenid&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "$" + q
+                        + url + "scan/getOpenid&" + "response_type=code&scope=snsapi_base&state=" +"state"
                         + "#wechat_redirect";
                 try {
                     response.sendRedirect(ul);
