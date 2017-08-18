@@ -29,11 +29,11 @@ public class ScanController extends BaseController {
 //    private static final String APP_ID = "wx731106a80c032cad";
 //    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
     //张松强的测试
-//    private static final String APP_ID = "wx8c2a4c2289e10ffb";
-//    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    private static final String APP_ID = "wx8c2a4c2289e10ffb";
+    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
 //    正式
-    private static final String APP_ID = "wx9abc729e2b4637ee";
-    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
+//    private static final String APP_ID = "wx9abc729e2b4637ee";
+//    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
     @Autowired
     private BarcodeService barcodeService;
@@ -126,9 +126,11 @@ public class ScanController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
-        int index = state.indexOf("$");
-        String gsdm = state.substring(0, index);
-        String q = state.substring(index+1, state.length());
+//        int index = state.indexOf("$");
+//        String gsdm = state.substring(0, index);
+//        String q = state.substring(index+1, state.length());
+        String gsdm = session.getAttribute("gsdm").toString();
+        String q = session.getAttribute("q").toString();
         logger.info("存入session时候的gsdm"+gsdm);
         logger.info("存入session时候的q"+q);
         Map result = barcodeService.sm(gsdm, q);
