@@ -9,9 +9,9 @@
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
 	<title>输入提取码</title>
-	<link rel="stylesheet" type="text/css" href="../css/common.css">
-	<link href="../css/mui.min.css" rel="stylesheet" />
-	<link href="../css/jquery.alerts.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link href="css/mui.min.css" rel="stylesheet" />
+	<link href="css/jquery.alerts.css" rel="stylesheet" />
 	<style type="text/css">
 		#code {
 			width: 60%; 
@@ -28,12 +28,12 @@
 </head>
 <body id="index" onload="load()">
 	<header>
-		<img src="../images/ldyx.png"/>
+		<img src="images/ldyx.png"/>
 	</header>
 	
 
 	<section class="data-tip">
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对绿地优鲜的支持,自2017年7月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对绿地优鲜的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。
 	</section>
 
 	<section>
@@ -55,17 +55,17 @@
 
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
-		<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
+		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
 	</footer>
 	
 
-	<script type="text/javascript" src="../js/jquery.min.js"></script>
-	<script type="text/javascript" src="../js/jquery-ui.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript">
 		jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
 	</script>
-	<script type="text/javascript" src="../js/jquery.alerts.js"></script>
-	<script src="../js/fpj.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/jquery.alerts.js"></script>
+	<script src="js/fpj.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
 
@@ -85,7 +85,10 @@
 		function load() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
 			$('#code').val('');
+
+			//alert(11);
 			$('#gsdm').val(gsdm);
+			//alert(gsdm);
 		}	
 		function tiqu() {
 			var tqm = $('#tqm').val();
@@ -134,6 +137,9 @@
 					}
 				}
 			);
+		}
+		function tiaozhuan() {
+			window.location.href = "bangzhu.html?time=" + new Date();
 		}
 	</script>
 </body>
