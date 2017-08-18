@@ -13,6 +13,9 @@ import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.XmlUtil;
 import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.commons.lang.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -288,6 +291,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setGfyhzh(gfyhzh);
                 jyxxsq.setOpenid(openid);
                 jyxxsq.setSjly(sjly);
+                jyxxsq.setTqm(tqm);
                 Map map = new HashMap<>();
                 map.put("tqm",jyxxsq.getTqm());
                 map.put("je",jyxxsq.getJshj());
@@ -315,6 +319,15 @@ public class BarcodeServiceImpl implements BarcodeService {
                     String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
                     String resultxml= HttpUtils.HttpUrlPost(xml,AppId,key);
                     logger.info("-------返回值---------"+resultxml);
+                    Document document = DocumentHelper.parseText(resultxml);
+                    Element root = document.getRootElement();
+                    List<Element> childElements = root.elements();
+                    Map xmlMap = new HashMap();
+                    for (Element child : childElements) {
+                        xmlMap.put(child.getName(),child.getText());
+                    }
+                    String returncode=(String)xmlMap.get("ReturnCode");
+                    String ReturnMessage=(String)xmlMap.get("ReturnMessage");
                     //插入表
                     Tqmtq tqmtq1 = new Tqmtq();
                     tqmtq1.setDdh(jyxxsq.getTqm());
