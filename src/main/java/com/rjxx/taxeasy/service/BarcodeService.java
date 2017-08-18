@@ -24,7 +24,7 @@ public interface BarcodeService {
     String pullInvioce(Map resultSjMap,String gsdm,String gfmc,
                        String gfsh,String email,String gfyh,
                        String gfyhzh,String gfdz,String gfdh,String tqm,
-                       String openid,String sjly ,String access_token);
+                       String openid,String sjly ,String access_token,String AppId,String key);
 
     Map sm(String gsdm, String q);
 
