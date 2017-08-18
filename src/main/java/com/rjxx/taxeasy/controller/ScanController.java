@@ -10,6 +10,7 @@ import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
+import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,16 +26,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/scan")
 public class ScanController extends BaseController {
-    //王亚辉的测试
-//    private static final String APP_ID = "wx731106a80c032cad";
-//    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
-    //张松强的测试
-    private static final String APP_ID = "wx8c2a4c2289e10ffb";
-    private static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
-//    正式
-//    private static final String APP_ID = "wx9abc729e2b4637ee";
-//    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
-
     @Autowired
     private BarcodeService barcodeService;
     @Autowired
@@ -117,8 +108,8 @@ public class ScanController extends BaseController {
 
     @RequestMapping(value = "/getOpenid")
     public void getOpenId(String state, String code) {
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
-                + SECRET + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
         String openid = resultObject.getString("openid");
