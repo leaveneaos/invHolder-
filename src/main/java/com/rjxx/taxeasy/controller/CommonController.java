@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.WxFpxx;
@@ -36,7 +37,9 @@ public class CommonController extends BaseController {
             WeixinUtils weixinUtils = new WeixinUtils();
             try {
                 //查询是否开具
+                logger.info("------orderNo---------"+orderNo);
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+                logger.info("--------数据---------"+ JSON.toJSONString(wxFpxx));
                 String status = barcodeService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
                 if(status!=null&& status.equals("开具中")){
                     //开具中对应的url
