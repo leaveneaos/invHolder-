@@ -181,7 +181,7 @@ public class BaseClController extends BaseController {
                 wxFpxx.setGsdm(gsxx.getGsdm());
                 wxFpxx.setQ(state);
                 wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                wxFpxx.setOrderNo(jylsh);
+                wxFpxx.setOrderNo(tqm);
                 logger.info("存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+"----openid"+wxFpxx.getOpenId()+"------订单编号"+wxFpxx.getOpenId());
                 try {
                     wxfpxxJpaDao.save(wxFpxx);
