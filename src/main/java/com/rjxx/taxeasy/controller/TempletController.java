@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.IMEIGenUtils;
+import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.StringUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
@@ -28,9 +29,9 @@ import java.util.*;
  * Created by zsq on 2017/7/25
  * 模板
  */
-@Controller
+@RestController
 @RequestMapping(value = "/templet")
-public class MissfreshController extends BaseController {
+public class TempletController extends BaseController {
     @Autowired
     private GsxxService gsxxservice;//公司信息
     @Autowired
@@ -68,7 +69,7 @@ public class MissfreshController extends BaseController {
     @Autowired
     private GetDataService getDataService;
     @Autowired
-    private DiscountDealUtil discountDealUtil;
+    private BarcodeService barcodeService;
 
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
@@ -109,16 +110,67 @@ public class MissfreshController extends BaseController {
     public void sendHtml(String q, Gsxx gsxx) throws IOException {
 
         Map<String, Object> result = new HashMap<String, Object>();
-
         try {
             /**
              * 如果q参数为空则跳转到发票提取页面
              */
-            if (null==q) {
+            if (null==q||q.equals("")) {
                 response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
                 return;
             }else {
 
+                Boolean b = RJCheckUtil.checkMD5(gsxx.getSecretKey(), q);
+                if(b){
+                    Map map = RJCheckUtil.decodeV2(q);
+                    String tqm = (String) map.get("tqm");
+                    String mdh = tqm.substring(4, 10);//门店号
+                    String jylsh = tqm.substring(12, 20);//交易流水号
+                    String opendid = (String) session.getAttribute("openid");
+                    String statsu = barcodeService.savaWxFpxx(tqm, gsxx.getGsdm(), q, opendid, jylsh);
+                    if(null==statsu||statsu.equals("-1")){
+                        logger.info("保存交易数据失败");
+                        request.getSession().setAttribute("msg", "保存交易数据失败，请重试");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+                    String visiterIP;
+                    if(request.getHeader("x-forwarded-for") == null){
+                        visiterIP = request.getRemoteAddr();/*访问者IP*/
+                    }else {
+                        visiterIP = request.getHeader("x-forwarded-for");
+                    }
+                    String llqxx = request.getHeader("User-Agent");
+                    Map reMap = barcodeService.redirct(tqm, gsxx.getGsdm(), opendid,visiterIP,llqxx);
+                    if(null!=reMap && reMap.get("num").equals("2")){
+                        //已经开过发票
+                        List<Kpls> list = (List) reMap.get("list");
+                        String pdfdzs = "";
+                        request.getSession().setAttribute("djh",list.get(0).getDjh());
+                        request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
+                        for (Kpls kpls2: list) {
+                            pdfdzs += kpls2.getPdfurl().replace(".pdf",",jpg") + ",";
+                        }
+                        if(pdfdzs.length() > 0){
+                            result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
+                            request.getSession().setAttribute("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
+                        }
+                        response.sendRedirect(request.getContextPath() + "/mbfxfp.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }else if(reMap.get("num").equals("6")){
+                        //正在开具
+                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }else if(reMap.get("num").equals("5")){
+                        //可以开具 订单确认
+                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+
+                }else {
+                    request.getSession().setAttribute("msg", "验签失败，请重试！");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
 
             }
         } catch (Exception e) {
@@ -208,12 +260,7 @@ public class MissfreshController extends BaseController {
 
             /*调用接口获取jyxxsq等信息*/
             Map resultMap = new HashMap();
-            String error=(String)resultMap.get("temp");
-             /*wait to do*/
-            if(error!=null){
-                result.put("error",error);
-                return result;
-            }
+
 
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
@@ -302,7 +349,11 @@ public class MissfreshController extends BaseController {
                             result.put("msg",resultMap.get("tmp"));
                             return result;
                         }
-
+                        String error=(String)resultMap.get("temp");
+                        if(error!=null){
+                            result.put("error",error);
+                            return result;
+                        }
                     }
                 }
 

@@ -1,6 +1,7 @@
 package com.rjxx.taxeasy.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.dao.*;
@@ -48,6 +49,18 @@ public class BarcodeServiceImpl implements BarcodeService {
     private TqmtqService tqmtqService;
     @Autowired
     private JylsService jylsService;
+
+    @Autowired
+    private  WxfpxxJpaDao wxfpxxJpaDao;
+
+    @Autowired
+    private GetDataService getDataService;
+
+    @Autowired
+    private FpjService fpjService;
+
+    @Autowired
+    private TqjlService tqjlService;
     @Override
     public Map sm(String gsdm, String q) {
         try {
@@ -338,8 +351,102 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     }
 
+    @Override
+    public  String savaWxFpxx(String tqm,String gsdm,String q,String openid,String orderNo){
+        String status="";
+        //微信写入数据库
+        WxFpxx wxFpxx = new WxFpxx();
+        wxFpxx.setTqm(tqm);
+        wxFpxx.setGsdm(gsdm);
+        wxFpxx.setQ(q);
+        wxFpxx.setOpenId(openid);
+        wxFpxx.setOrderNo(orderNo);
+        logger.info("存入数据提取码" + tqm + "----公司代码" + gsdm + "----q值" + q + "----openid" + openid + "------订单编号" + orderNo);
+        try {
+            wxfpxxJpaDao.save(wxFpxx);
+            status="0";
+        } catch (Exception e) {
+            logger.info("交易信息保存失败");
+            status ="-1";
+        }
+        return  status;
+    }
 
+    @Override
+    public Map redirct(String tqm,String gsdm,String opendid,String visiterIP,String llqxx){
+        Map resultMap = new HashMap();
+        Map parm = new HashMap<>();
+        parm.put("tqm", tqm);
+        parm.put("gsdm", gsdm);
+        Jyls jyls = jylsService.findOne(parm);
+        List<Kpls> list = jylsService.findByTqm(parm);
+        /**
+         * 代表申请已完成开票,跳转最终开票页面
+         */
+        if (list.size() > 0) {
+            if (opendid != null && !"null".equals(opendid)) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("djh", jyls.getDjh());
+                params.put("unionid", opendid);
+                Fpj fpj = fpjService.findOneByParams(params);
+                if (fpj == null) {
+                    fpj = new Fpj();
+                    fpj.setDjh(jyls.getDjh());
+                    fpj.setUnionid(opendid);
+                    fpj.setYxbz("1");
+                    fpj.setLrsj(new Date());
+                    fpj.setXgsj(new Date());
+                    fpjService.save(fpj);
+                }
+            }
+            resultMap.put("num", "2");
+            resultMap.put("list",list);
+            //已经开过票
+            Tqjl tqjl = new Tqjl();
+            tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
+            tqjl.setJlly("1");
+            tqjl.setTqsj(new Date());
+            tqjl.setIp(visiterIP);
+            tqjl.setLlqxx(llqxx);
+            tqjlService.save(tqjl);
+        } else if (null != jyls && null != jyls.getDjh()) {
 
+            resultMap.put("num", "6");
+        } else {
+            //跳转发票提取页面
+            Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
+            if(list.size()== 0 && null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
+                //需要调用接口获取开票信息
+                System.out.println("start+++++++++++");
+                //全家调用接口 解析xml
+                if(null!=gsdm && gsdm.equals("family")){
+                    resultMap=getDataService.getData(tqm,gsdm);
+                }
+                //绿地优鲜 解析json
+                else if(parm.get("gsdm").equals("ldyx")){
+                    System.out.println("ldyx+++++++++++++++++Strat");
+                    //第一次请求url获取token 验证
+                  Map  resultFirMap=getDataService.getldyxFirData(tqm,gsdm);
+                  if(null!=resultFirMap.get("accessToken")){
+                      Map  resultSecMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultFirMap.get("accessToken"));
+                      if(null!=resultSecMap.get("tmp")){
+                          resultMap.put("num","12");
+                          resultMap.put("msg",resultMap.get("tmp"));
+                      }
+                  }
+
+                }
+            }
+            List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+            List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+            List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+
+            resultMap.put("num","5");
+            resultMap.put("tqm",tqm);
+            resultMap.put("gsdm",gsdm);
+        }
+        return  resultMap;
+    }
     @Override
     public String checkStatus(String tqm, String gsdm) {
         try {
