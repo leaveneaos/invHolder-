@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
@@ -77,6 +78,10 @@ public class BaseClController extends BaseController {
     private GetDataService getDataService;
     @Autowired
     private DiscountDealUtil discountDealUtil;
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
+
+
     //正式
     public static final String APP_ID ="wx9abc729e2b4637ee";
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
@@ -169,6 +174,21 @@ public class BaseClController extends BaseController {
                 request.getSession().setAttribute("order", jylsh);
                 request.getSession().setAttribute(gsxx.getGsdm()+"tqm",tqm);
                 String opendid = (String) session.getAttribute("openid");
+
+                //微信写入数据库
+                WxFpxx wxFpxx = new WxFpxx();
+                wxFpxx.setTqm(tqm);
+                wxFpxx.setGsdm(gsxx.getGsdm());
+                wxFpxx.setQ(state);
+                wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                wxFpxx.setOrderNo(jylsh);
+                logger.info("存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+"----openid"+wxFpxx.getOpenId()+"------订单编号"+wxFpxx.getOpenId());
+                try {
+                    wxfpxxJpaDao.save(wxFpxx);
+                }catch (Exception e){
+                    logger.info("交易信息保存失败");
+                    return ;
+                }
                 Map map = new HashMap<>();
                 map.put("tqm", tqm);
                 map.put("gsdm", gsxx.getGsdm());
