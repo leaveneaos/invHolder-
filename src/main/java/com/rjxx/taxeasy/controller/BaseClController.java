@@ -172,6 +172,7 @@ public class BaseClController extends BaseController {
                 String jylsh = tqm.substring(12, 20);//交易流水号
                 request.getSession().setAttribute("orderNo", mdh);
                 request.getSession().setAttribute("order", jylsh);
+                request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute(gsxx.getGsdm()+"tqm",tqm);
                 String opendid = (String) session.getAttribute("openid");
 
