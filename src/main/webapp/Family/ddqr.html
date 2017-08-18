@@ -72,8 +72,7 @@
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
             if(isAlipay){
-                var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;
-                window.location.assign(encodeURI(myurl));
+                window.location.href = "../Family/ddmx.html?time=" + new Date();
             }else if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + price;
