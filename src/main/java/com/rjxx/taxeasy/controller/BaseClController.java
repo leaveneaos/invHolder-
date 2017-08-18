@@ -635,6 +635,7 @@ public class BaseClController extends BaseController {
         result.put("orderTime",request.getSession().getAttribute("orderTime"));
         result.put("orderNo",request.getSession().getAttribute("orderNo"));
         result.put("order",request.getSession().getAttribute("order"));
+        result.put("tqm",request.getSession().getAttribute("tqm"));
         return  result;
     }
 }
