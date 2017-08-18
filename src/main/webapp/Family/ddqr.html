@@ -64,28 +64,40 @@
         	)
 	    })
         function sure() {
-            var orderNo = $('#orderNo').text(),
-                order = $('#order').text(),
+            var storeNo = $('#orderNo').text(),
+                orderNo = $('#order').text(),
                 orderTime = $('#orderTime').text(),
                 price = $('#price').text();
-            $.post(
-                "../common/isBrowser",
-                {
-                    "storeNo" : orderNo,
-                    "orderNo" : order,
-                    "orderTime" : orderTime,
-                    "price" : price
-                },
-                function(data) {
-                    if (data.num == 0) {
-                        window.location.href = data.redirectUrl + new Date();
-                    }else if(data.num == 1) {
-                        window.location.href = "../Family/ddmx.html?time=" + new Date();
-                    }else if(data.num == 2) {
-                        alert(data.msg);
-                    }
-                }
-            );
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            if(isAlipay){
+                var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;
+                window.location.assign(encodeURI(myurl));
+            }else if(isWeixin){
+                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + price;
+            }else{
+                redirect("请用微信或支付宝扫码");
+            }
+//            $.post(
+//                "../common/isBrowser",
+//                {
+//                    "storeNo" : orderNo,
+//                    "orderNo" : order,
+//                    "orderTime" : orderTime,
+//                    "price" : price
+//                },
+//                function(data) {
+//                    if (data.num == 0) {
+//                        window.location.href = data.redirectUrl + new Date();
+//                    }else if(data.num == 1) {
+//                        window.location.href = "../Family/ddmx.html?time=" + new Date();
+//                    }else if(data.num == 2) {
+//                        alert(data.msg);
+//                    }
+//                }
+//            );
         }
 	</script>
 </body>
