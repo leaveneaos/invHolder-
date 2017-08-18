@@ -40,6 +40,7 @@
 		        </ul>
 			</div>
 			<div class="bottom">
+				<input type="hidden" id="tqmhidden">
 				<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
 			</div>
 		</div>
@@ -60,6 +61,7 @@
 		            $('#order').html(data.order);
 		            $('#orderTime').html(data.orderTime);
 		            $('#price').html(data.price);
+                    $('#tqmhidden').html(data.tqm);
 	        	}
         	)
 	    })
@@ -68,13 +70,14 @@
                 orderNo = $('#order').text(),
                 orderTime = $('#orderTime').text(),
                 price = $('#price').text();
+                tqm=$('#tqmhidden').text();
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
             if(isAlipay){
                 window.location.href = "../Family/ddmx.html?time=" + new Date();
             }else if(isWeixin){
-                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + price;
             }else{
                 redirect("请用微信或支付宝扫码");
