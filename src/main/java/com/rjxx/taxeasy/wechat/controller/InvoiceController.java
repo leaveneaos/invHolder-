@@ -85,7 +85,9 @@ public class InvoiceController extends BaseController {
             session.setAttribute("username", user);
             session.setAttribute("password", password);
             return ResultUtil.success();
-        } else {
+        } else if("-1".equals(status)){
+            return ResultUtil.error("请使用非管理员账户登录");
+        }else {
             return ResultUtil.error("用户名不存在或密码错误");
         }
     }

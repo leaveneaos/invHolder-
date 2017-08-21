@@ -169,6 +169,11 @@ public class InvoiceService {
         if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
             String pass = yhJpaDao.findYhmmByDlyhid(username);
             if (password.equals(pass)) {
+                Yh yh = yhJpaDao.findOne(yhJpaDao.findIdByDlyhid(username));
+                String roleids = yh.getRoleids();
+                if("1".equals(roleids)){
+                    return "-1";
+                }
                 return "1";
             } else {
                 return "0";
