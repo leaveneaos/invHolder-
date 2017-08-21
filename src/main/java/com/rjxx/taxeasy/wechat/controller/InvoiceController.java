@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.PasswordUtils;
+import com.rjxx.utils.weixin.WeiXinConstants;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,13 +31,6 @@ public class InvoiceController extends BaseController {
 
     @Autowired
     private InvoiceService invoiceService;
-
-    //王亚辉的测试
-//    private static final String APP_ID = "wx731106a80c032cad";
-//    private static final String SECRET = "4a025904d0d4e16a928f65950b1b60e3";
-//    正式
-    private static final String APP_ID = "wx9abc729e2b4637ee";
-    private static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     @ApiOperation(value = "接收抬头")
@@ -105,7 +99,7 @@ public class InvoiceController extends BaseController {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "wechat/getOpenid&" + "response_type=code&scope=snsapi_base&state=" + "yjkp"
                         + "#wechat_redirect";
                 try {
@@ -134,8 +128,8 @@ public class InvoiceController extends BaseController {
 
     @RequestMapping(value = "/getOpenid")
     public void getOpenId(String state, String code) {
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
-                + SECRET + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
         logger.error("result="+resultObject.toJSONString());
