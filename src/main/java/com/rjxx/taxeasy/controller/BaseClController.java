@@ -176,13 +176,18 @@ public class BaseClController extends BaseController {
                 request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute(gsxx.getGsdm()+"tqm",tqm);
                 String opendid = (String) session.getAttribute("openid");
-
+                String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
                 //微信写入数据库
                 WxFpxx wxFpxx = new WxFpxx();
                 wxFpxx.setTqm(tqm);
                 wxFpxx.setGsdm(gsxx.getGsdm());
                 wxFpxx.setQ(state);
-                wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                //微信支付宝
+                if(AlipayUtils.isAlipayBrowser(request)){
+                    wxFpxx.setOpenId(userId);
+                }else {
+                    wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                }
                 wxFpxx.setOrderNo(tqm);
                 logger.info("存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+"----openid"+wxFpxx.getOpenId()+"------订单编号"+wxFpxx.getOpenId());
                 try {

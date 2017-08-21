@@ -73,8 +73,8 @@
                 {
                     "kplsh":kplsh
 				},
-                function (json) {
-						alert(json);
+                function (obj) {
+                    	var json=eval("("+obj.kpls+")");
                         $('#xfmc').html(json.xfmc);
                         $('#gfmc').html(json.gfmc);
                         $('#fpje').html(json.jshj);
