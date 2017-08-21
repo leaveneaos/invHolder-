@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.*;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -86,8 +87,8 @@ public class BaseClController extends BaseController {
     //public static final String APP_ID ="wx9abc729e2b4637ee";
     //public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
     //沙箱测试
-    public static final String APP_ID ="wx8c2a4c2289e10ffb";
-    public static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
+    //public static final String APP_ID ="wx8c2a4c2289e10ffb";
+    //static final String SECRET = "ad706ca065a0d384414ae3b568e030fb";
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
 
 
@@ -103,15 +104,15 @@ public class BaseClController extends BaseController {
         request.getSession().setAttribute("gsdm","Family");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+            gsxx.setWxappid(WeiXinConstants.APP_ID);
+            gsxx.setWxsecret(WeiXinConstants.APP_SECRET);
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + APP_ID + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                              + url + "family/getWx&" + "response_type=code&scope=snsapi_base&state=" + str + "#wechat_redirect";
                 response.sendRedirect(ul);
                 logger.info("转发的url为"+ul);
@@ -290,11 +291,11 @@ public class BaseClController extends BaseController {
         params.put("gsdm","Family");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx.getWxappid() == null || gsxx.getWxsecret() ==null){
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+            gsxx.setWxappid(WeiXinConstants.APP_ID);
+            gsxx.setWxsecret(WeiXinConstants.APP_SECRET);
         }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + APP_ID + "&secret="
-                       + SECRET + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                       + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         logger.info("微信请求url+++"+turl);
         HttpClient client = new DefaultHttpClient();
         HttpGet get  = new HttpGet(turl);
