@@ -69,7 +69,12 @@
 					<Amount>${jymxsq.spje?c!}</Amount>
 					<DeductAmount></DeductAmount>
 					<TaxRate>${jymxsq.spsl?c!}</TaxRate>
-					<TaxAmount>${jymxsq.spse?c!}</TaxAmount>
+					<TaxAmount>
+						<#if (jymxsq.spse)??>
+						${jymxsq.spse?c!}
+						<#else>
+						</#if>
+					</TaxAmount>
 					<MxTotalAmount>${jymxsq.jshj?c!}</MxTotalAmount>
 					<PolicyMark>${jymxsq.yhzcbs!}</PolicyMark>
 					<TaxRateMark>${jymxsq.lslbz!}</TaxRateMark>

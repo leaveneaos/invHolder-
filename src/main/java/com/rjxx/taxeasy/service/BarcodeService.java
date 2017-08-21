@@ -24,11 +24,20 @@ public interface BarcodeService {
     String pullInvioce(Map resultSjMap,String gsdm,String gfmc,
                        String gfsh,String email,String gfyh,
                        String gfyhzh,String gfdz,String gfdh,String tqm,
-                       String openid,String sjly ,String access_token);
+                       String openid,String sjly ,String access_token,String AppId,String key);
 
     Map sm(String gsdm, String q);
 
     String getSpxx(String gsdm, String q);
 
     String checkStatus(String tqm,String gsdm);
+
+    /**
+     * 扫码保存数据库
+     */
+    String savaWxFpxx(String tqm,String gsdm,String q,String openid,String orderNo);
+    /**
+     *封装跳转方法
+     */
+    Map redirct(String tqm,String gsdm,String opendid,String visiterIP,String llqxx);
 }

@@ -1,17 +1,22 @@
 package com.rjxx.taxeasy.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.XmlUtil;
 import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.commons.lang.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +53,18 @@ public class BarcodeServiceImpl implements BarcodeService {
     private TqmtqService tqmtqService;
     @Autowired
     private JylsService jylsService;
+
+    @Autowired
+    private  WxfpxxJpaDao wxfpxxJpaDao;
+
+    @Autowired
+    private GetDataService getDataService;
+
+    @Autowired
+    private FpjService fpjService;
+
+    @Autowired
+    private TqjlService tqjlService;
     @Override
     public Map sm(String gsdm, String q) {
         try {
@@ -172,7 +189,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setGfdh(gfdh);
                 jyxxsq.setGfyhzh(gfyhzh);
                 jyxxsq.setGfyh(gfyh);
-                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ NumberUtil.getRandomLetter());
                 jyxxsq.setFpzldm("12");
                 jyxxsq.setFpczlxdm("11");
                 jyxxsq.setSffsyj("1");
@@ -256,7 +273,8 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Override
     public String pullInvioce(Map resultSjMap,String gsdm,  String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly,String access_token) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
+                              String openid,String sjly,String access_token,String AppId,String key) {
         WeixinUtils weixinUtils = new WeixinUtils();
             try {
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
@@ -274,6 +292,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setGfyhzh(gfyhzh);
                 jyxxsq.setOpenid(openid);
                 jyxxsq.setSjly(sjly);
+                jyxxsq.setTqm(tqm);
                 Map map = new HashMap<>();
                 map.put("tqm",jyxxsq.getTqm());
                 map.put("je",jyxxsq.getJshj());
@@ -299,8 +318,17 @@ public class BarcodeServiceImpl implements BarcodeService {
                 //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
                 try {
                     String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-                    String resultxml= HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+                    String resultxml= HttpUtils.HttpUrlPost(xml,AppId,key);
                     logger.info("-------返回值---------"+resultxml);
+                    Document document = DocumentHelper.parseText(resultxml);
+                    Element root = document.getRootElement();
+                    List<Element> childElements = root.elements();
+                    Map xmlMap = new HashMap();
+                    for (Element child : childElements) {
+                        xmlMap.put(child.getName(),child.getText());
+                    }
+                    String returncode=(String)xmlMap.get("ReturnCode");
+                    String ReturnMessage=(String)xmlMap.get("ReturnMessage");
                     //插入表
                     Tqmtq tqmtq1 = new Tqmtq();
                     tqmtq1.setDdh(jyxxsq.getTqm());
@@ -337,8 +365,102 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     }
 
+    @Override
+    public  String savaWxFpxx(String tqm,String gsdm,String q,String openid,String orderNo){
+        String status="";
+        //微信写入数据库
+        WxFpxx wxFpxx = new WxFpxx();
+        wxFpxx.setTqm(tqm);
+        wxFpxx.setGsdm(gsdm);
+        wxFpxx.setQ(q);
+        wxFpxx.setOpenId(openid);
+        wxFpxx.setOrderNo(orderNo);
+        logger.info("存入数据提取码" + tqm + "----公司代码" + gsdm + "----q值" + q + "----openid" + openid + "------订单编号" + orderNo);
+        try {
+            wxfpxxJpaDao.save(wxFpxx);
+            status="0";
+        } catch (Exception e) {
+            logger.info("交易信息保存失败");
+            status ="-1";
+        }
+        return  status;
+    }
 
+    @Override
+    public Map redirct(String tqm,String gsdm,String opendid,String visiterIP,String llqxx){
+        Map resultMap = new HashMap();
+        Map parm = new HashMap<>();
+        parm.put("tqm", tqm);
+        parm.put("gsdm", gsdm);
+        Jyls jyls = jylsService.findOne(parm);
+        List<Kpls> list = jylsService.findByTqm(parm);
+        /**
+         * 代表申请已完成开票,跳转最终开票页面
+         */
+        if (list.size() > 0) {
+            if (opendid != null && !"null".equals(opendid)) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("djh", jyls.getDjh());
+                params.put("unionid", opendid);
+                Fpj fpj = fpjService.findOneByParams(params);
+                if (fpj == null) {
+                    fpj = new Fpj();
+                    fpj.setDjh(jyls.getDjh());
+                    fpj.setUnionid(opendid);
+                    fpj.setYxbz("1");
+                    fpj.setLrsj(new Date());
+                    fpj.setXgsj(new Date());
+                    fpjService.save(fpj);
+                }
+            }
+            resultMap.put("num", "2");
+            resultMap.put("list",list);
+            //已经开过票
+            Tqjl tqjl = new Tqjl();
+            tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
+            tqjl.setJlly("1");
+            tqjl.setTqsj(new Date());
+            tqjl.setIp(visiterIP);
+            tqjl.setLlqxx(llqxx);
+            tqjlService.save(tqjl);
+        } else if (null != jyls && null != jyls.getDjh()) {
 
+            resultMap.put("num", "6");
+        } else {
+            //跳转发票提取页面
+            Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
+            if(list.size()== 0 && null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
+                //需要调用接口获取开票信息
+                System.out.println("start+++++++++++");
+                //全家调用接口 解析xml
+                if(null!=gsdm && gsdm.equals("family")){
+                    resultMap=getDataService.getData(tqm,gsdm);
+                }
+                //绿地优鲜 解析json
+                else if(parm.get("gsdm").equals("ldyx")){
+                    System.out.println("ldyx+++++++++++++++++Strat");
+                    //第一次请求url获取token 验证
+                  Map  resultFirMap=getDataService.getldyxFirData(tqm,gsdm);
+                  if(null!=resultFirMap.get("accessToken")){
+                      Map  resultSecMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultFirMap.get("accessToken"));
+                      if(null!=resultSecMap.get("tmp")){
+                          resultMap.put("num","12");
+                          resultMap.put("msg",resultMap.get("tmp"));
+                      }
+                  }
+
+                }
+            }
+            List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+            List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+            List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+
+            resultMap.put("num","5");
+            resultMap.put("tqm",tqm);
+            resultMap.put("gsdm",gsdm);
+        }
+        return  resultMap;
+    }
     @Override
     public String checkStatus(String tqm, String gsdm) {
         try {

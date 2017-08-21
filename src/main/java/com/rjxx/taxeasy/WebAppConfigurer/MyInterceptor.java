@@ -31,7 +31,7 @@ public class MyInterceptor implements HandlerInterceptor {
 
                     logger.info("-----初始化支付宝授权----end------");
                     logger.info("-----初始化URL----end-----"+request.getServletPath());
-                    return true;
+                    return false;
                 }
             }
         }

@@ -172,6 +172,7 @@ public class BaseClController extends BaseController {
                 String jylsh = tqm.substring(12, 20);//交易流水号
                 request.getSession().setAttribute("orderNo", mdh);
                 request.getSession().setAttribute("order", jylsh);
+                request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute(gsxx.getGsdm()+"tqm",tqm);
                 String opendid = (String) session.getAttribute("openid");
 
@@ -181,7 +182,7 @@ public class BaseClController extends BaseController {
                 wxFpxx.setGsdm(gsxx.getGsdm());
                 wxFpxx.setQ(state);
                 wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                wxFpxx.setOrderNo(jylsh);
+                wxFpxx.setOrderNo(tqm);
                 logger.info("存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+"----openid"+wxFpxx.getOpenId()+"------订单编号"+wxFpxx.getOpenId());
                 try {
                     wxfpxxJpaDao.save(wxFpxx);
@@ -634,6 +635,7 @@ public class BaseClController extends BaseController {
         result.put("orderTime",request.getSession().getAttribute("orderTime"));
         result.put("orderNo",request.getSession().getAttribute("orderNo"));
         result.put("order",request.getSession().getAttribute("order"));
+        result.put("tqm",request.getSession().getAttribute("tqm"));
         return  result;
     }
 }
