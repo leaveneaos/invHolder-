@@ -78,16 +78,17 @@
                     //alert(obj.kpls);
                     	//var json=eval("("+obj.kpls+")");
                     	//alert(json);
-						alert(obj.xfmc);
-                        $("#xfmc").html(obj.xfmc);
-                        $("#gfmc").html(obj.gfmc);
-                        $("#fpje").html(obj.jshj);
-                        $("#kprq").html(obj.kprq);
-                        $("#xfsh").html(obj.xfsh);
-                        $("#fpdm").html(obj.fpdm);
-                        $("#fphm").html(obj.fphm);
-                        $("#jym").html(obj.jym);
-                        $("#pdf").attr("href",obj.pdfurl);
+                    var data = jQuery.parseJSON(obj);
+						alert(data.xfmc);
+                        $("#xfmc").html(data.xfmc);
+                        $("#gfmc").html(data.gfmc);
+                        $("#fpje").html(data.jshj);
+                        $("#kprq").html(data.kprq);
+                        $("#xfsh").html(data.xfsh);
+                        $("#fpdm").html(data.fpdm);
+                        $("#fphm").html(data.fphm);
+                        $("#jym").html(data.jym);
+                        $("#pdf").attr("href",data.pdfurl);
                 }
             )
         })
