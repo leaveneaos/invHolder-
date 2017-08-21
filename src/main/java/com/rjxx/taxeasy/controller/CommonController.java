@@ -146,8 +146,18 @@ public class CommonController extends BaseController {
         Map kplsMap = new HashMap();
         kplsMap.put("kplsh",kplsh);
         Kpls kpls = kplsService.findOneByParams(kplsMap);
+        Map map = new HashMap();
+        map.put("gfmc",kpls.getGfmc());
+        map.put("xfmc",kpls.getXfmc());
+        map.put("jshj",kpls.getJshj());
+        map.put("kprq",kpls.getKprq());
+        map.put("xfsh",kpls.getXfsh());
+        map.put("fpdm",kpls.getFpdm());
+        map.put("fphm",kpls.getFphm());
+        map.put("jym", kpls.getJym());
+        map.put("pdfurl",kpls.getPdfurl());
         //resultMap.put("kpls",kpls);
-        logger.info("取到的数据——————"+JSON.toJSONString(kpls));
-        return  JSON.toJSONString(kpls);
+        logger.info("取到的数据——————"+JSON.toJSONString(map));
+        return  JSON.toJSONString(map);
     }
 }
