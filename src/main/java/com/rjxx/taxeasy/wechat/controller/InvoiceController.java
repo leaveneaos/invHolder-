@@ -94,6 +94,7 @@ public class InvoiceController extends BaseController {
     @RequestMapping
     public String index() {
         String ua = request.getHeader("user-agent").toLowerCase();
+        logger.info("--------APPID------"+WeiXinConstants.APP_ID );
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
