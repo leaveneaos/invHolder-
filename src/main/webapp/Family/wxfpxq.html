@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="css/fpxq.css">
 	<style>
 		.middle li.fl {
-			width: 28%;
+			width: 30%;
 		}
 	</style>
 </head>
@@ -63,10 +63,17 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
-       /* $(function () {
+		var encrypt_code =location.href.split('?')[1].split('&')[0].split('=')[1];;
+		var card_id = location.href.split('?')[1].split('&&')[1].split('=')[1];
+		alert(encrypt_code);
+		alert(card_id);
+       $(function () {
             $.post(
-                "../family/fpsession",
-                {},
+                "../common/wxfpxq",
+                {
+                    encrypt_code:encrypt_code,
+                    card_id:card_id
+				},
                 function (data) {
                         var kplslist=data.kplsList;
 
@@ -74,16 +81,14 @@
                         $('#gfmc').html(kplslist[0].gfmc);
                         $('#fpje').html(kplslist[0].jshj);
                         $('#kprq').html(kplslist[0].kprq);
+                        $('#xfsh').html(kplslist[0].xfsh);
                         $('#fpdm').html(kplslist[0].fpdm);
                         $('#fphm').html(kplslist[0].fphm);
+                        $('#jym').html(kplslist[0].jym);
                         $("#pdf").attr("href",kplslist[0].pdfurl);
                 }
             )
         })
-
-        $(".zfb").click(function () {
-            window.location = "../syncAlipay?_t=" + (new Date()).getTime();
-        });*/
 
 
 	</script>
