@@ -65,7 +65,7 @@
 	<script type="text/javascript">
 		var kplsh =location.href.split('?')[1].split('&')[0].split('=')[1];;
 		var card_id = location.href.split('?')[1].split('&&')[1].split('=')[1];
-		alert(encrypt_code);
+		alert(kplsh);
 		alert(card_id);
        $(function () {
             $.post(
@@ -75,6 +75,7 @@
 				},
                 function (data) {
 					var kplslist=data.kpls;
+					alert(kplslist);
                     var json=eval("(" + kplslist + ")");
 
                         $('#xfmc').html(json.xfmc);

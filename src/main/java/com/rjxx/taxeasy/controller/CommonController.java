@@ -135,6 +135,7 @@ public class CommonController extends BaseController {
     @RequestMapping(value = "/wxfpxq")
     @ResponseBody
     public Map wxfpxq(String kplsh ) throws IOException {
+        logger.info("收到请求-----"+kplsh);
         Map resultMap = new HashMap();
         if(null == kplsh ){
             request.getSession().setAttribute("msg", "发票跳转失败了，请重试!");
