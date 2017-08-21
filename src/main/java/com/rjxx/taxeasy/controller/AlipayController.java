@@ -63,6 +63,7 @@ public class AlipayController extends BaseController {
             AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(alipaySystemOauthTokenRequest);
             session.setAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN, oauthTokenResponse.getAccessToken());//访问令牌
             session.setAttribute(AlipayConstants.ALIPAY_USER_ID, oauthTokenResponse.getUserId());//用户id
+            logger.info("--------Aipay_User_Id-----------"+oauthTokenResponse.getUserId());
             session.setAttribute("refresh_token",oauthTokenResponse.getRefreshToken());//刷新令牌
             session.setAttribute("expires_in",oauthTokenResponse.getExpiresIn());//过期时间
             session.setAttribute("re_expires_in",oauthTokenResponse.getReExpiresIn());//刷新令牌时间
