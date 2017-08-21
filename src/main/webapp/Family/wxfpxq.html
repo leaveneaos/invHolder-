@@ -71,21 +71,21 @@
             $.post(
                 "../common/wxfpxq",
                 {
-                    kplsh:kplsh
+                    "kplsh":kplsh
 				},
                 function (data) {
-                        var kplslist=data.kpls;
-                    var kpls=eval("(" + kplslist + ")");
+					var kplslist=data.kpls;
+                    var json=eval("(" + kplslist + ")");
 
-                        $('#xfmc').html(kpls.xfmc);
-                        $('#gfmc').html(kpls.gfmc);
-                        $('#fpje').html(kpls.jshj);
-                        $('#kprq').html(kpls.kprq);
-                        $('#xfsh').html(kpls.xfsh);
-                        $('#fpdm').html(kpls.fpdm);
-                        $('#fphm').html(kpls.fphm);
-                        $('#jym').html(kpls.jym);
-                        $("#pdf").attr("href",kpls.pdfurl);
+                        $('#xfmc').html(json.xfmc);
+                        $('#gfmc').html(json.gfmc);
+                        $('#fpje').html(json.jshj);
+                        $('#kprq').html(json.kprq);
+                        $('#xfsh').html(json.xfsh);
+                        $('#fpdm').html(json.fpdm);
+                        $('#fphm').html(json.fphm);
+                        $('#jym').html(json.jym);
+                        $("#pdf").attr("href",json.pdfurl);
                 }
             )
         })
