@@ -74,8 +74,8 @@
                     kplsh:kplsh
 				},
                 function (data) {
-                        var kpls=data.kpls;
-                    var kpls=eval("(" + kpls + ")");
+                        var kplslist=data.kpls;
+                    var kpls=eval("(" + kplslist + ")");
 
                         $('#xfmc').html(kpls.xfmc);
                         $('#gfmc').html(kpls.gfmc);
