@@ -63,7 +63,7 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
-		var encrypt_code =location.href.split('?')[1].split('&')[0].split('=')[1];;
+		var kplsh =location.href.split('?')[1].split('&')[0].split('=')[1];;
 		var card_id = location.href.split('?')[1].split('&&')[1].split('=')[1];
 		alert(encrypt_code);
 		alert(card_id);
@@ -71,8 +71,7 @@
             $.post(
                 "../common/wxfpxq",
                 {
-                    encrypt_code:encrypt_code,
-                    card_id:card_id
+                    kplsh:kplsh
 				},
                 function (data) {
                         var kplslist=data.kplsList;

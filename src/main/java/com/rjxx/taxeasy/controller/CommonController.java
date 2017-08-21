@@ -93,35 +93,18 @@ public class CommonController extends BaseController {
     @ResponseBody
     public void fpInfoPageUrl(String encrypt_code ,String card_id) throws IOException {
         if(null == encrypt_code || null == card_id ){
-            logger.info("发票详情跳转失败");
             request.getSession().setAttribute("msg", "发票跳转失败了，请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return ;
         }
-        else {
-            //跳转页面
-            logger.info("拿到加密code----------"+encrypt_code);
-            logger.info("拿到卡券模板id----------"+card_id);
-            response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?encrypt_code="+encrypt_code+"&&card_id="+card_id+"&&_t=" + System.currentTimeMillis());
-            return;
-        }
-    }
-
-    @RequestMapping(value = "/wxfpxq")
-    @ResponseBody
-    public Map wxfpxq(String encrypt_code ,String card_id) throws IOException {
-        Map resultMap = new HashMap();
-        if(null == encrypt_code || null == card_id ){
-            request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
-        }
-
+        logger.info("拿到加密code----------"+encrypt_code);
+        logger.info("拿到卡券模板id----------"+card_id);
+        //WeixinUtils weixinUtils = new WeixinUtils();
         String code = weixinUtils.decode(encrypt_code);
         if(null == code ){
             request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
+            return ;
         }
         logger.info("拿到解码code----------"+code);
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByCode(code);
@@ -134,16 +117,36 @@ public class CommonController extends BaseController {
         Map kplsMap = new HashMap();
         kplsMap.put("gsdm",wxFpxx.getGsdm());
         kplsMap.put("jylsh",jyxxsq.getJylsh());
-        List<Kpls> kplsList = kplsService.findAll(kplsMap);
-        logger.info("开票流水"+JSON.toJSONString(kplsList));
-        if(kplsList.size() > 0 ){
-            logger.info("获取数据成功！");
-            resultMap.put("kplsList",kplsList);
-        }else{
+        List<Kpls> kpls = kplsService.findAll(kplsMap);
+        logger.info("开票流水"+JSON.toJSONString(kpls));
+        if(kpls.size() > 0 ){
+            Integer kplsh=kpls.get(0).getKplsh();
+            response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?kbs="+kplsh+"&&_t=" + System.currentTimeMillis());
+            return;
+        }
+        else
+        {
             request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return;
+        }
+
+    }
+    @RequestMapping(value = "/wxfpxq")
+    @ResponseBody
+    public Map wxfpxq(String kplsh ) throws IOException {
+        Map resultMap = new HashMap();
+        if(null == kplsh ){
+            request.getSession().setAttribute("msg", "发票跳转失败了，请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return null;
         }
+        logger.info("拿到kplsh----------"+kplsh);
+        Map kplsMap = new HashMap();
+        kplsMap.put("kplsh",kplsh);
+        Kpls kpls = kplsService.findOneByParams(kplsMap);
+        resultMap.put("kplsList",kpls);
+        logger.info("取到的数据——————"+resultMap.toString());
         return  resultMap;
     }
 }
