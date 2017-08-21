@@ -37,6 +37,8 @@ public class CommonController extends BaseController {
     private JyxxsqService jyxxsqService;
 
     @Autowired
+    private WeixinUtils weixinUtils;
+    @Autowired
     private KplsService kplsService;
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
@@ -44,9 +46,9 @@ public class CommonController extends BaseController {
     public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price){
         String redirectUrl ="";
         Map resultMap = new HashMap();
-        if(WeixinUtils.isWeiXinBrowser(request)){
+        if(weixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
-            WeixinUtils weixinUtils = new WeixinUtils();
+            //WeixinUtils weixinUtils = new WeixinUtils();
             try {
                 //查询是否开具
                 logger.info("------orderNo---------"+orderNo);
@@ -97,7 +99,7 @@ public class CommonController extends BaseController {
         }
         logger.info("拿到加密code----------"+encrypt_code);
         logger.info("拿到订单编号----------"+card_id);
-        WeixinUtils weixinUtils = new WeixinUtils();
+        //WeixinUtils weixinUtils = new WeixinUtils();
         String code = weixinUtils.decode(encrypt_code);
         if(null == code ){
             request.getSession().setAttribute("msg", "获取数据失败了，请重试!");

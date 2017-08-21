@@ -59,6 +59,8 @@ public class WeiXinController extends BaseController {
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
 
+    @Autowired
+    private WeixinUtils weixinUtils;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
@@ -86,7 +88,7 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public void postWeiXin() throws Exception {
         System.out.println("微信发送的post请求");
-        WeixinUtils weixinUtils = new WeixinUtils();
+        //WeixinUtils weixinUtils = new WeixinUtils();
         Map<String, String> requestMap = null;
         try {
             System.out.println("微信推送事件");
@@ -308,11 +310,11 @@ public class WeiXinController extends BaseController {
         logger.info("serialorder++++++++"+serialorder);
 
         //判断是否是微信浏览
-       if (!WeixinUtils.isWeiXinBrowser(request)) {
-            request.getSession().setAttribute("msg", "请使用微信进行该操作");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
-        }
+//       if (!WeixinUtils.isWeiXinBrowser(request)) {
+//            request.getSession().setAttribute("msg", "请使用微信进行该操作");
+//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//            return null;
+//        }
         //主动查询授权状态
         WeixinUtils weixinUtils = new WeixinUtils();
         String  access_token = (String)weixinUtils.hqtk().get("access_token");

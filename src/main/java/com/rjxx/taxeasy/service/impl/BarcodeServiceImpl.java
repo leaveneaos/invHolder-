@@ -65,6 +65,9 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Autowired
     private TqjlService tqjlService;
+
+    @Autowired
+    private  WeixinUtils weixinUtils;
     @Override
     public Map sm(String gsdm, String q) {
         try {
@@ -275,7 +278,7 @@ public class BarcodeServiceImpl implements BarcodeService {
     public String pullInvioce(Map resultSjMap,String gsdm,  String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
                               String openid,String sjly,String access_token,String AppId,String key) {
-        WeixinUtils weixinUtils = new WeixinUtils();
+        //WeixinUtils weixinUtils = new WeixinUtils();
             try {
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                 List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
