@@ -81,6 +81,8 @@ public class BaseClController extends BaseController {
     private DiscountDealUtil discountDealUtil;
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
+    @Autowired
+    private GsxxService gsxxService;
 
 
     //正式
@@ -544,7 +546,10 @@ public class BaseClController extends BaseController {
         }
         try{
            String xml=GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-           String resultxml=HttpUtils.HttpUrlPost(xml,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+            Map parms=new HashMap();
+            parms.put("gsdm",jyxxsq.getGsdm());
+            Gsxx gsxx=gsxxService.findOneByParams(parms);
+            String resultxml=HttpUtils.HttpUrlPost(xml,gsxx.getAppKey(),gsxx.getSecretKey());
             Document document = DocumentHelper.parseText(resultxml);
             Element root = document.getRootElement();
             List<Element> childElements = root.elements();
