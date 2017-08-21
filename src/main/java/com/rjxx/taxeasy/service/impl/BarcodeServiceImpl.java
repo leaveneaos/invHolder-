@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.RJCheckUtil;
@@ -188,7 +189,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 jyxxsq.setGfdh(gfdh);
                 jyxxsq.setGfyhzh(gfyhzh);
                 jyxxsq.setGfyh(gfyh);
-                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ NumberUtil.getRandomLetter());
                 jyxxsq.setFpzldm("12");
                 jyxxsq.setFpczlxdm("11");
                 jyxxsq.setSffsyj("1");
