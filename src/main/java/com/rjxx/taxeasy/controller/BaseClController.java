@@ -260,9 +260,15 @@ public class BaseClController extends BaseController {
                     resultMap = getDataService.getData(tqm, gsxx.getGsdm());
                     List<Jyxxsq> jyxxsqList = (List) resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
-                    String error = (String) resultMap.get("temp");
-                    if (error != null) {
-                        result.put("error", error);
+                    String error = (String) resultMap.get("error");
+                    if(error!=null){
+                        request.getSession().setAttribute("msg", error);
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+                    String temp = (String) resultMap.get("temp");
+                    if (temp != null) {
+                        result.put("error", temp);
                     }
                     Jyxxsq jyxxsq = jyxxsqList.get(0);
                     request.getSession().setAttribute("price", jyxxsq.getJshj());
