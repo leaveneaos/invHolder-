@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.SpvoService;
+import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.XmlUtil;
@@ -61,8 +62,8 @@ public class InvoiceService {
                 Skp skp = skpJpaDao.findOneById(skpid);
                 String gsdm = yhJpaDao.findGsdmByDlyhid(username);
                 Jyxxsq jyxxsq = new Jyxxsq();
-                jyxxsq.setDdh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+                jyxxsq.setDdh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ NumberUtil.getRandomLetter());
+                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+NumberUtil.getRandomLetter());
                 jyxxsq.setGsdm(gsdm);
                 jyxxsq.setKpddm(skp.getKpddm());
                 jyxxsq.setXfid(xfid);
