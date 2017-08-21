@@ -74,17 +74,18 @@
                     kplsh:kplsh
 				},
                 function (data) {
-                        var kplslist=data.kplsList;
+                        var kpls=data.kpls;
+                    var kpls=eval("(" + kpls + ")");
 
-                        $('#xfmc').html(kplslist[0].xfmc);
-                        $('#gfmc').html(kplslist[0].gfmc);
-                        $('#fpje').html(kplslist[0].jshj);
-                        $('#kprq').html(kplslist[0].kprq);
-                        $('#xfsh').html(kplslist[0].xfsh);
-                        $('#fpdm').html(kplslist[0].fpdm);
-                        $('#fphm').html(kplslist[0].fphm);
-                        $('#jym').html(kplslist[0].jym);
-                        $("#pdf").attr("href",kplslist[0].pdfurl);
+                        $('#xfmc').html(kpls.xfmc);
+                        $('#gfmc').html(kpls.gfmc);
+                        $('#fpje').html(kpls.jshj);
+                        $('#kprq').html(kpls.kprq);
+                        $('#xfsh').html(kpls.xfsh);
+                        $('#fpdm').html(kpls.fpdm);
+                        $('#fphm').html(kpls.fphm);
+                        $('#jym').html(kpls.jym);
+                        $("#pdf").attr("href",kpls.pdfurl);
                 }
             )
         })
