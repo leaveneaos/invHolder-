@@ -73,11 +73,7 @@
                 {
                     "kplsh":kplsh
 				},
-                function (data) {
-					var kplslist=data.kpls;
-					alert(kplslist);
-                    var json=eval("(" + kplslist + ")");
-
+                function (json) {
                         $('#xfmc').html(json.xfmc);
                         $('#gfmc').html(json.gfmc);
                         $('#fpje').html(json.jshj);
