@@ -145,7 +145,7 @@ public class CommonController extends BaseController {
         Map kplsMap = new HashMap();
         kplsMap.put("kplsh",kplsh);
         Kpls kpls = kplsService.findOneByParams(kplsMap);
-        resultMap.put("kplsList",kpls);
+        resultMap.put("kpls",kpls);
         logger.info("取到的数据——————"+resultMap.toString());
         return  resultMap;
     }
