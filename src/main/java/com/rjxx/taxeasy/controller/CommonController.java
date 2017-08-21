@@ -134,7 +134,7 @@ public class CommonController extends BaseController {
     }
     @RequestMapping(value = "/wxfpxq")
     @ResponseBody
-    public Map wxfpxq(String kplsh ) throws IOException {
+    public String wxfpxq(String kplsh ) throws IOException {
         logger.info("收到请求-----"+kplsh);
         Map resultMap = new HashMap();
         if(null == kplsh ){
@@ -147,7 +147,7 @@ public class CommonController extends BaseController {
         kplsMap.put("kplsh",kplsh);
         Kpls kpls = kplsService.findOneByParams(kplsMap);
         resultMap.put("kpls",kpls);
-        logger.info("取到的数据——————"+resultMap.toString());
-        return  resultMap;
+        logger.info("取到的数据——————"+JSON.toJSONString(resultMap));
+        return  JSON.toJSONString(resultMap);
     }
 }
