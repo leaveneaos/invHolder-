@@ -146,8 +146,8 @@ public class CommonController extends BaseController {
         Map kplsMap = new HashMap();
         kplsMap.put("kplsh",kplsh);
         Kpls kpls = kplsService.findOneByParams(kplsMap);
-        resultMap.put("kpls",kpls);
-        logger.info("取到的数据——————"+JSON.toJSONString(resultMap));
-        return  JSON.toJSONString(resultMap);
+        //resultMap.put("kpls",kpls);
+        logger.info("取到的数据——————"+JSON.toJSONString(kpls));
+        return  JSON.toJSONString(kpls);
     }
 }
