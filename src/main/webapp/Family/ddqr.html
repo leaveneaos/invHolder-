@@ -55,15 +55,15 @@
 		var msg=null;
 		$(function () {
             $.post(
-                    "../dzfp_sqj/getmsg",
+                    "../family/getmsg",
                     {},
                     function(data) {
                         if(null!=data){
-                            if(null!=data.msg&&""!=data.msg){
+                            if(null!=data.error&&""!=data.error){
                                //$('#msg').html("");
                                //$('#msg').html(data.msg);
-                                alert(data.msg);
-                                msg=data.msg;
+                                alert(data.error);
+                                msg=data.error;
                             }
                         }
                     });

@@ -61,6 +61,8 @@ public class WeiXinController extends BaseController {
 
     @Autowired
     private WeixinUtils weixinUtils;
+    @Autowired
+    private  GsxxService gsxxService;
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
@@ -140,6 +142,9 @@ public class WeiXinController extends BaseController {
                             logger.info("开始开票");
                             //全家进行开票
                             if(null!=gsdm&&gsdm.equals("Family")){
+                                Map parms=new HashMap();
+                                parms.put("gsdm",gsdm);
+                                Gsxx gsxx=gsxxService.findOneByParams(parms);
                                 logger.info("进入全家开票");
                                 //拉取数据
                                 Map   resultSjMap = getDataService.getData(tqm, "Family");
@@ -147,7 +152,7 @@ public class WeiXinController extends BaseController {
                                 String   status = barcodeService.pullInvioce(resultSjMap,gsdm,(String)resultMap.get("title"),
                                         (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
                                         ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),
-                                        tqm,openid,"4",access_token,"RJe115dfb8f3f8","bd79b66f566b5e2de07f1807c56b2469");
+                                        tqm,openid,"4",access_token,gsxx.getAppKey(),gsxx.getSecretKey());
                                 if ("-1".equals(status)) {
                                     logger.info("开具失败");
                                 } else if ("-2".equals(status)) {

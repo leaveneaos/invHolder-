@@ -269,14 +269,14 @@ public class BaseClController extends BaseController {
                     List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
                     String error = (String) resultMap.get("error");
                     if(error!=null){
-                        request.getSession().setAttribute("msg", error);
+                        request.getSession().setAttribute("error", error);
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
                         result.put("error", error);
                         return;
                     }
                     String temp = (String) resultMap.get("temp");
                     if (temp != null) {
-                        request.getSession().setAttribute("msg", temp);
+                        request.getSession().setAttribute("error", temp);
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
                         result.put("error", temp);
                         return;
@@ -657,6 +657,7 @@ public class BaseClController extends BaseController {
         result.put("orderNo",request.getSession().getAttribute("orderNo"));
         result.put("order",request.getSession().getAttribute("order"));
         result.put("tqm",request.getSession().getAttribute("tqm"));
+        result.put("error",request.getSession().getAttribute("error"));
         return  result;
     }
 }
