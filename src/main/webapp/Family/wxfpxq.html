@@ -9,7 +9,10 @@
 	<link rel="stylesheet" type="text/css" href="css/fpxq.css">
 	<style>
 		.middle li.fl {
-			width: 30%;
+			width: 35%;
+		}
+		.middle li.fr {
+			width: 57%;
 		}
 	</style>
 </head>
@@ -64,36 +67,34 @@
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
 		var kplsh =location.href.split('?')[1].split('&')[0].split('=')[1];;
-		var card_id = location.href.split('?')[1].split('&&')[1].split('=')[1];
-		alert(kplsh);
-		alert(card_id);
-       $(function () {
+		//var card_id = location.href.split('?')[1].split('&&')[1].split('=')[1];
+      $(function () {
             $.post(
                 "../common/wxfpxq",
                 {
                     "kplsh":kplsh
 				},
                 function (obj) {
-                    alert(obj);
-                    //alert(obj.kpls);
-                    	//var json=eval("("+obj.kpls+")");
-                    	//alert(json);
                     var data = jQuery.parseJSON(obj);
-						alert(data.xfmc);
                         $("#xfmc").html(data.xfmc);
                         $("#gfmc").html(data.gfmc);
-                        $("#fpje").html(data.jshj);
+                        //$("#fpje").html(data.jshj);
                         $("#kprq").html(data.kprq);
                         $("#xfsh").html(data.xfsh);
                         $("#fpdm").html(data.fpdm);
                         $("#fphm").html(data.fphm);
                         $("#jym").html(data.jym);
                         $("#pdf").attr("href",data.pdfurl);
+                    RetainedDecimalPlacesNF( $("#fpje").html(data.jshj));
                 }
             )
         })
-
-
+        //金额千位分隔2
+        function RetainedDecimalPlacesNF(num) {
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source[0];
+        };
 	</script>
 </body>
 </html>
