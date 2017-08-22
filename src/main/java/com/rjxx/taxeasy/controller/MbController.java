@@ -449,26 +449,16 @@ public class MbController extends BaseController {
             result.put("msg","该订单正在开票!");
             return result;
         }
+        Map gsMap = new HashMap();
+        gsMap.put("gsdm",jyxxsq.getGsdm());
+        Gsxx oneByGsdm = gsxxservice.findOneByGsdm(gsMap);
         try{
             String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-            String resultxml=HttpUtils.HttpUrlPost(xml,"RJcb0cb4d18ce7","73e235a15ee5cb022691625a50edae3b");
+            logger.info("secretKey------"+oneByGsdm.getSecretKey());
+            logger.info("appKey------"+oneByGsdm.getAppKey());
+            String resultxml=HttpUtils.HttpUrlPost(xml,oneByGsdm.getSecretKey(),oneByGsdm.getAppKey());
             logger.info("-------返回值---------"+resultxml);
-           /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
-            //复制一个新的list用于生成处理表
-            List<Jymxsq> jymxsqTempList = new ArrayList<Jymxsq>();
-            jymxsqTempList = BeanConvertUtils.convertList(jymxsqList, Jymxsq.class);
-            jymxsqClList = discountDealUtil.dealDiscount(jymxsqTempList, 0d, jyxxsq.getJshj(),jyxxsq.getHsbz());
-            Integer sqlsh=jyxxsqService.saveJyxxsq(jyxxsq, jymxsqList,jymxsqClList,jyzfmxList);
-            List jyxxsqlist=new ArrayList();
-            jyxxsqlist.add(jyxxsq);
-            List resultList=null;
-                if(jyxxsq.getGsdm().equals("Family")){
-                    resultList =  fpclService.skdzfp(jyxxsqlist,"03");
-                }else if(jyxxsq.getGsdm().equals("ldyx")){
-                    resultList =  fpclService.zjkp(jyxxsqlist,"01");
-                }
-                request.getSession().setAttribute("serialorder",resultList.get(0));
-                result.put("msg", "1");*/
+
         }catch (Exception e){
             e.printStackTrace();
         }
