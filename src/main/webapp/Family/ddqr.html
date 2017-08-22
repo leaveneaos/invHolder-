@@ -52,25 +52,42 @@
 
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
+		var msg=null;
 		$(function () {
-	        $.post(
-	        	"../family/qrxxsession",
-	        	{}, 
-	        	function (data) {
-		            $('#orderNo').html(data.orderNo);
-		            $('#order').html(data.order);
-		            $('#orderTime').html(data.orderTime);
-		            $('#price').html(data.price);
-                    $('#tqmhidden').html(data.tqm);
-	        	}
-        	)
-	    })
+            $.post(
+                    "../dzfp_sqj/getmsg",
+                    {},
+                    function(data) {
+                        if(null!=data){
+                            if(null!=data.msg&&""!=data.msg){
+                               //$('#msg').html("");
+                               //$('#msg').html(data.msg);
+                                alert(data.msg);
+                                msg=data.msg;
+                            }
+                        }
+                    });
+            if(msg==null){
+                $.post(
+                    "../family/qrxxsession",
+                    {},
+                    function (data) {
+                        $('#orderNo').html(data.orderNo);
+                        $('#order').html(data.order);
+                        $('#orderTime').html(data.orderTime);
+                        $('#price').html(data.price);
+                        $('#tqmhidden').html(data.tqm);
+                    }
+                )
+			}
+	    });
         function sure() {
             var storeNo = $('#orderNo').text(),
                 orderNo = $('#order').text(),
                 orderTime = $('#orderTime').text(),
                 price = $('#price').text();
              var   tqm=$('#tqmhidden').text();
+             if(tqm!=null){
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
@@ -100,6 +117,9 @@
 //                    }
 //                }
 //            );
+             }else{
+                 alert("数据异常！不能提交！");
+			 }
         }
 	</script>
 </body>

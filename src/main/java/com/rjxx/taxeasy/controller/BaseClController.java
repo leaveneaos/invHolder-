@@ -270,12 +270,16 @@ public class BaseClController extends BaseController {
                     String error = (String) resultMap.get("error");
                     if(error!=null){
                         request.getSession().setAttribute("msg", error);
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                        result.put("error", error);
                         return;
                     }
                     String temp = (String) resultMap.get("temp");
                     if (temp != null) {
+                        request.getSession().setAttribute("msg", temp);
+                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
                         result.put("error", temp);
+                        return;
                     }
                     Jyxxsq jyxxsq = jyxxsqList.get(0);
                     request.getSession().setAttribute("price", jyxxsq.getJshj());
