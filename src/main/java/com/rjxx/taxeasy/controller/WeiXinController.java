@@ -88,7 +88,7 @@ public class WeiXinController extends BaseController {
     }
 
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
-    public void postWeiXin() throws Exception {
+    public String postWeiXin() throws Exception {
         System.out.println("微信发送的post请求");
         //WeixinUtils weixinUtils = new WeixinUtils();
         Map<String, String> requestMap = null;
@@ -118,25 +118,25 @@ public class WeiXinController extends BaseController {
                     logger.info("拿到公司代码"+gsdm);
                     if(null==gsdm && gsdm.equals("")){
                         logger.info("公司代码为空！");
-                        return;
+                        return "";
                     }
                     String q = oneByOrderNo.getQ();
                     logger.info("拿到的q参数为"+q);
                     if (null==q && q.equals("")){
                         logger.info("参数q为空");
-                        return;
+                        return "";
                     }
                     String tqm = oneByOrderNo.getTqm();
                     logger.info("拿到的提取码为"+tqm);
                     if (null==tqm && tqm.equals("")){
                         logger.info("提取码为空");
-                        return;
+                        return "";
                     }
                     //主动获取授权状态，成功会返回数据
                     Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
                     if(null==resultMap){
                         logger.info("订单编号为"+SuccOrderId+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
-                        return ;
+                        return "";
                     }else {
                             System.out.println("开始封装数据并进行开票"+resultMap.toString());
                             logger.info("开始开票");
@@ -161,7 +161,7 @@ public class WeiXinController extends BaseController {
                                     logger.info("开具成功");
                                     System.out.println("开票成功");
                                 }
-                                return;
+                                return "";
                             }
                             if(null!=gsdm && gsdm.equals("chamate")){
                                 logger.info("进入一茶一坐开票处理");
@@ -176,7 +176,7 @@ public class WeiXinController extends BaseController {
                                     logger.info("开具成功");
                                     System.out.println("开票成功");
                                 }
-                                return;
+                                return "";
                             }
 
                     }
@@ -190,7 +190,7 @@ public class WeiXinController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ;
+        return "" ;
     }
 
         public Map<String, String> parseXml(HttpServletRequest request) throws Exception {
