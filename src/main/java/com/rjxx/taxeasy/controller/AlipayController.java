@@ -71,8 +71,8 @@ public class AlipayController extends BaseController {
             String returnUrl = new String(Base64.decodeBase64(state), "UTF-8");
             String redirectUrl = HtmlUtils.finishedUrl(request, returnUrl);
             logger.info(JSON.toJSONString(oauthTokenResponse)+"-------end application---------");
-            response.sendRedirect(request.getContextPath()+redirectUrl);
-            logger.info("-------URL---------"+request.getContextPath()+redirectUrl+"-------URL---------");
+            response.sendRedirect(redirectUrl);
+            logger.info("-------URL---------"+redirectUrl+"-------URL---------");
             return null;
         } catch (Exception e) {
             //处理异常
