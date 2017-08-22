@@ -161,12 +161,12 @@ public class MbController extends BaseController {
         response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+state+"&&_t="+System.currentTimeMillis() );
         return;
     }
-    @RequestMapping(value = "/bangzhu")
+    /*@RequestMapping(value = "/bangzhu")
     @ResponseBody
     public void bangzhu() throws IOException {
         response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
         return;
-    }
+    }*/
 
     public static void main(String[] args) {
         String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
