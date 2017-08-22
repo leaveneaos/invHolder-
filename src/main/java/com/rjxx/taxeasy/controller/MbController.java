@@ -451,12 +451,12 @@ public class MbController extends BaseController {
         }
         Map gsMap = new HashMap();
         gsMap.put("gsdm",jyxxsq.getGsdm());
-        Gsxx oneByGsdm = gsxxservice.findOneByGsdm(gsMap);
+        Gsxx gsxx = gsxxservice.findOneByGsdm(gsMap);
         try{
             String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-            logger.info("secretKey------"+oneByGsdm.getSecretKey());
-            logger.info("appKey------"+oneByGsdm.getAppKey());
-            String resultxml=HttpUtils.HttpUrlPost(xml,oneByGsdm.getSecretKey(),oneByGsdm.getAppKey());
+            logger.info("secretKey------"+gsxx.getSecretKey());
+            logger.info("appKey------"+gsxx.getAppKey());
+            String resultxml=HttpUtils.HttpUrlPost(xml,gsxx.getAppKey(),gsxx.getSecretKey());
             logger.info("-------返回值---------"+resultxml);
 
         }catch (Exception e){
