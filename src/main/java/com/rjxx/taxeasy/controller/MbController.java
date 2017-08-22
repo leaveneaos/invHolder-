@@ -332,9 +332,12 @@ public class MbController extends BaseController {
         Map<String, Object> result = new HashMap<String, Object>();
         List<Jymxsq> jymxsqList = (List)request.getSession().getAttribute(gsdm+tqm+"jymxsqList");
         List<Jyzfmx> jyzfmxList = (List)request.getSession().getAttribute(gsdm+tqm+"jyzfmxList");
-        Double zje = (Double) request.getSession().getAttribute(gsdm+tqm+"je");
-        Double bkpje = 0.00;
-        Double sjkpje = 0.00;
+        Double zjedb = (Double) request.getSession().getAttribute(gsdm+tqm+"je");
+
+        BigDecimal zje = new BigDecimal(zjedb.toString());
+        logger.info("总金额"+zje);
+        BigDecimal bkpje = new BigDecimal("0");
+        BigDecimal sjkpje = new BigDecimal("0");
         if(null!=jyzfmxList){
             for (Jyzfmx jyzfmx2 : jyzfmxList){
                 if(jymxsqList.get(0).getDdh().equals(jyzfmx2.getDdh())
@@ -357,14 +360,16 @@ public class MbController extends BaseController {
                         ||jyzfmx2.getZffsDm().equals("Z"))
                         ){
                     System.out.println("不开票支付金额为"+jyzfmx2.getZfje());
-                        bkpje+=jyzfmx2.getZfje();
+                        bkpje=bkpje.add(new BigDecimal(jyzfmx2.getZfje().toString()));
                 }
                 System.out.println("不开票金额为"+bkpje);
             }
-              sjkpje = zje - bkpje;
+              sjkpje = zje.subtract(bkpje);
             System.out.println("实际开票金额"+sjkpje);
         }
-        if(sjkpje==0.00){
+        int b = sjkpje.compareTo(new BigDecimal("0"));//
+        if(b == 0){
+            logger.info("不开票金额为0");
             result.put("num","12");
         }
         request.getSession().setAttribute(gsdm+tqm+"sjkpje",sjkpje);
