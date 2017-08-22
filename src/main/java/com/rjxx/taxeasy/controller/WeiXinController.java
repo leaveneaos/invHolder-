@@ -341,12 +341,12 @@ public class WeiXinController extends BaseController {
                 return  null;
             }
 
-           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls,access_token);
-            if(null==openid){
-                request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                return null;
-            }
+//           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls,access_token);
+//            if(null==openid){
+//                request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
+//                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                return null;
+//            }
         }
 
         if(null==openid){
