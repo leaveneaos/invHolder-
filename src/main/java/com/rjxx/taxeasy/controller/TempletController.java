@@ -5,6 +5,8 @@ import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.IMEIGenUtils;
 import com.rjxx.utils.RJCheckUtil;
@@ -162,7 +164,7 @@ public class TempletController extends BaseController {
                         return;
                     }else if(reMap.get("num").equals("5")){
                         //可以开具 订单确认
-                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/QR/confirm.html?_t=" + System.currentTimeMillis());
                         return;
                     }
 
@@ -260,7 +262,6 @@ public class TempletController extends BaseController {
 
             /*调用接口获取jyxxsq等信息*/
             Map resultMap = new HashMap();
-
 
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
@@ -498,6 +499,14 @@ public class TempletController extends BaseController {
         jyxxsq.setGfdh(dh.trim());
         jyxxsq.setGfyh(khh.trim());
         jyxxsq.setGfyhzh(yhzh.trim());
+        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
+        if(AlipayUtils.isAlipayBrowser(request)){
+            jyxxsq.setOpenid(userId);
+            jyxxsq.setSjly("5");//数据来源
+        }else{
+            jyxxsq.setOpenid(openid);
+            jyxxsq.setSjly("4");//数据来源
+        }
         Map map = new HashMap<>();
         map.put("tqm",jyxxsq.getTqm());
         map.put("je",jyxxsq.getJshj());
@@ -516,22 +525,7 @@ public class TempletController extends BaseController {
             String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
             String resultxml=HttpUtils.HttpUrlPost(xml,"RJcb0cb4d18ce7","73e235a15ee5cb022691625a50edae3b");
             logger.info("-------返回值---------"+resultxml);
-           /*List<JymxsqCl> jymxsqClList = new ArrayList<JymxsqCl>();
-            //复制一个新的list用于生成处理表
-            List<Jymxsq> jymxsqTempList = new ArrayList<Jymxsq>();
-            jymxsqTempList = BeanConvertUtils.convertList(jymxsqList, Jymxsq.class);
-            jymxsqClList = discountDealUtil.dealDiscount(jymxsqTempList, 0d, jyxxsq.getJshj(),jyxxsq.getHsbz());
-            Integer sqlsh=jyxxsqService.saveJyxxsq(jyxxsq, jymxsqList,jymxsqClList,jyzfmxList);
-            List jyxxsqlist=new ArrayList();
-            jyxxsqlist.add(jyxxsq);
-            List resultList=null;
-                if(jyxxsq.getGsdm().equals("Family")){
-                    resultList =  fpclService.skdzfp(jyxxsqlist,"03");
-                }else if(jyxxsq.getGsdm().equals("ldyx")){
-                    resultList =  fpclService.zjkp(jyxxsqlist,"01");
-                }
-                request.getSession().setAttribute("serialorder",resultList.get(0));
-                result.put("msg", "1");*/
+
         }catch (Exception e){
             e.printStackTrace();
         }
