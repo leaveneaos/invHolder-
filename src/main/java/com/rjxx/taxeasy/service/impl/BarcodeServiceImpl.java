@@ -306,16 +306,18 @@ public class BarcodeServiceImpl implements BarcodeService {
                     logger.info("该提取码已提交过申请!");
                     String reason="该提取码已提交过申请!";
                     //拒绝开票
-                    String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                    logger.info("拒绝开票状态"+str);
+                    //String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                    //logger.info("拒绝开票状态"+str);
+                    logger.info("进入拒绝开票，但是没有调用");
                     return "-2";
                 }
                 if(jyls1 != null){
                     logger.info("该订单正在开票!");
                     String reason="该订单正在开票!";
                     //拒绝开票
-                    String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                    logger.info("拒绝开票状态"+str);
+                    //String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                    //logger.info("拒绝开票状态"+str);
+                    logger.info("进入拒绝开票，但是没有调用");
                     return "-2";
                 }
                 //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
