@@ -334,28 +334,38 @@ public class BarcodeServiceImpl implements BarcodeService {
                     }
                     String returncode=(String)xmlMap.get("ReturnCode");
                     String ReturnMessage=(String)xmlMap.get("ReturnMessage");
-                    //插入表
-                    Tqmtq tqmtq1 = new Tqmtq();
-                    tqmtq1.setDdh(jyxxsq.getTqm());
-                    tqmtq1.setLrsj(new Date());
-                    tqmtq1.setZje(Double.valueOf(jyxxsq.getJshj()));
-                    tqmtq1.setGfmc(gfmc);
-                    tqmtq1.setNsrsbh(gfsh);
-                    tqmtq1.setDz(gfdz);
-                    tqmtq1.setDh(gfdh);
-                    tqmtq1.setKhh(gfyh);
-                    tqmtq1.setKhhzh(gfyhzh);
-                    tqmtq1.setFpzt("0");
-                    tqmtq1.setYxbz("1");
-                    tqmtq1.setGfemail(email);
-                    tqmtq1.setGsdm(jyxxsq.getGsdm());
-                    /*String llqxx = request.getHeader("User-Agent");
-                    tqmtq1.setLlqxx(llqxx);*/
-                    if(openid != null && !"null".equals(openid)){
-                        tqmtq1.setOpenid(openid);
-                    }
-                    tqmtqService.save(tqmtq1);
+                    if(returncode.equals("9999")){
+                       //返回错误 拒绝开票
+                        logger.info("进入拒绝开票-----");
+                        String reason="错误信息为"+ReturnMessage;
+                        String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        return "-2";
+                    }else {
+                        logger.info("-------开票成功返回值---------" + resultxml);
 
+                        //插入表
+                        Tqmtq tqmtq1 = new Tqmtq();
+                        tqmtq1.setDdh(jyxxsq.getTqm());
+                        tqmtq1.setLrsj(new Date());
+                        tqmtq1.setZje(Double.valueOf(jyxxsq.getJshj()));
+                        tqmtq1.setGfmc(gfmc);
+                        tqmtq1.setNsrsbh(gfsh);
+                        tqmtq1.setDz(gfdz);
+                        tqmtq1.setDh(gfdh);
+                        tqmtq1.setKhh(gfyh);
+                        tqmtq1.setKhhzh(gfyhzh);
+                        tqmtq1.setFpzt("0");
+                        tqmtq1.setYxbz("1");
+                        tqmtq1.setGfemail(email);
+                        tqmtq1.setGsdm(jyxxsq.getGsdm());
+                        /*String llqxx = request.getHeader("User-Agent");
+                        tqmtq1.setLlqxx(llqxx);*/
+                        if(openid != null && !"null".equals(openid)){
+                            tqmtq1.setOpenid(openid);
+                        }
+                        tqmtqService.save(tqmtq1);
+                        return  "0";
+                        }
 
                 } catch (Exception e) {
                     e.printStackTrace();
