@@ -112,7 +112,7 @@ public class WeiXinController extends BaseController {
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
-                response.sendRedirect(request.getContextPath() + "/handle?SuccOrderId="+SuccOrderId+
+                response.sendRedirect("http://fpjtest.datarj.com/einv/handle?SuccOrderId="+SuccOrderId+
                         "&FailOrderId="+FailOrderId+"&openid="+openid);
                 logger.info("直接返回");
                 return "";
@@ -129,7 +129,7 @@ public class WeiXinController extends BaseController {
      * @param FailOrderId  失败
      * @param openid
      */
-    @RequestMapping(value = "/handle")
+    @RequestMapping(value = "/handle",method = RequestMethod.POST)
     @ResponseBody
     public void handleBusiness(String SuccOrderId,String FailOrderId,String  openid){
         logger.info("进入业务逻辑处理----------------SuccOrderId===="+SuccOrderId
