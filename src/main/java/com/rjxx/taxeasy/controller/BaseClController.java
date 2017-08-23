@@ -268,6 +268,7 @@ public class BaseClController extends BaseController {
                     List<Jyxxsq> jyxxsqList = (List) resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
                     String error = (String) resultMap.get("error");
+                    logger.info("---------错误信息------------"+error);
                     if(error!=null){
                         request.getSession().setAttribute("error", error);
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
@@ -643,7 +644,7 @@ public class BaseClController extends BaseController {
         result.put("spmc",request.getSession().getAttribute("spmc"));
         return  result;
     }
-    @RequestMapping(value = "/qrxxsession")//确认信息
+    @RequestMapping(value = "/qrxxsession" ,method = RequestMethod.POST)//确认信息
     @ResponseBody
     public Map xgsession(){
         Map<String, Object> result = new HashMap<String, Object>();

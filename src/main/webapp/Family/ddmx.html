@@ -55,8 +55,8 @@
     				for(var i = 0; i < items.length; i++){
 
     				    zje += items[i].spje/1 + items[i].spse/1;
-
-    					html+='<div class="title"><span class="name">'+ items[i].spmc+'</span><span class="num">'+ items[i].sps+'</span><span class="price">'+ (items[i].spje/1+items[i].spse/1)+"</span></div>";
+                        var num=items[i].sps==null?"0":items[i].sps;
+    					html+='<div class="title"><span class="name">'+ items[i].spmc+'</span><span class="num">'+num+'</span><span class="price">'+ (items[i].spje/1+items[i].spse/1)+"</span></div>";
     				}
     				$('.totPrice').html(zje);
     				//在页面显示数据
