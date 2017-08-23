@@ -89,11 +89,13 @@ public class WeiXinController extends BaseController {
             logger.info("isSuccess:" + echo);
         }
     }
-
+    /**
+     * 微信callback
+     */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
         System.out.println("微信发送的post请求");
-        logger.info("全局变量计数器-----"+counter);
+        //logger.info("全局变量计数器-----"+counter);
         //WeixinUtils weixinUtils = new WeixinUtils();
         Map<String, String> requestMap = null;
         try {
@@ -102,104 +104,18 @@ public class WeiXinController extends BaseController {
             requestMap = parseXml(request);
             System.out.println("接收微信返回xml变map"+requestMap.toString());
 
-
-
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
-                counter=counter+1;
-                logger.info("计数器进行计算是第"+counter+"次微信post请求");
+               // counter=counter+1;
+               // logger.info("计数器进行计算是第"+counter+"次微信post请求");
                 logger.info("进入开票处理----");
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
-
-                logger.info("拿到的opedid是---------"+openid);
-                String  access_token = (String)weixinUtils.hqtk().get("access_token");
-                System.out.println("传递的token----"+access_token);
-                request.setAttribute("access_token",access_token);
-                if(null!=SuccOrderId &&!SuccOrderId.equals("")){
-                    System.out.println("拿到成功的订单id了");
-                    WxFpxx oneByOrderNo = wxfpxxJpaDao.findOneByOrderNo(SuccOrderId, openid);
-                    String gsdm = oneByOrderNo.getGsdm();
-                    logger.info("拿到公司代码"+gsdm);
-                    if(null==gsdm && gsdm.equals("")){
-                        logger.info("公司代码为空！");
-                        return "";
-                    }
-                    String q = oneByOrderNo.getQ();
-                    logger.info("拿到的q参数为"+q);
-                    if (null==q && q.equals("")){
-                        logger.info("参数q为空");
-                        return "";
-                    }
-                    String tqm = oneByOrderNo.getTqm();
-                    logger.info("拿到的提取码为"+tqm);
-                    if (null==tqm && tqm.equals("")){
-                        logger.info("提取码为空");
-                        return "";
-                    }
-                    //主动获取授权状态，成功会返回数据
-                    Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
-                    if(null==resultMap){
-                        logger.info("订单编号为"+SuccOrderId+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
-                        return "";
-                    }else {
-                            System.out.println("开始封装数据并进行开票"+resultMap.toString());
-                            logger.info("开始开票");
-                            //全家进行开票
-                            if(null!=gsdm&&gsdm.equals("Family")){
-                                if(counter>=2){
-                                    logger.info("计数器计算出第"+counter+"次，请求，返回空字符串给微信-----");
-                                   return  "";
-                                }else {
-                                    logger.info("计数器计算出第一次--"+counter+"进行业务逻辑处理");
-                                    Map parms = new HashMap();
-                                    parms.put("gsdm", gsdm);
-                                    Gsxx gsxx = gsxxService.findOneByParams(parms);
-                                    logger.info("进入全家开票");
-                                    //拉取数据
-                                    Map resultSjMap = getDataService.getData(tqm, "Family");
-                                    logger.info("全家拉取数据成功--------开始开票");
-                                    String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
-                                            (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
-                                            , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                            tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
-                                    if ("-1".equals(status)) {
-                                        logger.info("开具失败");
-                                    } else if ("-2".equals(status)) {
-                                        logger.info("开具失败，拒绝开票");
-                                    } else {
-                                        logger.info("开具成功");
-                                        System.out.println("开票成功");
-                                    }
-                                    counter=0;
-                                    logger.info("业务员处理成功之后,计数器重新清零-----"+counter);
-                                    return "";
-                                }
-                            }
-                            if(null!=gsdm && gsdm.equals("chamate")){
-                                logger.info("进入一茶一坐开票处理");
-                                String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
-                                        (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
-                                        ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid,"4");
-                                if ("-1".equals(status)) {
-                                    logger.info("开具失败");
-                                } else if ("0".equals(status)) {
-                                   logger.info("所需数据为空");
-                                }else {
-                                    logger.info("开具成功");
-                                    System.out.println("开票成功");
-                                }
-                                return "";
-                            }
-
-                    }
-                }
-                if(null!=FailOrderId && !FailOrderId.equals("")){
-                    System.out.println("失败的订单id"+FailOrderId);
-                    String re = "微信授权失败,请重新开票";
-                    String msg= weixinUtils.jujuekp(FailOrderId,re,access_token);
-                }
+                response.sendRedirect(request.getContextPath() + "/handle?SuccOrderId="+SuccOrderId+
+                        "&FailOrderId="+FailOrderId+"&openid="+openid);
+                logger.info("直接返回");
+                return "";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,7 +123,106 @@ public class WeiXinController extends BaseController {
         return "" ;
     }
 
-        public Map<String, String> parseXml(HttpServletRequest request) throws Exception {
+    /**
+     * 微信业务逻辑处理
+     * @param SuccOrderId  成功的订单编号
+     * @param FailOrderId  失败
+     * @param openid
+     */
+    @RequestMapping(value = "/handle")
+    @ResponseBody
+    public void handleBusiness(String SuccOrderId,String FailOrderId,String  openid){
+        logger.info("进入业务逻辑处理----------------SuccOrderId===="+SuccOrderId
+                +"------FailOrderId===="+FailOrderId+"---------openid======"+openid);
+
+        String  access_token = (String)weixinUtils.hqtk().get("access_token");
+        System.out.println("传递的token----"+access_token);
+        request.setAttribute("access_token",access_token);
+        if(null!=SuccOrderId &&!SuccOrderId.equals("")){
+            System.out.println("拿到成功的订单id了");
+            WxFpxx oneByOrderNo = wxfpxxJpaDao.findOneByOrderNo(SuccOrderId, openid);
+            String gsdm = oneByOrderNo.getGsdm();
+            logger.info("拿到公司代码"+gsdm);
+            if(null==gsdm && gsdm.equals("")){
+                logger.info("公司代码为空！");
+                return ;
+            }
+            String q = oneByOrderNo.getQ();
+            logger.info("拿到的q参数为"+q);
+            if (null==q && q.equals("")){
+                logger.info("参数q为空");
+                return ;
+            }
+            String tqm = oneByOrderNo.getTqm();
+            logger.info("拿到的提取码为"+tqm);
+            if (null==tqm && tqm.equals("")){
+                logger.info("提取码为空");
+                return ;
+            }
+            //主动获取授权状态，成功会返回数据
+            Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
+            if(null==resultMap){
+                logger.info("订单编号为"+SuccOrderId+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
+                return ;
+            }else {
+                System.out.println("开始封装数据并进行开票"+resultMap.toString());
+                logger.info("开始开票");
+                //全家进行开票
+                if(null!=gsdm&&gsdm.equals("Family")){
+//                    if(counter>=2){
+//                        logger.info("计数器计算出第"+counter+"次，请求，返回空字符串给微信-----");
+//                        return  ;
+//                    }else {
+                       // logger.info("计数器计算出第一次--"+counter+"进行业务逻辑处理");
+                        Map parms = new HashMap();
+                        parms.put("gsdm", gsdm);
+                        Gsxx gsxx = gsxxService.findOneByParams(parms);
+                        logger.info("进入全家开票");
+                        //拉取数据
+                        Map resultSjMap = getDataService.getData(tqm, "Family");
+                        logger.info("全家拉取数据成功--------开始开票");
+                        String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
+                                (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
+                                , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
+                                tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
+                        if ("-1".equals(status)) {
+                            logger.info("开具失败");
+                        } else if ("-2".equals(status)) {
+                            logger.info("开具失败，拒绝开票");
+                        } else {
+                            logger.info("开具成功");
+                            System.out.println("开票成功");
+                        }
+
+                        return ;
+                    }
+                }
+                if(null!=gsdm && gsdm.equals("chamate")){
+                    logger.info("进入一茶一坐开票处理");
+                    String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
+                            (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
+                            ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid,"4");
+                    if ("-1".equals(status)) {
+                        logger.info("开具失败");
+                    } else if ("0".equals(status)) {
+                        logger.info("所需数据为空");
+                    }else {
+                        logger.info("开具成功");
+                        System.out.println("开票成功");
+                    }
+                    return ;
+                }
+
+            }if(null!=FailOrderId && !FailOrderId.equals("")){
+            System.out.println("失败的订单id"+FailOrderId);
+            String re = "微信授权失败,请重新开票";
+            String msg= weixinUtils.jujuekp(FailOrderId,re,access_token);
+        }
+
+    }
+
+
+    public Map<String, String> parseXml(HttpServletRequest request) throws Exception {
             System.out.println("解析微信推送xml————————————");
             // 将解析结果存储在HashMap中
             Map<String, String> map = new HashMap<String, String>();
@@ -235,7 +250,6 @@ public class WeiXinController extends BaseController {
             return map;
 
         }
-
 
 
 
