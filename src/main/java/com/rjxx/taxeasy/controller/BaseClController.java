@@ -274,6 +274,8 @@ public class BaseClController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
                         result.put("error", error);
                         return;
+                    }else{
+                        request.getSession().setAttribute("error", "");
                     }
                     String temp = (String) resultMap.get("temp");
                     if (temp != null) {
