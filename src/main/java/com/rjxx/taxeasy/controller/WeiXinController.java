@@ -123,21 +123,19 @@ public class WeiXinController extends BaseController {
                 request.setAttribute("access_token",access_token);
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");
-                    WxFpxx oneByOrderNo = wxfpxxJpaDao.findOneByOrderNo(SuccOrderId, openid);
+                    WxFpxx oneByOrderNo = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
                     String gsdm = oneByOrderNo.getGsdm();
-                    logger.info("拿到公司代码"+gsdm);
+                    logger.info("根据订单编号查询交易信息数据"+oneByOrderNo.toString());
                     if(null==gsdm && gsdm.equals("")){
                         logger.info("公司代码为空！");
                         return "";
                     }
                     String q = oneByOrderNo.getQ();
-                    logger.info("拿到的q参数为"+q);
                     if (null==q && q.equals("")){
                         logger.info("参数q为空");
                         return "";
                     }
                     String tqm = oneByOrderNo.getTqm();
-                    logger.info("拿到的提取码为"+tqm);
                     if (null==tqm && tqm.equals("")){
                         logger.info("提取码为空");
                         return "";
