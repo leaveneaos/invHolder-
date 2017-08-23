@@ -26,10 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-06-26.
@@ -106,14 +103,21 @@ public class WeiXinController extends BaseController {
 
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
-                counter=counter+1;
-                logger.info("计数器进行计算是第"+counter+"次微信post请求");
+                //counter=counter+1;
+                //logger.info("计数器进行计算是第"+counter+"次微信post请求");
                 logger.info("进入开票处理----");
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
-
                 logger.info("拿到的opedid是---------"+openid);
+                String createTime = requestMap.get("CreateTime");
+                logger.info("排重前"+createTime+openid);
+                //判断排重
+                boolean paichongResult = this.paichong(createTime, openid);
+                if(!paichongResult){
+                    logger.info("该请求已接收过");
+                    return "";
+                }
                 String  access_token = (String)weixinUtils.hqtk().get("access_token");
                 System.out.println("传递的token----"+access_token);
                 request.setAttribute("access_token",access_token);
@@ -148,11 +152,7 @@ public class WeiXinController extends BaseController {
                         logger.info("开始开票");
                         //全家进行开票
                         if(null!=gsdm&&gsdm.equals("Family")){
-                            if(counter>=2){
-                                logger.info("计数器计算出第"+counter+"次，请求，返回空字符串给微信-----");
-                                return  "";
-                            }else {
-                                logger.info("计数器计算出第一次--"+counter+"进行业务逻辑处理");
+
                                 Map parms = new HashMap();
                                 parms.put("gsdm", gsdm);
                                 Gsxx gsxx = gsxxService.findOneByParams(parms);
@@ -175,7 +175,6 @@ public class WeiXinController extends BaseController {
                                 counter=0;
                                 logger.info("业务员处理成功之后,计数器重新清零-----"+counter);
                                 return "";
-                            }
                         }
                         if(null!=gsdm && gsdm.equals("chamate")){
                             logger.info("进入一茶一坐开票处理");
@@ -236,8 +235,23 @@ public class WeiXinController extends BaseController {
 
     }
 
-
-
+    /**
+     * 排重
+     */
+    private static final int MESSAGE_CACHE_SIZE = 1000;
+    private static List<String> cacheList = new ArrayList<>(MESSAGE_CACHE_SIZE);
+    public boolean paichong(String createTime, String fromUserName) {
+        String flag = createTime + fromUserName;
+        if (cacheList.contains(flag)) {
+            logger.info("cacheList里已存在"+flag);
+            return false;
+        }
+        if(cacheList.size()>=MESSAGE_CACHE_SIZE){
+            cacheList.remove(0);
+        }
+        cacheList.add(flag);
+        return true;
+    }
 
     /**
      * 获取微信授权链接
