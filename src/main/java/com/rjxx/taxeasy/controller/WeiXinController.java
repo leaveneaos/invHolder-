@@ -178,7 +178,7 @@ public class WeiXinController extends BaseController {
                         }
                         if(null!=gsdm && gsdm.equals("chamate")){
                             logger.info("进入一茶一坐开票处理");
-                            Thread.sleep(5000);
+                            //Thread.sleep(5000);
                             String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
                                     (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
                                     ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid,"4");
