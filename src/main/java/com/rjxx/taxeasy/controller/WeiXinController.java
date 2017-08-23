@@ -68,7 +68,7 @@ public class WeiXinController extends BaseController {
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
 
-    private  Integer i = 0;
+    private  Integer counter = 0;
     /**
      * 获取微信授权回调
      */
@@ -92,8 +92,8 @@ public class WeiXinController extends BaseController {
 
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
-
         System.out.println("微信发送的post请求");
+        logger.info("全局变量计数器-----"+counter);
         //WeixinUtils weixinUtils = new WeixinUtils();
         Map<String, String> requestMap = null;
         try {
@@ -106,8 +106,9 @@ public class WeiXinController extends BaseController {
 
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
-                i=i+1;
-                System.out.println("进入开票处理----");
+                counter=counter+1;
+                logger.info("计数器进行计算是第"+counter+"次微信post请求");
+                logger.info("进入开票处理----");
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
@@ -147,11 +148,11 @@ public class WeiXinController extends BaseController {
                             logger.info("开始开票");
                             //全家进行开票
                             if(null!=gsdm&&gsdm.equals("Family")){
-                                if(i>=2){
-                                    logger.info("第二次进入之后直接返回");
+                                if(counter>=2){
+                                    logger.info("计数器计算出第"+counter+"次，请求，返回空字符串给微信-----");
                                    return  "";
                                 }else {
-                                    logger.info("第一次进行开票处理-----------------");
+                                    logger.info("计数器计算出第一次--"+counter+"进行业务逻辑处理");
                                     Map parms = new HashMap();
                                     parms.put("gsdm", gsdm);
                                     Gsxx gsxx = gsxxService.findOneByParams(parms);
@@ -171,6 +172,8 @@ public class WeiXinController extends BaseController {
                                         logger.info("开具成功");
                                         System.out.println("开票成功");
                                     }
+                                    counter=0;
+                                    logger.info("业务员处理成功之后,计数器重新清零-----"+counter);
                                     return "";
                                 }
                             }
