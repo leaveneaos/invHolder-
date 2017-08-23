@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -95,7 +96,7 @@ public class WeiXinController extends BaseController {
      * 微信callback
      */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
-    public String postWeiXin() throws Exception {
+    public ModelAndView postWeiXin() throws Exception {
         System.out.println("微信发送的post请求");
         //logger.info("全局变量计数器-----"+counter);
         //WeixinUtils weixinUtils = new WeixinUtils();
@@ -115,15 +116,17 @@ public class WeiXinController extends BaseController {
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
                 String url = HtmlUtils.getBasePath(request);
-                response.sendRedirect(url+"/handle?SuccOrderId="+SuccOrderId+
-                        "&FailOrderId="+FailOrderId+"&openid="+openid);
+//                response.sendRedirect(url+"/handle?SuccOrderId="+SuccOrderId+
+//                        "&FailOrderId="+FailOrderId+"&openid="+openid);
                 logger.info("直接返回");
                 //return "";
+                return new ModelAndView("redirect:/handle?SuccOrderId="+SuccOrderId+
+                        "&FailOrderId="+FailOrderId+"&openid="+openid);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "" ;
+        return null;
     }
 
     /**
@@ -133,7 +136,7 @@ public class WeiXinController extends BaseController {
      * @param openid
      */
     @RequestMapping(value = "/handle",method = RequestMethod.GET)
-    public void handleBusiness(String SuccOrderId,String FailOrderId,String  openid){
+    public String handleBusiness(String SuccOrderId,String FailOrderId,String  openid){
         logger.info("进入业务逻辑处理----------------SuccOrderId===="+SuccOrderId
                 +"------FailOrderId===="+FailOrderId+"---------openid======"+openid);
 
@@ -147,25 +150,25 @@ public class WeiXinController extends BaseController {
             logger.info("拿到公司代码"+gsdm);
             if(null==gsdm && gsdm.equals("")){
                 logger.info("公司代码为空！");
-                return ;
+                return "";
             }
             String q = oneByOrderNo.getQ();
             logger.info("拿到的q参数为"+q);
             if (null==q && q.equals("")){
                 logger.info("参数q为空");
-                return ;
+                return "";
             }
             String tqm = oneByOrderNo.getTqm();
             logger.info("拿到的提取码为"+tqm);
             if (null==tqm && tqm.equals("")){
                 logger.info("提取码为空");
-                return ;
+                return "";
             }
             //主动获取授权状态，成功会返回数据
             Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
             if(null==resultMap){
                 logger.info("订单编号为"+SuccOrderId+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
-                return ;
+                return "";
             }else {
                 System.out.println("开始封装数据并进行开票"+resultMap.toString());
                 logger.info("开始开票");
@@ -196,7 +199,7 @@ public class WeiXinController extends BaseController {
                             System.out.println("开票成功");
                         }
 
-                        return ;
+                        return "";
                     }
                 }
                 if(null!=gsdm && gsdm.equals("chamate")){
@@ -212,7 +215,7 @@ public class WeiXinController extends BaseController {
                         logger.info("开具成功");
                         System.out.println("开票成功");
                     }
-                    return ;
+                    return "";
                 }
 
             }if(null!=FailOrderId && !FailOrderId.equals("")){
@@ -220,7 +223,7 @@ public class WeiXinController extends BaseController {
             String re = "微信授权失败,请重新开票";
             String msg= weixinUtils.jujuekp(FailOrderId,re,access_token);
         }
-
+        return "";
     }
 
 
