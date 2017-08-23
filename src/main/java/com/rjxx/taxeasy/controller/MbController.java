@@ -93,7 +93,7 @@ public class MbController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "/mb/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
+                        + url + "mb/getWx" + "&response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
