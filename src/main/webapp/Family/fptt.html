@@ -294,7 +294,7 @@
 		            var d=JSON.stringify(data);
 		            storage.setItem("data",d);
 		        }
-				var btnArray = [ '否', '是' ];
+				/*var btnArray = [ '否', '是' ];
 				title = "信息确认";	
 				firm = "发票抬头:" + fptt + "</br>";
 
@@ -315,11 +315,11 @@
 				}
 				if (null != yx && "" != yx) {
 					firm += "邮箱:" + yx +  "</br>";
-				}	
+				}	*/
 							
 				$("#sure").attr("disabled",true);
-				jConfirm(firm,title, function(r) {
-					if(r){
+				/*jConfirm(firm,title, function(r) {
+					if(r){*/
 						$.post(
 							"../family/sqkpsession",/*申请开票  信息放入session*/
 							{
@@ -343,10 +343,10 @@
 								}
 							}
 						);
-					}else{
+				/*	}else{
 						$("#sure").attr("disabled",false);
 					}
-				});
+				});*/
 			}
 		};
 	</script>
