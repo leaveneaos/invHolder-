@@ -15,6 +15,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,7 +96,7 @@ public class MbController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "mb/getWx" + "&response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
+                        + url + "getWx" + "&response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
@@ -168,18 +171,6 @@ public class MbController extends BaseController {
         return;
     }*/
 
-    public static void main(String[] args) {
-        String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
-        byte[] bt = null;
-        try {
-            sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-            bt = decoder.decodeBuffer(str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String csc = new String(bt);
-        System.out.println(csc);
-    }
 
     /*校验提取码是否正确*/
     @RequestMapping(value = "/tqyz")
@@ -457,38 +448,52 @@ public class MbController extends BaseController {
         Map gsMap = new HashMap();
         gsMap.put("gsdm",jyxxsq.getGsdm());
         Gsxx gsxx = gsxxservice.findOneByGsdm(gsMap);
-        try{
-            String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
-            logger.info("secretKey------"+gsxx.getSecretKey());
-            logger.info("appKey------"+gsxx.getAppKey());
-            String resultxml=HttpUtils.HttpUrlPost(xml,gsxx.getAppKey(),gsxx.getSecretKey());
-            logger.info("-------返回值---------"+resultxml);
-
-        }catch (Exception e){
+        try {
+            String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqList, jyzfmxList);
+            logger.info("secretKey------" + gsxx.getSecretKey());
+            logger.info("appKey------" + gsxx.getAppKey());
+            String resultxml = HttpUtils.HttpUrlPost(xml, gsxx.getAppKey(), gsxx.getSecretKey());
+            logger.info("-------返回值---------" + resultxml);
+            Document document = DocumentHelper.parseText(resultxml);
+            Element root = document.getRootElement();
+            List<Element> childElements = root.elements();
+            Map xmlMap = new HashMap();
+            for (Element child : childElements) {
+                xmlMap.put(child.getName(), child.getText());
+            }
+            String returncode = (String) xmlMap.get("ReturnCode");
+            String ReturnMessage = (String) xmlMap.get("ReturnMessage");
+            if (returncode.equals("9999")) {
+                logger.info("发送客户端失败----msg--"+ReturnMessage);
+                result.put("msg", ReturnMessage);
+                return result;
+            } else if(returncode.equals("0000")){
+                logger.info("发送客户端成功----");
+            Tqmtq tqmtq1 = new Tqmtq();
+            tqmtq1.setDdh(jyxxsq.getTqm());
+            tqmtq1.setLrsj(new Date());
+            tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm + tqm + "je"))));
+            tqmtq1.setGfmc(fptt);
+            tqmtq1.setNsrsbh(nsrsbh);
+            tqmtq1.setDz(dz);
+            tqmtq1.setDh(dh);
+            tqmtq1.setKhh(khh);
+            tqmtq1.setKhhzh(yhzh);
+            tqmtq1.setFpzt("0");
+            tqmtq1.setYxbz("1");
+            tqmtq1.setGfemail(yx);
+            tqmtq1.setGsdm(jyxxsq.getGsdm());
+            String llqxx = request.getHeader("User-Agent");
+            tqmtq1.setLlqxx(llqxx);
+            if (openid != null && !"null".equals(openid)) {
+                tqmtq1.setOpenid(openid);
+            }
+            tqmtqService.save(tqmtq1);
+            result.put("msg", "1");
+        }
+        }catch(Exception e){
             e.printStackTrace();
         }
-        Tqmtq tqmtq1 = new Tqmtq();
-        tqmtq1.setDdh(jyxxsq.getTqm());
-        tqmtq1.setLrsj(new Date());
-        tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm+tqm+"je"))));
-        tqmtq1.setGfmc(fptt);
-        tqmtq1.setNsrsbh(nsrsbh);
-        tqmtq1.setDz(dz);
-        tqmtq1.setDh(dh);
-        tqmtq1.setKhh(khh);
-        tqmtq1.setKhhzh(yhzh);
-        tqmtq1.setFpzt("0");
-        tqmtq1.setYxbz("1");
-        tqmtq1.setGfemail(yx);
-        tqmtq1.setGsdm(jyxxsq.getGsdm());
-        String llqxx = request.getHeader("User-Agent");
-        tqmtq1.setLlqxx(llqxx);
-        if(openid != null && !"null".equals(openid)){
-            tqmtq1.setOpenid(openid);
-        }
-        tqmtqService.save(tqmtq1);
-        result.put("msg","1");
-
         return  result;
     }
 
