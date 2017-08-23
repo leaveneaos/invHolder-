@@ -63,9 +63,12 @@ public class WeiXinController extends BaseController {
     private WeixinUtils weixinUtils;
     @Autowired
     private  GsxxService gsxxService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
+
+    private  Integer i = 0;
     /**
      * 获取微信授权回调
      */
@@ -89,6 +92,7 @@ public class WeiXinController extends BaseController {
 
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
+
         System.out.println("微信发送的post请求");
         //WeixinUtils weixinUtils = new WeixinUtils();
         Map<String, String> requestMap = null;
@@ -102,6 +106,7 @@ public class WeiXinController extends BaseController {
 
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
+                i=i+1;
                 System.out.println("进入开票处理----");
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
@@ -142,26 +147,32 @@ public class WeiXinController extends BaseController {
                             logger.info("开始开票");
                             //全家进行开票
                             if(null!=gsdm&&gsdm.equals("Family")){
-                                Map parms=new HashMap();
-                                parms.put("gsdm",gsdm);
-                                Gsxx gsxx=gsxxService.findOneByParams(parms);
-                                logger.info("进入全家开票");
-                                //拉取数据
-                                Map   resultSjMap = getDataService.getData(tqm, "Family");
-                                logger.info("全家拉取数据成功--------开始开票");
-                                String   status = barcodeService.pullInvioce(resultSjMap,gsdm,(String)resultMap.get("title"),
-                                        (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
-                                        ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),
-                                        tqm,openid,"4",access_token,gsxx.getAppKey(),gsxx.getSecretKey());
-                                if ("-1".equals(status)) {
-                                    logger.info("开具失败");
-                                } else if ("-2".equals(status)) {
-                                    logger.info("开具失败，拒绝开票");
+                                if(i>=2){
+                                    logger.info("第二次进入之后直接返回");
+                                   return  "";
                                 }else {
-                                    logger.info("开具成功");
-                                    System.out.println("开票成功");
+                                    logger.info("第一次进行开票处理-----------------");
+                                    Map parms = new HashMap();
+                                    parms.put("gsdm", gsdm);
+                                    Gsxx gsxx = gsxxService.findOneByParams(parms);
+                                    logger.info("进入全家开票");
+                                    //拉取数据
+                                    Map resultSjMap = getDataService.getData(tqm, "Family");
+                                    logger.info("全家拉取数据成功--------开始开票");
+                                    String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
+                                            (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
+                                            , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
+                                            tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
+                                    if ("-1".equals(status)) {
+                                        logger.info("开具失败");
+                                    } else if ("-2".equals(status)) {
+                                        logger.info("开具失败，拒绝开票");
+                                    } else {
+                                        logger.info("开具成功");
+                                        System.out.println("开票成功");
+                                    }
+                                    return "";
                                 }
-                                return "";
                             }
                             if(null!=gsdm && gsdm.equals("chamate")){
                                 logger.info("进入一茶一坐开票处理");
