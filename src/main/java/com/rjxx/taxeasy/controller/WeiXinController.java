@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
+import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.StringUtils;
@@ -35,7 +36,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2017-06-26.
  */
-@Controller
+@RestController
 
 public class WeiXinController extends BaseController {
 
@@ -113,10 +114,11 @@ public class WeiXinController extends BaseController {
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
-                response.sendRedirect("http://fpjtest.datarj.com/einv/handle?SuccOrderId="+SuccOrderId+
+                String url = HtmlUtils.getBasePath(request);
+                response.sendRedirect(url+"/handle?SuccOrderId="+SuccOrderId+
                         "&FailOrderId="+FailOrderId+"&openid="+openid);
                 logger.info("直接返回");
-                return "";
+                //return "";
             }
         } catch (Exception e) {
             e.printStackTrace();
