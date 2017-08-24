@@ -39,7 +39,7 @@ import java.util.*;
  * Created by Administrator on 2017/6/20 0020.
  */
 @Controller
-@RequestMapping("/family")
+@RequestMapping("/fm")
 public class BaseClController extends BaseController {
     @Autowired
     private GsxxService gsxxservice;//公司信息
@@ -399,10 +399,16 @@ public class BaseClController extends BaseController {
             resultMap=getDataService.getData(tqm,gsdm);
             List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
             List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-            String error=(String)resultMap.get("temp");
+            String error = (String) resultMap.get("error");
+            logger.info("---------错误信息------------"+error);
+            if(error!=null){
+                result.put("error", error);
+                return result;
+            }
+            String temp=(String)resultMap.get("temp");
              /*wait to do*/
             if(error!=null){
-                result.put("error",error);
+                result.put("error",temp);
                 return result;
             }
             Jyxxsq jyxxsq=jyxxsqList.get(0);

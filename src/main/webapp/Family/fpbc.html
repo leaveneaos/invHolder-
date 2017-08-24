@@ -85,7 +85,7 @@
 	    // 展示页面内容
 		$(function () {
             $.post(
-                "../family/qrxxsession",/*确认信息*/
+                "../fm/qrxxsession",/*确认信息*/
                 {},
                 function (data) {
                 	console.log(data)
@@ -112,7 +112,7 @@
         $('#sure').on('click',function () {
         	showMask();
 			$.post(
-			    "../family/savels",
+			    "../fm/savels",
 				{},
 				function (data) {
 			        if(data.msg == 1) {
