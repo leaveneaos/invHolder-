@@ -110,15 +110,15 @@
         });    
         // 确定
         $('#sure').on('click',function () {
-        	showMask();
+        	//showMask();
 			$.post(
 			    "../fm/savels",
 				{},
 				function (data) {
 			        if(data.msg == 1) {
-                        window.location.href = "fpxq.html?time=" + new Date();
+                        window.location.href = "witting.html?time=" + new Date();
                     }else{
-                    	hideMask();
+                    	//hideMask();
                     	alert(data.msg);
                     }
                 }

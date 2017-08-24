@@ -582,7 +582,7 @@ public class BaseClController extends BaseController {
                 return result;
             }else {
                 logger.info("-------返回值---------" + resultxml);
-                request.getSession().setAttribute("serialorder", ReturnMessage);
+                request.getSession().setAttribute("serialorder", jyxxsq.getJylsh()+jyxxsq.getDdh());
                 result.put("msg", "1");
                }
             }catch (Exception e){
