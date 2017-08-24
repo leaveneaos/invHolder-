@@ -10,6 +10,7 @@ import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.taxeasy.service.JyxxsqService;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.sun.tools.internal.jxc.api.JXC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,12 +109,13 @@ public class CommonController extends BaseController {
         }
         logger.info("拿到解码code----------"+code);
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByCode(code);
+        logger.info("查询到的微信交易信息--------"+JSON.toJSONString(wxFpxx));
         Map jyxxsqMap = new HashMap();
         jyxxsqMap.put("gsdm",wxFpxx.getGsdm());
         jyxxsqMap.put("tqm",wxFpxx.getTqm());
         jyxxsqMap.put("openid",wxFpxx.getOpenId());
-        logger.info("查询交易信息申请"+jyxxsqMap.toString());
         Jyxxsq jyxxsq = jyxxsqService.findOneByParams(jyxxsqMap);
+        logger.info("查询到的交易信息申请-----"+JSON.toJSONString(jyxxsq));
         Map kplsMap = new HashMap();
         kplsMap.put("gsdm",wxFpxx.getGsdm());
         kplsMap.put("jylsh",jyxxsq.getJylsh());
@@ -157,7 +159,7 @@ public class CommonController extends BaseController {
         map.put("jym", kpls.getJym());
         map.put("pdfurl",kpls.getPdfurl());
         //resultMap.put("kpls",kpls);
-        logger.info("取到的数据——————"+JSON.toJSONString(map));
+        //logger.info("取到的数据——————"+JSON.toJSONString(map));
         return  JSON.toJSONString(map);
     }
 }
