@@ -153,7 +153,7 @@ public class CommonController extends BaseController {
         map.put("gfmc",kpls.getGfmc());
         map.put("xfmc",kpls.getXfmc());
         map.put("jshj",kpls.getJshj());
-        map.put("kprq", DateFormatUtils.format(kpls.getKprq(),"yyy-MM-dd"));
+        map.put("kprq", DateFormatUtils.format(kpls.getKprq(),"yyyy-MM-dd"));
         map.put("xfsh",kpls.getXfsh());
         map.put("fpdm",kpls.getFpdm());
         map.put("fphm",kpls.getFphm());
