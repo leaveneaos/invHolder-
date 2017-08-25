@@ -278,9 +278,9 @@ public class MbController extends BaseController {
                         }else{
                             resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
                         }
-                        if(null!=resultMap.get("tmp")){
+                        if(null!=resultMap.get("msg")){
                             result.put("num","12");
-                            result.put("msg",resultMap.get("tmp"));
+                            result.put("msg",resultMap.get("msg"));
                             return result;
                         }
 
