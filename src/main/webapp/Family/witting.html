@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
 	<meta charset="UTF-8">
 	<title>订单确认</title>
@@ -7,7 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="css/common.css">
 	<style type="text/css">
 		.content {
-			padding: 50px 0px 20px;
+			padding: 50px 0px 30px;
 			box-sizing: border-box;
 			font-size: 14px;
 		}
@@ -16,6 +16,16 @@
 		}
 		.content .kj {
 			width: 40%;
+		}
+		.content li{
+			text-align: left;
+			margin-left: 10%;
+			width: 85%;
+			font-weight: 400;
+		}
+		.content p{
+			font-size: 16px;
+			font-weight: 600;
 		}
 	</style>
 </head>
@@ -29,13 +39,19 @@
 		<div class="content">
 			<div class="kjz">
 				<img class="kj" src='../images/kj.png'>
-				<p>发票开具中......</p>
-				<p>&nbsp;开票申请已提交，请注意邮箱查收！</br>或再次扫描二维码查看发票文件</p>
+				<p>您将通过以下途径获取电子发票</p>
+				<li>1、发送至您的个人邮箱;</li>
+				<li>2、关注公众号，及时获取发票通知;</li>
+				<li>3、发票自动存入微信卡包"我的票券"或支付宝"发票管家"。</li>
 			</div>
 			
 			<div class="ewm">
 				<img class="fl" src="../images/fwh.jpg">
 				<span class="fr">长按识别二维码,关注公众号及时收到发票信息</span>
+			</div>
+			<div class="bottom">
+				<input type="hidden" id="tqmhidden">
+				<button id="sure" style="width: 60%" type="submit" onclick="guanbi()">关&nbsp;&nbsp;&nbsp;&nbsp;闭</button>
 			</div>
 		</div>
 
@@ -44,5 +60,14 @@
 		<p class="company fl">泰易电子发票云服务平台</p>
 		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
+	<script src="../js/jquery.min.js"></script>
+
+	<script type="text/javascript">
+
+		function guanbi() {
+            window.close();
+        }
+
+	</script>
 </body>
 </html>
