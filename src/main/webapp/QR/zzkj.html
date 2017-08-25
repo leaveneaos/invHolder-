@@ -100,8 +100,9 @@
         function guanbi() {
             window.close();
             if(isWeixin){
-                alert("1");
                 WeixinJSBridge.call('closeWindow');
+			}if(isAlipay){
+                AlipayJSBridge.call('closeWebview');
 			}
         }
 
