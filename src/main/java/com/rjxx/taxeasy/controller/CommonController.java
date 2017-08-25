@@ -62,7 +62,7 @@ public class CommonController extends BaseController {
                     return null;
                 }else if(status!=null && status.equals("可开具")){
                     //可开具 跳转微信授权链接
-                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo);
+                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1");
                     if(null==redirectUrl||redirectUrl.equals("")){
                         //获取授权失败
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -120,7 +120,7 @@ public class CommonController extends BaseController {
         kplsMap.put("gsdm",wxFpxx.getGsdm());
         kplsMap.put("jylsh",jyxxsq.getJylsh());
         List<Kpls> kpls = kplsService.findAll(kplsMap);
-        logger.info("开票流水"+JSON.toJSONString(kpls));
+        //logger.info("开票流水"+JSON.toJSONString(kpls));
         if(kpls.size() > 0 ){
             Integer kplsh=kpls.get(0).getKplsh();
             response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?kbs="+kplsh+"&&_t=" + System.currentTimeMillis());
@@ -159,7 +159,15 @@ public class CommonController extends BaseController {
         map.put("jym", kpls.getJym());
         map.put("pdfurl",kpls.getPdfurl());
         //resultMap.put("kpls",kpls);
-        //logger.info("取到的数据——————"+JSON.toJSONString(map));
+        logger.info("取到的数据——————"+JSON.toJSONString(map));
         return  JSON.toJSONString(map);
+    }
+
+    @RequestMapping(value = "/receive")
+    @ResponseBody
+    private String wechatdrawinvoice(){
+        String redirectUrl="";
+
+        return null;
     }
 }

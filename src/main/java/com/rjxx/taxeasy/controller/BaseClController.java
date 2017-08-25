@@ -179,25 +179,50 @@ public class BaseClController extends BaseController {
                 request.getSession().setAttribute(gsxx.getGsdm()+"tqm",tqm);
                 String opendid = (String) session.getAttribute("openid");
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
-                //微信写入数据库
-                WxFpxx wxFpxx = new WxFpxx();
-                wxFpxx.setTqm(tqm);
-                wxFpxx.setGsdm(gsxx.getGsdm());
-                wxFpxx.setQ(state);
-                //微信支付宝
-                if(AlipayUtils.isAlipayBrowser(request)){
-                    wxFpxx.setOpenId(userId);
+                WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                //第一次扫描
+                if(null==wxFpxxByTqm){
+                    WxFpxx wxFpxx = new WxFpxx();
+                    wxFpxx.setTqm(tqm);
+                    wxFpxx.setGsdm(gsxx.getGsdm());
+                    wxFpxx.setQ(state);
+                        //支付宝
+                    if(AlipayUtils.isAlipayBrowser(request)){
+                        wxFpxx.setUserid(userId);
+                    }else {
+                        //微信
+                        wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                    }
+                    wxFpxx.setOrderNo(tqm);
+                    logger.info("存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+"----openid"+wxFpxx.getOpenId()+"------订单编号"+wxFpxx.getOrderNo());
+                    try {
+                        wxfpxxJpaDao.save(wxFpxx);
+                    }catch (Exception e){
+                        logger.info("交易信息保存失败");
+                        return ;
+                    }
                 }else {
-                    wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                    wxFpxxByTqm.setTqm(tqm);
+                    wxFpxxByTqm.setGsdm(gsxx.getGsdm());
+                    wxFpxxByTqm.setOrderNo(tqm);
+                    if(AlipayUtils.isAlipayBrowser(request)){
+                        wxFpxxByTqm.setUserid(userId);
+                    }else {
+                        //微信
+                        wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
+                    }
+                    if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                        String notNullCode= wxFpxxByTqm.getCode();
+                        wxFpxxByTqm.setCode(notNullCode);
+                    }
+                    try {
+                        wxfpxxJpaDao.save(wxFpxxByTqm);
+                    }catch (Exception e){
+                        logger.info("交易信息保存失败");
+                        return ;
+                    }
                 }
-                wxFpxx.setOrderNo(tqm);
-                logger.info("存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+"----openid"+wxFpxx.getOpenId()+"------订单编号"+wxFpxx.getOrderNo());
-                try {
-                    wxfpxxJpaDao.save(wxFpxx);
-                }catch (Exception e){
-                    logger.info("交易信息保存失败");
-                    return ;
-                }
+
                 Map map = new HashMap<>();
                 map.put("tqm", tqm);
                 map.put("gsdm", gsxx.getGsdm());
