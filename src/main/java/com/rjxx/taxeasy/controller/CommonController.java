@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.service.JyxxsqService;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.sun.tools.internal.jxc.api.JXC;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -152,7 +153,7 @@ public class CommonController extends BaseController {
         map.put("gfmc",kpls.getGfmc());
         map.put("xfmc",kpls.getXfmc());
         map.put("jshj",kpls.getJshj());
-        map.put("kprq",kpls.getKprq());
+        map.put("kprq", DateFormatUtils.format(kpls.getKprq(),"yyy-MM-dd"));
         map.put("xfsh",kpls.getXfsh());
         map.put("fpdm",kpls.getFpdm());
         map.put("fphm",kpls.getFphm());
