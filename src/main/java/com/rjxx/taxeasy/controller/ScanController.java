@@ -52,6 +52,8 @@ public class ScanController extends BaseController {
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String tqm=jsonObject.getString("tqm");
             session.setAttribute("tqm",tqm);
+            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+            if(null==wxFpxxByTqm){
             WxFpxx wxFpxx = new WxFpxx();
             wxFpxx.setTqm(tqm);
             wxFpxx.setGsdm(gsdm);
@@ -62,6 +64,23 @@ public class ScanController extends BaseController {
                 wxfpxxJpaDao.save(wxFpxx);
             }catch (Exception e){
                 return ResultUtil.error("交易信息保存失败");
+            }
+            }else {
+                wxFpxxByTqm.setTqm(tqm);
+                wxFpxxByTqm.setGsdm(gsdm);
+                wxFpxxByTqm.setQ(q);
+                wxFpxxByTqm.setOpenId(openid);
+                wxFpxxByTqm.setOrderNo(orderNo);
+                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                    String notNullCode= wxFpxxByTqm.getCode();
+                    wxFpxxByTqm.setCode(notNullCode);
+                }
+                try {
+                    wxfpxxJpaDao.save(wxFpxxByTqm);
+                }catch (Exception e){
+                    logger.info("交易信息保存失败");
+                    return ResultUtil.error("交易信息保存失败");
+                }
             }
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
