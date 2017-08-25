@@ -80,3 +80,19 @@ footer p {
 #Button1 {
 	margin-bottom: 65px;
 }
+ul, ol, li, a{
+	list-style: none;
+}
+button {
+	width: 80%;
+	height: 36px;
+	line-height: 36px;  /*解决在IE下文字显示不出问题*/
+	background-color: #4BB4F7;
+	list-style-type: none;
+	color: #fff;
+	border-radius: 18px;
+}
+button,input {
+	border: none;
+	outline:none;
+}
