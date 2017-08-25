@@ -94,8 +94,13 @@
 	</footer>
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var isAlipay = ua.indexOf('alipay') != -1;
         function guanbi() {
             window.close();
+            if(isWeixin){
+                WeixinJSBridge.call('closeWindow');
+			}
         }
 
 	</script>
