@@ -55,7 +55,7 @@
     				for(var i = 0; i < items.length; i++){
 
     				    zje += items[i].spje/1 + items[i].spse/1;
-                        var num=items[i].sps==null?"0":items[i].sps;
+                        var num=items[i].sps==null?"":items[i].sps;
     					html+='<div class="title"><span class="name">'+ items[i].spmc+'</span><span class="num">'+num+'</span><span class="price">'+ (items[i].spje/1+items[i].spse/1)+"</span></div>";
     				}
     				$('.totPrice').html(zje.toFixed(2));
