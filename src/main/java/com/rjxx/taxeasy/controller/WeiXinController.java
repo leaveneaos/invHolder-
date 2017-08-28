@@ -118,6 +118,7 @@ public class WeiXinController extends BaseController {
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");
                     WxFpxx oneByOrderNo = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
+
                     String gsdm = oneByOrderNo.getGsdm();
                     logger.info("根据订单编号查询交易信息数据"+oneByOrderNo.toString());
                     if(null==gsdm && gsdm.equals("")){
@@ -141,48 +142,51 @@ public class WeiXinController extends BaseController {
                         return "";
                     }else {
                         System.out.println("开始封装数据并进行开票"+resultMap.toString());
-                        logger.info("开始开票");
-                        //全家进行开票
-                        if(null!=gsdm&&gsdm.equals("Family")){
-
-                                Map parms = new HashMap();
-                                parms.put("gsdm", gsdm);
-                                Gsxx gsxx = gsxxService.findOneByParams(parms);
-                                logger.info("进入全家开票");
-                                //拉取数据
-                                Map resultSjMap = getDataService.getData(tqm, "Family");
-                                logger.info("全家拉取数据成功--------开始开票");
-                                String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
-                                        (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
-                                        , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                        tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
+                        if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
+                            logger.info("进入申请开票类型------------开始开票");
+                            //全家进行开票
+                            if(null!=gsdm&&gsdm.equals("Family")){
+                                    Map parms = new HashMap();
+                                    parms.put("gsdm", gsdm);
+                                    Gsxx gsxx = gsxxService.findOneByParams(parms);
+                                    logger.info("进入全家开票");
+                                    //拉取数据
+                                    Map resultSjMap = getDataService.getData(tqm, "Family");
+                                    logger.info("全家拉取数据成功--------开始开票");
+                                    String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
+                                            (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
+                                            , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
+                                            tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
+                                    if ("-1".equals(status)) {
+                                        logger.info("开具失败");
+                                    } else if ("-2".equals(status)) {
+                                        logger.info("开具失败，拒绝开票");
+                                    } else {
+                                        logger.info("开具成功");
+                                        System.out.println("开票成功");
+                                    }
+                                    return "";
+                            }
+                            if(null!=gsdm && gsdm.equals("chamate")){
+                                logger.info("进入一茶一坐开票处理");
+                                //Thread.sleep(5000);
+                                String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
+                                        (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
+                                        ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid,"4");
                                 if ("-1".equals(status)) {
                                     logger.info("开具失败");
-                                } else if ("-2".equals(status)) {
-                                    logger.info("开具失败，拒绝开票");
-                                } else {
+                                } else if ("0".equals(status)) {
+                                    logger.info("所需数据为空");
+                                }else {
                                     logger.info("开具成功");
                                     System.out.println("开票成功");
                                 }
                                 return "";
-                        }
-                        if(null!=gsdm && gsdm.equals("chamate")){
-                            logger.info("进入一茶一坐开票处理");
-                            //Thread.sleep(5000);
-                            String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
-                                    (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
-                                    ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid,"4");
-                            if ("-1".equals(status)) {
-                                logger.info("开具失败");
-                            } else if ("0".equals(status)) {
-                                logger.info("所需数据为空");
-                            }else {
-                                logger.info("开具成功");
-                                System.out.println("开票成功");
                             }
-                            return "";
                         }
-
+                        if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())){
+                            logger.info("进入领取发票类型------------直接插入卡包");
+                        }
                     }
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
