@@ -48,7 +48,7 @@
 	<section>
 		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
 			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
-				<a id="wx" onclick="sync()">
+				<a id="wx" onclick="wx()">
 					<span class="mui-icon iconfont icon-youxiang"></span>
 					<div class="mui-media-body" style="color: #fff;">微信</div>
 				</a>
@@ -108,7 +108,7 @@
     function sync() {
         window.location = "../syncAlipay?_t=" + (new Date()).getTime();
     };
-    $(".wx").click(function () {
+    $(".wx").click(function() {
         alert("11");
       var orderNo = $('#orderNo').val();
       var je = $('#je').val();
