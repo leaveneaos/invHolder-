@@ -178,11 +178,12 @@ public class ScanController extends BaseController {
                             break;
                         default://已经开过票的
                             if(status.indexOf("pdf")!=-1){
-                                String img=status.replace("pdf", "jpg");
+
                                 String pdf = status.split("[+]")[0];
                                 String je = status.split("[+]")[1];
                                 String orderTime = status.split("[+]")[2];
                                 String kplsh = status.split("[+]")[3];
+                                String img = pdf.replace("pdf", "jpg");
                                 if(WeixinUtils.isWeiXinBrowser(request)){
                                     WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                                     if(null == wxFpxxByTqm){
