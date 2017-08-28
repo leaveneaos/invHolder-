@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,35 +54,41 @@ public class ScanController extends BaseController {
             String tqm=jsonObject.getString("tqm");
             session.setAttribute("tqm",tqm);
             WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-            if(null==wxFpxxByTqm){
-            WxFpxx wxFpxx = new WxFpxx();
-            wxFpxx.setTqm(tqm);
-            wxFpxx.setGsdm(gsdm);
-            wxFpxx.setQ(q);
-            wxFpxx.setOpenId(openid);
-            wxFpxx.setOrderNo(orderNo);
-            try {
-                wxfpxxJpaDao.save(wxFpxx);
-            }catch (Exception e){
-                return ResultUtil.error("交易信息保存失败");
-            }
-            }else {
-                wxFpxxByTqm.setTqm(tqm);
-                wxFpxxByTqm.setGsdm(gsdm);
-                wxFpxxByTqm.setQ(q);
-                wxFpxxByTqm.setOpenId(openid);
-                wxFpxxByTqm.setOrderNo(orderNo);
-                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                    String notNullCode= wxFpxxByTqm.getCode();
-                    wxFpxxByTqm.setCode(notNullCode);
+            if(WeixinUtils.isWeiXinBrowser(request)){
+                logger.info("----微信扫码保存交易信息----");
+                if(null==wxFpxxByTqm){
+                    WxFpxx wxFpxx = new WxFpxx();
+                    wxFpxx.setTqm(tqm);
+                    wxFpxx.setGsdm(gsdm);
+                    wxFpxx.setQ(q);
+                    wxFpxx.setOpenId(openid);
+                    wxFpxx.setOrderNo(orderNo);
+                    wxFpxx.setWxtype("1");//1:申请开票2：领取发票
+                    try {
+                        wxfpxxJpaDao.save(wxFpxx);
+                    }catch (Exception e){
+                        return ResultUtil.error("交易信息保存失败");
+                    }
+                }else {
+                    wxFpxxByTqm.setTqm(tqm);
+                    wxFpxxByTqm.setGsdm(gsdm);
+                    wxFpxxByTqm.setQ(q);
+                    wxFpxxByTqm.setOpenId(openid);
+                    wxFpxxByTqm.setOrderNo(orderNo);
+                    wxFpxxByTqm.setWxtype("1");//1:申请开票2：领取发票
+                    if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                        String notNullCode= wxFpxxByTqm.getCode();
+                        wxFpxxByTqm.setCode(notNullCode);
+                    }
+                    try {
+                        wxfpxxJpaDao.save(wxFpxxByTqm);
+                    }catch (Exception e){
+                        logger.info("交易信息保存失败");
+                        return ResultUtil.error("交易信息保存失败");
+                    }
                 }
-                try {
-                    wxfpxxJpaDao.save(wxFpxxByTqm);
-                }catch (Exception e){
-                    logger.info("交易信息保存失败");
-                    return ResultUtil.error("交易信息保存失败");
-                }
             }
+
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
             return ResultUtil.error("二维码信息获取失败");

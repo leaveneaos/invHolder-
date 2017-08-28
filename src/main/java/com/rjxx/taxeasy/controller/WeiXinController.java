@@ -65,7 +65,7 @@ public class WeiXinController extends BaseController {
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
 
-    private  Integer counter = 0;
+   // private  Integer counter = 0;
     /**
      * 获取微信授权回调
      */
@@ -89,22 +89,16 @@ public class WeiXinController extends BaseController {
 
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
-        System.out.println("微信发送的post请求");
-        logger.info("全局变量计数器-----"+counter);
+        System.out.println("进入微信发送的post请求");
         //WeixinUtils weixinUtils = new WeixinUtils();
         Map<String, String> requestMap = null;
         try {
             System.out.println("微信推送事件");
             //微信事件xml转map
             requestMap = parseXml(request);
-            System.out.println("接收微信返回xml变map"+requestMap.toString());
-
-
-
+            logger.info("接收微信返回xml变map"+requestMap.toString());
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
-                //counter=counter+1;
-                //logger.info("计数器进行计算是第"+counter+"次微信post请求");
                 logger.info("进入开票处理----");
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
@@ -170,8 +164,6 @@ public class WeiXinController extends BaseController {
                                     logger.info("开具成功");
                                     System.out.println("开票成功");
                                 }
-                                counter=0;
-                                logger.info("业务员处理成功之后,计数器重新清零-----"+counter);
                                 return "";
                         }
                         if(null!=gsdm && gsdm.equals("chamate")){

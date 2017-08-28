@@ -12,6 +12,7 @@ import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.*;
 import com.rjxx.utils.StringUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -180,49 +181,50 @@ public class BaseClController extends BaseController {
                 String opendid = (String) session.getAttribute("openid");
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
                 WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-                //第一次扫描
-                if(null==wxFpxxByTqm){
-                    WxFpxx wxFpxx = new WxFpxx();
-                    wxFpxx.setTqm(tqm);
-                    wxFpxx.setGsdm(gsxx.getGsdm());
-                    wxFpxx.setQ(state);
-                        //支付宝
-                    if(AlipayUtils.isAlipayBrowser(request)){
-                        wxFpxx.setUserid(userId);
-                    }else {
+                if(WeixinUtils.isWeiXinBrowser(request)){
+                    logger.info("只保存微信扫码------------------");
+                    //第一次扫描
+                    if(null==wxFpxxByTqm){
+                        WxFpxx wxFpxx = new WxFpxx();
+                        wxFpxx.setTqm(tqm);
+                        wxFpxx.setGsdm(gsxx.getGsdm());
+                        wxFpxx.setOrderNo(tqm);
+                        wxFpxx.setQ(state);
+                        wxFpxx.setWxtype("1");
                         //微信
                         wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                    }
-                    wxFpxx.setOrderNo(tqm);
-                    logger.info("存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+"----openid"+wxFpxx.getOpenId()+"------订单编号"+wxFpxx.getOrderNo());
-                    try {
-                        wxfpxxJpaDao.save(wxFpxx);
-                    }catch (Exception e){
-                        logger.info("交易信息保存失败");
-                        return ;
-                    }
-                }else {
-                    wxFpxxByTqm.setTqm(tqm);
-                    wxFpxxByTqm.setGsdm(gsxx.getGsdm());
-                    wxFpxxByTqm.setOrderNo(tqm);
-                    if(AlipayUtils.isAlipayBrowser(request)){
-                        wxFpxxByTqm.setUserid(userId);
+                        logger.info("第一次扫码存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+
+                                state+"----openid"+wxFpxx.getOpenId()+"----支付宝"+wxFpxx.getUserid()+
+                                "------订单编号"+wxFpxx.getOrderNo()+"------发票类型"+wxFpxx.getWxtype());
+                        try {
+                            wxfpxxJpaDao.save(wxFpxx);
+                        }catch (Exception e){
+                            logger.info("交易信息保存失败");
+                            return ;
+                        }
                     }else {
+                        wxFpxxByTqm.setTqm(tqm);
+                        wxFpxxByTqm.setGsdm(gsxx.getGsdm());
+                        wxFpxxByTqm.setOrderNo(tqm);
+                        wxFpxxByTqm.setQ(state);
+                        wxFpxxByTqm.setWxtype("1");
                         //微信
                         wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
-                    }
-                    if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                        String notNullCode= wxFpxxByTqm.getCode();
-                        wxFpxxByTqm.setCode(notNullCode);
-                    }
-                    try {
-                        wxfpxxJpaDao.save(wxFpxxByTqm);
-                    }catch (Exception e){
-                        logger.info("交易信息保存失败");
-                        return ;
+                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                            String notNullCode= wxFpxxByTqm.getCode();
+                            wxFpxxByTqm.setCode(notNullCode);
+                        }
+                        logger.info("第一次扫码之后所有---存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+
+                                "----微信openid"+wxFpxxByTqm.getOpenId()+"-------支付宝userid"
+                                +wxFpxxByTqm.getUserid()+"------订单编号"+wxFpxxByTqm.getOrderNo()+"-----发票类型"+wxFpxxByTqm.getWxtype());
+                        try {
+                            wxfpxxJpaDao.save(wxFpxxByTqm);
+                        }catch (Exception e){
+                            logger.info("交易信息保存失败");
+                            return ;
+                        }
                     }
                 }
-
                 Map map = new HashMap<>();
                 map.put("tqm", tqm);
                 map.put("gsdm", gsxx.getGsdm());
