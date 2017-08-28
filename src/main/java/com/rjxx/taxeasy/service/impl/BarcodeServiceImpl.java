@@ -486,7 +486,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                 String pdfurl = kpls.getPdfurl();
                 String fphm = kpls.getFphm();
                 String je = kpls.getJshj()+"";
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
                 String orderTime = sdf.format(kpls.getLrsj());
                 String kplsh = kpls.getKplsh()+"";
                 if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
