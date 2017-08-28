@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,7 +87,7 @@ public class BarcodeController extends BaseController {
                                 String orderTime = status.split("[+]")[2];
                                 String kplsh = status.split("[+]")[3];
                                 String img = pdf.replace("pdf", "jpg");
-                                if(AlipayUtils.isAlipayBrowser(request)){
+                                if(WeixinUtils.isWeiXinBrowser(request)){
                                     logger.info("已经开过票的存入微信发票详情--");
                                     WxFpxx aliWxfpxx = new WxFpxx();
                                     aliWxfpxx.setTqm(ppdm+orderNo);
@@ -96,7 +97,7 @@ public class BarcodeController extends BaseController {
                                     aliWxfpxx.setOrderNo(orderNo);
                                     aliWxfpxx.setWxtype("2");
                                     aliWxfpxx.setKplsh(kplsh);
-                                    logger.info("支付宝扫码已完成开票"+aliWxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
+                                    logger.info("已完成开票之后，微信扫码直接归入卡包--信息"+aliWxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
                                             q+
                                             "------订单编号"+aliWxfpxx.getOrderNo()+"------发票类型"+aliWxfpxx.getWxtype());
                                     try {
