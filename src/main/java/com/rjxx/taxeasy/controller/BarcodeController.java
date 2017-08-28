@@ -80,6 +80,7 @@ public class BarcodeController extends BaseController {
                             break;
                         default:
                             if (status.indexOf("pdf") != -1) {
+                                logger.info(status);
                                 String pdf = status.split("[+]")[0];
                                 String je = status.split("[+]")[1];
                                 String orderTime = status.split("[+]")[2];
