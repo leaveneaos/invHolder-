@@ -488,9 +488,10 @@ public class BarcodeServiceImpl implements BarcodeService {
                 String je = kpls.getJshj()+"";
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String orderTime = sdf.format(kpls.getLrsj());
+                String kplsh = kpls.getKplsh()+"";
                 if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
                     logger.info("返回值-----"+pdfurl+je+orderTime);
-                    return pdfurl+je+orderTime;
+                    return pdfurl+"+"+je+"+"+orderTime+"+"+kplsh;
                 }else{
                     return "开具中";
                 }

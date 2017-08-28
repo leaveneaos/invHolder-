@@ -1,7 +1,10 @@
 package com.rjxx.taxeasy.controller;
 
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.domains.WxFpxx;
 import com.rjxx.taxeasy.service.BarcodeService;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +26,8 @@ public class BarcodeController extends BaseController {
     @Autowired
     private BarcodeService barcodeService;
 
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
     /**
      * 扫码请求,如果验签成功,进入扫码信息确认页面
      *
@@ -78,8 +83,29 @@ public class BarcodeController extends BaseController {
                                 String pdf = status.split("[+]")[0];
                                 String je = status.split("[+]")[1];
                                 String orderTime = status.split("[+]")[2];
+                                String kplsh = status.split("[+]")[3];
                                 String img = pdf.replace("pdf", "jpg");
                                 logger.info("跳转前的orderNo--"+orderNo+"金额--"+je+"下单时间--"+orderTime);
+                                if(AlipayUtils.isAlipayBrowser(request)){
+                                    logger.info("已经开过票的存入微信发票详情--");
+                                    WxFpxx aliWxfpxx = new WxFpxx();
+                                    aliWxfpxx.setTqm(ppdm+orderNo);
+                                    aliWxfpxx.setGsdm(gsdm);
+                                    aliWxfpxx.setQ(q);
+                                    //aliWxfpxx.setUserid(kplsh);
+                                    aliWxfpxx.setOrderNo(orderNo);
+                                    aliWxfpxx.setWxtype("2");
+                                    aliWxfpxx.setKplsh(kplsh);
+                                    logger.info("支付宝扫码已完成开票"+aliWxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
+                                            q+
+                                            "------订单编号"+aliWxfpxx.getOrderNo()+"------发票类型"+aliWxfpxx.getWxtype());
+                                    try {
+                                        wxfpxxJpaDao.save(aliWxfpxx);
+                                    }catch (Exception e){
+                                        logger.info("交易信息保存失败");
+                                        return ;
+                                    }
+                                }
                                 //有pdf对应的url
                                 response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
                                         + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
