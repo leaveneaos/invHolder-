@@ -85,16 +85,39 @@
 		function load() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
 			$('#code').val('');
-
-			//alert(11);
 			$('#gsdm').val(gsdm);
-			//alert(gsdm);
-		}	
+		}
 		function tiqu() {
 			var tqm = $('#tqm').val();
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;		
 			var code = $('#code').val();
             var gsdm =   $('#gsdm').val();
+
+			if(tqm==null||tqm==""){
+                firm = "请输入发票提取码！";
+                title = "提示";
+                jAlert(firm, title);
+                return;
+			}
+			if(code==null||code==""){
+                firm = "请输入右侧验证码！";
+                title = "提示";
+                jAlert(firm, title);
+                return;
+			}
+			if(gsdm==null){
+                firm = "请重新访问此页面！";
+                title = "提示";
+                jAlert(firm, title);
+                return;
+			}else if(gsdm=="ldyx") {
+                if (tqm.length != 19) {
+                    firm = "输入发票提取码不符合规定！";
+                    title = "提示";
+                    jAlert(firm, title);
+                    return;
+                }
+            }
 			$.post(
 				"tqyz",
 				{
