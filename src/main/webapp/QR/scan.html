@@ -45,15 +45,19 @@
 </header>
 
 <div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
+	<input type="" id="ordrNo"/>
+	<input type="" id="je"/>
+	<input type="" id="ordrTime"/>
 	<section>
 		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
-			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+			<!--<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">-->
+				<!---->
+			<!--</li>-->
+			<li class="mui-table-view-cell mui-media mui-col-xs-12 mui-col-sm-12">
 				<a id="wx" onclick="wx()">
 					<span class="mui-icon iconfont icon-youxiang"></span>
 					<div class="mui-media-body" style="color: #fff;">微信</div>
 				</a>
-			</li>
-			<li class="mui-table-view-cell mui-media mui-col-xs-12 mui-col-sm-12">
 				<a id="zfb" onclick="sync()">
 					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
 					<div class="mui-media-body" style="color: #fff;">支付宝</div>
@@ -66,9 +70,7 @@
 		<img id="innerImg"/>
 		<div id="innerMsg"></div>
 	</section>
-<input type="" id="ordrNo"/>
-<input type="" id="je"/>
-<input type="" id="ordrTime"/>
+
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
 		<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
@@ -108,7 +110,7 @@
     function sync() {
         window.location = "../syncAlipay?_t=" + (new Date()).getTime();
     };
-    $(".wx").click(function() {
+    function wx() {
         alert("11");
       var orderNo = $('#orderNo').val();
       var je = $('#je').val();
@@ -117,7 +119,7 @@
         alert(je);
         alert(orderTime);
         window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
-    });
+    };
 </script>
 </body>
 </html>
