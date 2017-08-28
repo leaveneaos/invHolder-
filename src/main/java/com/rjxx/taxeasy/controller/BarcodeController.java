@@ -86,7 +86,6 @@ public class BarcodeController extends BaseController {
                                 String orderTime = status.split("[+]")[2];
                                 String kplsh = status.split("[+]")[3];
                                 String img = pdf.replace("pdf", "jpg");
-                                logger.info("跳转前的orderNo--"+orderNo+"金额--"+je+"下单时间--"+orderTime);
                                 if(AlipayUtils.isAlipayBrowser(request)){
                                     logger.info("已经开过票的存入微信发票详情--");
                                     WxFpxx aliWxfpxx = new WxFpxx();
@@ -107,6 +106,8 @@ public class BarcodeController extends BaseController {
                                         return ;
                                     }
                                 }
+                                logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
+                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
                                 //有pdf对应的url
                                 response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
                                         + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
