@@ -166,9 +166,12 @@ public class CommonController extends BaseController {
 
     @RequestMapping(value = "/syncWeiXin")
     @ResponseBody
-    private String syncWeiXin(String kplsh){
+    private String syncWeiXin(String orderNo, String price, String orderTime){
         String redirectUrl="";
-        logger.info("开票流水号----"+kplsh);
+        logger.info("取到的数据----"+orderNo);
+        logger.info("取到的数据----"+price);
+        logger.info("取到的数据----"+orderTime);
+
         return redirectUrl;
     }
 }

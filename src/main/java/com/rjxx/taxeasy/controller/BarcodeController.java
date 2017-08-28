@@ -75,9 +75,14 @@ public class BarcodeController extends BaseController {
                             break;
                         default:
                             if (status.indexOf("pdf") != -1) {
-                                String img = status.replace("pdf", "jpg");
+                                String pdf = status.split("[+]")[0];
+                                String je = status.split("[+]")[1];
+                                String orderTime = status.split("[+]")[2];
+                                String img = pdf.replace("pdf", "jpg");
+                                logger.info("跳转前的orderNo--"+orderNo+"金额--"+je+"下单时间--"+orderTime);
                                 //有pdf对应的url
-                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "=" + img);
+                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
+                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
                             } else {
                                 //无pdf对应的url
                                 response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_ERROR");

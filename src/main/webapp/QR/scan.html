@@ -66,7 +66,9 @@
 		<img id="innerImg"/>
 		<div id="innerMsg"></div>
 	</section>
-
+<input type="" id="ordrNo"/>
+<input type="" id="je"/>
+<input type="" id="ordrTime"/>
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
 		<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
@@ -86,7 +88,13 @@
         var thisURL = document.URL;
         var getval = thisURL.split('?')[1];
         var msg = getval.split("=")[2];
+        var orderNo = getval.split("=")[3];
+        var je = getval.split("=")[4];
+        var orderTime = getval.split("=")[5];
 		$("#innerImg").attr("src", msg);
+		$('#orderNo').val(orderNo);
+		$('#je').val(je);
+		$('#orderTime').val(orderTime);
     });
     $.post(
         '../getInvoiceTitle',
@@ -102,9 +110,13 @@
     };
     $(".wx").click(function () {
         alert("11");
-//        var kplsh = $('#kplsh').val();
-//        alert(kplsh);
-        //window.location = "../common/syncWeiXin?kplsh="+kplsh+"_t=" + (new Date()).getTime();
+      var orderNo = $('#orderNo').val();
+      var je = $('#je').val();
+      var orderTime = $('#orderTime').val();
+        alert(orderNo);
+        alert(je);
+        alert(orderTime);
+        window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
     });
 </script>
 </body>
