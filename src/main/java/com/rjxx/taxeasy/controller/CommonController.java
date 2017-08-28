@@ -164,11 +164,11 @@ public class CommonController extends BaseController {
         return  JSON.toJSONString(map);
     }
 
-    @RequestMapping(value = "/receive")
+    @RequestMapping(value = "/syncWeiXin")
     @ResponseBody
-    private String wechatdrawinvoice(){
+    private String syncWeiXin(String kplsh){
         String redirectUrl="";
-
-        return null;
+        logger.info("开票流水号----"+kplsh);
+        return redirectUrl;
     }
 }

@@ -56,12 +56,12 @@
 					</svg>
 					<span>邮箱</span>
 				</a>
-				<!-- <a href="" class="wx">
+				<a href="" class="wx">
 					<svg class="icon" aria-hidden="true">
 					  <use xlink:href="#icon-weixin"></use>
 					</svg>
 					<span>微信</span>
-				</a> -->
+				</a>
 				<a href="javascript:void(0);" class="zfb">
 					<svg class="icon" aria-hidden="true">
 					  <use xlink:href="#icon-zhifubao"></use>
@@ -71,6 +71,7 @@
 				
 			</div>
 		</div>
+		<input type="" id="kplsh" />
 	</section>
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/iconfont.js"></script>
@@ -88,6 +89,7 @@
                         $('#kprq').html(kplslist[0].kprq);
                         $('#fpdm').html(kplslist[0].fpdm);
                         $('#fphm').html(kplslist[0].fphm);
+                        $('#kplsh').html(kplslist[0].kplsh);
                         $("#pdf").attr("href",kplslist[0].pdfurl);
                 }
             )
@@ -97,9 +99,11 @@
             window.location = "../syncAlipay?_t=" + (new Date()).getTime();
         });
 
-        // $(".wx").click(function () {
-        //     window.location = "../syncWeiXin?_t=" + (new Date()).getTime();
-        // });
+         $(".wx").click(function () {
+             var kplsh = $('#kplsh').val();
+             alert(kplsh);
+             window.location = "../common/syncWeiXin?kplsh="+kplsh+"_t=" + (new Date()).getTime();
+         });
 	</script>
 </body>
 </html>
