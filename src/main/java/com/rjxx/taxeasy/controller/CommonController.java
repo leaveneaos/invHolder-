@@ -168,9 +168,34 @@ public class CommonController extends BaseController {
     @ResponseBody
     private String syncWeiXin(String orderNo, String price, String orderTime){
         String redirectUrl="";
-        logger.info("取到的数据----"+orderNo);
-        logger.info("取到的数据----"+price);
-        logger.info("取到的数据----"+orderTime);
+        logger.info("取到的数据orderNo----"+orderNo);
+        logger.info("取到的数据price----"+price);
+        logger.info("取到的数据orderTime----"+orderTime);
+        WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+
+        try {
+            if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
+                //可开具 跳转微信授权链接
+                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2");
+                if(null==redirectUrl||redirectUrl.equals("")){
+                    //获取授权失败
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }else {
+                    //成功跳转
+                    response.sendRedirect(redirectUrl);
+                    return null;
+                }
+            }else {
+                logger.info("获取开票数据失败");
+                request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return redirectUrl;
     }
