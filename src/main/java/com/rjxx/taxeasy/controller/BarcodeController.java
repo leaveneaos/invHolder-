@@ -83,35 +83,10 @@ public class BarcodeController extends BaseController {
                             if (status.indexOf("pdf") != -1) {
                                 logger.info(status);
                                 String pdf = status.split("[+]")[0];
-                                String je = status.split("[+]")[1];
-                                String orderTime = status.split("[+]")[2];
-                                String kplsh = status.split("[+]")[3];
+                                //String je = status.split("[+]")[1];
+                               // String orderTime = status.split("[+]")[2];
+                                //String kplsh = status.split("[+]")[3];
                                 String img = pdf.replace("pdf", "jpg");
-//                                if(WeixinUtils.isWeiXinBrowser(request)){
-//                                    logger.info("已经开过票的存入微信发票详情--");
-//                                    WxFpxx aliWxfpxx = new WxFpxx();
-//                                    aliWxfpxx.setTqm(ppdm+orderNo);
-//                                    aliWxfpxx.setGsdm(gsdm);
-//                                    aliWxfpxx.setQ(q);
-//                                    //aliWxfpxx.setUserid(kplsh);
-//                                    aliWxfpxx.setOrderNo(orderNo);
-//                                    aliWxfpxx.setWxtype("2");
-//                                    aliWxfpxx.setKplsh(kplsh);
-//                                    logger.info("已完成开票之后，微信扫码直接归入卡包--信息"+aliWxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
-//                                            q+
-//                                            "------订单编号"+aliWxfpxx.getOrderNo()+"------发票类型"+aliWxfpxx.getWxtype());
-//                                    try {
-//                                        wxfpxxJpaDao.save(aliWxfpxx);
-//                                    }catch (Exception e){
-//                                        logger.info("交易信息保存失败");
-//                                        return ;
-//                                    }
-//                                }
-//                                logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
-//                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
-//                                //有pdf对应的url
-//                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
-//                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
                                 response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+img);
                             } else {
                                 //无pdf对应的url

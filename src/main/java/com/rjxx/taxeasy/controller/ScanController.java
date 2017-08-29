@@ -178,7 +178,6 @@ public class ScanController extends BaseController {
                             break;
                         default://已经开过票的
                             if(status.indexOf("pdf")!=-1){
-
                                 String pdf = status.split("[+]")[0];
                                 String je = status.split("[+]")[1];
                                 String orderTime = status.split("[+]")[2];
@@ -205,7 +204,6 @@ public class ScanController extends BaseController {
                                             logger.info("交易信息保存失败");
                                             return ;
                                         }
-
                                     }else {
                                         wxFpxxByTqm.setTqm(ppdm+orderNo);
                                         wxFpxxByTqm.setGsdm(gsdm);
@@ -226,15 +224,12 @@ public class ScanController extends BaseController {
                                         }
                                     }
 
-
                                 }
                                 logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
                                         + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
                                 //有pdf对应的url
                                 response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
                                         + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
-                                //有pdf对应的url
-                                //response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+img);
                             }else{
                                 //无pdf对应的url
                                 response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_ERROR");

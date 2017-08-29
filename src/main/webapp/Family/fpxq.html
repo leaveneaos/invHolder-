@@ -12,6 +12,9 @@
 		<img src="../images/nav.png">
 	</header>
 	<section class="main">
+		<input type="hidden" id="orderNo"/>
+		<input type="hidden" id="je"/>
+		<input type="hidden" id="orderTime"/>
 		<div class="shadow1"></div>
 		<div class="shadow2"></div>
 		<div class="content">
@@ -71,12 +74,22 @@
 				
 			</div>
 		</div>
-		<input type="" id="kplsh" />
 	</section>
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var isAlipay = ua.indexOf('alipay') != -1;
         $(function () {
+            var thisURL = document.URL;
+            var getval = thisURL.split('?')[1];
+            var orderNo = getval.split("=")[2];
+            var je = getval.split("=")[3];
+            var orderTime = getval.split("=")[4];
+            $('#orderNo').val(orderNo);
+            $('#je').val(je);
+            $('#orderTime').val(orderTime);
             $.post(
                 "../fm/fpsession",
                 {},
@@ -100,9 +113,10 @@
         });
 
          $(".wx").click(function () {
-             var kplsh = $('#kplsh').val();
-             alert(kplsh);
-             window.location = "../common/syncWeiXin?kplsh="+kplsh+"_t=" + (new Date()).getTime();
+             var orderNo = $('#orderNo').val();
+             var je = $('#je').val();
+             var orderTime = $('#orderTime').val();
+             window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
          });
 	</script>
 </body>
