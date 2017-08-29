@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.druid.sql.visitor.functions.Lpad;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
@@ -186,6 +187,20 @@ public class WeiXinController extends BaseController {
                         }
                         if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())){
                             logger.info("进入领取发票类型------------直接插入卡包");
+                            WxFpxx wxFpxxIncard = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
+                            if(null==wxFpxxIncard.getCode()||"".equals(wxFpxxIncard.getCode())){
+                                logger.info("进入插卡方法-----");
+                                //没有插入过卡包
+                                Map kplsMap = new HashMap();
+                                kplsMap.put("kplsh",wxFpxxIncard.getKplsh());
+                                Kpls kpls = kplsService.findOneByParams(kplsMap);
+                                Map params2 = new HashMap();
+                                params2.put("kplsh", wxFpxxIncard.getKplsh());
+                                List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
+                                //插入卡包
+                                String result = weixinUtils.fpInsertCardBox(SuccOrderId, pdf_file_url, kpspmxList, kpls);
+                                return "";
+                            }
                         }
                     }
                 }

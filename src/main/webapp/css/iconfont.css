@@ -1,6 +1,7 @@
 
 @font-face {font-family: "iconfont";
   src:url('../fonts/iconfont.ttf?t=1496917502641') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+
 }
 
 .iconfont {
@@ -11,6 +12,7 @@
   -moz-osx-font-smoothing: grayscale;
   color: #fff;
 }
+
 .icon-jikediancanicon23:before { content: "\e785"; }
 
 .icon-youxiang:before { content: "\e62f"; }
@@ -36,5 +38,3 @@
 .icon-icon:before { content: "\e60e"; color: green;font-size:20px;}
 
 .icon-youxiang4:before { content: "\e622"; color: green;font-size:20px;}
-
-.icon-weixin:before { content: "\e612"; }
