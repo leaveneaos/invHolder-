@@ -136,53 +136,54 @@ public class WeiXinController extends BaseController {
                         logger.info("提取码为空");
                         return "";
                     }
-                    //主动获取授权状态，成功会返回数据
-                    Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
-                    if(null==resultMap){
-                        logger.info("订单编号为"+SuccOrderId+"的提取码,主动获取授权失败,订单可能没有授权"+resultMap.get("msg"));
-                        return "";
-                    }else {
-                        System.out.println("开始封装数据并进行开票"+resultMap.toString());
-                        if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
-                            logger.info("进入申请开票类型------------开始开票");
+                    if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
+                        logger.info("进入申请开票类型------------开始开票");
+                        //主动获取授权状态，成功会返回数据
+                        Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
+                        if(null==resultMap){
+                            logger.info("进入--主动查询授权是空。");
+                            return "";
+                        }else {
+                            System.out.println("开始封装数据并进行开票" + resultMap.toString());
                             //全家进行开票
-                            if(null!=gsdm&&gsdm.equals("Family")){
-                                    Map parms = new HashMap();
-                                    parms.put("gsdm", gsdm);
-                                    Gsxx gsxx = gsxxService.findOneByParams(parms);
-                                    logger.info("进入全家开票");
-                                    //拉取数据
-                                    Map resultSjMap = getDataService.getData(tqm, "Family");
-                                    logger.info("全家拉取数据成功--------开始开票");
-                                    String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
-                                            (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
-                                            , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                            tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
+                            if (null != gsdm && gsdm.equals("Family")) {
+                                Map parms = new HashMap();
+                                parms.put("gsdm", gsdm);
+                                Gsxx gsxx = gsxxService.findOneByParams(parms);
+                                logger.info("进入全家开票");
+                                //拉取数据
+                                Map resultSjMap = getDataService.getData(tqm, "Family");
+                                logger.info("全家拉取数据成功--------开始开票");
+                                String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
+                                        (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
+                                        , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
+                                        tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
+                                if ("-1".equals(status)) {
+                                    logger.info("开具失败");
+                                } else if ("-2".equals(status)) {
+                                    logger.info("开具失败，拒绝开票");
+                                } else {
+                                    logger.info("开具成功");
+                                    System.out.println("开票成功");
+                                }
+                                return "";
+                            }
+                            if (null != gsdm && gsdm.equals("chamate")) {
+                                logger.info("进入一茶一坐开票处理");
+                                //Thread.sleep(5000);
+                                String status = barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"),
+                                        (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
+                                        , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4");
                                     if ("-1".equals(status)) {
                                         logger.info("开具失败");
-                                    } else if ("-2".equals(status)) {
-                                        logger.info("开具失败，拒绝开票");
+                                    } else if ("0".equals(status)) {
+                                        logger.info("所需数据为空");
                                     } else {
                                         logger.info("开具成功");
                                         System.out.println("开票成功");
                                     }
                                     return "";
-                            }
-                            if(null!=gsdm && gsdm.equals("chamate")){
-                                logger.info("进入一茶一坐开票处理");
-                                //Thread.sleep(5000);
-                                String   status = barcodeService.makeInvoice(gsdm,q,(String)resultMap.get("title"),
-                                        (String)resultMap.get("tax_no"),(String)resultMap.get("email"),(String)resultMap.get("bank_type")
-                                        ,(String)resultMap.get("bank_no"),(String)resultMap.get("addr"),(String)resultMap.get("phone"),tqm,openid,"4");
-                                if ("-1".equals(status)) {
-                                    logger.info("开具失败");
-                                } else if ("0".equals(status)) {
-                                    logger.info("所需数据为空");
-                                }else {
-                                    logger.info("开具成功");
-                                    System.out.println("开票成功");
                                 }
-                                return "";
                             }
                         }
                         if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())){
@@ -202,7 +203,6 @@ public class WeiXinController extends BaseController {
                                 return "";
                             }
                         }
-                    }
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
                     System.out.println("失败的订单id"+FailOrderId);
