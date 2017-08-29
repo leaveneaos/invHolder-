@@ -195,9 +195,19 @@ public class WeiXinController extends BaseController {
                                 Map kplsMap = new HashMap();
                                 kplsMap.put("kplsh",wxFpxxIncard.getKplsh());
                                 Kpls kpls = kplsService.findOneByParams(kplsMap);
+                                if(null==kpls){
+                                    logger.info("kpls为空");
+                                    return "";
+                                }
                                 Map params2 = new HashMap();
                                 params2.put("kplsh", wxFpxxIncard.getKplsh());
                                 List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
+                                if(null==kpspmxList){
+                                    logger.info("商品明细为空");
+                                    return "";
+                                }
+                                logger.info("开票流水为---"+JSON.toJSONString(kpls));
+                                logger.info("开票商品明细为---"+JSON.toJSONString(kpspmxList));
                                 //插入卡包
                                 String result = weixinUtils.fpInsertCardBox(SuccOrderId, pdf_file_url, kpspmxList, kpls);
                                 return "";
