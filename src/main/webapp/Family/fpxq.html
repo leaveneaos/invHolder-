@@ -59,7 +59,7 @@
 					</svg>
 					<span>邮箱</span>
 				</a>
-				<a href="" class="wx">
+				<a href="javascript:void(0);" class="wx">
 					<svg class="icon" aria-hidden="true">
 					  <use xlink:href="#icon-weixin"></use>
 					</svg>
@@ -99,9 +99,6 @@
             $('#orderNo').val(orderNo);
             $('#je').val(je);
             $('#orderTime').val(orderTime);
-            alert(orderNo);
-            alert(je);
-            alert(orderTime);
             $.post(
                 "../fm/fpsession",
                 {},
@@ -128,9 +125,6 @@
              var orderNo = $('#orderNo').val();
              var je = $('#je').val();
              var orderTime = $('#orderTime').val();
-             alert(orderNo);
-             alert(je);
-             alert(orderTime);
              window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
          });
 	</script>
