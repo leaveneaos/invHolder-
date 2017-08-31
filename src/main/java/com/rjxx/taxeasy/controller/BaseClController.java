@@ -281,9 +281,9 @@ public class BaseClController extends BaseController {
                     String orderTime = sdf.format(list.get(0).getLrsj());
                     logger.info("跳转发票详情页面---"+orderNo+"+"+je+"+"+orderTime);
                     logger.info("跳转连接"+request.getContextPath() + "/Family/fpxq.html?_t="
-                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "orderTime=" + orderTime);
+                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime);
                     response.sendRedirect(request.getContextPath() + "/Family/fpxq.html?_t="
-                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "orderTime=" + orderTime);
+                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime);
                     return;
                 } else if (null != jyls && null != jyls.getDjh()) {
                     /**
