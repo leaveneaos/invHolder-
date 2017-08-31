@@ -78,18 +78,19 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
-        var ua = navigator.userAgent.toLowerCase();
-        var isWeixin = ua.indexOf('micromessenger') != -1;
-        var isAlipay = ua.indexOf('alipay') != -1;
-        if(isWeixin){
-            $(".zfb").css('display','none');
-            $(".wx").css('display','block');
-		}
-        if(isAlipay){
-            $(".zfb").css('display','block');
-            $(".wx").css('display','none');
-        }
+
         $(function () {
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            if(isWeixin){
+                $(".zfb").css('display','none');
+                $(".wx").css('display','block');
+            }
+            if(isAlipay){
+                $(".zfb").css('display','block');
+                $(".wx").css('display','none');
+            }
             var thisURL = document.URL;
             var getval = thisURL.split('?')[1];
             var orderNo = getval.split("=")[2];
@@ -98,6 +99,9 @@
             $('#orderNo').val(orderNo);
             $('#je').val(je);
             $('#orderTime').val(orderTime);
+            alert(orderNo);
+            alert(je);
+            alert(orderTime);
             $.post(
                 "../fm/fpsession",
                 {},
