@@ -81,6 +81,14 @@
         var ua = navigator.userAgent.toLowerCase();
         var isWeixin = ua.indexOf('micromessenger') != -1;
         var isAlipay = ua.indexOf('alipay') != -1;
+        if(isWeixin){
+            $(".zfb").css('display','none');
+            $(".wx").css('display','block');
+		}
+        if(isAlipay){
+            $(".zfb").css('display','block');
+            $(".wx").css('display','none');
+        }
         $(function () {
             var thisURL = document.URL;
             var getval = thisURL.split('?')[1];
@@ -116,6 +124,9 @@
              var orderNo = $('#orderNo').val();
              var je = $('#je').val();
              var orderTime = $('#orderTime').val();
+             alert(orderNo);
+             alert(je);
+             alert(orderTime);
              window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
          });
 	</script>

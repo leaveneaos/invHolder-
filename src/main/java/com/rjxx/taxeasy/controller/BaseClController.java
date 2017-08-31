@@ -279,6 +279,9 @@ public class BaseClController extends BaseController {
                     String je = list.get(0).getJshj().toString();
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String orderTime = sdf.format(list.get(0).getLrsj());
+                    logger.info("跳转发票详情页面---"+orderNo+"+"+je+"+"+orderTime);
+                    logger.info("跳转连接"+request.getContextPath() + "/Family/fpxq.html?_t="
+                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "orderTime=" + orderTime);
                     response.sendRedirect(request.getContextPath() + "/Family/fpxq.html?_t="
                             + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "orderTime=" + orderTime);
                     return;
