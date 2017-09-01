@@ -145,6 +145,7 @@
                         price = data.price;
                         spsl = data.spsl;
                         spmc = data.spmc;
+                        alert(RetainedDecimalPlaces($('#price').html(data.price)+"元"));
                     }else{
                         redirect(obj.msg)
                     }
