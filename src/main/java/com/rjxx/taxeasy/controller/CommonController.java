@@ -48,6 +48,9 @@ public class CommonController extends BaseController {
     public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price){
         String redirectUrl ="";
         Map resultMap = new HashMap();
+
+        String str = price.replaceAll("[\u4e00-\u9fa5]+", "");
+        logger.info("截取金额字符串元---"+str);
         if(weixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
             //WeixinUtils weixinUtils = new WeixinUtils();
@@ -63,7 +66,7 @@ public class CommonController extends BaseController {
                     return null;
                 }else if(status!=null && status.equals("可开具")){
                     //可开具 跳转微信授权链接
-                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1");
+                    redirectUrl = weixinUtils.getTiaoURL(orderNo,str,orderTime, storeNo,"1");
                     if(null==redirectUrl||redirectUrl.equals("")){
                         //获取授权失败
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -171,12 +174,14 @@ public class CommonController extends BaseController {
         logger.info("取到的数据orderNo----"+orderNo);
         logger.info("取到的数据price----"+price);
         logger.info("取到的数据orderTime----"+orderTime);
+        String str = price.replaceAll("[\u4e00-\u9fa5]+", "");
+        logger.info("截取金额字符串元---"+str);
         WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
 
         try {
             if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
                 //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2");
+                redirectUrl = weixinUtils.getTiaoURL(orderNo,str,orderTime, "","2");
                 if(null==redirectUrl||redirectUrl.equals("")){
                     //获取授权失败
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");

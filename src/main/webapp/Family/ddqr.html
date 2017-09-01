@@ -67,7 +67,7 @@
                             $('#orderNo').html(data.orderNo);
                             $('#order').html(data.order);
                             $('#orderTime').html(data.orderTime);
-                            $('#price').html(RetainedDecimalPlaces(data.price));
+                            $('#price').html(RetainedDecimalPlaces(data.price)+"元");
                             $('#tqmhidden').html(data.tqm);
                             $("#sure").attr("disabled",false);
                             msg=null;
