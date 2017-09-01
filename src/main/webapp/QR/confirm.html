@@ -137,7 +137,7 @@
                         var data = eval("(" + obj.data + ")");
                         $('#orderNo').html(data.orderNo);
                         $('#orderTime').html(data.orderTime);
-                        $('#price').html(data.price);
+                        RetainedDecimalPlaces($('#price').html(data.price)+"元");
                         $('#storeNo').html(data.storeNo);
                         orderNo = data.orderNo;
                         orderTime = data.orderTime;
@@ -151,7 +151,12 @@
                 }
             )
         })
-
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
         function tk() {
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
