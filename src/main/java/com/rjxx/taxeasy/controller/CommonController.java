@@ -48,8 +48,9 @@ public class CommonController extends BaseController {
     public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price){
         String redirectUrl ="";
         Map resultMap = new HashMap();
-
-        String str = price.replaceAll("[\u4e00-\u9fa5]+", "");
+        logger.info("截取前--"+price);
+        int i = price.indexOf("元");
+        String str = price.substring(0,i);
         logger.info("截取金额字符串元---"+str);
         if(weixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
@@ -172,9 +173,10 @@ public class CommonController extends BaseController {
     private String syncWeiXin(String orderNo, String price, String orderTime){
         String redirectUrl="";
         logger.info("取到的数据orderNo----"+orderNo);
-        logger.info("取到的数据price----"+price);
         logger.info("取到的数据orderTime----"+orderTime);
-        String str = price.replaceAll("[\u4e00-\u9fa5]+", "");
+        logger.info("截取前--"+price);
+        int i = price.indexOf("元");
+        String str = price.substring(0,i);
         logger.info("截取金额字符串元---"+str);
         WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
 
