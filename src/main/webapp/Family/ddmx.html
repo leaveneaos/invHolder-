@@ -56,7 +56,7 @@
 
     				    zje += items[i].spje/1 + items[i].spse/1;
                         var num=items[i].sps==null?"":items[i].sps;
-    					html+='<div class="title"><span class="name" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">'+ items[i].spmc+'</span><span class="num">'+num+'</span><span class="price">'+ (items[i].spje/1+items[i].spse/1)+"</span></div>";
+    					html+='<div class="title"><span class="name" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">'+ items[i].spmc+'</span><span class="num">'+num+'</span><span class="price">'+ RetainedDecimalPlaces(items[i].spje/1+items[i].spse/1)+"元"+"</span></div>";
     				}
     				$('.totPrice').html(zje.toFixed(2));
     				//在页面显示数据
@@ -67,6 +67,12 @@
 		function sure(){
 			window.location.href = "fptt.html?time="+new Date();
 		}
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
 	</script>
 </body>
 </html>

@@ -85,15 +85,16 @@
                         $("#fphm").html(data.fphm);
                         $("#jym").html(data.jym);
                         $("#pdf").attr("href",data.pdfurl);
-                    RetainedDecimalPlacesNF( $("#fpje").html(data.jshj));
+                    	$("#fpje").html(RetainedDecimalPlaces(data.jshj)+"元");
                 }
             )
         })
         //金额千位分隔2
-        function RetainedDecimalPlacesNF(num) {
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
             var source = String(num).split(".");
             source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
-            return source[0];
+            return source.join(".");
         };
 	</script>
 </body>

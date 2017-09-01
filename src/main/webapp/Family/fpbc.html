@@ -90,7 +90,7 @@
                 function (data) {
                 	console.log(data)
                     $("#fptt").html(data.fptt);
-                    $("#je").html(data.je);
+                    $("#je").html(RetainedDecimalPlaces(data.je)+"元");
                     if(null==data.nsrsbh || data.nsrsbh==''){
                     	$('#nsrsbh').parent().css('display','none')
                     }else{
@@ -123,7 +123,13 @@
                     }
                 }
             );
-        })      
+        })
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
 	</script>
 </body>
 </html>

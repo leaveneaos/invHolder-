@@ -107,7 +107,7 @@
 
                         $('#xfmc').html(kplslist[0].xfmc);
                         $('#gfmc').html(kplslist[0].gfmc);
-                        $('#fpje').html(kplslist[0].jshj);
+                        $('#fpje').html(RetainedDecimalPlaces(kplslist[0].jshj)+"元");
                         $('#kprq').html(kplslist[0].kprq);
                         $('#fpdm').html(kplslist[0].fpdm);
                         $('#fphm').html(kplslist[0].fphm);
@@ -127,6 +127,12 @@
              var orderTime = $('#orderTime').val();
              window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
          });
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
 	</script>
 </body>
 </html>

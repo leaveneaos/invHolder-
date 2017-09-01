@@ -23,11 +23,12 @@
 			</div>
 			<div class="middle" style="height: 240px;">
 		        <ul>
-		            <li class="fl">门店编号 :</li>
+		            <li class="fl">店铺名称 :</li>
 		            <li class="fr omit" id="orderNo"></li>
 		        </ul>
 		         <ul>
-		            <li class="fl">序&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号 :</li>
+		            <!--<li class="fl">序&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号 :</li>-->
+		            <li class="fl">交易序号 :</li>
 		            <li class="fr omit" id="order"></li>
 		        </ul>
 		        <ul>
@@ -36,7 +37,7 @@
 		        </ul>
 		        <ul>
 		            <li class="fl">合计金额 :</li>
-		            <li class="fr omit" id="price"></li>
+		            <li class="fr omit" id="price" ></li>
 		        </ul>
 			</div>
 			<div class="bottom">
@@ -66,7 +67,7 @@
                             $('#orderNo').html(data.orderNo);
                             $('#order').html(data.order);
                             $('#orderTime').html(data.orderTime);
-                            $('#price').html(data.price);
+                            $('#price').html(RetainedDecimalPlaces(data.price)+"元");
                             $('#tqmhidden').html(data.tqm);
                             $("#sure").attr("disabled",false);
                             msg=null;
@@ -74,6 +75,13 @@
                     }
                 )
 	    });
+
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
         function sure() {
             var storeNo = $('#orderNo').text(),
                 orderNo = $('#order').text(),
