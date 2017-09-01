@@ -67,7 +67,7 @@
                             $('#orderNo').html(data.orderNo);
                             $('#order').html(data.order);
                             $('#orderTime').html(data.orderTime);
-                            $('#price').html(RetainedDecimalPlaces(data.price));
+                            $('#price').html(RetainedDecimalPlaces(data.price)+"元");
                             $('#tqmhidden').html(data.tqm);
                             $("#sure").attr("disabled",false);
                             msg=null;
@@ -87,6 +87,8 @@
                 orderNo = $('#order').text(),
                 orderTime = $('#orderTime').text(),
                 price = $('#price').text();
+            var reg=/[\u4E00-\u9FA5]/g;
+            var pri = price.replace(reg,'');
              var   tqm=$('#tqmhidden').text();
              if(tqm!=null){
             var ua = navigator.userAgent.toLowerCase();
@@ -96,7 +98,7 @@
                 window.location.href = "../Family/ddmx.html?time=" + new Date();
             }else if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + price;
+                    "&storeNo=" + storeNo + "&price=" + pri;
             }else{
                 redirect("请用微信或支付宝扫码");
             }
