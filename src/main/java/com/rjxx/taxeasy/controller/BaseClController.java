@@ -243,13 +243,13 @@ public class BaseClController extends BaseController {
                             wFpxx.setOrderNo(tqm);
                             wFpxx.setQ(state);
                             wFpxx.setWxtype("2");
-                           wFpxx.setOpenId(opendid);
+                            wFpxx.setOpenId(opendid);
                             wFpxx.setKplsh(list.get(0).getKplsh().toString());
                             logger.info("已完成开票,归入卡包---"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+
-                                    state+"----支付宝"+userId+
+                                    state+"----微信"+opendid+
                                     "------订单编号"+wFpxx.getOrderNo()+"------发票类型"+wFpxx.getWxtype());
                             try {
-                                wxfpxxJpaDao.save(wxFpxxByTqm);
+                                wxfpxxJpaDao.save(wFpxx);
                             }catch (Exception e){
                                 logger.info("交易信息保存失败");
                                 return ;
