@@ -137,7 +137,7 @@
                         var data = eval("(" + obj.data + ")");
                         $('#orderNo').html(data.orderNo);
                         $('#orderTime').html(data.orderTime);
-                        RetainedDecimalPlaces($('#price').html(data.price)+"元");
+                        $('#price').html(RetainedDecimalPlaces(data.price));
                         $('#storeNo').html(data.storeNo);
                         orderNo = data.orderNo;
                         orderTime = data.orderTime;
@@ -145,7 +145,6 @@
                         price = data.price;
                         spsl = data.spsl;
                         spmc = data.spmc;
-                        alert(RetainedDecimalPlaces($('#price').html(data.price)+"元"));
                     }else{
                         redirect(obj.msg)
                     }
