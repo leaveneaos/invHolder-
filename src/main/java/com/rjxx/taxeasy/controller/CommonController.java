@@ -182,7 +182,7 @@ public class CommonController extends BaseController {
         logger.info("取到的数据orderTime----"+orderTime);
         try {
             //判断是否是微信浏览
-            if (!WeixinUtils.isWeiXinBrowser(request)) {
+            if (!weixinUtils.isWeiXinBrowser(request)) {
                 request.getSession().setAttribute("msg", "请使用微信进行该操作");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
