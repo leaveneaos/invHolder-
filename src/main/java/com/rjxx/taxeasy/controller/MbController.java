@@ -268,15 +268,13 @@ public class MbController extends BaseController {
                         System.out.println("ldyx+++++++++++++++++Strat");
                         //第一次请求url获取token 验证
                         resultMap=getDataService.getldyxFirData(tqm,gsdm);
-                        if(null==request.getSession().getAttribute("crateDateTime")){
-                            //放入系统当前时间 直接是毫秒
-                            Long dateTime = System.currentTimeMillis();
-                            request.getSession().setAttribute("crateDateTime",dateTime);//创建时间
-                            request.getSession().setAttribute("accessToken",resultMap.get("accessToken"));//token
-                            request.getSession().setAttribute("expiresIn",resultMap.get("expiresIn"));//过期时间
-                            resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
+                        String accessToken = (String) resultMap.get("accessToken");
+                        if(null!=accessToken && "".equals(accessToken)){
+                            resultMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
                         }else{
-                            resultMap = getDataService.getldyxSecData(tqm,gsdm,(String) resultMap.get("accessToken"));
+                            result.put("num","12");
+                            result.put("msg","获取数据失败，请重试！");
+                            return result;
                         }
                         if(null!=resultMap.get("msg")){
                             result.put("num","12");

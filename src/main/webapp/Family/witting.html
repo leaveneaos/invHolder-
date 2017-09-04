@@ -66,13 +66,19 @@
         var ua = navigator.userAgent.toLowerCase();
         var isWeixin = ua.indexOf('micromessenger') != -1;
         var isAlipay = ua.indexOf('alipay') != -1;
+        var isUCBrowser = ua.indexOf('UCBrowser') != -1;
+        var isSafari = ua.indexOf('Safari') != -1;
 		function guanbi() {
             window.close();
             if(isWeixin){
                 WeixinJSBridge.call('closeWindow');
             }if(isAlipay){
                 AlipayJSBridge.call('closeWebview');
-            }
+            }if(isUCBrowser){
+
+			}if(isSafari){
+
+			}
         }
 
 	</script>
