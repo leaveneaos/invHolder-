@@ -37,6 +37,9 @@
 		#zfb {
 			display: none;
 		}
+		#wx{
+			display: none;
+		}
 	</style>
 </head>
 <body>
@@ -88,6 +91,17 @@
 <script src="../js/mui.zoom.js"></script>
 <script>
     $(function () {
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var isAlipay = ua.indexOf('alipay') != -1;
+        if(isWeixin){
+            $(".zfb").css('display','none');
+            $(".wx").css('display','block');
+        }
+        if(isAlipay){
+            $(".zfb").css('display','block');
+            $(".wx").css('display','none');
+        }
         var thisURL = document.URL;
         var getval = thisURL.split('?')[1];
         var msg = getval.split("=")[2];
