@@ -472,25 +472,6 @@ public class BaseClController extends BaseController {
                 result.put("num","3");
                 return result;
             }
-            /*调用接口获取jyxxsq等信息*/
-            Map resultMap = new HashMap();
-            resultMap=getDataService.getData(tqm,gsdm);
-            List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
-            List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-            String error = (String) resultMap.get("error");
-            logger.info("---------错误信息------------"+error);
-            if(error!=null){
-                result.put("error", error);
-                return result;
-            }
-            String temp=(String)resultMap.get("temp");
-             /*wait to do*/
-            if(error!=null){
-                result.put("error",temp);
-                return result;
-            }
-            Jyxxsq jyxxsq=jyxxsqList.get(0);
-            request.getSession().setAttribute("je",jyxxsq.getJshj());
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
             if (list.size() > 0) {/*代表申请已完成开票,跳转最终开票页面*/
@@ -540,6 +521,25 @@ public class BaseClController extends BaseController {
             }else if(null != jyls && null !=jyls.getDjh()){
                 result.put("num","6");
             }else {//跳转发票提取页面
+                 /*调用接口获取jyxxsq等信息*/
+                Map resultMap = new HashMap();
+                resultMap=getDataService.getData(tqm,gsdm);
+                List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+                List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+                String error = (String) resultMap.get("error");
+                logger.info("---------错误信息------------"+error);
+                if(error!=null){
+                    result.put("error", error);
+                    return result;
+                }
+                String temp=(String)resultMap.get("temp");
+                /*wait to do*/
+                if(error!=null){
+                    result.put("error",temp);
+                    return result;
+                }
+                Jyxxsq jyxxsq=jyxxsqList.get(0);
+                request.getSession().setAttribute("je",jyxxsq.getJshj());
                 request.getSession().setAttribute("resultMap",resultMap);
                 request.getSession().setAttribute("jymxsqList",jymxsqList);
                 request.getSession().setAttribute("tqm",tqm);

@@ -117,7 +117,7 @@
 				}, 
 				function(data) {
 					if(data.num == 2){
-                    	window.open("fpxq.html?time=" + new Date());
+                    	window.location.href("../Family/fpxq.html?time=" + new Date());
 					}else if (data.num == 3) {
                         $('#cwts').html("您输入的提取码不正确！");
                         loadimage();
@@ -125,9 +125,9 @@
 						$('#cwts').html("您输入的验证码不正确");
 						loadimage();	
 					}else if(data.num == 5){
-                        window.location.href = "ddmx.html?time=" + new Date();
+                        window.location.href = "../Family/ddmx.html?time=" + new Date();
 					}else if (data.num == 6) {
-                        window.location.href = "witting.html?time=" + new Date();
+                        window.location.href = "../Family/witting.html?time=" + new Date();
                     }else if (data.error != null) {
                         $('#cwts').html(data.error);
                         loadimage();
