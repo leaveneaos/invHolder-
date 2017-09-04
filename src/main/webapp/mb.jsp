@@ -24,16 +24,23 @@
 		.mui-input-group .mui-input-row {
 		    height: 45px;
 		}
+		#us {
+			text-decoration:none;
+			color:#000000;
+		}
+
 	</style>
 </head>
 <body id="index" onload="load()">
-	<header>
-		<img src="images/ldyx.png"/>
-	</header>
+<header>
+	<div id="img">
+		<img id="logo" src="images/rjxx.jpg"/>
+	</div>
+</header>
 	
-
 	<section class="data-tip">
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对绿地优鲜的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对<a id="us">我们</a>
+		的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。
 	</section>
 
 	<section>
@@ -68,7 +75,6 @@
 	<script src="js/fpj.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
-
         var sUserAgent = navigator.userAgent.toLowerCase();
         var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
         var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
@@ -85,8 +91,28 @@
 		function load() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
 			$('#code').val('');
-			$('#gsdm').val(gsdm);
+
 		}
+        $(function () {
+            var gsdm = location.href.split('?')[1].split('&')[0].split('=')[1];
+            $('#gsdm').val(gsdm);
+            var gsdm= $('#gsdm').val();
+			if(gsdm!=null && gsdm!=""){
+                $("#logo").attr("src", "/images/" + gsdm + ".png");
+			}
+            $.post(
+                "../common/getGsxx",
+                {
+                    "gsdm":gsdm
+				},
+                function (data) {
+					if(data!=null && data!=""){
+					$('#us').text(data);
+					}
+                }
+            )
+
+        })
 		function tiqu() {
 			var tqm = $('#tqm').val();
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;		
@@ -160,9 +186,6 @@
 					}
 				}
 			);
-		}
-		function tiaozhuan() {
-			window.location.href = "bangzhu.html?time=" + new Date();
 		}
 	</script>
 </body>

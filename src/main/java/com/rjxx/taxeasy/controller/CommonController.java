@@ -3,10 +3,12 @@ package com.rjxx.taxeasy.controller;
 import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.domains.Gsxx;
 import com.rjxx.taxeasy.domains.Jyxxsq;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.WxFpxx;
 import com.rjxx.taxeasy.service.BarcodeService;
+import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JyxxsqService;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.utils.weixin.WeixinUtils;
@@ -40,8 +42,12 @@ public class CommonController extends BaseController {
 
     @Autowired
     private WeixinUtils weixinUtils;
+
     @Autowired
     private KplsService kplsService;
+
+    @Autowired
+    private GsxxService gsxxService;
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
     @ResponseBody
@@ -174,13 +180,14 @@ public class CommonController extends BaseController {
         String redirectUrl="";
         logger.info("取到的数据orderNo----"+orderNo);
         logger.info("取到的数据orderTime----"+orderTime);
-//        logger.info("截取前--"+price);
-//        int i = price.indexOf("元");
-//        String str = price.substring(0,i);
-//        logger.info("截取金额字符串元---"+str);
-        WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-
         try {
+            //判断是否是微信浏览
+            if (!WeixinUtils.isWeiXinBrowser(request)) {
+                request.getSession().setAttribute("msg", "请使用微信进行该操作");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
             if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
                 //可开具 跳转微信授权链接
                 redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2");
@@ -203,7 +210,21 @@ public class CommonController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return redirectUrl;
+    }
+    @RequestMapping(value = "/getGsxx")
+    @ResponseBody
+    private String getGsxx(String gsdm){
+        String gsInfo="";
+        if(gsdm==null){
+            return  null;
+        }
+        Map map = new HashMap();
+        map.put("gsdm",gsdm);
+        Gsxx gsxx = gsxxService.findOneByGsdm(map);
+        if(gsxx!=null){
+            gsInfo=gsxx.getGsmc();
+        }
+        return gsInfo;
     }
 }
