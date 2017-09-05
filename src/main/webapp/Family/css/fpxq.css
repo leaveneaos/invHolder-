@@ -46,6 +46,7 @@
 }
 .btoTip {
 	font-size: 13px;
+	white-space: nowrap;
 }
 .save {
 	color: #666;
@@ -70,7 +71,7 @@
 }
 .yx,.wx,.zfb {
 	color: #666;
-	padding: 0 12px;
+	padding: 0 10px;
 
 }
 #pdf {
