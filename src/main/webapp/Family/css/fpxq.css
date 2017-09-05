@@ -72,7 +72,7 @@
 .yx,.wx,.zfb {
 	color: #666;
 	padding: 0 10px;
-
+	white-space: nowrap;
 }
 #pdf {
 	display: inline-block;
