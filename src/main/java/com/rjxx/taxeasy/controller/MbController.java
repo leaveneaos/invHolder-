@@ -269,12 +269,12 @@ public class MbController extends BaseController {
                         //第一次请求url获取token 验证
                         resultMap=getDataService.getldyxFirData(tqm,gsdm);
                         String accessToken = (String) resultMap.get("accessToken");
-                        if(null!=accessToken && "".equals(accessToken)){
-                            resultMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
-                        }else{
+                        if(null == accessToken || "".equals(accessToken)){
                             result.put("num","12");
                             result.put("msg","获取数据失败，请重试！");
                             return result;
+                        }else{
+                            resultMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
                         }
                         if(null!=resultMap.get("msg")){
                             result.put("num","12");
