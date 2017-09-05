@@ -121,24 +121,30 @@ public class CommonController extends BaseController {
         logger.info("拿到解码code----------"+code);
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByCode(code);
         logger.info("查询到的微信交易信息--------"+JSON.toJSONString(wxFpxx));
-        Map jyxxsqMap = new HashMap();
-        jyxxsqMap.put("gsdm",wxFpxx.getGsdm());
-        jyxxsqMap.put("tqm",wxFpxx.getTqm());
-        jyxxsqMap.put("openid",wxFpxx.getOpenId());
-        Jyxxsq jyxxsq = jyxxsqService.findOneByParams(jyxxsqMap);
-        logger.info("查询到的交易信息申请-----"+JSON.toJSONString(jyxxsq));
-        Map kplsMap = new HashMap();
-        kplsMap.put("gsdm",wxFpxx.getGsdm());
-        kplsMap.put("jylsh",jyxxsq.getJylsh());
-        List<Kpls> kpls = kplsService.findAll(kplsMap);
-        //logger.info("开票流水"+JSON.toJSONString(kpls));
-        if(kpls.size() > 0 ){
-            Integer kplsh=kpls.get(0).getKplsh();
-            response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?kbs="+kplsh+"&&_t=" + System.currentTimeMillis());
-            return;
-        }
-        else
-        {
+        if(null!=wxFpxx){
+            Map jyxxsqMap = new HashMap();
+            jyxxsqMap.put("gsdm",wxFpxx.getGsdm());
+            jyxxsqMap.put("tqm",wxFpxx.getTqm());
+            jyxxsqMap.put("openid",wxFpxx.getOpenId());
+            Jyxxsq jyxxsq = jyxxsqService.findOneByParams(jyxxsqMap);
+            logger.info("查询到的交易信息申请-----"+JSON.toJSONString(jyxxsq));
+            Map kplsMap = new HashMap();
+            kplsMap.put("gsdm",wxFpxx.getGsdm());
+            kplsMap.put("jylsh",jyxxsq.getJylsh());
+            List<Kpls> kpls = kplsService.findAll(kplsMap);
+            //logger.info("开票流水"+JSON.toJSONString(kpls));
+            if(kpls.size() > 0 ){
+                Integer kplsh=kpls.get(0).getKplsh();
+                response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?kbs="+kplsh+"&&_t=" + System.currentTimeMillis());
+                return;
+            }
+            else
+            {
+                request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return;
+            }
+        }else {
             request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return;
