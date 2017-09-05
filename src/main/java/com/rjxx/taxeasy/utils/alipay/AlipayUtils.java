@@ -44,9 +44,14 @@ public class AlipayUtils {
      * @return
      */
     public static boolean isAlipayBrowser(HttpServletRequest request) {
-        String ua = request.getHeader("user-agent").toLowerCase();
-        boolean res = ua.contains("alipay");
-        return res;
+        try {
+            String ua = request.getHeader("user-agent").toLowerCase();
+            boolean res = ua.contains("alipay");
+            return res;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
