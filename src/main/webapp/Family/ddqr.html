@@ -54,6 +54,10 @@
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
 		var msg=null;
+        function redirect(errorMsg){
+            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            window.location.assign(encodeURI(myurl));
+        }
 		$(function () {
                 $.post(
                     "../fm/qrxxsession",
@@ -89,19 +93,23 @@
                 price = $('#price').text();
             var reg=/[\u4E00-\u9FA5]/g;
             var pri = price.replace(reg,'');
-             var   tqm=$('#tqmhidden').text();
+			var tqm=$('#tqmhidden').text();
              if(tqm!=null){
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
+            var isUCBrowser = ua.indexOf('UCBrowser') != -1;
             if(isAlipay){
                 window.location.href = "../Family/ddmx.html?time=" + new Date();
             }else if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + pri;
-            }else{
+            }else if(isUCBrowser){
+                alert("进入uc浏览器");
                 redirect("请用微信或支付宝扫码");
-            }
+            }else {
+                redirect("请用微信或支付宝扫码");
+			}
 //            $.post(
 //                "../common/isBrowser",
 //                {
