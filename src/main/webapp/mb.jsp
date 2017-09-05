@@ -98,10 +98,10 @@
             $('#gsdm').val(gsdm);
             var gsdm= $('#gsdm').val();
 			if(gsdm!=null && gsdm!=""){
-                $("#logo").attr("src", "/images/" + gsdm + ".png");
+                $("#logo").attr("src", "images/" + gsdm + ".png");
 			}
             $.post(
-                "../common/getGsxx",
+                "common/getGsxx",
                 {
                     "gsdm":gsdm
 				},
