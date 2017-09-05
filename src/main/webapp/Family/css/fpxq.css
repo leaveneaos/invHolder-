@@ -71,8 +71,9 @@
 }
 .yx,.wx,.zfb {
 	color: #666;
-	padding: 0 10px;
+	padding: 0 5px;
 	white-space: nowrap;
+	border: solid 1px #ef3636;
 }
 #pdf {
 	display: inline-block;
