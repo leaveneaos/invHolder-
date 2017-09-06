@@ -138,7 +138,13 @@ public class ScanController extends BaseController {
                 + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
+        logger.info("传入的appid"+WeiXinConstants.APP_ID);
+        logger.info("传入的appid-----"+WeiXinConstants.APP_SECRET);
+        logger.info("获取的带有refresh_token---"+JSON.toJSONString(resultObject));
         String openid = resultObject.getString("openid");
+        String access_token = resultObject.getString("access_token");
+        session.setAttribute("access_token", access_token);
+        logger.info("存入的access_token"+access_token);
         logger.info("存入session时候的openid"+openid);
         if (openid != null) {
             session.setAttribute("openid", openid);
