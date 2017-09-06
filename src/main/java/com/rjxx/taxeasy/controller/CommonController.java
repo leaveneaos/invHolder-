@@ -72,11 +72,8 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                     return null;
                 }else if(status!=null && status.equals("可开具")){
-                    logger.info("进入拉取授权页-----");
-                    String access_token = (String) session.getAttribute("access_token");
-                    logger.info("获取session里的accessToken"+access_token);
                     //可开具 跳转微信授权链接
-                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token);
+                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1");
                     if(null==redirectUrl||redirectUrl.equals("")){
                         //获取授权失败
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -198,11 +195,8 @@ public class CommonController extends BaseController {
             }
             WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
             if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
-                logger.info("进入拉取授权页-----");
-                String access_token = (String) session.getAttribute("access_token");
-                logger.info("获取session里的accessToken"+access_token);
                 //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2",access_token);
+                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2");
                 if(null==redirectUrl||redirectUrl.equals("")){
                     //获取授权失败
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
