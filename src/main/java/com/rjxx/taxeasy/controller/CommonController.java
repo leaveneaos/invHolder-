@@ -12,7 +12,6 @@ import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JyxxsqService;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.utils.weixin.WeixinUtils;
-import com.sun.tools.internal.jxc.api.JXC;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -72,10 +71,8 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                     return null;
                 }else if(status!=null && status.equals("可开具")){
-                    String access_token = (String) session.getAttribute("access_token");
-                    logger.info("传入的----"+access_token);
                     //可开具 跳转微信授权链接
-                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token);
+                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1");
                     if(null==redirectUrl||redirectUrl.equals("")){
                         //获取授权失败
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -197,10 +194,8 @@ public class CommonController extends BaseController {
             }
             WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
             if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
-                String access_token = (String) session.getAttribute("access_token");
-                logger.info("------传入的a"+access_token);
                 //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2",access_token);
+                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2");
                 if(null==redirectUrl||redirectUrl.equals("")){
                     //获取授权失败
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
