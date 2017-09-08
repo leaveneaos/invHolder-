@@ -10,6 +10,7 @@
 	<meta http-equiv="Cache" content="no-cache">
 	<title>输入取票号</title>
 	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link href="css/jquery.alerts.css" rel="stylesheet" />
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript">
@@ -59,7 +60,7 @@
 		<p class="company">上海容津信息技术有限公司</p>
 		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
 	</footer>
-
+	<script type="text/javascript" src="js/jquery.alerts.js"></script>
 	<script type="text/javascript">
 	  	var sUserAgent = navigator.userAgent.toLowerCase();
 	    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
