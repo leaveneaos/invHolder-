@@ -102,17 +102,21 @@
 					    	window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date();
 					    }
 					} else if (data.num == 3) {
-						btnArray = [ '确定' ];
-						firm = "您提取的发票尚未开具,请检查客户号是否正确,或稍后再试!";
+						firm = "您提取的发票尚未开具,请检查客户编号是否正确,或稍后再试!";
 						title = "提示";
-						alert(firm, title);
+                        jAlert(firm, title);
+                        loadimage();
+                        $('#cwts').css('opacity','0');
 					} else if (data.num == 4) {
+                        loadimage();
 						$('#cwts').css('opacity','1');
 					} else if (data.num == 5) {
 						btnArray = [ '确定' ];
 						firm = data.msg;
 						title = "提示";
 						alert(firm, title);
+                        loadimage();
+                        $('#cwts').css('opacity','0');
 					}
 				}
 			);

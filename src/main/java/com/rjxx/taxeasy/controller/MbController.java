@@ -183,24 +183,12 @@ public class MbController extends BaseController {
         String opendid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
+            Map resultMap = new HashMap();
             Map map = new HashMap<>();
             map.put("tqm", tqm);
             map.put("gsdm", gsdm);
-
-            /*调用接口获取jyxxsq等信息*/
-            Map resultMap = new HashMap();
-            String error=(String)resultMap.get("temp");
-             /*wait to do*/
-            if(error!=null){
-                result.put("error",error);
-                return result;
-            }
-
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
-            //查询参数总表url 是否调用接口获取开票信息
-
-
             if (list.size() > 0) {
                 /*代表申请已完成开票,跳转最终开票页面*/
                 if (opendid != null && !"null".equals(opendid)) {
@@ -253,18 +241,12 @@ public class MbController extends BaseController {
             else if(null != jyls && null !=jyls.getDjh()){
                 result.put("num","6");
             }else {
-                //跳转发票提取页面
                 Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
-                if(list.size()== 0 && null!=zb1.getCsz()&&!zb1.getCsz().equals("")){
-                    //需要调用接口获取开票信息
-                    System.out.println("start+++++++++++");
-                    //Map resultMap1 = new HashMap();
+                if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
+                    //需要调用接口获取开票信息,并跳转发票提取页面
+                   logger.info("start+++++++++++调用接口获取开票如：绿地优鲜");
                     //全家调用接口 解析xml
-                    if(null!=gsdm && gsdm.equals("family")){
-                        resultMap=getDataService.getData(tqm,gsdm);
-                    }
-                    //绿地优鲜 解析json
-                    else if(map.get("gsdm").equals("ldyx")){
+                    if(map.get("gsdm").equals("ldyx")){
                         System.out.println("ldyx+++++++++++++++++Strat");
                         //第一次请求url获取token 验证
                         resultMap=getDataService.getldyxFirData(tqm,gsdm);
@@ -281,31 +263,34 @@ public class MbController extends BaseController {
                             result.put("msg",resultMap.get("msg"));
                             return result;
                         }
-
                     }
+                    List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+                    List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+                    List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+                    if(null!=jyxxsqList){
+                        Jyxxsq jyxxsq=jyxxsqList.get(0);
+                        request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
+                    }
+                    if(resultMap!=null){
+                        request.getSession().setAttribute(gsdm+tqm+"resultMap",resultMap);
+                    }
+                    if(jymxsqList!=null) {
+                        request.getSession().setAttribute(gsdm+tqm+"jymxsqList", jymxsqList);
+                    }
+                    if(jyzfmxList!=null){
+                        request.getSession().setAttribute(gsdm+tqm+"jyzfmxList",jyzfmxList);
+                    }
+                    request.getSession().setAttribute(gsdm+"tqm",tqm);
+                    result.put("num","5");
+                    result.put("tqm",tqm);
+                    result.put("gsdm",gsdm);
                 }
-
-                List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
-                List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-                List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
-                if(null!=jyxxsqList){
-                    Jyxxsq jyxxsq=jyxxsqList.get(0);
-                    request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
+                else{
+                    //不用获取数据，数据为空
+                    result.put("num","1");
+                    result.put("tqm",tqm);
+                    result.put("gsdm",gsdm);
                 }
-                if(resultMap!=null){
-                    request.getSession().setAttribute(gsdm+tqm+"resultMap",resultMap);
-                }
-                if(jymxsqList!=null) {
-                    request.getSession().setAttribute(gsdm+tqm+"jymxsqList", jymxsqList);
-                }
-                if(jyzfmxList!=null){
-                    request.getSession().setAttribute(gsdm+tqm+"jyzfmxList",jyzfmxList);
-                }
-                request.getSession().setAttribute(gsdm+"tqm",tqm);
-
-                result.put("num","5");
-                result.put("tqm",tqm);
-                result.put("gsdm",gsdm);
             }
         }else {//校验码错误
             result.put("num","4");

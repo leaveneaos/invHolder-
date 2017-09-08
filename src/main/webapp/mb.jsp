@@ -18,8 +18,9 @@
 			float: left; 
 		}
 		#cwts {
-			color: red; 
-			margin-left: 23px; 
+			color: red;
+			margin-left: 23px;
+			opacity: 0;
 		}
 		.mui-input-group .mui-input-row {
 		    height: 45px;
@@ -54,7 +55,7 @@
 				<img src="image.jsp" name="randImage" class="data-yzm" id="randImage" onclick="loadimage()"/>
 			</div>
 		</form>
-		<p id="cwts"></p>
+		<p id="cwts">验证码输入错误</p>
 
 		<button id="Button1" onclick="tiqu()" class="mui-btn mui-btn-primary mui-btn-block">提&nbsp;&nbsp;交</button>
 
@@ -153,14 +154,11 @@
 				}, 
 				function(data) {
 					if (data.num == 1) {
-						if (data.clztdm == "00") {
-							window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();
-						} else {
-							btnArray = [ '确定' ];
-							firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
-							title = "提示";
-							jAlert(firm,title);
-						}
+						firm = "您提取的发票尚未开具,请检查提取码是否正确,或稍后再试!";
+						title = "提示";
+                        jAlert(firm,title);
+                        $('#cwts').css('opacity','0');
+                        loadimage();
 					}else if (data.num == 2) {
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
                             window.open("mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date());
@@ -168,21 +166,23 @@
                             window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
 						}
 					}else if (data.num == 4) {
-						$('#cwts').html("您输入的验证码不正确");
+                        $('#cwts').css('opacity','1');
 						loadimage();
-						
 					}else if (data.num == 5) {
                         window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();;
 					}else if (data.num == 6) {
-                        btnArray = [ '确定' ];
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";
                         title = "提示";
                         jAlert(firm, title);
+                        loadimage();
+                        $('#cwts').css('opacity','0');
                     }else if (data.num == 11) {
                         $('#cwts').html("输入的提取码不正确");
                         loadimage();
                     }else  if(data.num ==12){
+                        $('#cwts').css('opacity','0');
 					    alert(data.msg);
+                        loadimage();
 					}
 				}
 			);
