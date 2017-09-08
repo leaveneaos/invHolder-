@@ -110,7 +110,7 @@
 					}else if(data.num ==1){
                         firm = "您提取的发票尚未开具,请检查取票号是否正确,或稍后再试!";
                         title = "提示";
-                        alert(firm, title);
+                        jAlert(firm, title);
                         loadimage();
                         $('#cwts').css('opacity','0');
 					}

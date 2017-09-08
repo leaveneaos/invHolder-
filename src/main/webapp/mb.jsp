@@ -166,8 +166,8 @@
                             window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
 						}
 					}else if (data.num == 4) {
+                        loadimage();
                         $('#cwts').css('opacity','1');
-						loadimage();
 					}else if (data.num == 5) {
                         window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();;
 					}else if (data.num == 6) {
@@ -177,12 +177,14 @@
                         loadimage();
                         $('#cwts').css('opacity','0');
                     }else if (data.num == 11) {
+                        loadimage();
                         $('#cwts').html("输入的提取码不正确");
-                        loadimage();
                     }else  if(data.num ==12){
-                        $('#cwts').css('opacity','0');
-					    alert(data.msg);
+                        firm = data.msg;
+                        title = "提示";
+                        jAlert(firm, title);
                         loadimage();
+                        $('#cwts').css('opacity','0');
 					}
 				}
 			);

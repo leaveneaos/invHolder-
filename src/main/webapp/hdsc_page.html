@@ -111,10 +111,9 @@
                         loadimage();
 						$('#cwts').css('opacity','1');
 					} else if (data.num == 5) {
-						btnArray = [ '确定' ];
 						firm = data.msg;
 						title = "提示";
-						alert(firm, title);
+                        jAlert(firm, title);
                         loadimage();
                         $('#cwts').css('opacity','0');
 					}
