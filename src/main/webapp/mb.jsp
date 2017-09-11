@@ -161,8 +161,16 @@
                         loadimage();
 					}else if (data.num == 2) {
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+                            if(null!=data.gsdm && data.gsdm == "cmsc"){
+                                alert("111");
+                                window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.tqm+"&time=" + new Date();
+							}
                             window.open("mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date());
                         }else{
+                            if(null!=data.gsdm && data.gsdm == "cmsc"){
+                                alert("222");
+                                window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.tqm+"&time=" + new Date();
+                            }
                             window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
 						}
 					}else if (data.num == 4) {

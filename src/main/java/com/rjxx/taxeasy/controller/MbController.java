@@ -185,10 +185,19 @@ public class MbController extends BaseController {
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             Map resultMap = new HashMap();
             Map map = new HashMap<>();
-            map.put("tqm", tqm);
+            List<Kpls> list = new ArrayList<>();
             map.put("gsdm", gsdm);
+            if(null!=gsdm &&"cmsc".equals(gsdm)){
+                map.put("khh",tqm);
+            }else {
+                map.put("tqm", tqm);
+            }
+            if(null!= gsdm && "cmsc".equals(gsdm)){
+                list = jylsService.findBykhh(map);
+            }else {
+                list = jylsService.findByTqm(map);
+            }
             Jyls jyls = jylsService.findOne(map);
-            List<Kpls> list = jylsService.findByTqm(map);
             if (list.size() > 0) {
                 /*代表申请已完成开票,跳转最终开票页面*/
                 if (opendid != null && !"null".equals(opendid)) {
@@ -236,7 +245,10 @@ public class MbController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
-
+                if(null!= gsdm && "cmsc".equals(gsdm)){
+                    request.getSession().setAttribute("khh", tqm);
+                    request.getSession().setAttribute("gsdm", gsdm);
+                }
             }
             else if(null != jyls && null !=jyls.getDjh()){
                 result.put("num","6");
