@@ -6,10 +6,7 @@ import com.rjxx.taxeasy.domains.Fpj;
 import com.rjxx.taxeasy.domains.Gsxx;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Tqjl;
-import com.rjxx.taxeasy.service.FpjService;
-import com.rjxx.taxeasy.service.GsxxService;
-import com.rjxx.taxeasy.service.JylsService;
-import com.rjxx.taxeasy.service.TqjlService;
+import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import org.apache.http.HttpEntity;
@@ -48,6 +45,9 @@ public class Hdsc2Controller extends BaseController {
 
     @Autowired
     private GsxxService gsxxService;
+
+    @Autowired
+    private KplsService kplsService;
 
     public static final String APP_ID = "wx9abc729e2b4637ee";
 
@@ -204,7 +204,7 @@ public class Hdsc2Controller extends BaseController {
 
     @RequestMapping(value = "/xfp")
     @ResponseBody
-    public Map xfp(String khh, String gsdm, String month) {
+    public Map xfp(String khh, String gsdm, String month,String kplsh) {
         Map result = new HashMap();
         String openid = (String) session.getAttribute("openid");
         Map map = new HashMap<>();
@@ -213,25 +213,26 @@ public class Hdsc2Controller extends BaseController {
         //if(null!=gsdm&&gsdm.equals("hdsc")){
             map.put("khh", khh);
             map.put("gsdm", gsdm);
+            map.put("kplsh",kplsh);
        // }
         /*if(null!=gsdm&&gsdm.equals("hongkang")){
             map.put("tqm", khh);
             map.put("gsdm", gsdm);
         }*/
-        if (month.equals("this")) {
-            map.put("this", "  date_format(b.kprq,'%Y-%m')=date_format(now(),'%Y-%m')");
-            list = jylsService.findBykhh(map);
-        } else if (month.equals("previous")) {
-            map.put("previous", "   date_format(b.kprq,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')");
-            list = jylsService.findBykhh(map);
-        } else if (month.equals("twobefore")) {
-            map.put("twobefore", " b.kprq <date_add(curdate(),interval -2 MONTH)");
-            list = jylsService.findBykhh(map);
-        } else if (month.equals("Decemberbefore")) {
-            map.put("Decemberbefore", "year(b.kprq)=year(date_sub(now(),interval 1 year))");
-            list = jylsService.findBykhh(map);
-        }
-
+//        if (month.equals("this")) {
+//            map.put("this", "  date_format(b.kprq,'%Y-%m')=date_format(now(),'%Y-%m')");
+//            list = jylsService.findBykhh(map);
+//        } else if (month.equals("previous")) {
+//            map.put("previous", "   date_format(b.kprq,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m')");
+//            list = jylsService.findBykhh(map);
+//        } else if (month.equals("twobefore")) {
+//            map.put("twobefore", " b.kprq <date_add(curdate(),interval -2 MONTH)");
+//            list = jylsService.findBykhh(map);
+//        } else if (month.equals("Decemberbefore")) {
+//            map.put("Decemberbefore", "year(b.kprq)=year(date_sub(now(),interval 1 year))");
+//            list = jylsService.findBykhh(map);
+//        }
+        list = kplsService.findAll(map);
         if (list.size() > 0) {
             String pdfdzs = "";
             request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());

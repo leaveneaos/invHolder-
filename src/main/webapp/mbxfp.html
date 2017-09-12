@@ -30,27 +30,27 @@
 </head>
 <body>
 <header class="mui-bar mui-bar-nav">
-	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
+	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="cursor:pointer" onclick="history.go(-2)"></a>
 	<h1 class="mui-title">发票提取</h1>
 </header>
 
 <div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
 	<section>
 		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
-			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
 				<a id="you">
 					<span class="mui-icon iconfont icon-youxiang"></span>
 					<div class="mui-media-body" style="color: #fff;">邮箱</div>
 				</a>
 			</li>
-			<!-- <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-				<a id="fpj">
+			 <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				<a id="fpj" style="display: none">
 					<span class="mui-icon iconfont icon-fapiaoguanli1"></span>
-					<div class="mui-media-body" style="color: #fff;">发票夹</div>
+					<div class="mui-media-body" style="color: #fff;">微信</div>
 				</a>
-			</li> -->
-			<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
-				<a id="zfb">
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				<a id="zfb" style="display: none">
 					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
 					<div class="mui-media-body" style="color: #fff;">支付宝</div>
 				</a>
@@ -77,8 +77,17 @@
     var serialorder;
     var gsdms = location.href.split('?')[1].split('&')[0].split('=')[1];
     var tqms = location.href.split('?')[1].split('&&')[1].split('=')[1];
-
-
+    var ua = navigator.userAgent.toLowerCase();
+    var isWeixin = ua.indexOf('micromessenger') != -1;
+    var isAlipay = ua.indexOf('alipay') != -1;
+    if(isWeixin){
+        $("#fpj").css('display','block');
+        $("#zfb").css('display','none');
+    }
+    if(isAlipay){
+        $("#fpj").css('display','none');
+        $("#zfb").css('display','block');
+    }
     $(function() {
         $('#gsdm').val(gsdms);
         $('#tqm').val(tqms);
