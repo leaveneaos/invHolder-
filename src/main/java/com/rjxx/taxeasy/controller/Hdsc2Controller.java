@@ -232,7 +232,7 @@ public class Hdsc2Controller extends BaseController {
 //            map.put("Decemberbefore", "year(b.kprq)=year(date_sub(now(),interval 1 year))");
 //            list = jylsService.findBykhh(map);
 //        }
-        list = kplsService.findAll(map);
+        list = kplsService.findAllKpInfo(map);
         if (list.size() > 0) {
             String pdfdzs = "";
             request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
