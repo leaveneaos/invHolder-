@@ -43,6 +43,7 @@
 					<Recipient>${jyxxsq.gfsjr!}</Recipient>
 					<ReciAddress></ReciAddress>
 					<Zip>${jyxxsq.gfyb!}</Zip>
+                    <MobilephoneNo>${jyxxsq.gfsjh!}</MobilephoneNo>
 				</Buyer>
 			</OrderMain>
 			<OrderDetails count="${count}">
