@@ -39,19 +39,9 @@ public class CmscController extends BaseController {
     @Autowired
     private JylsService jylsService;//交易流水
     @Autowired
-    private TqjlService tqjlService;//提取记录
-    @Autowired
-    private CszbService cszbService;//参数主表
-    @Autowired
     private TqmtqService tqmtqService;//提取码提取
     @Autowired
-    private FpjService fpjService;//发票夹
-    @Autowired
     private KplsService kplsService;
-    @Autowired
-    private SendalEmail se;
-    @Autowired
-    private SpfyxService spfyxService;
     @Autowired
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
@@ -166,7 +156,6 @@ public class CmscController extends BaseController {
             }
             if (f) {
                 if (list.size() > 0) {
-
                     result.put("khh", khh);
                     result.put("num", "2");
                     result.put("gsdm", gsdm);
