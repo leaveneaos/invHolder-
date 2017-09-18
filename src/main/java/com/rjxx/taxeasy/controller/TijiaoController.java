@@ -368,13 +368,7 @@ public class TijiaoController extends BaseController {
         map.put("khh", request.getSession().getAttribute("khh"));
         map.put("gsdm", request.getSession().getAttribute("gsdm"));
         List<Kpls> list = jylsService.findBykhh(map);
-        for(Kpls kpls : list){
-            Map kplsMap = new HashMap();
-            kplsMap.put("gsdm",kpls.getGsdm());
-            kplsMap.put("jylsh",kpls.getJylsh());
-            List<Kpls> kplsList = kplsService.findAll(kplsMap);
-            result.put("kplsList",kplsList);
-        }
+        result.put("kplsList",list);
         return result;
     }
 
