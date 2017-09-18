@@ -338,7 +338,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                        //返回错误 拒绝开票
                         logger.info("进入拒绝开票-----");
                         String reason="错误信息为"+ReturnMessage;
-                        String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        //String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
                         return "-2";
                     }else {
                         logger.info("-------开票成功返回值---------" + resultxml);

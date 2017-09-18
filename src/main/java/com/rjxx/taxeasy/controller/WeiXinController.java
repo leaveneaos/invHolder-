@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
+import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
@@ -40,16 +41,10 @@ public class WeiXinController extends BaseController {
     private KplsService kplsService;
 
     @Autowired
-    private JylsService jylsService;
-
-    @Autowired
     private GetDataService getDataService;
 
     @Autowired
     private KpspmxService kpspmxService;
-
-    @Autowired
-    private TqmtqService tqmtqService;
 
     @Autowired
     private  BarcodeService barcodeService;
@@ -59,8 +54,12 @@ public class WeiXinController extends BaseController {
 
     @Autowired
     private WeixinUtils weixinUtils;
+
     @Autowired
     private  GsxxService gsxxService;
+
+    @Autowired
+    private WxTokenJpaDao wxTokenJpaDao;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${rjxx.pdf_file_url:}")
@@ -91,7 +90,6 @@ public class WeiXinController extends BaseController {
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
         System.out.println("进入微信发送的post请求");
-        //WeixinUtils weixinUtils = new WeixinUtils();
         Map<String, String> requestMap = null;
         try {
             System.out.println("微信推送事件");
@@ -113,9 +111,16 @@ public class WeiXinController extends BaseController {
                     logger.info("该请求已接收过");
                     return "";
                 }
-                String  access_token = (String)weixinUtils.hqtk().get("access_token");
-                System.out.println("传递的token----"+access_token);
-                request.setAttribute("access_token",access_token);
+                //String  access_token = (String)weixinUtils.hqtk().get("access_token");
+                //System.out.println("传递的token----"+access_token);
+                //request.setAttribute("access_token",access_token);
+                String access_token="";
+                WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                if(wxToken == null){
+                    access_token = (String)weixinUtils.hqtk().get("access_token");
+                }else {
+                    access_token = wxToken.getAccessToken();
+                }
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");
                     WxFpxx oneByOrderNo = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
