@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<title>输入统册号</title>
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link href="css/jquery.alerts.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript">
+		jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+	</script>
+	<link href="css/mui.min.css" rel="stylesheet" />
+	<script src="js/fpj.js" type="text/javascript"></script>
+
+	<style type="text/css">
+		#code {
+			width: 60%;
+			float: left;
+		}
+		#cwts {
+			color: red;
+			margin-left: 23px;
+			opacity: 0;
+		}
+	</style>
+</head>
+<body id="index" onload="load()">
+	<header>
+		<img src="images/cmsc.jpg"/>
+	</header>
+
+	<section class="data-tip">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对上海崇明自来水厂的支持，自2017年6月1日起我们将提供"增值税电子普通发票"，电子发票与纸质发票具有同等法律效力，请输入您的统册号，及时获得电子发票。
+	</section>
+
+	<section>
+		<form class="mui-input-group">
+			<div class="mui-input-row">
+				<input type="text" id="khh" class="mui-input-clear" placeholder="请输入您的统册号">
+			</div>
+			<div class="mui-input-row">
+				<input type="text" id="code" name="code" placeholder="请输入右侧验证码">
+				<img src="image.jsp" class="data-yzm" name="randImage" id="randImage" onclick="loadimage()"/>
+			</div>
+		</form>
+	</section>
+
+	<p id="cwts">验证码输入错误</p>
+
+	<button id="Button1" onclick="tiqu()" style="padding: 5px 0;" class="mui-btn mui-btn-primary mui-btn-block">提&nbsp;&nbsp;交</button>
+
+	<footer>
+		<p class="company">上海容津信息技术有限公司</p>
+		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
+	</footer>
+	<script type="text/javascript" src="js/jquery.alerts.js"></script>
+	<script type="text/javascript">
+	  	var sUserAgent = navigator.userAgent.toLowerCase();
+	    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+	    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+	    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+	    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+	    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+	    var bIsAndroid = sUserAgent.match(/android/i) == "android";
+	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
+
+		// $(function() {
+		// 	var url = window.location.href;
+		// 	if (url.indexOf("tqm") != -1) {
+		// 		var tqm = url.substring(url.indexOf("=") + 1, url.indexOf("&"));
+		// 		$('#tqm').val(tqm);
+		// 	}
+		// })
+
+		function loadimage() {
+			document.getElementById("randImage").src = "image.jsp?" + Math.random();
+		}
+		function load() {
+			document.getElementById("randImage").src = "image.jsp?" + Math.random();
+			$('#code').val('');
+		}
+		function tiqu() {
+			var khh = $('#khh').val();
+			var code = $('#code').val();
+			$.post(
+				"cmsc/fptq",
+				{
+					"khh" : khh,
+					"code" : code
+				},
+				function(data) {
+					if (data.num == 2) {
+					    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+					    	window.open("dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date());
+					    }else{
+					    	window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date();
+					    }
+					} else if (data.num == 3) {
+						firm = "您提取的发票尚未开具,请检查客户编号是否正确,或稍后再试!";
+						title = "提示";
+                        jAlert(firm, title);
+                        loadimage();
+                        $('#cwts').css('opacity','0');
+					} else if (data.num == 4) {
+                        loadimage();
+						$('#cwts').css('opacity','1');
+					} else if (data.num == 5) {
+						firm = data.msg;
+						title = "提示";
+                        jAlert(firm, title);
+                        loadimage();
+                        $('#cwts').css('opacity','0');
+					}
+				}
+			);
+		}
+		function tiaozhuan() {
+			window.location.href = "bangzhu.html?time=" + new Date();
+		}
+	</script>
+</body>
+</html>
