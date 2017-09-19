@@ -83,8 +83,15 @@ public class CommonController extends BaseController {
                         access_token = wxToken.getAccessToken();
                         ticket= wxToken.getTicket();
                     }
+                    String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                    if(null==spappid ||"".equals(spappid)){
+                        //获取授权失败
+                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
+                    }
                     //可开具 跳转微信授权链接
-                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket);
+                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                     if(null==redirectUrl||redirectUrl.equals("")){
                         //获取授权失败
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -223,8 +230,15 @@ public class CommonController extends BaseController {
                     access_token = wxToken.getAccessToken();
                     ticket= wxToken.getTicket();
                 }
+                String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                if(null==spappid || "".equals(spappid)){
+                    //获取授权失败
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
                 //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2",access_token,ticket);
+                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2",access_token,ticket,spappid);
                 if(null==redirectUrl||redirectUrl.equals("")){
                     //获取授权失败
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");

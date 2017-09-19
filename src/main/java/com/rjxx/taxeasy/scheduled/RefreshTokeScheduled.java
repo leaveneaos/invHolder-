@@ -27,7 +27,7 @@ public class RefreshTokeScheduled {
 
     private static Logger logger = LoggerFactory.getLogger(RefreshTokeScheduled.class);
 
-    @Scheduled(fixedRate = 1000*55*55*1)
+    @Scheduled(fixedRate = 1000*60*30)
     //@Scheduled(fixedRate = 1000*5)
     public void refresh(){
         String flag="01";
