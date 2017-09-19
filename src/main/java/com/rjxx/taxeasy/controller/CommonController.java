@@ -85,12 +85,12 @@ public class CommonController extends BaseController {
                     }
                     String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
                     logger.info("----获取的spappid"+spappid);
-//                    if(null==spappid ||"".equals(spappid)){
-//                        //获取授权失败
-//                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                        return null;
-//                    }
+                    if(null==spappid ||"".equals(spappid)){
+                        //获取授权失败
+                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
+                    }
                     //可开具 跳转微信授权链接
                     redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                     if(null==redirectUrl||redirectUrl.equals("")){
