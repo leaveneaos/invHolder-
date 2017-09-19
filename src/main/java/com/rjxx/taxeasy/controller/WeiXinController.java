@@ -345,76 +345,76 @@ public class WeiXinController extends BaseController {
      *
      * @return
      */
-    @RequestMapping(value = "/syncWeiXin")
-    @ResponseBody
-    public String syncWeiXin(@RequestParam(required = false) String order_id) throws Exception {
-        if (order_id == null) {
-            Object orderObject = session.getAttribute("order");
-            if (orderObject == null) {
-                request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                return null;
-            }
-            order_id = orderObject.toString();
-        }
-        logger.info("order_id++++++++++"+order_id);
-        String serialorder= "";
-        Object serialorderObject = session.getAttribute("serialorder");
-        if (serialorderObject == null) {
-            request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
-        }
-        serialorder = serialorderObject.toString();
-        logger.info("serialorder++++++++"+serialorder);
-
-        //判断是否是微信浏览
-//       if (!WeixinUtils.isWeiXinBrowser(request)) {
-//            request.getSession().setAttribute("msg", "请使用微信进行该操作");
-//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//            return null;
-//        }
-        //主动查询授权状态
-        WeixinUtils weixinUtils = new WeixinUtils();
-        String  access_token = (String)weixinUtils.hqtk().get("access_token");
-        request.setAttribute("access_token",access_token);
-        Map weiXinDataMap = weixinUtils.zdcxstatus(order_id,access_token);
-        if(null==weiXinDataMap){
-            logger.info("主动查询授权失败++++++++++++");
-            return null;
-        }
-        Map para = new HashMap();
-        para.put("serialorder", serialorder);
-        List<Kpls> kplsList = kplsService.findAll(para);
-
-        String openid=null;
-        for (Kpls kpls : kplsList) {
-            int kplsh = kpls.getKplsh();
-            Map params2 = new HashMap();
-            params2.put("kplsh", kplsh);
-            List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
-
-            String s_media_id =weixinUtils.creatPDF(kpls.getPdfurl(),pdf_file_url);
-            if(null==s_media_id&&StringUtils.isBlank(s_media_id)){
-                logger.info("上传PDF失败获取s_media_id为null");
-                return  null;
-            }
-
-//           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls,access_token);
-//            if(null==openid){
-//                request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
+//    @RequestMapping(value = "/syncWeiXin")
+//    @ResponseBody
+//    public String syncWeiXin(@RequestParam(required = false) String order_id) throws Exception {
+//        if (order_id == null) {
+//            Object orderObject = session.getAttribute("order");
+//            if (orderObject == null) {
+//                request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
 //                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
 //                return null;
 //            }
-        }
-
-        if(null==openid){
-            request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
-        }else {
-
-        }
-        return  null;
-    }
+//            order_id = orderObject.toString();
+//        }
+//        logger.info("order_id++++++++++"+order_id);
+//        String serialorder= "";
+//        Object serialorderObject = session.getAttribute("serialorder");
+//        if (serialorderObject == null) {
+//            request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
+//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//            return null;
+//        }
+//        serialorder = serialorderObject.toString();
+//        logger.info("serialorder++++++++"+serialorder);
+//
+//        //判断是否是微信浏览
+////       if (!WeixinUtils.isWeiXinBrowser(request)) {
+////            request.getSession().setAttribute("msg", "请使用微信进行该操作");
+////            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+////            return null;
+////        }
+//        //主动查询授权状态
+//        WeixinUtils weixinUtils = new WeixinUtils();
+//        String  access_token = (String)weixinUtils.hqtk().get("access_token");
+//        request.setAttribute("access_token",access_token);
+//        Map weiXinDataMap = weixinUtils.zdcxstatus(order_id,access_token);
+//        if(null==weiXinDataMap){
+//            logger.info("主动查询授权失败++++++++++++");
+//            return null;
+//        }
+//        Map para = new HashMap();
+//        para.put("serialorder", serialorder);
+//        List<Kpls> kplsList = kplsService.findAll(para);
+//
+//        String openid=null;
+//        for (Kpls kpls : kplsList) {
+//            int kplsh = kpls.getKplsh();
+//            Map params2 = new HashMap();
+//            params2.put("kplsh", kplsh);
+//            List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
+//
+////            String s_media_id =weixinUtils.creatPDF(kpls.getPdfurl(),pdf_file_url);
+////            if(null==s_media_id&&StringUtils.isBlank(s_media_id)){
+////                logger.info("上传PDF失败获取s_media_id为null");
+////                return  null;
+////            }
+//
+////           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls,access_token);
+////            if(null==openid){
+////                request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
+////                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+////                return null;
+////            }
+//        }
+//
+//        if(null==openid){
+//            request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
+//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//            return null;
+//        }else {
+//
+//        }
+//        return  null;
+//    }
 }

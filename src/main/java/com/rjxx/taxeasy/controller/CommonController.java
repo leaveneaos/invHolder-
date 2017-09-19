@@ -2,11 +2,9 @@ package com.rjxx.taxeasy.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
-import com.rjxx.taxeasy.domains.Gsxx;
-import com.rjxx.taxeasy.domains.Jyxxsq;
-import com.rjxx.taxeasy.domains.Kpls;
-import com.rjxx.taxeasy.domains.WxFpxx;
+import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JyxxsqService;
@@ -47,6 +45,10 @@ public class CommonController extends BaseController {
 
     @Autowired
     private GsxxService gsxxService;
+
+    @Autowired
+    private WxTokenJpaDao wxTokenJpaDao;
+
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
     @ResponseBody
@@ -71,8 +73,18 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                     return null;
                 }else if(status!=null && status.equals("可开具")){
+                    String access_token ="";
+                    String ticket = "";
+                    WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                    if(wxToken==null){
+                        access_token= (String) weixinUtils.hqtk().get("access_token");
+                        ticket = weixinUtils.getTicket(access_token);
+                    }else {
+                        access_token = wxToken.getAccessToken();
+                        ticket= wxToken.getTicket();
+                    }
                     //可开具 跳转微信授权链接
-                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1");
+                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket);
                     if(null==redirectUrl||redirectUrl.equals("")){
                         //获取授权失败
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -110,8 +122,15 @@ public class CommonController extends BaseController {
         }
         logger.info("拿到加密code----------"+encrypt_code);
         logger.info("拿到卡券模板id----------"+card_id);
-        //WeixinUtils weixinUtils = new WeixinUtils();
-        String code = weixinUtils.decode(encrypt_code);
+
+        String access_token ="";
+        WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+        if(wxToken==null){
+            access_token= (String) weixinUtils.hqtk().get("access_token");
+        }else {
+            access_token = wxToken.getAccessToken();
+        }
+        String code = weixinUtils.decode(encrypt_code,access_token);
         if(null == code ){
             request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -194,8 +213,18 @@ public class CommonController extends BaseController {
             }
             WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
             if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
+                String access_token ="";
+                String ticket = "";
+                WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                if(wxToken==null){
+                    access_token= (String) weixinUtils.hqtk().get("access_token");
+                    ticket = weixinUtils.getTicket(access_token);
+                }else {
+                    access_token = wxToken.getAccessToken();
+                    ticket= wxToken.getTicket();
+                }
                 //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2");
+                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2",access_token,ticket);
                 if(null==redirectUrl||redirectUrl.equals("")){
                     //获取授权失败
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
