@@ -189,9 +189,9 @@ public Map sm(String gsdm, String q) {
     @Override
     public String getSpxx(String gsdm, String q) {
         Map decode = RJCheckUtil.decodeForAll(q);
-        String size = decode.get("size").toString();
+        Integer size = (Integer) decode.get("size");
         String spdm = "";
-        if("6".equals(size)){
+        if(size==6){
             spdm = decode.get("A4").toString();
         }
         String orderNo = decode.get("A0").toString();
