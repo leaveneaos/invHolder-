@@ -743,24 +743,28 @@ public Map sm(String gsdm, String q) {
 //            }
             List result = new ArrayList();
             List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
-            for(Integer djh:djhs){
-                if(djh!=null){
-                    Kpls kpls = kplsJpaDao.findOneByDjh(djh);
-                    String fpztdm = kpls.getFpztdm();
-                    String pdfurl = kpls.getPdfurl();
-                    String fphm = kpls.getFphm();
-                    String je = kpls.getJshj()+"";
-                    SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
-                    String orderTime = sdf.format(kpls.getLrsj());
-                    String kplsh = kpls.getKplsh()+"";
-                    if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
-                        result.add(pdfurl+"+"+je+"+"+orderTime+"+"+kplsh);
-                    }else {
-                        result.add("开具中");
+            if(djhs!=null){
+                for(Integer djh:djhs){
+                    if(djh!=null){
+                        Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                        String fpztdm = kpls.getFpztdm();
+                        String pdfurl = kpls.getPdfurl();
+                        String fphm = kpls.getFphm();
+                        String je = kpls.getJshj()+"";
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+                        String orderTime = sdf.format(kpls.getLrsj());
+                        String kplsh = kpls.getKplsh()+"";
+                        if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
+                            result.add(pdfurl+"+"+je+"+"+orderTime+"+"+kplsh);
+                        }else {
+                            result.add("开具中");
+                        }
+                    }else{
+                        result.add("可开具");
                     }
-                }else{
-                    result.add("可开具");
                 }
+            }else {
+                result.add("可开具");
             }
             return result;
         } catch(Exception e){
