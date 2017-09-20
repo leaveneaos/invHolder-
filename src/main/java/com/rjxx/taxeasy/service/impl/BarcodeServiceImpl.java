@@ -68,55 +68,139 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Autowired
     private  WeixinUtils weixinUtils;
-    @Override
-    public Map sm(String gsdm, String q) {
-        try {
-            Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
-            String secretKey = gsxx.getSecretKey();
-            Boolean b = RJCheckUtil.checkMD5(secretKey, q);
-            if (b) {
-                Map decode = RJCheckUtil.decode(q);
-                String storeNo = decode.get("storeNo").toString();
-                String orderNo = decode.get("orderNo").toString();
-                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
-                Integer pid = skp.getPid();
-                Integer xfid = skp.getXfid(); //销方id
-                Integer kpdid = skp.getId();//税控盘id(开票点id)
-                String ppdm = "";
-                String ppurl = "";
-                if (pid != null) {
-                    Pp pp = ppJpaDao.findOneById(pid);
-                    ppdm = pp.getPpdm();
-                    ppurl = pp.getPpurl();
-                } else {
-                    Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "mrmburlid");
-                    ppurl = cszb.getCsz();
-                }
-                Map map = new HashMap();
-                map.put("ppdm", ppdm);
-                map.put("ppurl", ppurl);
-                map.put("orderNo", orderNo);
-                return map;
+//    @Override
+//    public Map sm2(String gsdm, String q) {
+//        try {
+//            Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
+//            String secretKey = gsxx.getSecretKey();
+//            Boolean b = RJCheckUtil.checkMD5(secretKey, q);
+//            if (b) {
+//                Map decode = RJCheckUtil.decode(q);
+//                String storeNo = decode.get("storeNo").toString();
+//                String orderNo = decode.get("orderNo").toString();
+//                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
+//                Integer pid = skp.getPid();
+//                Integer xfid = skp.getXfid(); //销方id
+//                Integer kpdid = skp.getId();//税控盘id(开票点id)
+//                String ppdm = "";
+//                String ppurl = "";
+//                if (pid != null) {
+//                    Pp pp = ppJpaDao.findOneById(pid);
+//                    ppdm = pp.getPpdm();
+//                    ppurl = pp.getPpurl();
+//                } else {
+//                    Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "mrmburlid");
+//                    ppurl = cszb.getCsz();
+//                }
+//                Map map = new HashMap();
+//                map.put("ppdm", ppdm);
+//                map.put("ppurl", ppurl);
+//                map.put("orderNo", orderNo);
+//                return map;
+//            } else {
+//                return null;
+//            }
+//        } catch(Exception e){
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+@Override
+public Map sm(String gsdm, String q) {
+    try {
+        Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
+        String secretKey = gsxx.getSecretKey();
+        Boolean b = RJCheckUtil.checkMD5ForAll(secretKey, q);
+        if (b) {
+            Map decode = RJCheckUtil.decodeForAll(q);
+            String storeNo = decode.get("A3").toString();
+            String orderNo = decode.get("A0").toString();
+            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
+            Integer pid = skp.getPid();
+            Integer xfid = skp.getXfid(); //销方id
+            Integer kpdid = skp.getId();//税控盘id(开票点id)
+            String ppdm = "";
+            String ppurl = "";
+            if (pid != null) {
+                Pp pp = ppJpaDao.findOneById(pid);
+                ppdm = pp.getPpdm();
+                ppurl = pp.getPpurl();
             } else {
-                return null;
+                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "mrmburlid");
+                ppurl = cszb.getCsz();
             }
-        } catch(Exception e){
-            e.printStackTrace();
+            Map map = new HashMap();
+            map.put("ppdm", ppdm);
+            map.put("ppurl", ppurl);
+            map.put("orderNo", orderNo);
+            return map;
+        } else {
             return null;
         }
+    } catch(Exception e){
+        e.printStackTrace();
+        return null;
     }
+}
+
+//    @Override
+//    public String getSpxx2(String gsdm, String q) {
+//        Map decode = RJCheckUtil.decode(q);
+//        String orderNo = decode.get("orderNo").toString();
+//        String orderTime = decode.get("orderTime").toString();
+//        String price = decode.get("price").toString();
+//        String storeNo = decode.get("storeNo").toString();
+//        if (StringUtils.isNotBlank(orderNo) &&
+//                StringUtils.isNotBlank(orderTime) &&
+//                StringUtils.isNotBlank(price) &&
+//                StringUtils.isNotBlank(storeNo)) {
+//            try {
+//                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
+//                Integer xfid = skp.getXfid(); //销方id
+//                Integer kpdid = skp.getId();//税控盘id(开票点id)
+//                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
+//                Map map = new HashMap();
+//                map.put("gsdm", gsdm);
+//                map.put("spdm", cszb.getCsz());
+//                Spvo oneSpvo = spvoService.findOneSpvo(map);
+//                Double spsl = oneSpvo.getSl();
+//                String spmc = oneSpvo.getSpmc();
+//                Map result = new HashMap();
+//                result.put("orderNo", orderNo);
+//                result.put("orderTime", orderTime);
+//                result.put("storeNo", storeNo);
+//                result.put("price", price);
+//                result.put("spsl", spsl);
+//                result.put("spmc", spmc);
+//                Integer pid=skp.getPid();
+//                Pp pp = ppJpaDao.findOneById(pid);
+//                result.put("tqm", pp.getPpdm() + orderNo);
+//                return JSONObject.toJSONString(result);
+//            } catch(Exception e){
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }else{
+//            return null;
+//        }
+//    }
 
     @Override
     public String getSpxx(String gsdm, String q) {
-        Map decode = RJCheckUtil.decode(q);
-        String orderNo = decode.get("orderNo").toString();
-        String orderTime = decode.get("orderTime").toString();
-        String price = decode.get("price").toString();
-        String storeNo = decode.get("storeNo").toString();
+        Map decode = RJCheckUtil.decodeForAll(q);
+        String size = decode.get("size").toString();
+        String spdm = "";
+        if("6".equals(size)){
+            spdm = decode.get("A4").toString();
+        }
+        String orderNo = decode.get("A0").toString();
+        String orderTime = decode.get("A1").toString();
+        String price = decode.get("A2").toString();
+        String storeNo = decode.get("A3").toString();
         if (StringUtils.isNotBlank(orderNo) &&
                 StringUtils.isNotBlank(orderTime) &&
                 StringUtils.isNotBlank(price) &&
-                StringUtils.isNotBlank(storeNo)) {
+                StringUtils.isNotBlank(storeNo)){
             try {
                 Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
                 Integer xfid = skp.getXfid(); //销方id
@@ -124,7 +208,16 @@ public class BarcodeServiceImpl implements BarcodeService {
                 Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
                 Map map = new HashMap();
                 map.put("gsdm", gsdm);
-                map.put("spdm", cszb.getCsz());
+                if(cszb!=null){
+                    map.put("spdm", cszb.getCsz());
+                }else {
+                    //如果没有参数，则表明是传商品代码
+                    if(StringUtils.isNotBlank(spdm)){
+                        map.put("spdm", spdm);
+                    }else{
+                        return null;
+                    }
+                }
                 Spvo oneSpvo = spvoService.findOneSpvo(map);
                 Double spsl = oneSpvo.getSl();
                 String spmc = oneSpvo.getSpmc();
@@ -148,16 +241,142 @@ public class BarcodeServiceImpl implements BarcodeService {
         }
     }
 
-
+//    @Override
+//    public String makeInvoice2(String gsdm, String q, String gfmc, String gfsh, String email,
+//                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly) {
+//        Map decode = RJCheckUtil.decode(q);
+//        String orderNo = decode.get("orderNo").toString();
+//        String orderTime = decode.get("orderTime").toString();
+//        String price = decode.get("price").toString();
+//        String storeNo = decode.get("storeNo").toString();
+//        if (StringUtils.isNotBlank(orderNo) &&
+//                StringUtils.isNotBlank(orderTime) &&
+//                StringUtils.isNotBlank(price) &&
+//                StringUtils.isNotBlank(storeNo) &&
+//                StringUtils.isNotBlank(gfmc)) {
+//            try {
+//                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo,gsdm);
+//                Integer xfid = skp.getXfid(); //销方id
+//                Xf xf = xfJpaDao.findOneById(xfid);
+//                Integer kpdid = skp.getId();//税控盘id(开票点id)
+//                Jyxxsq jyxxsq = new Jyxxsq();
+//                jyxxsq.setDdh(orderNo);
+//                jyxxsq.setGsdm(gsdm);
+//                jyxxsq.setKpddm(storeNo);
+//                jyxxsq.setXfmc(xf.getXfmc());
+//                jyxxsq.setKpr(skp.getKpr());
+//                jyxxsq.setFhr(skp.getFhr());
+//                jyxxsq.setSkr(skp.getSkr());
+//                jyxxsq.setXfid(xfid);
+//                jyxxsq.setXfsh(xf.getXfsh());
+//                jyxxsq.setXfyhzh(skp.getYhzh());
+//                jyxxsq.setXfyh(skp.getKhyh());
+//                jyxxsq.setJshj(Double.valueOf(price));
+//                jyxxsq.setXfdh(skp.getLxdh());//销方电话
+//                jyxxsq.setXfdz(skp.getLxdz());//销方地址
+//                jyxxsq.setXflxr(xf.getXflxr());//销方联系人
+//                jyxxsq.setXfyb(xf.getXfyb());//销方邮编
+//                jyxxsq.setGfmc(gfmc);
+//                jyxxsq.setGfsh(gfsh);
+//                jyxxsq.setGfemail(email);
+//                jyxxsq.setGfdz(gfdz);
+//                jyxxsq.setGfdh(gfdh);
+//                jyxxsq.setGfyhzh(gfyhzh);
+//                jyxxsq.setGfyh(gfyh);
+//                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+ NumberUtil.getRandomLetter());
+//                jyxxsq.setFpzldm("12");
+//                jyxxsq.setFpczlxdm("11");
+//                jyxxsq.setSffsyj("1");
+//                jyxxsq.setZsfs("0");
+//                jyxxsq.setHsbz("1");
+//                jyxxsq.setSjly(sjly);
+//                jyxxsq.setOpenid(openid);
+//                jyxxsq.setLrsj(new Date());
+//                jyxxsq.setXgsj(new Date());
+//                jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
+//                if(tqm==null){
+//                    Integer pid=skp.getPid();
+//                    Pp pp = ppJpaDao.findOneById(pid);
+//                    jyxxsq.setTqm(pp.getPpdm()+orderNo);
+//                }else{
+//                    jyxxsq.setTqm(tqm);
+//                }
+//
+//                List<Jymxsq> jymxsqList = new ArrayList<>();
+//                Jymxsq jymxsq = new Jymxsq();
+//                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
+//                Map map = new HashMap();
+//                map.put("gsdm", gsdm);
+//                map.put("spdm", cszb.getCsz());
+//                Spvo spvo = spvoService.findOneSpvo(map);
+//                jymxsq.setSpdm(spvo.getSpbm());
+//                jymxsq.setYhzcmc(spvo.getYhzcmc());
+//                jymxsq.setYhzcbs(spvo.getYhzcbs());
+//                jymxsq.setLslbz(spvo.getLslbz());
+//                jymxsq.setJshj(Double.valueOf(price));
+//                jymxsq.setFphxz("0");
+//                jymxsq.setSpmc(spvo.getSpmc());
+//                jymxsq.setLrsj(new Date());
+//                jymxsq.setXgsj(new Date());
+//                jymxsq.setSpsl(spvo.getSl());
+//                jymxsq.setSpje(Double.valueOf(price));
+//                jymxsqList.add(jymxsq);
+//                List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
+//
+//                List<Jyzfmx> jyzfmxList = new ArrayList<>();
+//
+//                String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqs,jyzfmxList);
+//                Gsxx oneByGsdm = gsxxJpaDao.findOneByGsdm(gsdm);
+//                String appid = oneByGsdm.getAppKey();
+//                String key = oneByGsdm.getSecretKey();
+//                String resultxml = HttpUtils.HttpUrlPost(xml, appid, key);
+//                String json = "";
+//                try {
+//                    Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
+//                    String returnMsg=resultMap.get("ReturnMessage").toString();
+//                    String returnCode=resultMap.get("ReturnCode").toString();
+//                    Map map2 = new HashMap();
+//                    map2.put("returnMsg", returnMsg);
+//                    map2.put("returnCode", returnCode);
+//                    map2.put("serialorder",  jyxxsq.getJylsh()+jyxxsq.getDdh());
+//                    json=JSONObject.toJSONString(map2);
+//                }catch (Exception e){
+//                    String serialorder=resultxml;
+//                    Kpls oneBySerialorder = kplsJpaDao.findOneBySerialorder(serialorder);
+//                    String fphm=oneBySerialorder.getFphm();
+//                    String fpdm = oneBySerialorder.getFpdm();
+//                    if(fphm==null || fpdm==null){
+//                        return "-1";
+//                    }
+//                    Map map3 = new HashMap();
+//                    map3.put("fphm", fphm);
+//                    map3.put("fpdm", fpdm);
+//                    map3.put("serialorder", jyxxsq.getJylsh()+jyxxsq.getDdh());
+//                    json=JSONObject.toJSONString(map3);
+//                }
+//                return json;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return "-1";
+//            }
+//        } else {
+//            return "0";
+//        }
+//    }
 
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly) {
-        Map decode = RJCheckUtil.decode(q);
-        String orderNo = decode.get("orderNo").toString();
-        String orderTime = decode.get("orderTime").toString();
-        String price = decode.get("price").toString();
-        String storeNo = decode.get("storeNo").toString();
+        Map decode = RJCheckUtil.decodeForAll(q);
+        String size = decode.get("size").toString();
+        String spdm = "";
+        if("6".equals(size)){
+            spdm = decode.get("A4").toString();
+        }
+        String orderNo = decode.get("A0").toString();
+        String orderTime = decode.get("A1").toString();
+        String price = decode.get("A2").toString();
+        String storeNo = decode.get("A3").toString();
         if (StringUtils.isNotBlank(orderNo) &&
                 StringUtils.isNotBlank(orderTime) &&
                 StringUtils.isNotBlank(price) &&
@@ -212,24 +431,51 @@ public class BarcodeServiceImpl implements BarcodeService {
                 }
 
                 List<Jymxsq> jymxsqList = new ArrayList<>();
-                Jymxsq jymxsq = new Jymxsq();
-                Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
-                Map map = new HashMap();
-                map.put("gsdm", gsdm);
-                map.put("spdm", cszb.getCsz());
-                Spvo spvo = spvoService.findOneSpvo(map);
-                jymxsq.setSpdm(spvo.getSpbm());
-                jymxsq.setYhzcmc(spvo.getYhzcmc());
-                jymxsq.setYhzcbs(spvo.getYhzcbs());
-                jymxsq.setLslbz(spvo.getLslbz());
-                jymxsq.setJshj(Double.valueOf(price));
-                jymxsq.setFphxz("0");
-                jymxsq.setSpmc(spvo.getSpmc());
-                jymxsq.setLrsj(new Date());
-                jymxsq.setXgsj(new Date());
-                jymxsq.setSpsl(spvo.getSl());
-                jymxsq.setSpje(Double.valueOf(price));
-                jymxsqList.add(jymxsq);
+                if(price.indexOf(",")!=-1 && spdm.indexOf(",")!=-1){
+                    Integer priceSize = RJCheckUtil.getSize(price, ",");
+                    Integer spdmSize = RJCheckUtil.getSize(spdm, ",");
+                    if(priceSize!=spdmSize){
+                        return "-1";
+                    }
+                    String[] priceArray = price.split(",");
+                    String[] spdmArray = spdm.split(",");
+                    for (int i=0;i<priceSize;i++){
+                        Jymxsq jymxsq = new Jymxsq();
+                        jymxsq.setSpdm(spdmArray[i]);
+                        jymxsq.setJshj(Double.valueOf(priceArray[i]));
+                        jymxsqList.add(jymxsq);
+                    }
+                }else {
+                    Jymxsq jymxsq = new Jymxsq();
+                    jymxsq.setSpdm(spdm);
+                    jymxsq.setJshj(Double.valueOf(price));
+                    jymxsqList.add(jymxsq);
+                }
+                for(Jymxsq jymxsq:jymxsqList){
+                    Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
+                    Map map = new HashMap();
+                    map.put("gsdm", gsdm);
+                    if(cszb!=null){
+                        map.put("spdm", cszb.getCsz());
+                    }else {
+                        //如果没有参数，则表明是传商品代码
+                        if(StringUtils.isNotBlank(jymxsq.getSpdm())){
+                            map.put("spdm", jymxsq.getSpdm());
+                        }else{
+                            return "-1";
+                        }
+                    }
+                    Spvo spvo = spvoService.findOneSpvo(map);
+                    jymxsq.setYhzcmc(spvo.getYhzcmc());
+                    jymxsq.setYhzcbs(spvo.getYhzcbs());
+                    jymxsq.setLslbz(spvo.getLslbz());
+                    jymxsq.setFphxz("0");
+                    jymxsq.setSpmc(spvo.getSpmc());
+                    jymxsq.setLrsj(new Date());
+                    jymxsq.setXgsj(new Date());
+                    jymxsq.setSpsl(spvo.getSl());
+                    jymxsq.setSpje(Double.valueOf(price));
+                }
                 List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
 
                 List<Jyzfmx> jyzfmxList = new ArrayList<>();
@@ -272,7 +518,6 @@ public class BarcodeServiceImpl implements BarcodeService {
             return "0";
         }
     }
-
 
     @Override
     public String pullInvioce(Map resultSjMap,String gsdm,  String gfmc, String gfsh, String email,
