@@ -452,6 +452,7 @@ public Map sm(String gsdm, String q) {
                 }else {
                     jyxxsq.setJshj(Double.valueOf(price));
                     Jymxsq jymxsq = new Jymxsq();
+                    jymxsq.setSpdm(spdm);
                     jymxsq.setJshj(Double.valueOf(price));
                     jymxsqList.add(jymxsq);
                 }
