@@ -9,6 +9,7 @@ import com.rjxx.taxeasy.domains.Tqjl;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -79,7 +80,7 @@ public class Hdsc2Controller extends BaseController {
 
             String openid = (String) session.getAttribute("openid");
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID+ "&redirect_uri="
                         + url + "/hdsc/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
@@ -120,8 +121,8 @@ public class Hdsc2Controller extends BaseController {
             gsxx.setWxappid(APP_ID);
             gsxx.setWxsecret(SECRET);
         }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
-                + gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         HttpClient client = new DefaultHttpClient();
         HttpGet get = new HttpGet(turl);

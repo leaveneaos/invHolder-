@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -71,7 +72,7 @@ public class CmscController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 logger.info("进入重定向");
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "/getWx" + "&response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return null;
@@ -91,12 +92,9 @@ public class CmscController extends BaseController {
         Map params = new HashMap<>();
         params.put("gsdm",state);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(gsxx.getWxappid() == null || gsxx.getWxsecret() ==null){
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
-        }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
-                + gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET+ "&code=" + code + "&grant_type=authorization_code";
         HttpClient client = new DefaultHttpClient();
         HttpGet get  = new HttpGet(turl);
         ObjectMapper jsonparer = new ObjectMapper();
