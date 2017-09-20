@@ -116,7 +116,6 @@
         var afterSize = msg.replace(/&/g, "").length;
         var size=beforeSize-afterSize;
         for (var i=0;i<size;i++){
-            alert(msg.split("&")[i+1]);
             $("#innerImg").append("<tr><td><img src='" + msg.split("&")[i+1] + "' style='width: 100%'/></td>></tr>");
 		}
 		$('#orderNo').val(orderNo);
