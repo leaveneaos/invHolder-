@@ -2,14 +2,13 @@ package com.rjxx.taxeasy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.comm.BaseController;
-import com.rjxx.taxeasy.domains.Fpj;
-import com.rjxx.taxeasy.domains.Gsxx;
-import com.rjxx.taxeasy.domains.Kpls;
-import com.rjxx.taxeasy.domains.Tqjl;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -49,6 +48,9 @@ public class Hdsc2Controller extends BaseController {
 
     @Autowired
     private KplsService kplsService;
+
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
 
     public static final String APP_ID = "wx9abc729e2b4637ee";
 
@@ -275,6 +277,45 @@ public class Hdsc2Controller extends BaseController {
             String llqxx = request.getHeader("User-Agent");
             tqjl.setLlqxx(llqxx);
             tqjlService.save(tqjl);
+
+            //表示已经开过票 --领取发票类型
+            if(WeixinUtils.isWeiXinBrowser(request)){
+                WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(khh);
+                if(null==wxFpxxByTqm){
+                    WxFpxx wFpxx = new WxFpxx();
+                    wFpxx.setTqm(khh);
+                    wFpxx.setGsdm(gsdm);
+                    wFpxx.setOrderNo(khh);
+                    wFpxx.setQ("");
+                    wFpxx.setWxtype("2");
+                    wFpxx.setOpenId(openid);
+                    wFpxx.setKplsh(list.get(0).getKplsh().toString());
+                    try {
+                        wxfpxxJpaDao.save(wFpxx);
+                    }catch (Exception e){
+                        logger.info("交易信息保存失败");
+                        return null;
+                    }
+                }else {
+                    wxFpxxByTqm.setTqm(khh);
+                    wxFpxxByTqm.setGsdm(gsdm);
+                    wxFpxxByTqm.setQ("");
+                    wxFpxxByTqm.setOpenId(openid);
+                    wxFpxxByTqm.setOrderNo(khh);
+                    wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
+                    wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
+                    if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                        String notNullCode= wxFpxxByTqm.getCode();
+                        wxFpxxByTqm.setCode(notNullCode);
+                    }
+                    try {
+                        wxfpxxJpaDao.save(wxFpxxByTqm);
+                    }catch (Exception e){
+                        logger.info("交易信息保存失败");
+                        return null;
+                    }
+                }
+            }
             try {
                 String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
                 if (AlipayUtils.isAlipayBrowser(request)) {
