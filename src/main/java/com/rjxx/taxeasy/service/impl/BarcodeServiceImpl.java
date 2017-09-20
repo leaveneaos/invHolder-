@@ -743,7 +743,7 @@ public Map sm(String gsdm, String q) {
 //            }
             List<String> result = new ArrayList();
             List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
-            if(djhs!=null && djhs.size()>0){
+            if(djhs!=null){
                 logger.info("list不等于空");
                 for(Integer djh:djhs){
                     if(djh!=null){
