@@ -293,7 +293,8 @@ public class Hdsc2Controller extends BaseController {
                     try {
                         wxfpxxJpaDao.save(wFpxx);
                     }catch (Exception e){
-                        logger.info("交易信息保存失败");
+                        e.printStackTrace();
+                        logger.info("交易信息保存失败1");
                         return null;
                     }
                 }else {
@@ -311,7 +312,8 @@ public class Hdsc2Controller extends BaseController {
                     try {
                         wxfpxxJpaDao.save(wxFpxxByTqm);
                     }catch (Exception e){
-                        logger.info("交易信息保存失败");
+                        e.printStackTrace();
+                        logger.info("交易信息保存失败2");
                         return null;
                     }
                 }
