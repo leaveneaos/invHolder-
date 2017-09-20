@@ -136,11 +136,10 @@
         };
         if(isWeixin){
             $('#fpj').click(function () {
-                if(null == orderNo|| null == price || null ==orderTime){
+                if(null == orderNo|| null == price || null == orderTime){
                     window.location.href = "smtq/demo.html?time=" + new Date().getTime();
                 }
-                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + price;
+                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
             });
         }
 

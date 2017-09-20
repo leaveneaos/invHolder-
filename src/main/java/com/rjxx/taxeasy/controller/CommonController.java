@@ -257,6 +257,7 @@ public class CommonController extends BaseController {
     private String syncWeiXin(String orderNo, String price, String orderTime){
         String redirectUrl="";
         logger.info("取到的数据orderNo----"+orderNo);
+        logger.info("数据金额price----"+price);
         logger.info("取到的数据orderTime----"+orderTime);
         try {
             //判断是否是微信浏览
