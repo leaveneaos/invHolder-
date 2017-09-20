@@ -164,6 +164,7 @@ public class ScanController extends BaseController {
                 logger.warn("存入session时候orderNo="+orderNo);
                 session.setAttribute("orderNo", orderNo);
                 List<String> status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
+                logger.info("status={}",status);
                 if(status!=null){
                     if(status.contains("可开具")){
                         if (StringUtils.isNotBlank(ppdm)) {

@@ -741,7 +741,7 @@ public Map sm(String gsdm, String q) {
 //            }else{
 //                return "可开具";
 //            }
-            List result = new ArrayList();
+            List<String> result = new ArrayList();
             List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
             if(djhs!=null){
                 for(Integer djh:djhs){
