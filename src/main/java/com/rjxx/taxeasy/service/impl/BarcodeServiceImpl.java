@@ -766,8 +766,10 @@ public Map sm(String gsdm, String q) {
             }else {
                 result.add("可开具");
             }
+            logger.info("result=",result);
             return result;
         } catch(Exception e){
+            e.printStackTrace();
             return null;
         }
     }

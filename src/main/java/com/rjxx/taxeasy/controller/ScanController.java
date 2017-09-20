@@ -164,8 +164,8 @@ public class ScanController extends BaseController {
                 logger.warn("存入session时候orderNo="+orderNo);
                 session.setAttribute("orderNo", orderNo);
                 List<String> status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
-                logger.info("status={}",status);
-                if(status!=null){
+                logger.info("status=",status);
+                if(status!=null&&status.size()>0){
                     if(status.contains("可开具")){
                         if (StringUtils.isNotBlank(ppdm)) {
                             //有品牌代码对应的url
