@@ -72,47 +72,90 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
-                String status = barcodeService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
-                if(status!=null&& status.equals("开具中")){
-                    //开具中对应的url
-                    response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
-                    return null;
-                }else if(status!=null && status.equals("可开具")){
-                    String access_token ="";
-                    String ticket = "";
-                    WxToken wxToken = wxTokenJpaDao.findByFlag("01");
-                    if(wxToken==null){
-                        access_token= (String) weixinUtils.hqtk().get("access_token");
-                        ticket = weixinUtils.getTicket(access_token);
+                List<String> status = barcodeService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
+                if(status!=null){
+                    if(status.contains("开具中")){
+                        //开具中对应的url
+                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+                        return null;
+                    }else if(status.contains("可开具")){
+                        String access_token ="";
+                        String ticket = "";
+                        WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                        if(wxToken==null){
+                            access_token= (String) weixinUtils.hqtk().get("access_token");
+                            ticket = weixinUtils.getTicket(access_token);
+                        }else {
+                            access_token = wxToken.getAccessToken();
+                            ticket= wxToken.getTicket();
+                        }
+                        String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                        logger.info("----获取的spappid"+spappid);
+                        if(null==spappid ||"".equals(spappid)){
+                            //获取授权失败
+                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return null;
+                        }
+                        //可开具 跳转微信授权链接
+                        redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
+                        if(null==redirectUrl||redirectUrl.equals("")){
+                            //获取授权失败
+                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return null;
+                        }else {
+                            //成功跳转
+                            response.sendRedirect(redirectUrl);
+                            return null;
+                        }
                     }else {
-                        access_token = wxToken.getAccessToken();
-                        ticket= wxToken.getTicket();
-                    }
-                    String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
-                    logger.info("----获取的spappid"+spappid);
-                    if(null==spappid ||"".equals(spappid)){
-                        //获取授权失败
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return null;
                     }
-                    //可开具 跳转微信授权链接
-                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
-                    if(null==redirectUrl||redirectUrl.equals("")){
-                        //获取授权失败
-                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                        return null;
-                    }else {
-                        //成功跳转
-                        response.sendRedirect(redirectUrl);
-                        return null;
-                    }
-                }else {
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                    return null;
                 }
+
+//                if(status!=null&& status.equals("开具中")){
+//                    //开具中对应的url
+//                    response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+//                    return null;
+//                }else if(status!=null && status.equals("可开具")){
+//                    String access_token ="";
+//                    String ticket = "";
+//                    WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+//                    if(wxToken==null){
+//                        access_token= (String) weixinUtils.hqtk().get("access_token");
+//                        ticket = weixinUtils.getTicket(access_token);
+//                    }else {
+//                        access_token = wxToken.getAccessToken();
+//                        ticket= wxToken.getTicket();
+//                    }
+//                    String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+//                    logger.info("----获取的spappid"+spappid);
+//                    if(null==spappid ||"".equals(spappid)){
+//                        //获取授权失败
+//                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                        return null;
+//                    }
+//                    //可开具 跳转微信授权链接
+//                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
+//                    if(null==redirectUrl||redirectUrl.equals("")){
+//                        //获取授权失败
+//                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                        return null;
+//                    }else {
+//                        //成功跳转
+//                        response.sendRedirect(redirectUrl);
+//                        return null;
+//                    }
+//                }else {
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    return null;
+//                }
 
             } catch (Exception e) {
                 e.printStackTrace();

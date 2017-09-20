@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -162,81 +163,151 @@ public class ScanController extends BaseController {
                 String orderNo = result.get("orderNo").toString();
                 logger.warn("存入session时候orderNo="+orderNo);
                 session.setAttribute("orderNo", orderNo);
-                String status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
+                List<String> status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 if(status!=null){
-                    switch (status) {
-                        case "可开具":
-                            if (StringUtils.isNotBlank(ppdm)) {
-                                //有品牌代码对应的url
-                                response.sendRedirect(request.getContextPath() + ppurl + "?t="+ System.currentTimeMillis()+ "=" +ppdm );
-                            } else {
-                                //无品牌对应的url
-                                response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis()+"=no");
-                            }
-                            break;
-                        case "开具中":
-                            //开具中对应的url
-                            response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
-                            break;
-                        default://已经开过票的
-                            if(status.indexOf("pdf")!=-1){
-                                String pdf = status.split("[+]")[0];
-                                String je = status.split("[+]")[1];
-                                String orderTime = status.split("[+]")[2];
-                                String kplsh = status.split("[+]")[3];
+                    if(status.contains("可开具")){
+                        if (StringUtils.isNotBlank(ppdm)) {
+                            //有品牌代码对应的url
+                            response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
+                        } else {
+                            //无品牌对应的url
+                            response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=no");
+                        }
+                    }else if(status.contains("开具中")){
+                        //开具中对应的url
+                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+                    }else {
+                        StringBuilder sb = new StringBuilder();
+                        for(String str:status){
+                            if(str.indexOf("pdf")!=-1){
+                                String pdf = str.split("[+]")[0];
                                 String img = pdf.replace("pdf", "jpg");
-                                if(WeixinUtils.isWeiXinBrowser(request)){
-                                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-                                    if(null == wxFpxxByTqm){
-                                        logger.info("已经开过票的存入微信发票详情--");
-                                        WxFpxx Wxfpxx = new WxFpxx();
-                                        Wxfpxx.setTqm(ppdm+orderNo);
-                                        Wxfpxx.setGsdm(gsdm);
-                                        Wxfpxx.setQ(q);
-                                        Wxfpxx.setOpenId(openid);
-                                        Wxfpxx.setOrderNo(orderNo);
-                                        Wxfpxx.setWxtype("2");
-                                        Wxfpxx.setKplsh(kplsh);
-                                        logger.info("已完成开票之后，微信扫码直接归入卡包--信息"+Wxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
-                                                q+
-                                                "------订单编号"+Wxfpxx.getOrderNo()+"------发票类型"+Wxfpxx.getWxtype());
-                                        try {
-                                            wxfpxxJpaDao.save(Wxfpxx);
-                                        }catch (Exception e){
-                                            logger.info("交易信息保存失败");
-                                            return ;
-                                        }
-                                    }else {
-                                        wxFpxxByTqm.setTqm(ppdm+orderNo);
-                                        wxFpxxByTqm.setGsdm(gsdm);
-                                        wxFpxxByTqm.setQ(q);
-                                        wxFpxxByTqm.setOpenId(openid);
-                                        wxFpxxByTqm.setOrderNo(orderNo);
-                                        wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
-                                        wxFpxxByTqm.setKplsh(kplsh);
-                                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                            String notNullCode= wxFpxxByTqm.getCode();
-                                            wxFpxxByTqm.setCode(notNullCode);
-                                        }
-                                        try {
-                                            wxfpxxJpaDao.save(wxFpxxByTqm);
-                                        }catch (Exception e){
-                                            logger.info("交易信息保存失败");
-                                            return ;
-                                        }
-                                    }
-
-                                }
-                                logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
-                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
-                                //有pdf对应的url
-                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
-                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
-                            }else{
-                                //无pdf对应的url
-                                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_ERROR");
+                                sb.append("&"+img);
                             }
+                        }
+                        String je = status.get(0).split("[+]")[1];
+                        String orderTime = status.get(0).split("[+]")[2];
+                        String kplsh = status.get(0).split("[+]")[3];
+                        if(WeixinUtils.isWeiXinBrowser(request)){
+                            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+                            if(null == wxFpxxByTqm){
+                                logger.info("已经开过票的存入微信发票详情--");
+                                WxFpxx Wxfpxx = new WxFpxx();
+                                Wxfpxx.setTqm(ppdm+orderNo);
+                                Wxfpxx.setGsdm(gsdm);
+                                Wxfpxx.setQ(q);
+                                Wxfpxx.setOpenId(openid);
+                                Wxfpxx.setOrderNo(orderNo);
+                                Wxfpxx.setWxtype("2");
+                                Wxfpxx.setKplsh(kplsh);
+                                logger.info("已完成开票之后，微信扫码直接归入卡包--信息"+Wxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
+                                        q+
+                                        "------订单编号"+Wxfpxx.getOrderNo()+"------发票类型"+Wxfpxx.getWxtype());
+                                try {
+                                    wxfpxxJpaDao.save(Wxfpxx);
+                                }catch (Exception e){
+                                    logger.info("交易信息保存失败");
+                                    return ;
+                                }
+                            }else {
+                                wxFpxxByTqm.setTqm(ppdm+orderNo);
+                                wxFpxxByTqm.setGsdm(gsdm);
+                                wxFpxxByTqm.setQ(q);
+                                wxFpxxByTqm.setOpenId(openid);
+                                wxFpxxByTqm.setOrderNo(orderNo);
+                                wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
+                                wxFpxxByTqm.setKplsh(kplsh);
+                                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                                    String notNullCode= wxFpxxByTqm.getCode();
+                                    wxFpxxByTqm.setCode(notNullCode);
+                                }
+                                try {
+                                    wxfpxxJpaDao.save(wxFpxxByTqm);
+                                }catch (Exception e){
+                                    logger.info("交易信息保存失败");
+                                    return ;
+                                }
+                            }
+
+                        }
+                        logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
+                                + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
+                        //有pdf对应的url
+                        response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
+                                + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
                     }
+//                    switch (status) {
+//                        case "可开具":
+//                            if (StringUtils.isNotBlank(ppdm)) {
+//                                //有品牌代码对应的url
+//                                response.sendRedirect(request.getContextPath() + ppurl + "?t="+ System.currentTimeMillis()+ "=" +ppdm );
+//                            } else {
+//                                //无品牌对应的url
+//                                response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis()+"=no");
+//                            }
+//                            break;
+//                        case "开具中":
+//                            //开具中对应的url
+//                            response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+//                            break;
+//                        default://已经开过票的
+//                            if(status.indexOf("pdf")!=-1){
+//                                String pdf = status.split("[+]")[0];
+//                                String je = status.split("[+]")[1];
+//                                String orderTime = status.split("[+]")[2];
+//                                String kplsh = status.split("[+]")[3];
+//                                String img = pdf.replace("pdf", "jpg");
+//                                if(WeixinUtils.isWeiXinBrowser(request)){
+//                                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+//                                    if(null == wxFpxxByTqm){
+//                                        logger.info("已经开过票的存入微信发票详情--");
+//                                        WxFpxx Wxfpxx = new WxFpxx();
+//                                        Wxfpxx.setTqm(ppdm+orderNo);
+//                                        Wxfpxx.setGsdm(gsdm);
+//                                        Wxfpxx.setQ(q);
+//                                        Wxfpxx.setOpenId(openid);
+//                                        Wxfpxx.setOrderNo(orderNo);
+//                                        Wxfpxx.setWxtype("2");
+//                                        Wxfpxx.setKplsh(kplsh);
+//                                        logger.info("已完成开票之后，微信扫码直接归入卡包--信息"+Wxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
+//                                                q+
+//                                                "------订单编号"+Wxfpxx.getOrderNo()+"------发票类型"+Wxfpxx.getWxtype());
+//                                        try {
+//                                            wxfpxxJpaDao.save(Wxfpxx);
+//                                        }catch (Exception e){
+//                                            logger.info("交易信息保存失败");
+//                                            return ;
+//                                        }
+//                                    }else {
+//                                        wxFpxxByTqm.setTqm(ppdm+orderNo);
+//                                        wxFpxxByTqm.setGsdm(gsdm);
+//                                        wxFpxxByTqm.setQ(q);
+//                                        wxFpxxByTqm.setOpenId(openid);
+//                                        wxFpxxByTqm.setOrderNo(orderNo);
+//                                        wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
+//                                        wxFpxxByTqm.setKplsh(kplsh);
+//                                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+//                                            String notNullCode= wxFpxxByTqm.getCode();
+//                                            wxFpxxByTqm.setCode(notNullCode);
+//                                        }
+//                                        try {
+//                                            wxfpxxJpaDao.save(wxFpxxByTqm);
+//                                        }catch (Exception e){
+//                                            logger.info("交易信息保存失败");
+//                                            return ;
+//                                        }
+//                                    }
+//
+//                                }
+//                                logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
+//                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
+//                                //有pdf对应的url
+//                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
+//                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
+//                            }else{
+//                                //无pdf对应的url
+//                                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_ERROR");
+//                            }
                 }else{
                     //获取pdf状态码失败的url
                     response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_STATE_ERROR");

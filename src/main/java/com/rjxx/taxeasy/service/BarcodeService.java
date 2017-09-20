@@ -1,9 +1,5 @@
 package com.rjxx.taxeasy.service;
 
-import com.rjxx.taxeasy.domains.Jymxsq;
-import com.rjxx.taxeasy.domains.Jyxxsq;
-import com.rjxx.taxeasy.domains.Jyzfmx;
-
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +26,7 @@ public interface BarcodeService {
 
     String getSpxx(String gsdm, String q);
 
-    String checkStatus(String tqm,String gsdm);
+    List<String> checkStatus(String tqm,String gsdm);
 
     /**
      * 扫码保存数据库

@@ -70,10 +70,12 @@
 		</ul>
 	</section>
 
-	<section id=parentIndustryUL>
-		<img id="innerImg"/>
-		<div id="innerMsg"></div>
-	</section>
+	<!--<section id=parentIndustryUL>-->
+		<!--<img id="innerImg"/>-->
+		<!--<div id="innerMsg"></div>-->
+	<!--</section>-->
+	<table id="innerImg">
+	</table>
 
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
@@ -108,7 +110,13 @@
         var orderNo = getval.split("=")[3];
         var je = getval.split("=")[4];
         var orderTime = getval.split("=")[5];
-		$("#innerImg").attr("src", msg);
+
+        var beforeSize=msg.size();
+        var size=beforeSize-(msg.replaceAll("&", "").size());
+        for (var i=0;i<size;i++){
+            $("#innerImg").append("<tr><td><img src='" + msg.split("&")[i] + "'></td>></tr>");
+		}
+//		$("#innerImg").attr("src", msg);
 		$('#orderNo').val(orderNo);
 		$('#je').val(je);
 		$('#orderTime').val(orderTime);

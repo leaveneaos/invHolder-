@@ -447,7 +447,6 @@ public Map sm(String gsdm, String q) {
                     }
                 }else {
                     Jymxsq jymxsq = new Jymxsq();
-                    jymxsq.setSpdm(spdm);
                     jymxsq.setJshj(Double.valueOf(price));
                     jymxsqList.add(jymxsq);
                 }
@@ -458,7 +457,7 @@ public Map sm(String gsdm, String q) {
                     if(cszb!=null){
                         map.put("spdm", cszb.getCsz());
                     }else {
-                        //如果没有参数，则表明是传商品代码
+                        //如果没有参数，则表明是传商品代码,此时交易明细申请中税收分类编码暂时放商品编码
                         if(StringUtils.isNotBlank(jymxsq.getSpdm())){
                             map.put("spdm", jymxsq.getSpdm());
                         }else{
@@ -466,6 +465,7 @@ public Map sm(String gsdm, String q) {
                         }
                     }
                     Spvo spvo = spvoService.findOneSpvo(map);
+                    jymxsq.setSpdm(spvo.getSpbm());
                     jymxsq.setYhzcmc(spvo.getYhzcmc());
                     jymxsq.setYhzcbs(spvo.getYhzcbs());
                     jymxsq.setLslbz(spvo.getLslbz());
@@ -722,26 +722,47 @@ public Map sm(String gsdm, String q) {
         return  resultMap;
     }
     @Override
-    public String checkStatus(String tqm, String gsdm) {
+    public List<String> checkStatus(String tqm, String gsdm) {
         try {
-            Integer djh = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
-            if(djh!=null){
-                Kpls kpls = kplsJpaDao.findOneByDjh(djh);
-                String fpztdm = kpls.getFpztdm();
-                String pdfurl = kpls.getPdfurl();
-                String fphm = kpls.getFphm();
-                String je = kpls.getJshj()+"";
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
-                String orderTime = sdf.format(kpls.getLrsj());
-                String kplsh = kpls.getKplsh()+"";
-                if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
-                    return pdfurl+"+"+je+"+"+orderTime+"+"+kplsh;
+//            if(djh!=null){
+//                Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+//                String fpztdm = kpls.getFpztdm();
+//                String pdfurl = kpls.getPdfurl();
+//                String fphm = kpls.getFphm();
+//                String je = kpls.getJshj()+"";
+//                SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+//                String orderTime = sdf.format(kpls.getLrsj());
+//                String kplsh = kpls.getKplsh()+"";
+//                if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
+//                    return pdfurl+"+"+je+"+"+orderTime+"+"+kplsh;
+//                }else{
+//                    return "开具中";
+//                }
+//            }else{
+//                return "可开具";
+//            }
+            List result = new ArrayList();
+            List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
+            for(Integer djh:djhs){
+                if(djh!=null){
+                    Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                    String fpztdm = kpls.getFpztdm();
+                    String pdfurl = kpls.getPdfurl();
+                    String fphm = kpls.getFphm();
+                    String je = kpls.getJshj()+"";
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+                    String orderTime = sdf.format(kpls.getLrsj());
+                    String kplsh = kpls.getKplsh()+"";
+                    if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
+                        result.add(pdfurl+"+"+je+"+"+orderTime+"+"+kplsh);
+                    }else {
+                        result.add("开具中");
+                    }
                 }else{
-                    return "开具中";
+                    result.add("可开具");
                 }
-            }else{
-                return "可开具";
             }
+            return result;
         } catch(Exception e){
             return null;
         }
