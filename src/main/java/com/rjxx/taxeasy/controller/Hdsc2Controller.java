@@ -236,6 +236,12 @@ public class Hdsc2Controller extends BaseController {
 //            list = jylsService.findBykhh(map);
 //        }
         list = kplsService.findAllKpInfo(map);
+        Jyls jyls = new Jyls();
+        jyls.setGsdm(list.get(0).getGsdm());
+        jyls.setDjh((list.get(0).getDjh()));
+        jyls.setJylsh(list.get(0).getJylsh());
+        Jyls jyls1 = jylsService.findOneByParams(jyls);
+        String khhbyJyls=jyls1.getKhh();
         if (list.size() > 0) {
             String pdfdzs = "";
             request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
@@ -283,9 +289,9 @@ public class Hdsc2Controller extends BaseController {
                 WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(khh);
                 if(null==wxFpxxByTqm){
                     WxFpxx wFpxx = new WxFpxx();
-                    wFpxx.setTqm(khh);
+                    wFpxx.setTqm(khhbyJyls);
                     wFpxx.setGsdm(gsdm);
-                    wFpxx.setOrderNo(khh);
+                    wFpxx.setOrderNo(khhbyJyls);
                     wFpxx.setQ("");
                     wFpxx.setWxtype("2");
                     wFpxx.setOpenId(openid);
@@ -298,11 +304,11 @@ public class Hdsc2Controller extends BaseController {
                         return null;
                     }
                 }else {
-                    wxFpxxByTqm.setTqm(khh);
+                    wxFpxxByTqm.setTqm(khhbyJyls);
                     wxFpxxByTqm.setGsdm(gsdm);
                     wxFpxxByTqm.setQ("");
                     wxFpxxByTqm.setOpenId(openid);
-                    wxFpxxByTqm.setOrderNo(khh);
+                    wxFpxxByTqm.setOrderNo(khhbyJyls);
                     wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
                     wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
                     if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
