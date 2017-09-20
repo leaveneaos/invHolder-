@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -399,7 +400,6 @@ public Map sm(String gsdm, String q) {
                 jyxxsq.setXfsh(xf.getXfsh());
                 jyxxsq.setXfyhzh(skp.getYhzh());
                 jyxxsq.setXfyh(skp.getKhyh());
-                jyxxsq.setJshj(Double.valueOf(price));
                 jyxxsq.setXfdh(skp.getLxdh());//销方电话
                 jyxxsq.setXfdz(skp.getLxdz());//销方地址
                 jyxxsq.setXflxr(xf.getXflxr());//销方联系人
@@ -430,8 +430,10 @@ public Map sm(String gsdm, String q) {
                     jyxxsq.setTqm(tqm);
                 }
 
+
                 List<Jymxsq> jymxsqList = new ArrayList<>();
                 if(price.indexOf(",")!=-1 && spdm.indexOf(",")!=-1){
+                    BigDecimal jyxxsqPrice = new BigDecimal("0");
                     Integer priceSize = RJCheckUtil.getSize(price, ",");
                     Integer spdmSize = RJCheckUtil.getSize(spdm, ",");
                     if(priceSize!=spdmSize){
@@ -440,12 +442,15 @@ public Map sm(String gsdm, String q) {
                     String[] priceArray = price.split(",");
                     String[] spdmArray = spdm.split(",");
                     for (int i=0;i<priceSize;i++){
+                        jyxxsqPrice.add(new BigDecimal(priceArray[i]));
                         Jymxsq jymxsq = new Jymxsq();
                         jymxsq.setSpdm(spdmArray[i]);
                         jymxsq.setJshj(Double.valueOf(priceArray[i]));
                         jymxsqList.add(jymxsq);
                     }
+                    jyxxsq.setJshj(jyxxsqPrice.doubleValue());
                 }else {
+                    jyxxsq.setJshj(Double.valueOf(price));
                     Jymxsq jymxsq = new Jymxsq();
                     jymxsq.setJshj(Double.valueOf(price));
                     jymxsqList.add(jymxsq);
