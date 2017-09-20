@@ -209,7 +209,7 @@ public Map sm(String gsdm, String q) {
                 Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
                 Map map = new HashMap();
                 map.put("gsdm", gsdm);
-                if(cszb!=null){
+                if(cszb.getCsz()!=null){
                     map.put("spdm", cszb.getCsz());
                 }else {
                     //如果没有参数，则表明是传商品代码
