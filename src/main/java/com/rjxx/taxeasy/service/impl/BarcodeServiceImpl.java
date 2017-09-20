@@ -743,10 +743,13 @@ public Map sm(String gsdm, String q) {
 //            }
             List<String> result = new ArrayList();
             List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
-            if(djhs!=null){
+            if(djhs!=null && djhs.size()>0){
+                logger.info("list不等于空");
                 for(Integer djh:djhs){
                     if(djh!=null){
+                        logger.info("djh不等于空");
                         Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                        logger.info("kpls=",kpls);
                         String fpztdm = kpls.getFpztdm();
                         String pdfurl = kpls.getPdfurl();
                         String fphm = kpls.getFphm();
@@ -760,10 +763,12 @@ public Map sm(String gsdm, String q) {
                             result.add("开具中");
                         }
                     }else{
+                        logger.info("djh等于空");
                         result.add("可开具");
                     }
                 }
             }else {
+                logger.info("list等于空");
                 result.add("可开具");
             }
             logger.info("result=",result);
