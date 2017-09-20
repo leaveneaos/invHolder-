@@ -55,18 +55,23 @@ public class CommonController extends BaseController {
     public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price){
         String redirectUrl ="";
         Map resultMap = new HashMap();
-        logger.info("截取前--"+price);
-//        int i = price.indexOf("元");
-//        String str = price.substring(0,i);
-        //logger.info("截取金额字符串元---"+str);
         if(weixinUtils.isWeiXinBrowser(request)){
             logger.info("微信浏览器--------------");
-            //WeixinUtils weixinUtils = new WeixinUtils();
+            logger.info("截取前--"+price);
             try {
-                //查询是否开具
                 logger.info("------orderNo---------"+orderNo);
+                if(null==orderNo || "".equals(orderNo)){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                 logger.info("--------数据---------"+ JSON.toJSONString(wxFpxx));
+                if(null==wxFpxx){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
                 String status = barcodeService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
                 if(status!=null&& status.equals("开具中")){
                     //开具中对应的url
@@ -181,7 +186,6 @@ public class CommonController extends BaseController {
     @ResponseBody
     public String wxfpxq(String kplsh ) throws IOException {
         logger.info("收到请求-----"+kplsh);
-        Map resultMap = new HashMap();
         if(null == kplsh ){
             request.getSession().setAttribute("msg", "发票跳转失败了，请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -201,7 +205,6 @@ public class CommonController extends BaseController {
         map.put("fphm",kpls.getFphm());
         map.put("jym", kpls.getJym());
         map.put("pdfurl",kpls.getPdfurl());
-        //resultMap.put("kpls",kpls);
         logger.info("取到的数据——————"+JSON.toJSONString(map));
         return  JSON.toJSONString(map);
     }

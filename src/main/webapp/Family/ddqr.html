@@ -58,6 +58,7 @@
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
+        pricese=null;
 		$(function () {
                 $.post(
                     "../fm/qrxxsession",
@@ -72,6 +73,7 @@
                             $('#order').html(data.order);
                             $('#orderTime').html(data.orderTime);
                             $('#price').html(RetainedDecimalPlaces(data.price)+"元");
+                            pricese = data.price;
                             $('#tqmhidden').html(data.tqm);
                             $("#sure").attr("disabled",false);
                             msg=null;
@@ -94,6 +96,9 @@
             var reg=/[\u4E00-\u9FA5]/g;
             var pri = price.replace(reg,'');
 			var tqm=$('#tqmhidden').text();
+			if(null==pricese){
+                redirect("出现未知错误");
+			}
              if(tqm!=null){
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
@@ -103,7 +108,7 @@
                 window.location.href = "../Family/ddmx.html?time=" + new Date();
             }else if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + pri;
+                    "&storeNo=" + storeNo + "&price=" + pricese;
             }else if(isUCBrowser){
                 alert("进入uc浏览器");
                 redirect("请用微信或支付宝扫码");
