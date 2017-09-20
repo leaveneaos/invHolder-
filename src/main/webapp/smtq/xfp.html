@@ -81,7 +81,6 @@
     var isAlipay = ua.indexOf('alipay') != -1;
     var isUCBrowser = ua.indexOf('UCBrowser') != -1;
     var isSafari = ua.indexOf('Safari') != -1;
-    //var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
     if(isWeixin){
         $("#fpj").css('display','block');
         $("#zfb").css('display','none');
@@ -91,6 +90,11 @@
         $("#zfb").css('display','block');
     }
     var serialorder;
+
+     orderNo = null;
+     price = null;
+     orderTime = null;
+     storeNo = null;
     $(function () {
         $.post(
                 "../tijiao/fpsession",
@@ -100,6 +104,9 @@
                     if (msg != "暂时未有发票开具") {
                         serialorder = data.serialorder;
                         var pdfdzs = data.pdfdz;
+                        orderNo = data.orderNo;
+                        price = data.price;
+                        orderTime = data.orderTime;
                         if (serialorder != null && serialorder != "") {
                             pdfdz = pdfdzs.split(",");
                             $.each(
@@ -127,13 +134,16 @@
                 window.location = "../syncAlipay?_t=" + (new Date()).getTime();
             });
         };
+        if(isWeixin){
+            $('#fpj').click(function () {
+                if(null == orderNo|| null == price || null ==orderTime){
+                    window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                }
+                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + price;
+            });
+        }
 
-
-
-        
-        // $('#fpj').click(function () {
-        //     // window.location.href = "../waitting.html?_t=" + new Date().getTime();
-        // });
 
 
         //   $('#fpj').click(function() {

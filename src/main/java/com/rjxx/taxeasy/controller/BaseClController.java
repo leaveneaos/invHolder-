@@ -209,7 +209,7 @@ public class BaseClController extends BaseController {
                     request.getSession().setAttribute("djh", list.get(0).getDjh());
                     request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
                     for (Kpls kpls2 : list) {
-                        pdfdzs += kpls2.getPdfurl().replace(".pdf", ",jpg") + ",";
+                        pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
                     }
                     if (pdfdzs.length() > 0) {
                         result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
@@ -278,10 +278,9 @@ public class BaseClController extends BaseController {
                     String orderNo= tqm;
                     String je = list.get(0).getJshj().toString();
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String orderTime = sdf.format(list.get(0).getLrsj());
+                    String orderTime = sdf.format(list.get(0).getKprq());
                     logger.info("跳转发票详情页面---"+orderNo+"+"+je+"+"+orderTime);
-                    logger.info("跳转连接"+request.getContextPath() + "/Family/fpxq.html?_t="
-                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime);
+                    //如果是多张发票的话，只能领取第一张。
                     response.sendRedirect(request.getContextPath() + "/Family/fpxq.html?_t="
                             + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime);
                     return;
@@ -494,7 +493,7 @@ public class BaseClController extends BaseController {
                 request.getSession().setAttribute("djh",list.get(0).getDjh());
                 request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
                 for (Kpls kpls2: list) {
-                    pdfdzs += kpls2.getPdfurl().replace(".pdf",",jpg") + ",";
+                    pdfdzs += kpls2.getPdfurl().replace(".pdf",".jpg") + ",";
                 }
                 if(pdfdzs.length() > 0){
                     result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
