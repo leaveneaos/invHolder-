@@ -105,18 +105,20 @@
             $(".wx").css('display','none');
         }
         var thisURL = document.URL;
+//        var thisURL = "/QR/scan.html?t=1505897643036=&http://test.datarj.com/e-invoice-file/500102010003698/20170920/beda2b8a-76d8-4575-844a-b7916999c292.jpg&http://test.datarj.com/e-invoice-file/500102010003698/20170920/beda2b8a-76d8-4575-844a-b7916999c292.jpg&http://test.datarj.com/e-invoice-file/500102010003698/20170920/beda2b8a-76d8-4575-844a-b7916999c292.jpg=1505888376745=0.1=20170920151312";
         var getval = thisURL.split('?')[1];
         var msg = getval.split("=")[2];
         var orderNo = getval.split("=")[3];
         var je = getval.split("=")[4];
         var orderTime = getval.split("=")[5];
 
-        var beforeSize=msg.size();
-        var size=beforeSize-(msg.replaceAll("&", "").size());
+        var beforeSize=msg.length;
+        var afterSize = msg.replace(/&/g, "").length;
+        var size=beforeSize-afterSize;
         for (var i=0;i<size;i++){
-            $("#innerImg").append("<tr><td><img src='" + msg.split("&")[i] + "'></td>></tr>");
+            alert(msg.split("&")[i+1]);
+            $("#innerImg").append("<tr><td><img src='" + msg.split("&")[i+1] + "' style='width: 100%'/></td>></tr>");
 		}
-//		$("#innerImg").attr("src", msg);
 		$('#orderNo').val(orderNo);
 		$('#je').val(je);
 		$('#orderTime').val(orderTime);
