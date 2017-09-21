@@ -487,9 +487,45 @@ public class MbController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
-                if(null!= gsdm && "cmsc".equals(gsdm)){
-                    request.getSession().setAttribute("khh", tqm);
-                    request.getSession().setAttribute("gsdm", gsdm);
+                //表示已经开过票 --领取发票类型
+                if(WeixinUtils.isWeiXinBrowser(request)){
+                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                    if(null==wxFpxxByTqm){
+                        WxFpxx wFpxx = new WxFpxx();
+                        wFpxx.setTqm(tqm);
+                        wFpxx.setGsdm(gsdm);
+                        wFpxx.setOrderNo(tqm);
+                        wFpxx.setQ("");
+                        wFpxx.setWxtype("2");
+                        wFpxx.setOpenId(opendid);
+                        wFpxx.setKplsh(list.get(0).getKplsh().toString());
+                        try {
+                            wxfpxxJpaDao.save(wFpxx);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            logger.info("交易信息保存失败1");
+                            return null;
+                        }
+                    }else {
+                        wxFpxxByTqm.setTqm(tqm);
+                        wxFpxxByTqm.setGsdm(gsdm);
+                        wxFpxxByTqm.setQ("");
+                        wxFpxxByTqm.setOpenId(opendid);
+                        wxFpxxByTqm.setOrderNo(tqm);
+                        wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
+                        wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
+                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                            String notNullCode= wxFpxxByTqm.getCode();
+                            wxFpxxByTqm.setCode(notNullCode);
+                        }
+                        try {
+                            wxfpxxJpaDao.save(wxFpxxByTqm);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            logger.info("交易信息保存失败2");
+                            return null;
+                        }
+                    }
                 }
             }
             else if(null != jyls && null !=jyls.getDjh()){

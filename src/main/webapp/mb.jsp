@@ -161,17 +161,9 @@
                         loadimage();
 					}else if (data.num == 2) {
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-                            if(null!=data.gsdm && data.gsdm == "cmsc"){
-                                window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.tqm+"&time=" + new Date();
-							}else {
                                 window.location.href= "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
-                            }
                         }else{
-                            if(null!=data.gsdm && data.gsdm == "cmsc"){
-                                window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.tqm+"&time=" + new Date();
-                            }else {
                                 window.location.href = "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
-                            }
 						}
 					}else if (data.num == 4) {
                         loadimage();

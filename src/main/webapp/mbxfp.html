@@ -139,7 +139,6 @@
                 if(null == orderNo|| null == price || null == orderTime){
                     window.location.href = "smtq/demo.html?time=" + new Date().getTime();
                 }
-                alert(orderNo+price+orderTime);
                 window.location = "common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
             });
 		}
