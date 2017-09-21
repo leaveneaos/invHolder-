@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -423,6 +422,7 @@ public Map sm(String gsdm, String q) {
                 Xf xf = xfJpaDao.findOneById(xfid);
                 Integer kpdid = skp.getId();//税控盘id(开票点id)
                 Jyxxsq jyxxsq = new Jyxxsq();
+                jyxxsq.setJshj(0d);
                 jyxxsq.setDdh(orderNo);
                 jyxxsq.setGsdm(gsdm);
                 jyxxsq.setKpddm(storeNo);
@@ -467,7 +467,7 @@ public Map sm(String gsdm, String q) {
 
                 List<Jymxsq> jymxsqList = new ArrayList<>();
                 if(price.indexOf(",")!=-1 && spdm.indexOf(",")!=-1){
-                    BigDecimal jyxxsqPrice = new BigDecimal("0");
+//                    BigDecimal jyxxsqPrice = new BigDecimal("0");
                     Integer priceSize = RJCheckUtil.getSize(price, ",");
                     Integer spdmSize = RJCheckUtil.getSize(spdm, ",");
                     if(priceSize!=spdmSize){
@@ -476,13 +476,14 @@ public Map sm(String gsdm, String q) {
                     String[] priceArray = price.split(",");
                     String[] spdmArray = spdm.split(",");
                     for (int i=0;i<priceSize+1;i++){
-                        jyxxsqPrice.add(new BigDecimal(priceArray[i]));
+                        jyxxsq.setJshj(jyxxsq.getJshj()+Double.valueOf(priceArray[i]));
+//                        jyxxsqPrice.add(new BigDecimal(priceArray[i]));
                         Jymxsq jymxsq = new Jymxsq();
                         jymxsq.setSpdm(spdmArray[i]);
                         jymxsq.setJshj(Double.valueOf(priceArray[i]));
                         jymxsqList.add(jymxsq);
                     }
-                    jyxxsq.setJshj(jyxxsqPrice.doubleValue());
+//                    jyxxsq.setJshj(jyxxsqPrice.doubleValue());
                 }else {
                     jyxxsq.setJshj(Double.valueOf(price));
                     Jymxsq jymxsq = new Jymxsq();
