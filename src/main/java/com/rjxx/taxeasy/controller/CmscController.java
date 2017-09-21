@@ -121,12 +121,7 @@ public class CmscController extends BaseController {
             //关闭连接,释放资源
             client.getConnectionManager().shutdown();
         }
-        //宏康页面已经有了,不跳模板
-        if(state.equals("hongkang")){
-            response.sendRedirect(request.getContextPath() + "/" + state + "_page.jsp?gsdm="+state+"&&_t=" + System.currentTimeMillis());
-            return;
-        }
-        response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+state+"&&_t="+System.currentTimeMillis() );
+        response.sendRedirect(request.getContextPath() + "/" + state + "_page.html?_t=" + System.currentTimeMillis());
         return;
     }
 
