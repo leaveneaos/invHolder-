@@ -198,6 +198,8 @@ public Map sm(String gsdm, String q) {
         String orderTime = decode.get("A1").toString();
         String price = decode.get("A2").toString();
         String storeNo = decode.get("A3").toString();
+        StringBuilder spsl = new StringBuilder();
+        StringBuilder spmc = new StringBuilder();
         if (StringUtils.isNotBlank(orderNo) &&
                 StringUtils.isNotBlank(orderTime) &&
                 StringUtils.isNotBlank(price) &&
@@ -207,28 +209,57 @@ public Map sm(String gsdm, String q) {
                 Integer xfid = skp.getXfid(); //销方id
                 Integer kpdid = skp.getId();//税控盘id(开票点id)
                 Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
-                Map map = new HashMap();
-                map.put("gsdm", gsdm);
-                if(cszb.getCsz()!=null){
-                    map.put("spdm", cszb.getCsz());
-                }else {
-                    //如果没有参数，则表明是传商品代码
-                    if(StringUtils.isNotBlank(spdm)){
-                        map.put("spdm", spdm);
+
+                List<String> spdmList = new ArrayList();
+                //如果价格和商品代码有多个
+                if(price.indexOf(",")!=-1 && spdm.indexOf(",")!=-1){
+                    Integer priceSize = RJCheckUtil.getSize(price, ",");
+                    Integer spdmSize = RJCheckUtil.getSize(spdm, ",");
+                    if(priceSize!=spdmSize){
+                        return null;
+                    }
+                    String[] spdmArray = spdm.split(",");
+                    for(String str:spdmArray){
+                        spdmList.add(str);
+                    }
+                    //如果只有一个或没有传商品代码
+                }else{
+                    spdmList.add(spdm);
+                }
+                if(spdmList!=null||spdmList.size()>0){
+                    Map map = new HashMap();
+                    map.put("gsdm", gsdm);
+                    for(int i=0;i<spdmList.size();i++){
+                        map.put("spdm", spdmList.get(i));
+                        Spvo oneSpvo = spvoService.findOneSpvo(map);
+                        if(i==0){
+                            spsl.append(oneSpvo.getSl());
+                            spmc.append(oneSpvo.getSpmc());
+                        }else{
+                            spsl.append(","+oneSpvo.getSl());
+                            spmc.append(","+oneSpvo.getSpmc());
+                        }
+                    }
+                    //如果没有传商品代码
+                }else{
+                    if(cszb.getCsz()!=null){
+                        Map map = new HashMap();
+                        map.put("gsdm", gsdm);
+                        map.put("spdm", cszb.getCsz());
+                        Spvo oneSpvo = spvoService.findOneSpvo(map);
+                        spsl.append(oneSpvo.getSl());
+                        spmc.append(oneSpvo.getSpmc());
                     }else{
                         return null;
                     }
                 }
-                Spvo oneSpvo = spvoService.findOneSpvo(map);
-                Double spsl = oneSpvo.getSl();
-                String spmc = oneSpvo.getSpmc();
                 Map result = new HashMap();
                 result.put("orderNo", orderNo);
                 result.put("orderTime", orderTime);
                 result.put("storeNo", storeNo);
                 result.put("price", price);
-                result.put("spsl", spsl);
-                result.put("spmc", spmc);
+                result.put("spsl", spsl.toString());
+                result.put("spmc", spmc.toString());
                 Integer pid=skp.getPid();
                 Pp pp = ppJpaDao.findOneById(pid);
                 result.put("tqm", pp.getPpdm() + orderNo);

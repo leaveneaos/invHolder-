@@ -219,11 +219,29 @@
             var thisURL = document.URL;
             var myurl=decodeURI(thisURL);
             var getval =myurl.split('?')[1];
-            var spsl= getval.split("=")[2];
-            var spmc= getval.split("=")[3];
-            var price= getval.split("=")[4];
-            $('#tab').append("<tr><td>"+spmc+"</td><td>" + price + "</td><td>" + spsl + "%</td></tr>");
-
+//            var spsl= getval.split("=")[2];
+//            var spmc= getval.split("=")[3];
+//            var price= getval.split("=")[4];
+            var spsl= "3";
+            var spmc= "鸡蛋";
+            var price= "1.1";
+            if(spsl.indexOf(",")!=-1 && spmc.indexOf(",")!=-1 && price.indexOf(",")!=-1){
+                var pricesize=price.length-(price.replace(/,/g, "").length);
+                var spslsize=spsl.length-(spsl.replace(/,/g, "").length);
+                var spmcsize=spmc.length-(spmc.replace(/,/g, "").length);
+                if(pricesize==spslsize && pricesize==spmcsize){
+                    for(var i=0;i<pricesize+1;i++){
+                        $('#tab').append("<tr><td>"+spmc.split(",")[i]+"</td><td>" + price.split(",")[i] + "</td><td>" + spsl.split(",")[i] + "%</td></tr>");
+                    }
+                }else {
+                    redirect("传入信息有误,input.line[234]");
+                }
+            }else{
+                if(spsl.indexOf(",")!=-1 || spmc.indexOf(",")!=-1 ||price.indexOf(",")!=-1 ){
+                    redirect("传入信息有误,input.line[239]");
+                }
+                $('#tab').append("<tr><td>"+spmc+"</td><td>" + price + "</td><td>" + spsl + "%</td></tr>");
+            }
             // 获取支付宝默认抬头信息
             $.post(
                 '../getInvoiceTitle',
