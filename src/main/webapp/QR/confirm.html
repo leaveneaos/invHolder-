@@ -143,7 +143,6 @@
                         lastSpmc=data.spmc;
 
                         if(price.indexOf(",")!=-1 &&lastSpsl.indexOf(",")!=-1 &&lastSpmc.indexOf(",")!=-1){
-                            alert("yes");
                             var pricesize=price.length-(price.replace(/,/g, "").length);
                             var spslsize=lastSpsl.length-(lastSpsl.replace(/,/g, "").length);
                             var spmcsize=lastSpmc.length-(lastSpmc.replace(/,/g, "").length);
@@ -157,13 +156,11 @@
                                 redirect("传入数据有误,confirm.line[155]");
                             }
                         }else{
-                            alert("no");
                             //如果传过来的数据，有的是多个有的是一个
                             if(lastSpsl.indexOf(",")!=-1 || lastSpmc.indexOf(",")!=-1 ||price.indexOf(",")!=-1 ){
                                 redirect("传入数据有误,confirm.line[160]");
                             }
                             lastPrice = price;
-                            alert(lastPrice);
                         }
 
                         orderNo = data.orderNo;
@@ -173,19 +170,19 @@
                         $('#orderNo').html(data.orderNo);
                         $('#orderTime').html(data.orderTime);
                         $('#storeNo').html(data.storeNo);
-                        $('#price').html(lastPrice+"元");
+                        $('#price').html(RetainedDecimalPlaces(lastPrice)+"元");
                     }else{
                         redirect(obj.msg)
                     }
                 }
             )
         })
-//        function RetainedDecimalPlaces(num) {
-//            num = parseFloat(num).toFixed(2);
-//            var source = String(num).split(".");
-//            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
-//            return source.join(".");
-//        };
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
         function tk() {
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;

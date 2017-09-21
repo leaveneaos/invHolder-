@@ -475,7 +475,7 @@ public Map sm(String gsdm, String q) {
                     }
                     String[] priceArray = price.split(",");
                     String[] spdmArray = spdm.split(",");
-                    for (int i=0;i<priceSize;i++){
+                    for (int i=0;i<priceSize+1;i++){
                         jyxxsqPrice.add(new BigDecimal(priceArray[i]));
                         Jymxsq jymxsq = new Jymxsq();
                         jymxsq.setSpdm(spdmArray[i]);
