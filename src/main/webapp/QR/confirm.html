@@ -151,7 +151,6 @@
                                 for(var i=0;i<pricesize+1;i++){
                                     lastPrice+=parseFloat(price.split(",")[i]);
                                 }
-                                alert(lastPrice);
                             }else {
                                 redirect("传入数据有误,confirm.line[155]");
                             }
@@ -166,7 +165,6 @@
                         orderNo = data.orderNo;
                         orderTime = data.orderTime;
                         storeNo = data.storeNo;
-                        alert(orderNo + "..."+orderTime +"..."+ storeNo);
                         $('#orderNo').html(data.orderNo);
                         $('#orderTime').html(data.orderTime);
                         $('#storeNo').html(data.storeNo);
