@@ -2,12 +2,18 @@ package com.rjxx.taxeasy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.*;
+import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
-import com.rjxx.utils.BeanConvertUtils;
-import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.StringUtils;
+import com.rjxx.taxeasy.utils.NumberUtil;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
+import com.rjxx.utils.*;
+import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -26,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -36,42 +43,35 @@ import java.util.*;
 public class MbController extends BaseController {
     @Autowired
     private GsxxService gsxxservice;//公司信息
-    @Autowired
-    private SmtqService smtqService;//扫描提取
+
     @Autowired
     private JylsService jylsService;//交易流水
+
     @Autowired
     private TqjlService tqjlService;//提取记录
+
     @Autowired
     private CszbService cszbService;//参数主表
-    @Autowired
-    private SkpService skpService;//税控盘
-    @Autowired
-    private XfService xfService;//销方
-    @Autowired
-    private JyxxsqService jyxxsqService;//交易信息申请
-    @Autowired
-    private JymxsqClService jymxsqClService;//交易明细申请
+
     @Autowired
     private TqmtqService tqmtqService;//提取码提取
-    @Autowired
-    private PpService ppService;//品牌
+
     @Autowired
     private FpjService fpjService;//发票夹
-    @Autowired
-    private FpclService fpclService;
+
     @Autowired
     private KplsService kplsService;
     @Autowired
     private SendalEmail se;
+
     @Autowired
     private SpfyxService spfyxService;
-    @Autowired
-    private JymxsqService jymxsqService;
+
     @Autowired
     private GetDataService getDataService;
+
     @Autowired
-    private DiscountDealUtil discountDealUtil;
+    private WxfpxxJpaDao wxfpxxJpaDao;
 
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
@@ -80,12 +80,20 @@ public class MbController extends BaseController {
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
     @RequestMapping(value = "/mb", method = RequestMethod.GET)
-    public void index(String g) throws Exception{
+    public void index(String g,String q) throws Exception{
+
+        logger.info("-----参数q的值为"+q);
+        logger.info("-----参数g的值为"+g);
         String gsdm = g;
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm",gsdm);
         request.getSession().setAttribute("gsdm",gsdm);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
+        if(gsxx == null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
         if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
             gsxx.setWxappid(APP_ID);
             gsxx.setWxsecret(SECRET);
@@ -96,29 +104,264 @@ public class MbController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 logger.info("进入重定向");
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "/getWx" + "&response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
-                //宏康页面已经有了,不跳转模板
-                if(null!=gsdm&&gsdm.equals("hongkang")){
-                    response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.jsp?gsdm="+gsdm+"&&_t=" + System.currentTimeMillis());
-                    return;
-                }
-                response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
+                barcodeCl(gsxx, q);
                 return;
             }
         } else {
-            //宏康页面已经有了,不跳模板
-            if(null!=gsdm&&gsdm.equals("hongkang")){
-                response.sendRedirect(request.getContextPath() + "/" + gsdm + "_page.jsp?gsdm="+gsdm+"&&_t=" + System.currentTimeMillis());
-                return;
-            }
-            response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsdm+"&&t=" + System.currentTimeMillis());
+            barcodeCl(gsxx,q);
             return;
         }
     }
+
+        public void barcodeCl(Gsxx gsxx, String q) throws IOException {
+        Map<String, Object> result = new HashMap<String, Object>();
+            logger.info("进入判断是否手机扫码处理公司代码是-----"+gsxx.getGsdm());
+        try {
+            if(gsxx == null){
+                request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return ;
+            }
+            /**
+             * 如果q参数为空则跳转到发票提取页面
+             */
+            if (null==q) {
+                logger.info("不带参数q,进入浏览器页面-------");
+                //宏康页面已经有了,不跳模板
+                if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
+                    response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
+                    return;
+                }
+                response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
+                return;
+            }else {
+                logger.info("带有q参数，处理扫码开票");
+                RJCheckUtil rjCheckUtil = new RJCheckUtil();
+                Boolean b = rjCheckUtil.checkMD5ForAll(gsxx.getSecretKey(), q);
+                if(b){
+                    Map mapdecode = rjCheckUtil.decodeForAll(q);
+
+                    String tqm = (String) mapdecode.get("A0");//解析code，第一个为提取码
+
+                    request.getSession().setAttribute("orderNo", System.currentTimeMillis()+ NumberUtil.getRandomLetter());//门店编号
+                    request.getSession().setAttribute("order",tqm );//订单号
+                    request.getSession().setAttribute("tqm", tqm);//提取码
+                    request.getSession().setAttribute(gsxx.getGsdm()+"tqm",tqm);
+                    String opendid = (String) session.getAttribute("openid");
+                    String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
+
+                    Map map = new HashMap<>();
+                    map.put("tqm", tqm);
+                    map.put("gsdm", gsxx.getGsdm());
+                    Jyls jyls = jylsService.findOne(map);
+                    List<Kpls> list = jylsService.findByTqm(map);
+                    /**
+                     * 代表申请已完成开票,跳转最终开票页面
+                     */
+                    if (list.size() > 0) {
+                        if (opendid != null && !"null".equals(opendid)) {
+                            Map<String, Object> params = new HashMap<>();
+                            params.put("djh", jyls.getDjh());
+                            params.put("unionid", opendid);
+                            Fpj fpj = fpjService.findOneByParams(params);
+                            if (fpj == null) {
+                                fpj = new Fpj();
+                                fpj.setDjh(jyls.getDjh());
+                                fpj.setUnionid(opendid);
+                                fpj.setYxbz("1");
+                                fpj.setLrsj(new Date());
+                                fpj.setXgsj(new Date());
+                                fpjService.save(fpj);
+                            }
+                        }
+                        String pdfdzs = "";
+                        request.getSession().setAttribute("djh", list.get(0).getDjh());
+                        request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
+                        for (Kpls kpls2 : list) {
+                            pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+                        }
+                        if (pdfdzs.length() > 0) {
+                            result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                            request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                        }
+                        /**
+                         * num=2表示已经开过票
+                         */
+                        result.put("num", "2");
+                        Tqjl tqjl = new Tqjl();
+                        tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
+                        tqjl.setJlly("1");
+                        tqjl.setTqsj(new Date());
+                        String visiterIP;
+                        if (request.getHeader("x-forwarded-for") == null) {
+                            visiterIP = request.getRemoteAddr();/*访问者IP*/
+                        } else {
+                            visiterIP = request.getHeader("x-forwarded-for");
+                        }
+                        tqjl.setIp(visiterIP);
+                        String llqxx = request.getHeader("User-Agent");
+                        tqjl.setLlqxx(llqxx);
+                        tqjlService.save(tqjl);
+                        //表示已经开过票 --领取发票类型
+                        if(WeixinUtils.isWeiXinBrowser(request)){
+                            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                            if(null==wxFpxxByTqm){
+                                WxFpxx wFpxx = new WxFpxx();
+                                wFpxx.setTqm(tqm);
+                                wFpxx.setGsdm(gsxx.getGsdm());
+                                wFpxx.setOrderNo(tqm);
+                                wFpxx.setQ(q);
+                                wFpxx.setWxtype("2");
+                                wFpxx.setOpenId(opendid);
+                                wFpxx.setKplsh(list.get(0).getKplsh().toString());
+                                logger.info("已完成开票,归入卡包---"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+
+                                        q+"----微信"+opendid+
+                                        "------订单编号"+wFpxx.getOrderNo()+"------发票类型"+wFpxx.getWxtype());
+                                try {
+                                    wxfpxxJpaDao.save(wFpxx);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    logger.info("交易信息保存失败");
+                                    return ;
+                                }
+                            }else {
+                                wxFpxxByTqm.setTqm(tqm);
+                                wxFpxxByTqm.setGsdm(gsxx.getGsdm());
+                                wxFpxxByTqm.setQ(q);
+                                wxFpxxByTqm.setOpenId(opendid);
+                                wxFpxxByTqm.setOrderNo(tqm);
+                                wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
+                                wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
+                                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                                    String notNullCode= wxFpxxByTqm.getCode();
+                                    wxFpxxByTqm.setCode(notNullCode);
+                                }
+                                try {
+                                    wxfpxxJpaDao.save(wxFpxxByTqm);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    logger.info("交易信息保存失败");
+                                    return ;
+                                }
+                            }
+
+                        }
+                        //如果是多张的话，只能领取第一张
+                        String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
+                        if (AlipayUtils.isAlipayBrowser(request)) {
+                            redirectUrl += "&isAlipay=true";
+                        }
+                        response.sendRedirect(redirectUrl);
+                        return;
+                    } else if (null != jyls && null != jyls.getDjh()) {
+                        /**
+                         * 等待页面
+                         */
+                        result.put("num", "6");
+                        response.sendRedirect(request.getContextPath() + "/Family/witting.html?_t=" + System.currentTimeMillis());
+                        return;
+                    } else {
+                        /**
+                         * 没有开过票调用接口获取数据
+                         */
+                        Map resultMap = new HashMap();
+                        if(gsxx.getGsdm().equals("bqw")){
+                            Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
+                            resultMap = getDataService.getDataForBqw(tqm, gsxx.getGsdm(),zb1.getCsz());
+                        }
+                        List<Jyxxsq> jyxxsqList = (List) resultMap.get("jyxxsqList");
+                        List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
+                        String error = (String) resultMap.get("error");
+                        if(error!=null){
+                            logger.info("---------错误信息------------"+error);
+                            request.getSession().setAttribute("error", error);
+                            response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                            result.put("error", error);
+                            return;
+                        }
+
+                        String temp = (String) resultMap.get("tmp");
+                        if (temp != null) {
+                            request.getSession().setAttribute("error", temp);
+                            response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                            result.put("error", temp);
+                            return;
+                        }
+                        Jyxxsq jyxxsq = jyxxsqList.get(0);
+                        request.getSession().setAttribute("price", jyxxsq.getJshj());
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
+                        request.getSession().setAttribute("resultMap", resultMap);
+                        request.getSession().setAttribute("jymxsqList", jymxsqList);
+                        request.getSession().setAttribute("tqm", tqm);
+                        result.put("num", "5");
+                        if(WeixinUtils.isWeiXinBrowser(request)){
+                            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                            //第一次扫描
+                            if(null==wxFpxxByTqm){
+                                WxFpxx wxFpxx = new WxFpxx();
+                                wxFpxx.setTqm(tqm);
+                                wxFpxx.setGsdm(gsxx.getGsdm());
+                                wxFpxx.setOrderNo(tqm);
+                                wxFpxx.setQ(q);
+                                wxFpxx.setWxtype("1");
+                                //微信
+                                wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                                logger.info("第一次扫码存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+
+                                        q+"----openid"+wxFpxx.getOpenId()+"----支付宝"+wxFpxx.getUserid()+
+                                        "------订单编号"+wxFpxx.getOrderNo()+"------发票类型"+wxFpxx.getWxtype());
+                                try {
+                                    wxfpxxJpaDao.save(wxFpxx);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    logger.info("交易信息保存失败");
+                                    return ;
+                                }
+                            }else {
+                                wxFpxxByTqm.setTqm(tqm);
+                                wxFpxxByTqm.setGsdm(gsxx.getGsdm());
+                                wxFpxxByTqm.setOrderNo(tqm);
+                                wxFpxxByTqm.setQ(q);
+                                wxFpxxByTqm.setWxtype("1");
+                                //微信
+                                wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
+                                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                                    String notNullCode= wxFpxxByTqm.getCode();
+                                    wxFpxxByTqm.setCode(notNullCode);
+                                }
+                                logger.info("第一次扫码之后所有---存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+q+
+                                        "----微信openid"+wxFpxxByTqm.getOpenId()+"-------支付宝userid"
+                                        +wxFpxxByTqm.getUserid()+"------订单编号"+wxFpxxByTqm.getOrderNo()+"-----发票类型"+wxFpxxByTqm.getWxtype());
+                                try {
+                                    wxfpxxJpaDao.save(wxFpxxByTqm);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    logger.info("交易信息保存失败");
+                                    return ;
+                                }
+                            }
+                        }
+                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+                }else {
+                    request.getSession().setAttribute("msg", "秘钥不匹配,验签失败!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            request.getSession().setAttribute("msg", e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return;
+        }
+    }
+
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state,String code) throws IOException{
@@ -130,8 +373,8 @@ public class MbController extends BaseController {
             gsxx.setWxappid(APP_ID);
             gsxx.setWxsecret(SECRET);
         }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
-                + gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         HttpClient client = new DefaultHttpClient();
         HttpGet get  = new HttpGet(turl);
         ObjectMapper jsonparer = new ObjectMapper();
@@ -159,22 +402,21 @@ public class MbController extends BaseController {
             client.getConnectionManager().shutdown();
         }
         //宏康页面已经有了,不跳模板
-        if(state.equals("hongkang")){
-            response.sendRedirect(request.getContextPath() + "/" + state + "_page.jsp?gsdm="+state+"&&_t=" + System.currentTimeMillis());
+        if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
+            response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
             return;
         }
-        response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+state+"&&_t="+System.currentTimeMillis() );
+        response.sendRedirect(request.getContextPath() + "SQ/mb.html?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
         return;
     }
-    /*@RequestMapping(value = "/bangzhu")
-    @ResponseBody
-    public void bangzhu() throws IOException {
-        response.sendRedirect(request.getContextPath() + "/smtq/smtq2.html?_t=" + System.currentTimeMillis());
-        return;
-    }*/
 
-
-    /*校验提取码是否正确*/
+    /**
+     * 提取验证
+     * @param tqm
+     * @param code
+     * @param gsdm
+     * @return
+     */
     @RequestMapping(value = "/tqyz")
     @ResponseBody
     public Map<String,Object> tqyz(String tqm,String code,String gsdm) {
@@ -219,7 +461,7 @@ public class MbController extends BaseController {
                 request.getSession().setAttribute("djh",list.get(0).getDjh());
                 request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
                 for (Kpls kpls2: list) {
-                    pdfdzs += kpls2.getPdfurl().replace(".pdf",",jpg") + ",";
+                    pdfdzs += kpls2.getPdfurl().replace(".pdf",".jpg") + ",";
                 }
                 if(pdfdzs.length() > 0){
                     result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
