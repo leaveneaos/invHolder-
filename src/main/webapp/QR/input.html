@@ -219,12 +219,9 @@
             var thisURL = document.URL;
             var myurl=decodeURI(thisURL);
             var getval =myurl.split('?')[1];
-//            var spsl= getval.split("=")[2];
-//            var spmc= getval.split("=")[3];
-//            var price= getval.split("=")[4];
-            var spsl= "3";
-            var spmc= "鸡蛋";
-            var price= "1.1";
+            var spsl= getval.split("=")[2];
+            var spmc= getval.split("=")[3];
+            var price= getval.split("=")[4];
             if(spsl.indexOf(",")!=-1 && spmc.indexOf(",")!=-1 && price.indexOf(",")!=-1){
                 var pricesize=price.length-(price.replace(/,/g, "").length);
                 var spslsize=spsl.length-(spsl.replace(/,/g, "").length);
