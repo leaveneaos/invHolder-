@@ -88,14 +88,15 @@
         $("#fpj").css('display','none');
         $("#zfb").css('display','block');
     }
+    orderNo = null;
+    price = null;
+    orderTime = null;
+    storeNo = null;
     $(function() {
         $('#gsdm').val(gsdms);
         $('#tqm').val(tqms);
         var gsdm = $('#gsdm').val();
         var tqm = $('#tqm').val();
-
-        //alert(gsdm);
-        //alert(tqm);
         $.post(
             "fpsession",
             {
@@ -105,6 +106,9 @@
             function(data) {
                     serialorder = data.serialorder;
                     var pdfdzs = data.pdfdzs;
+					orderNo = data.orderNo;
+					price = data.price;
+					orderTime = data.kprq;
                     if (serialorder != null && serialorder != "") {
                       var  pdfdz = pdfdzs.split(",");
                         $.each(
@@ -120,18 +124,21 @@
             }
         );
 
-
         $('#you').click(function() {
              window.location.href = "mbyouxiang.html?gsdm="+gsdm+"&&tqm="+tqm+"&&_t=" + new Date().getTime();
         });
-        // if (urlinfo.indexOf("isAlipay=true") != -1) {
-        $("#zfb").click(function () {
-            window.location = "../syncAlipay?_t=" + (new Date()).getTime();
-        });
-        // };
-        // $('#fpj').click(function() {
-        //  	 window.location.href = "../waitting.html?_t=" + new Date().getTime();
-        // });
+        //支付宝归入发票管家
+        if(isAlipay){
+            $("#zfb").click(function () {
+                window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+            });
+		}
+		//微信归入卡包
+        if(isWeixin){
+            $('#fpj').click(function() {
+                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
+            });
+		}
     })
 </script>
 <script src="js/mui.min.js"></script>

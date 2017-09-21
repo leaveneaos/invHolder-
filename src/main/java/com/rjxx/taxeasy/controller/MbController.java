@@ -740,11 +740,11 @@ public class MbController extends BaseController {
     @ResponseBody
     public Map fpsession(String tqm,String gsdm) {
         Map<String, Object> result = new HashMap<String, Object>();
-        Map map2 = new HashMap();
         Map csmap = new HashMap<>();
         csmap.put("tqm", tqm);
         csmap.put("gsdm", gsdm);
         List<Kpls> jylslist = jylsService.findByTqm(csmap);
+        Map map2 = new HashMap();
         if(jylslist.size()>0){
             map2.put("serialorder",jylslist.get(0).getSerialorder());
         }
@@ -758,6 +758,18 @@ public class MbController extends BaseController {
         }
         result.put("serialorder", jylslist.get(0).getSerialorder());
         request.getSession().setAttribute("msg", "请重新扫描二维码");
+        result.put("kprq",kplsList.get(0).getKprq());
+        result.put("price",kplsList.get(0).getJshj());
+        Jyls jyls = new Jyls();
+        jyls.setGsdm(kplsList.get(0).getGsdm());
+        jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
+        jyls.setJylsh(kplsList.get(0).getJylsh());
+        Jyls jyls1 = jylsService.findOneByParams(jyls);
+        if(jyls1.getGsdm().equals("hdsc")||jyls1.getGsdm().equals("cmsc")){
+            result.put("orderNo",jyls1.getKhh());
+        }else {
+            result.put("orderNo",jyls1.getTqm());
+        }
         return result;
     }
 
