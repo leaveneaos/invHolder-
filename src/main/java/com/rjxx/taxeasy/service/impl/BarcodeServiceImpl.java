@@ -514,7 +514,7 @@ public Map sm(String gsdm, String q) {
                     jymxsq.setLrsj(new Date());
                     jymxsq.setXgsj(new Date());
                     jymxsq.setSpsl(spvo.getSl());
-                    jymxsq.setSpje(Double.valueOf(price));
+                    jymxsq.setSpje(jymxsq.getJshj());
                 }
                 List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
 
