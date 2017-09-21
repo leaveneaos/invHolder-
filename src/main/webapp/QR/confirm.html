@@ -135,16 +135,40 @@
                 function (obj) {
                     if(obj.code=="1"){
                         var data = eval("(" + obj.data + ")");
-                        $('#orderNo').html(data.orderNo);
-                        $('#orderTime').html(data.orderTime);
-                        $('#price').html(RetainedDecimalPlaces(data.price)+"元");
-                        $('#storeNo').html(data.storeNo);
+                        //价格，多个则显示带逗号的多个，一个则显示一个
+                        price =data.price;
+                        //最后价格，如果是多个价格则算总和，如果只有一个只算一个
+                        lastPrice=null;
+                        lastSpsl = data.spsl;
+                        lastSpmc=data.spmc;
+
+                        if(price.indexOf(",")!=-1 &&lastSpsl.indexOf(",")!=-1 &&lastSpmc.indexOf(",")!=-1){
+                            var pricesize=price.length-(price.replace(/,/g, "").length);
+                            var spslsize=lastSpsl.length-(lastSpsl.replace(/,/g, "").length);
+                            var spmcsize=lastSpmc.length-(lastSpmc.replace(/,/g, "").length);
+                            //如果传过来的数据个数匹配
+                            if(pricesize==spslsize && pricesize==spmcsize){
+                                for(var i=0;i<pricesize+1;i++){
+                                    lastPrice+=parseFloat(price.split(",")[i]);
+                                }
+                            }else {
+                                redirect("传入数据有误,confirm.line[155]");
+                            }
+                        }else{
+                            //如果传过来的数据，有的是多个有的是一个
+                            if(spsl.indexOf(",")!=-1 || spmc.indexOf(",")!=-1 ||price.indexOf(",")!=-1 ){
+                                redirect("传入数据有误,confirm.line[160]");
+                            }
+                            lastPrice = price;
+                        }
+
                         orderNo = data.orderNo;
                         orderTime = data.orderTime;
                         storeNo = data.storeNo;
-                        price = data.price;
-                        spsl = data.spsl;
-                        spmc = data.spmc;
+                        $('#orderNo').html(orderNo);
+                        $('#orderTime').html(orderTime);
+                        $('#storeNo').html(storeNo);
+                        $('#price').html(RetainedDecimalPlaces(lastPrice)+"元");
                     }else{
                         redirect(obj.msg)
                     }
@@ -162,28 +186,11 @@
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
             if(isAlipay){
-                var myurl = "../QR/input.html?param="+new Date()+"="+spsl+"="+spmc+"="+price;
+                var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
                 window.location.assign(encodeURI(myurl));
             }else if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + price;
-//                $.post(
-//                    "../common/isBrowser",
-//                    {
-//                        "orderNo":orderNo,
-//                        "orderTime":orderTime,
-//                        "storeNo":storeNo,
-//                        "price":price
-//                    },
-//                    function (obj) {
-//                        var num = obj.num;
-//                        if(num=="0"){
-//                            window.location.href=obj.redirectUrl+new Date();
-//                        }else{
-//                            redirect(obj.msg);
-//                        }
-//                    }
-//                )
+                    "&storeNo=" + storeNo + "&price=" + lastPrice;
             }else{
                 redirect("请用微信或支付宝扫码");
             }
