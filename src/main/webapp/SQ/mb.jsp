@@ -9,9 +9,9 @@
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
 	<title>输入提取码</title>
-	<link rel="stylesheet" type="text/css" href="css/common.css">
-	<link href="css/mui.min.css" rel="stylesheet" />
-	<link href="css/jquery.alerts.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="../css/common.css">
+	<link href="../css/mui.min.css" rel="stylesheet" />
+	<link href="../css/jquery.alerts.css" rel="stylesheet" />
 	<style type="text/css">
 		#code {
 			width: 60%; 
@@ -35,7 +35,7 @@
 <body id="index" onload="load()">
 <header>
 	<div id="img">
-		<img id="logo" src="images/rjxx.jpg"/>
+		<img id="logo" src="../images/rjxx.jpg"/>
 	</div>
 </header>
 	
@@ -52,7 +52,7 @@
 			<input id="gsdm" name="gsdm" type="hidden" />
 			<div class="mui-input-row">
 				<input type="text" id="code" name="code" placeholder="请输入右侧验证码">
-				<img src="image.jsp" name="randImage" class="data-yzm" id="randImage" onclick="loadimage()"/>
+				<img src="../image.jsp" name="randImage" class="data-yzm" id="randImage" onclick="loadimage()"/>
 			</div>
 		</form>
 		<p id="cwts">验证码输入错误</p>
@@ -63,17 +63,17 @@
 
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
-		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
+		<p class="help"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
 	
 
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui.js"></script>
 	<script type="text/javascript">
 		jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
 	</script>
-	<script type="text/javascript" src="js/jquery.alerts.js"></script>
-	<script src="js/fpj.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../js/jquery.alerts.js"></script>
+	<script src="../js/fpj.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
         var sUserAgent = navigator.userAgent.toLowerCase();
@@ -160,24 +160,18 @@
                         $('#cwts').css('opacity','0');
                         loadimage();
 					}else if (data.num == 2) {
+					    alert(1);
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-                            if(null!=data.gsdm && data.gsdm == "cmsc"){
-                                window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.tqm+"&time=" + new Date();
-							}else {
-                                window.location.href("mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date());
-                            }
+                                window.location.href("../SQ/mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date());
+
                         }else{
-                            if(null!=data.gsdm && data.gsdm == "cmsc"){
-                                window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.tqm+"&time=" + new Date();
-                            }else {
-                                window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
-                            }
+                                window.location.href ="../SQ/mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
 						}
 					}else if (data.num == 4) {
                         loadimage();
                         $('#cwts').css('opacity','1');
 					}else if (data.num == 5) {
-                        window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();;
+                        window.location.href = "../SQ/mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();;
 					}else if (data.num == 6) {
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";
                         title = "提示";
