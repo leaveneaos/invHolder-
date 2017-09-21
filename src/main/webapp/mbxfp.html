@@ -136,6 +136,10 @@
 		//微信归入卡包
         if(isWeixin){
             $('#fpj').click(function() {
+                if(null == orderNo|| null == price || null == orderTime){
+                    window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                }
+                alert(orderNo+price+orderTime);
                 window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
             });
 		}

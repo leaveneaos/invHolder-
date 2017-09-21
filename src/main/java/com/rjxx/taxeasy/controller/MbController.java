@@ -758,7 +758,8 @@ public class MbController extends BaseController {
         }
         result.put("serialorder", jylslist.get(0).getSerialorder());
         request.getSession().setAttribute("msg", "请重新扫描二维码");
-        result.put("kprq",kplsList.get(0).getKprq());
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        result.put("kprq",sdf.format(kplsList.get(0).getKprq()));
         result.put("price",kplsList.get(0).getJshj());
         Jyls jyls = new Jyls();
         jyls.setGsdm(kplsList.get(0).getGsdm());
