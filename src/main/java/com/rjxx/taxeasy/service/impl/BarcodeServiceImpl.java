@@ -265,6 +265,7 @@ public Map sm(String gsdm, String q) {
                 Integer pid=skp.getPid();
                 Pp pp = ppJpaDao.findOneById(pid);
                 result.put("tqm", pp.getPpdm() + orderNo);
+                logger.info("getSpxx结果==="+JSONObject.toJSONString(result));
                 return JSONObject.toJSONString(result);
             } catch(Exception e){
                 e.printStackTrace();

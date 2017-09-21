@@ -133,14 +133,17 @@
                 "../scan/scanConfirm",
                 {},
                 function (obj) {
+                    alert(obj);
                     if(obj.code=="1"){
                         var data = eval("(" + obj.data + ")");
+                        alert(data);
                         //价格，多个则显示带逗号的多个，一个则显示一个
                         price =data.price;
                         //最后价格，如果是多个价格则算总和，如果只有一个只算一个
                         lastPrice=null;
                         lastSpsl = data.spsl;
                         lastSpmc=data.spmc;
+                        alert(lastSpsl + "||||" + lastSpmc);
 
                         if(price.indexOf(",")!=-1 &&lastSpsl.indexOf(",")!=-1 &&lastSpmc.indexOf(",")!=-1){
                             var pricesize=price.length-(price.replace(/,/g, "").length);
