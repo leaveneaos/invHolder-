@@ -224,7 +224,9 @@ public Map sm(String gsdm, String q) {
                     }
                     //如果只有一个或没有传商品代码
                 }else{
-                    spdmList.add(spdm);
+                    if(StringUtils.isNotBlank(spdm)){
+                        spdmList.add(spdm);
+                    }
                 }
                 if(spdmList!=null&&spdmList.size()>0){
                     Map map = new HashMap();
