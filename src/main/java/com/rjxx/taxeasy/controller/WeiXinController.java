@@ -211,8 +211,6 @@ public class WeiXinController extends BaseController {
                                     logger.info("商品明细为空");
                                     return "";
                                 }
-                                logger.info("开票流水为---"+JSON.toJSONString(kpls));
-                                logger.info("开票商品明细为---"+JSON.toJSONString(kpspmxList));
                                 logger.info("PDFurl---"+pdf_file_url);
                                 //插入卡包
                                 String result = weixinUtils.fpInsertCardBox(SuccOrderId, pdf_file_url, kpspmxList, kpls);

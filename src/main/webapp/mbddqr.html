@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>订单确认</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/ddqr.css">
+</head>
+<body>
+	<header>
+		<img src="../images/nav.png">
+	</header>
+	<section class="main">
+		<div class="shadow1"></div>
+		<div class="shadow2"></div>
+		<div class="content">
+			<div class="top">
+				<span class="one">订单确认</span><span class="one">&gt;</span>
+				<span>订单明细</span><span>&gt;</span>
+				<span>发票抬头</span><span>&gt;</span>
+				<span>发票保存</span>
+			</div>
+			<div class="middle" style="height: 240px;">
+		        <ul>
+		            <li class="fl">店铺名称 :</li>
+		            <li class="fr omit" id="orderNo"></li>
+		        </ul>
+		         <ul>
+		            <!--<li class="fl">序&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号 :</li>-->
+		            <li class="fl">交易序号 :</li>
+		            <li class="fr omit" id="order"></li>
+		        </ul>
+		        <ul>
+		            <li class="fl">交易日期 :</li>
+		            <li class="fr omit" id="orderTime"></li>
+		        </ul>
+		        <ul>
+		            <li class="fl">合计金额 :</li>
+		            <li class="fr omit" id="price" ></li>
+		        </ul>
+			</div>
+			<div class="bottom">
+				<input type="hidden" id="tqmhidden">
+				<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+			</div>
+		</div>
+	</section>
+	<footer>
+		<p class="company fl">泰易电子发票云服务平台</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+		var msg=null;
+        function redirect(errorMsg){
+            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            window.location.assign(encodeURI(myurl));
+        }
+        pricese=null;
+		$(function () {
+                $.post(
+                    "../fm/qrxxsession",
+                    {},
+                    function (data) {
+                        if(null!=data.error&&""!=data.error){
+                            alert(data.error);
+                            msg=data.error;
+                            $("#sure").attr("disabled","disabled");
+                        }else{
+                            $('#orderNo').html(data.orderNo);
+                            $('#order').html(data.order);
+                            $('#orderTime').html(data.orderTime);
+                            $('#price').html(RetainedDecimalPlaces(data.price)+"元");
+                            pricese = data.price;
+                            $('#tqmhidden').html(data.tqm);
+                            $("#sure").attr("disabled",false);
+                            msg=null;
+						}
+                    }
+                )
+	    });
+
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
+        function sure() {
+            var storeNo = $('#orderNo').text(),
+                orderNo = $('#order').text(),
+                orderTime = $('#orderTime').text(),
+                price = $('#price').text();
+            var reg=/[\u4E00-\u9FA5]/g;
+            var pri = price.replace(reg,'');
+			var tqm=$('#tqmhidden').text();
+			if(null==pricese){
+                redirect("出现未知错误");
+			}
+             if(tqm!=null){
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            var isUCBrowser = ua.indexOf('UCBrowser') != -1;
+            if(isAlipay){
+                window.location.href = "../Family/ddmx.html?time=" + new Date();
+            }else if(isWeixin){
+                window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + pricese;
+            }else if(isUCBrowser){
+                alert("进入uc浏览器");
+                redirect("请用微信或支付宝扫码");
+            }else {
+                redirect("请用微信或支付宝扫码");
+			}
+//            $.post(
+//                "../common/isBrowser",
+//                {
+//                    "storeNo" : orderNo,
+//                    "orderNo" : order,
+//                    "orderTime" : orderTime,
+//                    "price" : price
+//                },
+//                function(data) {
+//                    if (data.num == 0) {
+//                        window.location.href = data.redirectUrl + new Date();
+//                    }else if(data.num == 1) {
+//                        window.location.href = "../Family/ddmx.html?time=" + new Date();
+//                    }else if(data.num == 2) {
+//                        alert(data.msg);
+//                    }
+//                }
+//            );
+             }else{
+                 alert("数据异常！不能提交！");
+			 }
+        }
+	</script>
+</body>
+</html>
