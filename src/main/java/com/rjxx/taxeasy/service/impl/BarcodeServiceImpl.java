@@ -226,7 +226,7 @@ public Map sm(String gsdm, String q) {
                 }else{
                     spdmList.add(spdm);
                 }
-                if(spdmList!=null||spdmList.size()>0){
+                if(spdmList!=null&&spdmList.size()>0){
                     Map map = new HashMap();
                     map.put("gsdm", gsdm);
                     for(int i=0;i<spdmList.size();i++){
