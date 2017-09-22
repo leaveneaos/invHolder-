@@ -97,12 +97,12 @@
         var isWeixin = ua.indexOf('micromessenger') != -1;
         var isAlipay = ua.indexOf('alipay') != -1;
         if(isWeixin){
-            $(".zfb").css('display','none');
-            $(".wx").css('display','block');
+            $("#zfb").css('display','none');
+            $("#wx").css('display','block');
         }
         if(isAlipay){
-            $(".zfb").css('display','block');
-            $(".wx").css('display','none');
+            $("#zfb").css('display','block');
+            $("#wx").css('display','none');
         }
         var thisURL = document.URL;
 //        var thisURL = "/QR/scan.html?t=1505897643036=&http://test.datarj.com/e-invoice-file/500102010003698/20170920/beda2b8a-76d8-4575-844a-b7916999c292.jpg&http://test.datarj.com/e-invoice-file/500102010003698/20170920/beda2b8a-76d8-4575-844a-b7916999c292.jpg&http://test.datarj.com/e-invoice-file/500102010003698/20170920/beda2b8a-76d8-4575-844a-b7916999c292.jpg=1505888376745=0.1=20170920151312";
@@ -122,16 +122,16 @@
 		$('#je').val(je);
 		$('#orderTime').val(orderTime);
     });
-//    $.post(
-//        '../getInvoiceTitle',
-//        {},
-//        function(test) {
-//            if(test.success) {
-//                $("#zfb").css('display','block');
-//                $("#wx").css('display','none');
-//            };
-//        }
-//    );
+    $.post(
+        '../getInvoiceTitle',
+        {},
+        function(test) {
+            if(test.success) {
+                $("#zfb").css('display','block');
+                $("#wx").css('display','none');
+            };
+        }
+    );
     function sync() {
         window.location = "../syncAlipay?_t=" + (new Date()).getTime();
     };
