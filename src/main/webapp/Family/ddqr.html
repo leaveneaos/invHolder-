@@ -68,6 +68,10 @@
                             alert(data.error);
                             msg=data.error;
                             $("#sure").attr("disabled","disabled");
+                        }if(null!=data.temp&&""!=data.temp){
+                            alert(data.temp);
+                            msg=data.temp;
+                            $("#sure").attr("disabled","disabled");
                         }else{
                             $('#orderNo').html(data.orderNo);
                             $('#order').html(data.order);

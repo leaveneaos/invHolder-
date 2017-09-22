@@ -311,9 +311,9 @@ public class BaseClController extends BaseController {
                     }
                     String temp = (String) resultMap.get("tmp");
                     if (temp != null) {
-                        request.getSession().setAttribute("error", temp);
+                        request.getSession().setAttribute("temp", temp);
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
-                        result.put("error", temp);
+                        result.put("temp", temp);
                         return;
                     }
                     Jyxxsq jyxxsq = jyxxsqList.get(0);
@@ -746,6 +746,8 @@ public class BaseClController extends BaseController {
         result.put("order",request.getSession().getAttribute("order"));
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
+        result.put("temp",request.getSession().getAttribute("temp"));
+
         return  result;
     }
 }
