@@ -122,16 +122,16 @@
 		$('#je').val(je);
 		$('#orderTime').val(orderTime);
     });
-    $.post(
-        '../getInvoiceTitle',
-        {},
-        function(test) {
-            if(test.success) {
-                $("#zfb").css('display','block');
-                $("#wx").css('display','none');
-            };
-        }
-    );
+//    $.post(
+//        '../getInvoiceTitle',
+//        {},
+//        function(test) {
+//            if(test.success) {
+//                $("#zfb").css('display','block');
+//                $("#wx").css('display','none');
+//            };
+//        }
+//    );
     function sync() {
         window.location = "../syncAlipay?_t=" + (new Date()).getTime();
     };
