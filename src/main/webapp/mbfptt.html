@@ -171,7 +171,7 @@
 		});
         // 获取支付宝默认抬头信息
 		$.post(
-            '../getInvoiceTitle',
+            'getInvoiceTitle',
             {},
             function(test) {
 				if(test.success) {
@@ -199,7 +199,7 @@
         // 选择支付宝抬头信息
 		function changeFptt(obj){
             $.post(
-                '../getInvoiceTitle',
+                'getInvoiceTitle',
                 {},
                 function(test) {
                     if(test.success) {
