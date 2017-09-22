@@ -310,7 +310,9 @@ public class BaseClController extends BaseController {
                         request.getSession().setAttribute("error", "");
                     }
                     String temp = (String) resultMap.get("tmp");
-                    if (temp != null) {
+                    logger.info("---------校验错误信息------------"+temp);
+
+                    if (!"".equals(temp)) {
                         request.getSession().setAttribute("temp", temp);
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
                         result.put("temp", temp);
@@ -536,8 +538,9 @@ public class BaseClController extends BaseController {
                     return result;
                 }
                 String temp=(String)resultMap.get("tmp");
+                logger.info("---------校验错误信息------------"+temp);
                 /*wait to do*/
-                if(temp!=null){
+                if(!"".equals(temp)){
                     result.put("temp",temp);
                     return result;
                 }
