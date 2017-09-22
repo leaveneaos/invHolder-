@@ -131,6 +131,9 @@
                     }else if (data.error != null) {
                         $('#cwts').html(data.error);
                         loadimage();
+                    }else if (data.temp != null) {
+                        $('#cwts').html(data.temp);
+                        loadimage();
                     }
 				}
 			);

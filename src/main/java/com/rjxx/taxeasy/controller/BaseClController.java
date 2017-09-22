@@ -315,6 +315,8 @@ public class BaseClController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
                         result.put("temp", temp);
                         return;
+                    }else{
+                        request.getSession().setAttribute("temp", "");
                     }
                     Jyxxsq jyxxsq = jyxxsqList.get(0);
                     request.getSession().setAttribute("price", jyxxsq.getJshj());
@@ -536,7 +538,7 @@ public class BaseClController extends BaseController {
                 String temp=(String)resultMap.get("tmp");
                 /*wait to do*/
                 if(temp!=null){
-                    result.put("error",temp);
+                    result.put("temp",temp);
                     return result;
                 }
                 Jyxxsq jyxxsq=jyxxsqList.get(0);
