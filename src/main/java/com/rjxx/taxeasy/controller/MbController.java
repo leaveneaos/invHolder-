@@ -346,7 +346,8 @@ public class MbController extends BaseController {
                                 }
                             }
                         }
-                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
+                                      +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
                         return;
                     }
                 }else {
@@ -837,7 +838,14 @@ public class MbController extends BaseController {
         result.put("yx", request.getSession().getAttribute(gsdm+tqm+"yx"));
         result.put("je", request.getSession().getAttribute(gsdm+tqm+"je"));
         result.put("sjkpje", request.getSession().getAttribute(gsdm+tqm+"sjkpje"));
-        System.out.println(""+session.getAttribute(gsdm+tqm+"fptt").toString());
+
+        //System.out.println(""+session.getAttribute(gsdm+tqm+"fptt").toString());
+        result.put("price",request.getSession().getAttribute("price"));
+        result.put("orderTime",request.getSession().getAttribute("orderTime"));
+        result.put("orderNo",request.getSession().getAttribute("orderNo"));
+        result.put("order",request.getSession().getAttribute("order"));
+        result.put("tqm",request.getSession().getAttribute("tqm"));
+        result.put("error",request.getSession().getAttribute("error"));
         return  result;
     }
 

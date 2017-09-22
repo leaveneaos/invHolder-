@@ -169,7 +169,7 @@
                         loadimage();
                         $('#cwts').css('opacity','1');
 					}else if (data.num == 5) {
-                        window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();;
+                        window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();
 					}else if (data.num == 6) {
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";
                         title = "提示";

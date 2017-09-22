@@ -71,6 +71,9 @@
 					<!-- <select id="getFptt" oninput="changeFptt(this.value)">
 					  <option value="getFptt">
 					</select> -->
+					<!--选择支付宝抬头-->
+					<select id="getFptt" oninput="changeFptt(this.value)">
+					</select>
 				</div>
 				<div class="mui-input-row">
 					<label id ="yx2"><span style="color: red;">*</span>邮箱地址</label>
@@ -166,7 +169,7 @@
 				}
 			});
 		});
-
+        // 获取支付宝默认抬头信息
 		$.post(
             '../getInvoiceTitle',
             {},
@@ -193,7 +196,7 @@
 				};
             }
         );
-
+        // 选择支付宝抬头信息
 		function changeFptt(obj){
             $.post(
                 '../getInvoiceTitle',
