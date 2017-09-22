@@ -280,17 +280,12 @@ public class MbController extends BaseController {
                         if(error!=null){
                             logger.info("---------错误信息------------"+error);
                             request.getSession().setAttribute("error", error);
-                            response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
-                            result.put("error", error);
-                            return;
                         }
 
-                        String temp = (String) resultMap.get("tmp");
-                        if (temp != null) {
-                            request.getSession().setAttribute("error", temp);
-                            response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
-                            result.put("error", temp);
-                            return;
+                        String msg = (String) resultMap.get("msg");
+                        if(null!= msg && !"".equals(resultMap.get("msg"))){
+                            logger.info("---------校验信息------------"+msg);
+                            request.getSession().setAttribute("msg", msg);
                         }
                         Jyxxsq jyxxsq = jyxxsqList.get(0);
                         request.getSession().setAttribute("price", jyxxsq.getJshj());
@@ -846,6 +841,7 @@ public class MbController extends BaseController {
         result.put("order",request.getSession().getAttribute("order"));
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
+        result.put("msg",request.getSession().getAttribute("msg"));
         return  result;
     }
 

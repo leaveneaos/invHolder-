@@ -69,7 +69,21 @@
 				$('#tqmhidden').html(orderNo);
                 $("#logo").attr("src", "images/" + gsmc + ".png");
 			}
-
+            $.post(
+                "qrxxsession",
+                {},
+                function (data) {
+                    if(null!=data.error&&""!=data.error){
+                        alert(data.error);
+                        msg=data.error;
+                        $("#sure").attr("disabled","disabled");
+                    }if(null!=data.msg &&""!=data.msg){
+                        alert(data.msg);
+                        msg=data.msg;
+                        $("#sure").attr("disabled","disabled");
+                    }
+                }
+            )
 	    });
 
         function RetainedDecimalPlaces(num) {
