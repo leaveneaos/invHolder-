@@ -535,7 +535,7 @@ public class BaseClController extends BaseController {
                 }
                 String temp=(String)resultMap.get("tmp");
                 /*wait to do*/
-                if(error!=null){
+                if(temp!=null){
                     result.put("error",temp);
                     return result;
                 }
