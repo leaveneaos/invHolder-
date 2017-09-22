@@ -318,8 +318,10 @@ public class BaseClController extends BaseController {
                     }
                     Jyxxsq jyxxsq = jyxxsqList.get(0);
                     request.getSession().setAttribute("price", jyxxsq.getJshj());
+                    logger.info("-----存入session的金额"+jyxxsq.getJshj());
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
+                    logger.info("-----存入session的交易日期"+sdf.format(jyxxsq.getDdrq()));
                     request.getSession().setAttribute("resultMap", resultMap);
                     request.getSession().setAttribute("jymxsqList", jymxsqList);
                     request.getSession().setAttribute("tqm", tqm);
