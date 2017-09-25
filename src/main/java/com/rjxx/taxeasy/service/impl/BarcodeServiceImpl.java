@@ -262,8 +262,12 @@ public Map sm(String gsdm, String q) {
                 result.put("spsl", spsl.toString());
                 result.put("spmc", spmc.toString());
                 Integer pid=skp.getPid();
-                Pp pp = ppJpaDao.findOneById(pid);
-                result.put("tqm", pp.getPpdm() + orderNo);
+                if(pid==null){
+                    result.put("tqm", orderNo);
+                }else{
+                    Pp pp = ppJpaDao.findOneById(pid);
+                    result.put("tqm", pp.getPpdm() + orderNo);
+                }
                 logger.info("getSpxx结果==="+JSONObject.toJSONString(result));
                 return JSONObject.toJSONString(result);
             } catch(Exception e){
@@ -458,8 +462,12 @@ public Map sm(String gsdm, String q) {
                 jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
                 if(tqm==null){
                     Integer pid=skp.getPid();
-                    Pp pp = ppJpaDao.findOneById(pid);
-                    jyxxsq.setTqm(pp.getPpdm()+orderNo);
+                    if(pid==null){
+                        jyxxsq.setTqm(orderNo);
+                    }else{
+                        Pp pp = ppJpaDao.findOneById(pid);
+                        jyxxsq.setTqm(pp.getPpdm()+orderNo);
+                    }
                 }else{
                     jyxxsq.setTqm(tqm);
                 }
