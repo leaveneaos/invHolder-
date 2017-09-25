@@ -90,7 +90,7 @@
                 function (data) {
                 	console.log(data)
                     $("#fptt").html(data.fptt);
-                    $("#je").html(RetainedDecimalPlaces(data.je)+"元");
+                    $("#je").html(RetainedDecimalPlaces(data.price)+"元");
                     if(null==data.nsrsbh || data.nsrsbh==''){
                     	$('#nsrsbh').parent().css('display','none')
                     }else{

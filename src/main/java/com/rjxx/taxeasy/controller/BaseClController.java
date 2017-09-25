@@ -742,7 +742,6 @@ public class BaseClController extends BaseController {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("fptt", request.getSession().getAttribute("fptt"));
         result.put("yx", request.getSession().getAttribute("yx"));
-        result.put("je", request.getSession().getAttribute("price"));
         result.put("nsrsbh", request.getSession().getAttribute("nsrsbh"));
 
         result.put("price",request.getSession().getAttribute("price"));
