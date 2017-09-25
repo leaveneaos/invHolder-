@@ -81,6 +81,7 @@ public class BarcodeController extends BaseController {
                                 String pdf = str.split("[+]")[0];
                                 String img = pdf.replace("pdf", "jpg");
                                 sb.append("&"+img);
+                                session.setAttribute("serialorder", str.split("[+]")[4]);
                             }
                         }
                         response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+sb.toString());
