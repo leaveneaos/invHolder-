@@ -348,6 +348,8 @@ public class MbController extends BaseController {
                         }
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
                                       +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
+                        logger.info("手机扫码跳转订单确认页面地址------"+request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
+                                +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
                         return;
                     }
                 }else {
