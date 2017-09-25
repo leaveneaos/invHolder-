@@ -79,8 +79,6 @@
     var ua = navigator.userAgent.toLowerCase();
     var isWeixin = ua.indexOf('micromessenger') != -1;
     var isAlipay = ua.indexOf('alipay') != -1;
-    var isUCBrowser = ua.indexOf('UCBrowser') != -1;
-    var isSafari = ua.indexOf('Safari') != -1;
     if(isWeixin){
         $("#fpj").css('display','block');
         $("#zfb").css('display','none');
@@ -129,7 +127,7 @@
         $('#you').click(function () {
             window.location.href = "../youxiang1.html?_t=" + new Date().getTime();
         });
-        if (urlinfo.indexOf("isAlipay=true") != -1) {
+        if (isAlipay) {
             $("#zfb").click(function () {
                 window.location = "../syncAlipay?_t=" + (new Date()).getTime();
             });
@@ -143,30 +141,6 @@
             });
         }
 
-
-
-        //   $('#fpj').click(function() {
-        //       if (openid == null) {
-        //           getCode();
-        //       } else {
-        //           $.ajax({
-        //               url : '../pjj/saveFpj',
-        //               data : {
-        //                   "openid" : openid
-        //               },
-        //               method : 'post',
-        //               success : function(data) {
-        //                   if (data.success) {
-        //                       window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
-        //                   } else if (data.nopeat) {
-        //    window.location.href = "../pjj/index.html?_t=" + new Date().getTime();
-        // } else {
-        //    window.location.href = "../pjj/first";
-        // }
-        //               }
-        //            });
-        //       }
-        //   });
     })
 </script>
 <script src="../js/mui.min.js"></script>
