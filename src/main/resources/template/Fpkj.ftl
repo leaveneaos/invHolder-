@@ -51,7 +51,7 @@
 				<ProductItem>
 					<VenderOwnCode></VenderOwnCode>
 					<ProductCode>${jymxsq.spdm!}</ProductCode>
-					<ProductName>${jymxsq.spmc!}</ProductName>
+					<ProductName><![CDATA[${jymxsq.spmc!}]]></ProductName>
 					<RowType>${jymxsq.fphxz!}</RowType>
 					<Spec>${jymxsq.spggxh!}</Spec>
 					<Unit>${jymxsq.spdw!}</Unit>
