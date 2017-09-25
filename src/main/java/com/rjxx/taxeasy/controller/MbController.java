@@ -147,7 +147,7 @@ public class MbController extends BaseController {
                     Map mapdecode = rjCheckUtil.decodeForAll(q);
 
                     String tqm = (String) mapdecode.get("A0");//解析code，第一个为提取码
-
+                    logger.info("解析二维码-----参数q提取码"+tqm);
                     request.getSession().setAttribute("orderNo", System.currentTimeMillis()+ NumberUtil.getRandomLetter());//门店编号
                     request.getSession().setAttribute("order",tqm );//订单号
                     request.getSession().setAttribute("tqm", tqm);//提取码
