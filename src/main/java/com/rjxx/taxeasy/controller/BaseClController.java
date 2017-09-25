@@ -446,7 +446,7 @@ public class BaseClController extends BaseController {
     public static void main(String[] args) {
        String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
         byte[] bt = null;
-        String sign="on=061402100101123456781&si=89b7438f74359f027c9f3b601e410ad2";
+        String sign="on=092120221701307042144&si=2d072a9a03f94c2c10286922d5b32dd3";
         String s=null;
         try {
             sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
@@ -545,7 +545,7 @@ public class BaseClController extends BaseController {
                     return result;
                 }
                 Jyxxsq jyxxsq=jyxxsqList.get(0);
-                request.getSession().setAttribute("je",jyxxsq.getJshj());
+                request.getSession().setAttribute("price",jyxxsq.getJshj());
                 request.getSession().setAttribute("resultMap",resultMap);
                 request.getSession().setAttribute("jymxsqList",jymxsqList);
                 request.getSession().setAttribute("tqm",tqm);
