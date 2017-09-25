@@ -47,7 +47,6 @@
             var myurl = "QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
-        pricese=null;
 		$(function () {
             var thisURL = document.URL;
             var  getval =thisURL.split('?')[1];
@@ -102,7 +101,7 @@
                 window.location.href = "mbfptt.html?gsdm="+gsmc+"&&tqm="+ tqm +"&&time=" + new Date();
             }else if(isWeixin){
                 window.location = "common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + pricese;
+                    "&storeNo=" + storeNo + "&price=" + price;
             }
             else {
                 window.location.href = "mbfptt.html?gsdm="+ gsmc +"&&tqm="+ tqm +"&&time=" + new Date();
