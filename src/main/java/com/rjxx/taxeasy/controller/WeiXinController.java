@@ -172,8 +172,7 @@ public class WeiXinController extends BaseController {
                                     System.out.println("开票成功");
                                 }
                                 return "";
-                            }
-                            if (null != gsdm && gsdm.equals("chamate")) {
+                            }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm))) {
                                 logger.info("进入一茶一坐开票处理");
                                 //Thread.sleep(5000);
                                 String status = barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"),
@@ -188,7 +187,9 @@ public class WeiXinController extends BaseController {
                                         System.out.println("开票成功");
                                     }
                                     return "";
-                                }
+                                }else {
+                                logger.info("------改公司"+gsdm+"未配置,开票处理！");
+                            }
                             }
                         }
                         if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())){
