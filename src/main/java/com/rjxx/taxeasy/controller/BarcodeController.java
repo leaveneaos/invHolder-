@@ -83,6 +83,7 @@ public class BarcodeController extends BaseController {
                                 sb.append("&"+img);
                             }
                         }
+                        session.setAttribute("serialorder", status.get(0).split("[+]")[4]);
                         response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+sb.toString());
                     }
 //                    switch (status) {

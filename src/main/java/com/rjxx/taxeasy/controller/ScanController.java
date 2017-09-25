@@ -189,6 +189,7 @@ public class ScanController extends BaseController {
                         String je = status.get(0).split("[+]")[1];
                         String orderTime = status.get(0).split("[+]")[2];
                         String kplsh = status.get(0).split("[+]")[3];
+                        session.setAttribute("serialorder", status.get(0).split("[+]")[4]);
                         if(WeixinUtils.isWeiXinBrowser(request)){
                             WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                             if(null == wxFpxxByTqm){

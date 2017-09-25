@@ -806,8 +806,9 @@ public Map sm(String gsdm, String q) {
                         SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
                         String orderTime = sdf.format(kpls.getLrsj());
                         String kplsh = kpls.getKplsh()+"";
+                        String serialorder=kpls.getSerialorder();
                         if("00".equals(fpztdm)&& StringUtils.isNotBlank(pdfurl)&&StringUtils.isNotBlank(fphm)){
-                            result.add(pdfurl+"+"+je+"+"+orderTime+"+"+kplsh);
+                            result.add(pdfurl+"+"+je+"+"+orderTime+"+"+kplsh+"+"+serialorder);
                         }else {
                             result.add("开具中");
                         }
