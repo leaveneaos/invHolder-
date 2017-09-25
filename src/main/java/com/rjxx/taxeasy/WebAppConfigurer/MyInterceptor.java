@@ -1,6 +1,5 @@
 package com.rjxx.taxeasy.WebAppConfigurer;
 
-import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,7 @@ public class MyInterceptor implements HandlerInterceptor {
         HttpSession session=request.getSession();
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
-        if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")){
+        if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||url.equals("/mb")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
