@@ -59,7 +59,7 @@
             orderNo = getval.split("=")[3];
             price = getval.split("=")[4];
             //orderTime = getval.split("=")[5];
-            if(gsmc == null || orderNo ==null || price==null || orderTime ==null){
+            if(gsmc == null || orderNo ==null || price==null){
                 redirect("出现未知错误，请重新扫码或联系商户！")
 			}else {
 				$('#order').html(orderNo);
