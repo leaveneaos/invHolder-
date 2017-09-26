@@ -545,10 +545,14 @@ public Map sm(String gsdm, String q) {
                     map2.put("serialorder",  jyxxsq.getJylsh()+jyxxsq.getDdh());
                     json=JSONObject.toJSONString(map2);
                     if(null!=returnCode && "9999".equals(returnCode)){
-                        logger.info("进入拒绝开票-----错误原因为"+returnMsg);
-                        String reason= returnMsg;
-                        String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                            logger.info("进入拒绝开票-----错误原因为"+returnMsg);
+                            String reason= returnMsg;
+                        if(null!= sjly && "4".equals(sjly)){
+                            String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        }
+                        return "-1";
                     }
+
                 }catch (Exception e){
                     String serialorder=resultxml;
                     Kpls oneBySerialorder = kplsJpaDao.findOneBySerialorder(serialorder);
@@ -603,17 +607,21 @@ public Map sm(String gsdm, String q) {
                 if(tqmtq != null && tqmtq.getId() != null){
                     logger.info("该提取码已提交过申请!");
                     String reason="该订单已提交过申请!";
-                    //拒绝开票
-                    String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                    logger.info("拒绝开票状态"+str);
+                    if(null!=sjly && "4".equals(sjly)){
+                        //拒绝开票
+                        String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        logger.info("拒绝开票状态"+str);
+                    }
                     return "-2";
                 }
                 if(jyls1 != null){
                     logger.info("该订单正在开票!");
                     String reason="该订单正在开票!";
-                    //拒绝开票
-                    String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                    logger.info("拒绝开票状态"+str);
+                    if(null!=sjly && "4".equals(sjly)){
+                        //拒绝开票
+                        String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        logger.info("拒绝开票状态"+str);
+                    }
                     return "-2";
                 }
                 //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
@@ -633,8 +641,10 @@ public Map sm(String gsdm, String q) {
                     if(returncode.equals("9999")){
                        //返回错误 拒绝开票
                         String reason="错误信息为"+ReturnMessage;
-                        String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                        logger.info("进入拒绝开票-----"+ReturnMessage+"拒绝开票状态"+str);
+                        if(null!=sjly && "4".equals(sjly)){
+                            String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                            logger.info("进入拒绝开票-----"+ReturnMessage+"拒绝开票状态"+str);
+                        }
                         return "-2";
                     }else {
                         logger.info("-------开票成功返回值---------" + resultxml);
