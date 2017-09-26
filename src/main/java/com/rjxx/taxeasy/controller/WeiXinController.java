@@ -162,7 +162,7 @@ public class WeiXinController extends BaseController {
                                 String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
                                         (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
                                         , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                        tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey());
+                                        tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),SuccOrderId);
                                 if ("-1".equals(status)) {
                                     logger.info("开具失败");
                                 } else if ("-2".equals(status)) {
@@ -177,7 +177,7 @@ public class WeiXinController extends BaseController {
                                 //Thread.sleep(5000);
                                 String status = barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"),
                                         (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
-                                        , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token);
+                                        , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
                                     if ("-1".equals(status)) {
                                         logger.info("开具失败");
                                     } else if ("0".equals(status)) {
