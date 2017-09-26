@@ -10,6 +10,7 @@ import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JyxxsqService;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,9 @@ public class CommonController extends BaseController {
 
     @Autowired
     private WxTokenJpaDao wxTokenJpaDao;
+
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
 
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
@@ -97,8 +101,10 @@ public class CommonController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return null;
                         }
+                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                        logger.info("传给微信的orderno"+weixinOrderNo);
                         //可开具 跳转微信授权链接
-                        redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
+                        redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){
                             //获取授权失败
                             request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");

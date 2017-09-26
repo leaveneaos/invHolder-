@@ -123,8 +123,23 @@ public class WeiXinController extends BaseController {
                 }
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     System.out.println("拿到成功的订单id了");
-                    WxFpxx oneByOrderNo = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
+                    //原始订单 ----- 开票平台的订单
+                    String orderno_old="";
+                    //拒绝之后的订单 --- 传给微信的订单---weixinorderno
+                    String orderno_new="";
+                    int i = SuccOrderId.indexOf("-");
+                    if(i<0){
+                        logger.info("没有-，表示没有拒绝过开票");
+                        orderno_old=SuccOrderId;
+                        orderno_new=SuccOrderId;
+                    }else {
+                        logger.info("表示拒绝过开票");
+                        orderno_new = SuccOrderId;
+                        String[] split = SuccOrderId.split("-");
+                        orderno_old = split[0];
+                    }
 
+                    WxFpxx oneByOrderNo = wxfpxxJpaDao.selsetByOrderNo(orderno_old);
                     String gsdm = oneByOrderNo.getGsdm();
                     logger.info("根据订单编号查询交易信息数据"+oneByOrderNo.toString());
                     if(null==gsdm && gsdm.equals("")){
@@ -144,7 +159,7 @@ public class WeiXinController extends BaseController {
                     if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
                         logger.info("进入申请开票类型------------开始开票");
                         //主动获取授权状态，成功会返回数据
-                        Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
+                        Map resultMap =  weixinUtils.zdcxstatus(orderno_new,access_token);
                         if(null==resultMap){
                             logger.info("进入--主动查询授权是空。");
                             return "";
@@ -167,7 +182,7 @@ public class WeiXinController extends BaseController {
                                     String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
                                             (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
                                             , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                            tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),SuccOrderId);
+                                            tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),orderno_new);
                                     if ("-1".equals(status)) {
                                         logger.info("开具失败");
                                     } else if ("-2".equals(status)) {

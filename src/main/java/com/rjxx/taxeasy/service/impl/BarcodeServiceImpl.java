@@ -404,7 +404,7 @@ public Map sm(String gsdm, String q) {
 
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly,String access_token,String SuccOrderId) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly,String access_token,String weixinOrderNo) {
         Map decode = RJCheckUtil.decodeForAll(q);
         String size = decode.get("size").toString();
         String spdm = "";
@@ -548,7 +548,8 @@ public Map sm(String gsdm, String q) {
                             logger.info("进入拒绝开票-----错误原因为"+returnMsg);
                             String reason= returnMsg;
                         if(null!= sjly && "4".equals(sjly)){
-                            String str=  weixinUtils.jujuekp(SuccOrderId,reason,access_token);
+                            logger.info("进行拒绝开票的weixinOrderN+++++"+weixinOrderNo);
+                            String str=  weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
                         }
                         return "-1";
                     }
@@ -580,7 +581,7 @@ public Map sm(String gsdm, String q) {
     @Override
     public String pullInvioce(Map resultSjMap,String gsdm,  String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
-                              String openid,String sjly,String access_token,String AppId,String key,String SuccOrderId) {
+                              String openid,String sjly,String access_token,String AppId,String key,String weixinOrderNo) {
             try {
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                 List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
@@ -608,8 +609,9 @@ public Map sm(String gsdm, String q) {
                     logger.info("该提取码已提交过申请!");
                     String reason="该订单已提交过申请!";
                     if(null!=sjly && "4".equals(sjly)){
+                        logger.info("进行拒绝开票的weixinOrderN+++++"+weixinOrderNo);
                         //拒绝开票
-                        String str= weixinUtils.jujuekp(SuccOrderId,reason,access_token);
+                        String str= weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
                         logger.info("拒绝开票状态"+str);
                     }
                     return "-2";
@@ -618,8 +620,9 @@ public Map sm(String gsdm, String q) {
                     logger.info("该订单正在开票!");
                     String reason="该订单正在开票!";
                     if(null!=sjly && "4".equals(sjly)){
+                        logger.info("进行拒绝开票的weixinOrderN+++++"+weixinOrderNo);
                         //拒绝开票
-                        String str= weixinUtils.jujuekp(SuccOrderId,reason,access_token);
+                        String str= weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
                         logger.info("拒绝开票状态"+str);
                     }
                     return "-2";
@@ -642,7 +645,7 @@ public Map sm(String gsdm, String q) {
                        //返回错误 拒绝开票
                         String reason="错误信息为"+ReturnMessage;
                         if(null!=sjly && "4".equals(sjly)){
-                            String str=  weixinUtils.jujuekp(SuccOrderId,reason,access_token);
+                            String str=  weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
                             logger.info("进入拒绝开票-----"+ReturnMessage+"拒绝开票状态"+str);
                         }
                         return "-2";
