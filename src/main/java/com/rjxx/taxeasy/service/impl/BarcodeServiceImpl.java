@@ -404,7 +404,7 @@ public Map sm(String gsdm, String q) {
 
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,String openid,String sjly,String access_token) {
         Map decode = RJCheckUtil.decodeForAll(q);
         String size = decode.get("size").toString();
         String spdm = "";
@@ -544,6 +544,11 @@ public Map sm(String gsdm, String q) {
                     map2.put("returnCode", returnCode);
                     map2.put("serialorder",  jyxxsq.getJylsh()+jyxxsq.getDdh());
                     json=JSONObject.toJSONString(map2);
+                    if(null!=returnCode && "9999".equals(returnCode)){
+                        logger.info("进入拒绝开票-----错误原因为"+returnMsg);
+                        String reason= returnMsg;
+                        String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                    }
                 }catch (Exception e){
                     String serialorder=resultxml;
                     Kpls oneBySerialorder = kplsJpaDao.findOneBySerialorder(serialorder);
@@ -572,7 +577,6 @@ public Map sm(String gsdm, String q) {
     public String pullInvioce(Map resultSjMap,String gsdm,  String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
                               String openid,String sjly,String access_token,String AppId,String key) {
-        //WeixinUtils weixinUtils = new WeixinUtils();
             try {
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                 List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
@@ -598,20 +602,18 @@ public Map sm(String gsdm, String q) {
                 Jyls jyls1 = jylsService.findOne(map);
                 if(tqmtq != null && tqmtq.getId() != null){
                     logger.info("该提取码已提交过申请!");
-                    String reason="该提取码已提交过申请!";
+                    String reason="该订单已提交过申请!";
                     //拒绝开票
-                    //String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                    //logger.info("拒绝开票状态"+str);
-                    logger.info("进入拒绝开票，但是没有调用");
+                    String str= weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                    logger.info("拒绝开票状态"+str);
                     return "-2";
                 }
                 if(jyls1 != null){
                     logger.info("该订单正在开票!");
                     String reason="该订单正在开票!";
                     //拒绝开票
-                    //String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
-                    //logger.info("拒绝开票状态"+str);
-                    logger.info("进入拒绝开票，但是没有调用");
+                    String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                    logger.info("拒绝开票状态"+str);
                     return "-2";
                 }
                 //调用接口开票,jyxxsq,jymxsqList,jyzfmxList
@@ -630,9 +632,9 @@ public Map sm(String gsdm, String q) {
                     String ReturnMessage=(String)xmlMap.get("ReturnMessage");
                     if(returncode.equals("9999")){
                        //返回错误 拒绝开票
-                        logger.info("进入拒绝开票-----");
                         String reason="错误信息为"+ReturnMessage;
-                        //String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        String str=  weixinUtils.jujuekp(jyxxsq.getTqm(),reason,access_token);
+                        logger.info("进入拒绝开票-----"+ReturnMessage+"拒绝开票状态"+str);
                         return "-2";
                     }else {
                         logger.info("-------开票成功返回值---------" + resultxml);

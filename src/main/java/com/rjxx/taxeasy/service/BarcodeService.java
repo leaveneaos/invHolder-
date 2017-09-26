@@ -10,7 +10,7 @@ public interface BarcodeService {
     String makeInvoice(String gsdm,String q,String gfmc,
                        String gfsh,String email,String gfyh,
                        String gfyhzh,String gfdz,String gfdh,String tqm,
-                       String openid,String sjly);
+                       String openid,String sjly,String access_token);
 
     /**
      * 拉取数据
