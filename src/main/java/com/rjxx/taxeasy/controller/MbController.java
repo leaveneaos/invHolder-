@@ -641,7 +641,6 @@ public class MbController extends BaseController {
                                     ||jyzfmx2.getZffsDm().equals("Y")
                                     ||jyzfmx2.getZffsDm().equals("Z"))
                                     ){
-                                System.out.println("不开票支付金额为"+jyzfmx2.getZfje());
                                 bkpje=bkpje.add(new BigDecimal(jyzfmx2.getZfje().toString()));
                             }
                             System.out.println("不开票金额为"+bkpje);
@@ -649,7 +648,7 @@ public class MbController extends BaseController {
                         sjkpje = zje.subtract(bkpje);
                         System.out.println("实际开票金额"+sjkpje);
                     }
-                    int b = sjkpje.compareTo(new BigDecimal("0"));//
+                    int b = sjkpje.compareTo(new BigDecimal("0"));
                     if(b == 0){
                         logger.info("不开票金额为0");
                         result.put("num","12");
@@ -671,6 +670,7 @@ public class MbController extends BaseController {
                     List<Jymxsq>  jymxsqList=(List)resultMap.get("jymxsqList");
                     result.put("jymxsqList",jymxsqList);
                     result.put("sjkpje",jyxxsqList.get(0).getJshj());
+                    request.getSession().setAttribute(gsdm+tqm+"sjkpje",jyxxsqList.get(0).getJshj());
                     return result;
                 }
             }
