@@ -13,6 +13,7 @@ import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.XmlJaxbUtils;
 import com.rjxx.utils.XmlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,6 +21,7 @@ import java.util.*;
 /**
  * Created by Administrator on 2017/9/26 0026.
  */
+@Service
 public class SimpleInvoiceServiceImpl implements SimpleInvoiceService {
 
     @Autowired
