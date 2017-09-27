@@ -1,5 +1,11 @@
 package com.rjxx.taxeasy.wechat.util;
 
+import com.rjxx.taxeasy.bizcomm.utils.URLUtils;
+import com.rjxx.utils.SignUtils;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -13,6 +19,8 @@ import java.util.Map;
  * Created by Administrator on 2017/8/1 0001.
  */
 public class HttpUtil {
+    private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
+
     public static HttpServletRequest getRequest() {
         ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         return attrs.getRequest();
@@ -64,5 +72,23 @@ public class HttpUtil {
             }
         }
         return cookieMap;
+    }
+
+    public static String HttpUrlPost(String QueryData,String AppId,String key,String type){
+        String result="";
+        try {
+            logger.info("----------发送的报文------"+QueryData);
+            JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
+            Client client = dcf.createClient(URLUtils.WS_URL);
+            String methodName = "UploadOrderData";
+            String sign= SignUtils.getSign(QueryData,key);
+            Object[] objects = client.invoke(methodName, AppId, sign, type, QueryData);
+            //输出调用结果
+            result = objects[0].toString();
+            logger.info("----------接收返回值------"+result.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
