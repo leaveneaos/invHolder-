@@ -110,6 +110,11 @@ public class BaseClController extends BaseController {
             gsxx.setWxappid(WeiXinConstants.APP_ID);
             gsxx.setWxsecret(WeiXinConstants.APP_SECRET);
         }
+        if(request.getHeader("user-agent")== null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
