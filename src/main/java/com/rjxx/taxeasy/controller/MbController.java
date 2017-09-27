@@ -94,9 +94,10 @@ public class MbController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return ;
         }
-        if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(request.getHeader("user-agent")==null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
@@ -800,7 +801,7 @@ public class MbController extends BaseController {
             result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
         }
         result.put("serialorder", jylslist.get(0).getSerialorder());
-        request.getSession().setAttribute("msg", "请重新扫描二维码");
+        //request.getSession().setAttribute("msg", "请重新扫描二维码");
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         result.put("kprq",sdf.format(kplsList.get(0).getKprq()));
         result.put("price",kplsList.get(0).getJshj());
