@@ -528,7 +528,7 @@ public class BaseClController extends BaseController {
             }else {//跳转发票提取页面
                  /*调用接口获取jyxxsq等信息*/
                 Map resultMap = new HashMap();
-                resultMap=getDataService.getData(tqm,gsdm);
+                resultMap=getDataService.getData(tqm,"Family");
                 List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
                 List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
                 String error = (String) resultMap.get("error");
