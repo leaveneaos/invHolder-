@@ -586,6 +586,9 @@ public Map sm(String gsdm, String q) {
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                 List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
                 List<Jyzfmx> jyzfmxList=(List)resultSjMap.get("jyzfmxList");
+                if(jyxxsqList == null){
+                    return "-1";
+                }
                 //封装数据
                 Jyxxsq jyxxsq=jyxxsqList.get(0);
                 jyxxsq.setGfmc(gfmc);
