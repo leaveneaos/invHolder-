@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -18,7 +19,7 @@ public class UploadDataController {
 
     @ApiOperation(value = "上传交易数据")
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public String upload(String appid, String sign, String orderData){
+    public String upload(@RequestParam String appid, @RequestParam String sign, @RequestParam String orderData){
         return simpleInvoiceService.getMsg(appid, sign, orderData);
     }
 }
