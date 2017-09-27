@@ -600,13 +600,13 @@ public class BaseClController extends BaseController {
         Map<String,Object> result = new HashMap<String,Object>();
         Map  resultMap=(Map)request.getSession().getAttribute("resultMap");
         String openid = String.valueOf(request.getSession().getAttribute("openid"));//微信openid
-        List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
-        List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-        List<Jyzfmx> jyzfmxList=(List)resultMap.get("jyzfmxList");
-        if(jyxxsqList==null){
+        if(resultMap == null){
             result.put("msg","该会话已过期，请重试!");
             return result;
         }
+        List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+        List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+        List<Jyzfmx> jyzfmxList=(List)resultMap.get("jyzfmxList");
         Jyxxsq jyxxsq=jyxxsqList.get(0);
         String fptt=String.valueOf(request.getSession().getAttribute("fptt"));
         String nsrsbh=String.valueOf(request.getSession().getAttribute("nsrsbh"));
