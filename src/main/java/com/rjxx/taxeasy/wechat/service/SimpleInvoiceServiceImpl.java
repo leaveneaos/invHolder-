@@ -111,7 +111,7 @@ public class SimpleInvoiceServiceImpl implements SimpleInvoiceService {
                 Map spvoMap = new HashMap();
                 spvoMap.put("gsdm", gsdm);
                 spvoMap.put("spdm", cszb.getCsz());
-                Spvo spvo = spvoService.findOneSpvo(map);
+                Spvo spvo = spvoService.findOneSpvo(spvoMap);
 
                 List<ProductItem> productItemList = new ArrayList<>();
                 ProductItem productItem = new ProductItem();
