@@ -127,6 +127,7 @@
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript" src="js/jquery.alerts.js"></script>
+	<script type="text/javascript" src="js/formb.js"></script>
 	<script type="text/javascript">
 	jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
 	</script>
@@ -160,7 +161,7 @@
 	    				}
 	    				//在页面显示数据
 	    				//$("#kpje").after("<span class='lht'>" + data.zje + "</span>")
-	    				$("#kpje").after("<span class='lht'>" + data.sjkpje + "</span>")
+	    				$("#kpje").after("<span class='lht'>" + RetainedDecimalPlaces(data.sjkpje)+"元" + "</span>")
 					}
                     if(data.num==12){
                         $("#sqkp").hide();
@@ -169,6 +170,7 @@
 				}
 			});
 		});
+
         // 获取支付宝默认抬头信息
 		$.post(
             'getInvoiceTitle',
@@ -303,8 +305,6 @@
 		 　　　 }
 	 　 	}
 		};
-
-
 
 		function kp() {
             var tqm = $('#tqm').val();
