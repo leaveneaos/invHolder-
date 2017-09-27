@@ -58,12 +58,12 @@
             gsmc = getval.split("=")[2];
             orderNo = getval.split("=")[3];
             price = getval.split("=")[4];
-            orderTime = getval.split("=")[5];
-            if(gsmc == null || orderNo ==null || price==null || orderTime ==null){
+            //orderTime = getval.split("=")[5];
+            if(gsmc == null || orderNo ==null || price==null){
                 redirect("出现未知错误，请重新扫码或联系商户！")
 			}else {
 				$('#order').html(orderNo);
-				$('#orderTime').html(orderTime);
+				//$('#orderTime').html(orderTime);
 				$('#price').html(RetainedDecimalPlaces(price)+"元");
 				$('#tqmhidden').html(orderNo);
                 $("#logo").attr("src", "images/" + gsmc + ".png");
@@ -80,6 +80,11 @@
                         alert(data.msg);
                         msg=data.msg;
                         $("#sure").attr("disabled","disabled");
+                    }else{
+                        $('#orderTime').html(data.orderTime);
+                        orderTime=data.orderTime;
+                        $("#sure").attr("disabled",false);
+                        msg=null;
                     }
                 }
             )

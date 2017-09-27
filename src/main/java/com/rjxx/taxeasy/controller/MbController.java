@@ -539,8 +539,8 @@ public class MbController extends BaseController {
                     //需要调用接口获取开票信息,并跳转发票提取页面
                    logger.info("start+++++++++++调用接口获取开票如：绿地优鲜");
                     //全家调用接口 解析xml
-                    if(map.get("gsdm").equals("ldyx")){
-                        System.out.println("ldyx+++++++++++++++++Strat");
+                    if(gsdm.equals("ldyx")){
+                        logger.info("绿地优鲜拉取数据---------------------");
                         //第一次请求url获取token 验证
                         resultMap=getDataService.getldyxFirData(tqm,gsdm);
                         String accessToken = (String) resultMap.get("accessToken");
@@ -556,6 +556,10 @@ public class MbController extends BaseController {
                             result.put("msg",resultMap.get("msg"));
                             return result;
                         }
+                    }else if("bqw".equals(gsdm)){
+                        logger.info("波奇网拉取数据--------------");
+                        Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
+                        resultMap = getDataService.getDataForBqw(tqm, gsdm,csz.getCsz());
                     }
                     List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
