@@ -583,12 +583,13 @@ public Map sm(String gsdm, String q) {
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
                               String openid,String sjly,String access_token,String AppId,String key,String weixinOrderNo) {
             try {
+                if(resultSjMap==null){{
+                    return "-1";
+                }
+                }
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                 List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
                 List<Jyzfmx> jyzfmxList=(List)resultSjMap.get("jyzfmxList");
-                if(jyxxsqList == null){
-                    return "-1";
-                }
                 //封装数据
                 Jyxxsq jyxxsq=jyxxsqList.get(0);
                 jyxxsq.setGfmc(gfmc);
