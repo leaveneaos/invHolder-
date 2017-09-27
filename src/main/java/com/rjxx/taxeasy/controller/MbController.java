@@ -782,7 +782,11 @@ public class MbController extends BaseController {
             Tqmtq tqmtq1 = new Tqmtq();
             tqmtq1.setDdh(jyxxsq.getTqm());
             tqmtq1.setLrsj(new Date());
-            tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm + tqm + "je"))));
+            if("bqw".equals(gsdm)){
+                tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm + tqm + "sjkpje"))));
+            }else {
+                tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm + tqm + "je"))));
+            }
             tqmtq1.setGfmc(fptt);
             tqmtq1.setNsrsbh(nsrsbh);
             tqmtq1.setDz(dz);
