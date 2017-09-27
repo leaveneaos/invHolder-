@@ -69,6 +69,16 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
+                if(null == orderTime || "".equals(orderTime)){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                if(null == price || "".equals(price)){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                 logger.info("--------数据---------"+ JSON.toJSONString(wxFpxx));
                 if(null==wxFpxx){
@@ -121,7 +131,6 @@ public class CommonController extends BaseController {
                         return null;
                     }
                 }
-
 //                if(status!=null&& status.equals("开具中")){
 //                    //开具中对应的url
 //                    response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
@@ -182,9 +191,6 @@ public class CommonController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return ;
         }
-        logger.info("拿到加密code----------"+encrypt_code);
-        logger.info("拿到卡券模板id----------"+card_id);
-
         String access_token ="";
         WxToken wxToken = wxTokenJpaDao.findByFlag("01");
         if(wxToken==null){
@@ -207,12 +213,10 @@ public class CommonController extends BaseController {
             jyxxsqMap.put("tqm",wxFpxx.getTqm());
             jyxxsqMap.put("openid",wxFpxx.getOpenId());
             Jyxxsq jyxxsq = jyxxsqService.findOneByParams(jyxxsqMap);
-            logger.info("查询到的交易信息申请-----"+JSON.toJSONString(jyxxsq));
             Map kplsMap = new HashMap();
             kplsMap.put("gsdm",wxFpxx.getGsdm());
             kplsMap.put("jylsh",jyxxsq.getJylsh());
             List<Kpls> kpls = kplsService.findAll(kplsMap);
-            //logger.info("开票流水"+JSON.toJSONString(kpls));
             if(kpls.size() > 0 ){
                 Integer kplsh=kpls.get(0).getKplsh();
                 response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?kbs="+kplsh+"&&_t=" + System.currentTimeMillis());
@@ -254,7 +258,6 @@ public class CommonController extends BaseController {
         map.put("fphm",kpls.getFphm());
         map.put("jym", kpls.getJym());
         map.put("pdfurl",kpls.getPdfurl());
-        logger.info("取到的数据——————"+JSON.toJSONString(map));
         return  JSON.toJSONString(map);
     }
 
@@ -269,6 +272,21 @@ public class CommonController extends BaseController {
             //判断是否是微信浏览
             if (!weixinUtils.isWeiXinBrowser(request)) {
                 request.getSession().setAttribute("msg", "请使用微信进行该操作");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            if(null == orderNo || "".equals(orderNo)){
+                request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            if(null == price || "".equals(price)){
+                request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            if(null == orderTime || "".equals(orderTime)){
+                request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
