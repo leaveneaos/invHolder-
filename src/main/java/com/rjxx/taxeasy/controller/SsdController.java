@@ -81,7 +81,7 @@ public class SsdController extends BaseController{
             String openid = (String) session.getAttribute("openid");
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
-                        + url + "/ssd/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
+                        + url + "ssd/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return null;
@@ -133,7 +133,7 @@ public class SsdController extends BaseController{
             // 关闭连接 ,释放资源
             client.getConnectionManager().shutdown();
         }
-        response.sendRedirect(request.getContextPath() + "/" + state + "1.html?_t=" + System.currentTimeMillis());
+        response.sendRedirect(request.getContextPath() + "/" + state + ".html?_t=" + System.currentTimeMillis());
         return;
     }
 
