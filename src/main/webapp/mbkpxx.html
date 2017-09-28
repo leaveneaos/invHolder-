@@ -103,6 +103,7 @@
 
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script src="js/mui.min.js"></script>
+	<script type="text/javascript" src="js/formb.js"></script>
 	<script type="text/javascript">
         var gsdms = location.href.split('?')[1].split('&')[0].split('=')[1];
         var tqms = location.href.split('?')[1].split('&&')[1].split('=')[1];
@@ -120,7 +121,7 @@
                     function (data) {
 
                         $("#fptt2").after("<span class='lht'>" + data.fptt + "<span>")
-                        $("#fpje2").after("<span class='lht'>" + data.sjkpje + "<span>")
+                        $("#fpje2").after("<span class='lht'>" +RetainedDecimalPlaces(data.sjkpje) + "元" + " <span>")
                         $("#yx2").after("<span class='lht'>" + data.yx + "<span>")
 
                     }

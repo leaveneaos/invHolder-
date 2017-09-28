@@ -110,6 +110,11 @@ public class BaseClController extends BaseController {
             gsxx.setWxappid(WeiXinConstants.APP_ID);
             gsxx.setWxsecret(WeiXinConstants.APP_SECRET);
         }
+        if(request.getHeader("user-agent")== null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
@@ -600,13 +605,13 @@ public class BaseClController extends BaseController {
         Map<String,Object> result = new HashMap<String,Object>();
         Map  resultMap=(Map)request.getSession().getAttribute("resultMap");
         String openid = String.valueOf(request.getSession().getAttribute("openid"));//微信openid
-        List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
-        List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-        List<Jyzfmx> jyzfmxList=(List)resultMap.get("jyzfmxList");
-        if(jyxxsqList==null){
+        if(resultMap == null){
             result.put("msg","该会话已过期，请重试!");
             return result;
         }
+        List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+        List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+        List<Jyzfmx> jyzfmxList=(List)resultMap.get("jyzfmxList");
         Jyxxsq jyxxsq=jyxxsqList.get(0);
         String fptt=String.valueOf(request.getSession().getAttribute("fptt"));
         String nsrsbh=String.valueOf(request.getSession().getAttribute("nsrsbh"));

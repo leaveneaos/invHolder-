@@ -172,7 +172,7 @@ public class WeiXinController extends BaseController {
                                     parms.put("gsdm", gsdm);
                                     Gsxx gsxx = gsxxService.findOneByParams(parms);
                                     Map resultSjMap = new HashMap();
-                                    if("family".equals(gsdm)){
+                                    if("Family".equals(gsdm)){
                                         //拉取数据
                                          resultSjMap = getDataService.getData(tqm, "Family");
                                     }else if("bqw".equals(gsdm)){

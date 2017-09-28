@@ -94,9 +94,10 @@ public class MbController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return ;
         }
-        if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(request.getHeader("user-agent")==null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
@@ -274,12 +275,13 @@ public class MbController extends BaseController {
                             Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
                             resultMap = getDataService.getDataForBqw(tqm, gsxx.getGsdm(),zb1.getCsz());
                         }
+
                         List<Jyxxsq> jyxxsqList = (List) resultMap.get("jyxxsqList");
                         List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
+                        request.getSession().setAttribute(gsxx.getGsdm()+tqm+"resultMap",resultMap);
                         String error = (String) resultMap.get("error");
                         if(error!=null){
                             logger.info("---------错误信息------------"+error);
-                            //request.getSession().setAttribute("error", error);
                             request.getSession().setAttribute("msg", error);
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
@@ -601,54 +603,80 @@ public class MbController extends BaseController {
      */
     @RequestMapping(value = "/spmx")
     @ResponseBody
-    public Map<String,Object> spmx(String tqm,String gsdm){
+    public Map<String,Object> spmx(String tqm,String gsdm) {
         Map<String, Object> result = new HashMap<String, Object>();
-        List<Jymxsq> jymxsqList = (List)request.getSession().getAttribute(gsdm+tqm+"jymxsqList");
-        List<Jyzfmx> jyzfmxList = (List)request.getSession().getAttribute(gsdm+tqm+"jyzfmxList");
-        Double zjedb = (Double) request.getSession().getAttribute(gsdm+tqm+"je");
+        try {
+            if(gsdm==null){
+                request.getSession().setAttribute("msg", "出现未知异常，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }else {
+                if("ldyx".equals(gsdm)){
+                    List<Jymxsq> jymxsqList = (List)request.getSession().getAttribute(gsdm+tqm+"jymxsqList");
+                    List<Jyzfmx> jyzfmxList = (List)request.getSession().getAttribute(gsdm+tqm+"jyzfmxList");
+                    Double zjedb = (Double) request.getSession().getAttribute(gsdm+tqm+"je");
 
-        BigDecimal zje = new BigDecimal(zjedb.toString());
-        logger.info("总金额"+zje);
-        BigDecimal bkpje = new BigDecimal("0");
-        BigDecimal sjkpje = new BigDecimal("0");
-        if(null!=jyzfmxList){
-            for (Jyzfmx jyzfmx2 : jyzfmxList){
-                if(jymxsqList.get(0).getDdh().equals(jyzfmx2.getDdh())
-                        &&(jyzfmx2.getZffsDm().equals("A")
-                        ||jyzfmx2.getZffsDm().equals("B")
-                        ||jyzfmx2.getZffsDm().equals("E")
-                        ||jyzfmx2.getZffsDm().equals("F")
-                        ||jyzfmx2.getZffsDm().equals("G")
-                        ||jyzfmx2.getZffsDm().equals("h")
-                        ||jyzfmx2.getZffsDm().equals("I")
-                        ||jyzfmx2.getZffsDm().equals("J")
-                        ||jyzfmx2.getZffsDm().equals("L")
-                        ||jyzfmx2.getZffsDm().equals("N")
-                        ||jyzfmx2.getZffsDm().equals("P")
-                        ||jyzfmx2.getZffsDm().equals("Q")
-                        ||jyzfmx2.getZffsDm().equals("S")
-                        ||jyzfmx2.getZffsDm().equals("V")
-                        ||jyzfmx2.getZffsDm().equals("X")
-                        ||jyzfmx2.getZffsDm().equals("Y")
-                        ||jyzfmx2.getZffsDm().equals("Z"))
-                        ){
-                    System.out.println("不开票支付金额为"+jyzfmx2.getZfje());
-                        bkpje=bkpje.add(new BigDecimal(jyzfmx2.getZfje().toString()));
+                    BigDecimal zje = new BigDecimal(zjedb.toString());
+                    logger.info("总金额"+zje);
+                    BigDecimal bkpje = new BigDecimal("0");
+                    BigDecimal sjkpje = new BigDecimal("0");
+                    if(null!=jyzfmxList){
+                        for (Jyzfmx jyzfmx2 : jyzfmxList){
+                            if(jymxsqList.get(0).getDdh().equals(jyzfmx2.getDdh())
+                                    &&(jyzfmx2.getZffsDm().equals("A")
+                                    ||jyzfmx2.getZffsDm().equals("B")
+                                    ||jyzfmx2.getZffsDm().equals("E")
+                                    ||jyzfmx2.getZffsDm().equals("F")
+                                    ||jyzfmx2.getZffsDm().equals("G")
+                                    ||jyzfmx2.getZffsDm().equals("h")
+                                    ||jyzfmx2.getZffsDm().equals("I")
+                                    ||jyzfmx2.getZffsDm().equals("J")
+                                    ||jyzfmx2.getZffsDm().equals("L")
+                                    ||jyzfmx2.getZffsDm().equals("N")
+                                    ||jyzfmx2.getZffsDm().equals("P")
+                                    ||jyzfmx2.getZffsDm().equals("Q")
+                                    ||jyzfmx2.getZffsDm().equals("S")
+                                    ||jyzfmx2.getZffsDm().equals("V")
+                                    ||jyzfmx2.getZffsDm().equals("X")
+                                    ||jyzfmx2.getZffsDm().equals("Y")
+                                    ||jyzfmx2.getZffsDm().equals("Z"))
+                                    ){
+                                bkpje=bkpje.add(new BigDecimal(jyzfmx2.getZfje().toString()));
+                            }
+                            System.out.println("不开票金额为"+bkpje);
+                        }
+                        sjkpje = zje.subtract(bkpje);
+                        System.out.println("实际开票金额"+sjkpje);
+                    }
+                    int b = sjkpje.compareTo(new BigDecimal("0"));
+                    if(b == 0){
+                        logger.info("不开票金额为0");
+                        result.put("num","12");
+                    }
+                    request.getSession().setAttribute(gsdm+tqm+"sjkpje",sjkpje);
+                    result.put("jymxsqList",jymxsqList);
+                    result.put("jyzfmxList",jyzfmxList);
+                    result.put("sjkpje",sjkpje);
+                    return result;
                 }
-                System.out.println("不开票金额为"+bkpje);
+                if("bqw".equals(gsdm)){
+                    Map resultMap = (Map) request.getSession().getAttribute(gsdm + tqm + "resultMap");
+                    if(resultMap == null){
+                        request.getSession().setAttribute("msg", "该请求已过期，请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
+                    }
+                    List<Jyxxsq>  jyxxsqList=(List)resultMap.get("jyxxsqList");
+                    List<Jymxsq>  jymxsqList=(List)resultMap.get("jymxsqList");
+                    result.put("jymxsqList",jymxsqList);
+                    result.put("sjkpje",jyxxsqList.get(0).getJshj());
+                    request.getSession().setAttribute(gsdm+tqm+"sjkpje",jyxxsqList.get(0).getJshj());
+                    return result;
+                }
             }
-              sjkpje = zje.subtract(bkpje);
-            System.out.println("实际开票金额"+sjkpje);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        int b = sjkpje.compareTo(new BigDecimal("0"));//
-        if(b == 0){
-            logger.info("不开票金额为0");
-            result.put("num","12");
-        }
-        request.getSession().setAttribute(gsdm+tqm+"sjkpje",sjkpje);
-        result.put("jymxsqList",jymxsqList);
-        result.put("jyzfmxList",jyzfmxList);
-        result.put("sjkpje",sjkpje);
         return result;
     }
 
@@ -754,7 +782,11 @@ public class MbController extends BaseController {
             Tqmtq tqmtq1 = new Tqmtq();
             tqmtq1.setDdh(jyxxsq.getTqm());
             tqmtq1.setLrsj(new Date());
-            tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm + tqm + "je"))));
+            if("bqw".equals(gsdm)){
+                tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm + tqm + "sjkpje"))));
+            }else {
+                tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute(gsdm + tqm + "je"))));
+            }
             tqmtq1.setGfmc(fptt);
             tqmtq1.setNsrsbh(nsrsbh);
             tqmtq1.setDz(dz);
@@ -800,7 +832,7 @@ public class MbController extends BaseController {
             result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
         }
         result.put("serialorder", jylslist.get(0).getSerialorder());
-        request.getSession().setAttribute("msg", "请重新扫描二维码");
+        //request.getSession().setAttribute("msg", "请重新扫描二维码");
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         result.put("kprq",sdf.format(kplsList.get(0).getKprq()));
         result.put("price",kplsList.get(0).getJshj());
