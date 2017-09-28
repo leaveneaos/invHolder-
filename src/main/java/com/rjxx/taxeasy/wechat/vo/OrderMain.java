@@ -31,6 +31,8 @@ public class OrderMain {
 
     private Buyer Buyer;
 
+    private String ExtractedCode;
+
     public String getOrderNo() {
         return OrderNo;
     }
@@ -109,5 +111,13 @@ public class OrderMain {
 
     public void setBuyer(Buyer buyer) {
         Buyer = buyer;
+    }
+
+    public String getExtractedCode() {
+        return ExtractedCode;
+    }
+
+    public void setExtractedCode(String extractedCode) {
+        ExtractedCode = extractedCode;
     }
 }

@@ -100,10 +100,6 @@ public class SimpleInvoiceServiceImpl implements SimpleInvoiceService {
                 orderMain.setTotalAmount(totalAmount);
                 orderMain.setTaxMark("1");
 
-                Buyer buyer = new Buyer();
-                buyer.setExtractedCode(extractedCode);
-                orderMain.setBuyer(buyer);
-
                 Order order = new Order();
                 order.setOrderMain(orderMain);
 
