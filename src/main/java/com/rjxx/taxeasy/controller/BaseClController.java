@@ -706,6 +706,7 @@ public class BaseClController extends BaseController {
         Map<String, Object> result = new HashMap<String, Object>();
         Map map2 = new HashMap();
         map2.put("serialorder",request.getSession().getAttribute("serialorder"));
+        map2.put("gsdm","Family");
         List<Kpls> kplsList = kplsService.findAll(map2);
         String pdfdzs = "";
         for (Kpls kpls2 : kplsList) {
