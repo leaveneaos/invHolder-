@@ -80,7 +80,6 @@ public class CommonController extends BaseController {
                     return null;
                 }
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-                logger.info("--------数据---------"+ JSON.toJSONString(wxFpxx));
                 if(null==wxFpxx){
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -104,7 +103,6 @@ public class CommonController extends BaseController {
                             ticket= wxToken.getTicket();
                         }
                         String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
-                        logger.info("----获取的spappid"+spappid);
                         if(null==spappid ||"".equals(spappid)){
                             //获取授权失败
                             request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -112,7 +110,7 @@ public class CommonController extends BaseController {
                             return null;
                         }
                         String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
-                        logger.info("传给微信的orderno"+weixinOrderNo);
+                        logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
                         //可开具 跳转微信授权链接
                         redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){
@@ -206,7 +204,6 @@ public class CommonController extends BaseController {
         }
         logger.info("拿到解码code----------"+code);
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByCode(code);
-        logger.info("查询到的微信交易信息--------"+JSON.toJSONString(wxFpxx));
         if(null!=wxFpxx){
             Map jyxxsqMap = new HashMap();
             jyxxsqMap.put("gsdm",wxFpxx.getGsdm());
@@ -309,8 +306,10 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
+                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
                 //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, "","2",access_token,ticket,spappid);
+                redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, "","2",access_token,ticket,spappid);
                 if(null==redirectUrl||redirectUrl.equals("")){
                     //获取授权失败
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
