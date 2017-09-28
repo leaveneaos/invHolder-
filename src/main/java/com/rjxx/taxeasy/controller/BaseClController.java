@@ -569,6 +569,15 @@ public class BaseClController extends BaseController {
     @RequestMapping(value = "/getsp",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Map<String,Object> spmx(){
+        try {
+            if(null==request.getSession().getAttribute("jymxsqList")){
+                request.getSession().setAttribute("msg", "会话已过期!请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Map<String, Object> result = new HashMap<String, Object>();
         List<Jymxsq> jymxsqList = (List)request.getSession().getAttribute("jymxsqList");
         result.put("jymxsqList",jymxsqList);
@@ -709,6 +718,15 @@ public class BaseClController extends BaseController {
     @ResponseBody
     public Map fpsession() {
         Map<String, Object> result = new HashMap<String, Object>();
+        try {
+            if(null == request.getSession().getAttribute("serialorder")){
+                request.getSession().setAttribute("msg", "会话已过期!请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Map map2 = new HashMap();
         map2.put("serialorder",request.getSession().getAttribute("serialorder"));
         map2.put("gsdm","Family");
