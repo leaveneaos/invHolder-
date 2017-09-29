@@ -31,7 +31,7 @@
 				<Remark>${jyxxsq.bz!}</Remark>
 				<ExtractedCode>${jyxxsq.tqm!}</ExtractedCode>
 				<Buyer>
-					<CustomerType>0</CustomerType>
+					<CustomerType>${jyxxsq.gflx!}</CustomerType>
 					<Identifier>${jyxxsq.gfsh!}</Identifier>
 					<Name>${jyxxsq.gfmc!}</Name>
 					<Address>${jyxxsq.gfdz!}</Address>
