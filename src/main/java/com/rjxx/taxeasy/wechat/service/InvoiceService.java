@@ -76,6 +76,11 @@ public class InvoiceService {
                 jyxxsq.setFpczlxdm("11");
                 jyxxsq.setGfmc(purchaserName);
                 jyxxsq.setGfsh(purchaserTaxNo);
+                if(null!=purchaserTaxNo && !"".equals(purchaserTaxNo)){
+                    jyxxsq.setGflx("1");
+                }else {
+                    jyxxsq.setGflx("0");
+                }
                 jyxxsq.setGfemail(email);
                 jyxxsq.setSffsyj("1");
                 jyxxsq.setZsfs("0");
