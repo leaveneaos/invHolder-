@@ -21,7 +21,6 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -141,6 +140,13 @@ public class SsdController extends BaseController{
     @ResponseBody
     public Map Fptq(String khh, String code) {
         String sessionCode = (String) session.getAttribute("rand");
+        if(sessionCode==null){
+            try {
+                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=您的会话已过期，请重新扫码");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         String openid = (String) session.getAttribute("openid");
         String gsdm = (String) session.getAttribute(SESSION_KEY_FPTQ_GSDM);
         Map<String, Object> result = new HashMap<String, Object>();
