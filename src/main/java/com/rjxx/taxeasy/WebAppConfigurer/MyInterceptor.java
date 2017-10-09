@@ -19,6 +19,9 @@ public class MyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session=request.getSession();
+        if(null==session){
+            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=session_out");
+        }
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
         if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||url.equals("/mb")){
