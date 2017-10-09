@@ -650,6 +650,11 @@ public class BaseClController extends BaseController {
         jyxxsq.setGfdh(dh.trim());
         jyxxsq.setGfyh(khh.trim());
         jyxxsq.setGfyhzh(yhzh.trim());
+        if(null!=nsrsbh.trim() && !"".equals(nsrsbh.trim())) {
+            jyxxsq.setGflx("1");
+        }else {
+            jyxxsq.setGflx("0");
+        }
         Map map = new HashMap<>();
         map.put("tqm",jyxxsq.getTqm());
         map.put("je",jyxxsq.getJshj());

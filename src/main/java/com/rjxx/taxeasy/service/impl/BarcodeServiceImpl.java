@@ -444,6 +444,11 @@ public Map sm(String gsdm, String q) {
                 jyxxsq.setXfyb(xf.getXfyb());//销方邮编
                 jyxxsq.setGfmc(gfmc);
                 jyxxsq.setGfsh(gfsh);
+                if(null!=gfsh&&!"".equals(gfsh)){
+                    jyxxsq.setGflx("1");
+                }else {
+                    jyxxsq.setGflx("0");
+                }
                 jyxxsq.setGfemail(email);
                 jyxxsq.setGfdz(gfdz);
                 jyxxsq.setGfdh(gfdh);
@@ -603,6 +608,11 @@ public Map sm(String gsdm, String q) {
                 jyxxsq.setOpenid(openid);
                 jyxxsq.setSjly(sjly);
                 jyxxsq.setTqm(tqm);
+                if(null!=gfsh && !"".equals(gfsh)){
+                    jyxxsq.setGflx("1");
+                }else {
+                    jyxxsq.setGflx("0");
+                }
                 Map map = new HashMap<>();
                 map.put("tqm",jyxxsq.getTqm());
                 map.put("je",jyxxsq.getJshj());
