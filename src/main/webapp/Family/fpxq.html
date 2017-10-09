@@ -21,8 +21,8 @@
 			<div class="topName">
 				泰易电子发票
 			</div>
-			<div class="middle" style="height: 240px;">
-		        <ul>
+			<div class="middle" >
+		       <!-- <ul>
 		            <li class="fl">销方名称</li>
 		            <li class="fr omit" id="xfmc"></li>
 		        </ul>
@@ -48,7 +48,7 @@
 		        </ul>
 		        <div  class="ck">
 					<a id="pdf" >查看发票</a>
-		        </div>
+		        </div>-->
 			</div>
 			<div class="bottom btoTip">
 				<h4 class="save">您还可以通过以下方式保存发票：</h4>
@@ -107,16 +107,14 @@
                 "../fm/fpsession",
                 {},
                 function (data) {
-                        var kplslist=data.kplsList;
-
-                        $('#xfmc').html(kplslist[0].xfmc);
-                        $('#gfmc').html(kplslist[0].gfmc);
-                        $('#fpje').html(RetainedDecimalPlaces(kplslist[0].jshj)+"元");
-                        $('#kprq').html(kplslist[0].kprq);
-                        $('#fpdm').html(kplslist[0].fpdm);
-                        $('#fphm').html(kplslist[0].fphm);
-                        $('#kplsh').html(kplslist[0].kplsh);
-                        $("#pdf").attr("href",kplslist[0].pdfurl);
+					var items = data.kplsList;
+                    console.log(items);
+                    var html='';
+                    for(var i = 0; i < items.length; i++) {
+                        html+='<ul><li class="fl">销方名称</li><li class="fr omit" id="xfmc">'+items[i].xfmc+'</li></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul> <ul><li class="fl">开票金额</li><li class="fr omit" id="kpje">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul><ul><li class="fl">开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="gfmc">'+items[i].fpdm+'</li></ul> <ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fpdm+'</li></ul><div class="ck"><a id="pdf" href='+items[i].pdfurl+'>查看发票</a></div>';
+                    }
+                    //在页面显示数据
+                    $(".middle").html(html);
                 }
             )
         })
