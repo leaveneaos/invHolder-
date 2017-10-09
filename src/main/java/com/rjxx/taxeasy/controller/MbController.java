@@ -10,6 +10,12 @@ import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
+import com.rjxx.taxeasy.vo.KplsVO4;
+import com.rjxx.taxeasy.vo.Spvo;
+import com.rjxx.taxeasy.wechat.dto.DefaultResult;
+import com.rjxx.taxeasy.wechat.util.HttpUtil;
+import com.rjxx.taxeasy.wechat.util.TaxUtil;
+import com.rjxx.taxeasy.wechat.vo.*;
 import com.rjxx.utils.*;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
@@ -30,8 +36,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -63,7 +71,10 @@ public class MbController extends BaseController {
     private KplsService kplsService;
     @Autowired
     private SendalEmail se;
-
+    @Autowired
+    private SkpService skpService;
+    @Autowired
+    private XfService xfService;
     @Autowired
     private SpfyxService spfyxService;
 
@@ -73,6 +84,21 @@ public class MbController extends BaseController {
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
 
+    @Autowired
+    private JyxxsqService jyxxsqService;
+
+    @Autowired
+    private  JymxsqService jymxsqService;
+    @Autowired
+    private CszbService cszbservice;
+    @Autowired
+    private GsxxService gsxxService;
+    @Autowired
+    private FpclService fpclservice;
+    @Autowired
+    private KpspmxService kpspmxService;
+    @Autowired
+    private SpvoService spvoService;
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
@@ -425,177 +451,203 @@ public class MbController extends BaseController {
     @RequestMapping(value = "/tqyz")
     @ResponseBody
     public Map<String,Object> tqyz(String tqm,String code,String gsdm) {
+
         String sessionCode = (String) session.getAttribute("rand");
 
         String opendid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            Map resultMap = new HashMap();
-            Map map = new HashMap<>();
-            List<Kpls> list = new ArrayList<>();
-            map.put("gsdm", gsdm);
-            if(null!=gsdm &&"cmsc".equals(gsdm)){
-                map.put("khh",tqm);
-            }else {
-                map.put("tqm", tqm);
-            }
-            if(null!= gsdm && "cmsc".equals(gsdm)){
-                list = jylsService.findBykhh(map);
-            }else {
-                list = jylsService.findByTqm(map);
-            }
-            Jyls jyls = jylsService.findOne(map);
-            if (list.size() > 0) {
-                /*代表申请已完成开票,跳转最终开票页面*/
-                if (opendid != null && !"null".equals(opendid)) {
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("djh", jyls.getDjh());
-                    params.put("unionid",opendid);
-                    Fpj fpj = fpjService.findOneByParams(params);
-                    if(fpj == null){
-                        fpj = new Fpj();
-                        fpj.setDjh(jyls.getDjh());
-                        fpj.setUnionid(opendid);
-                        fpj.setYxbz("1");
-                        fpj.setLrsj(new Date());
-                        fpj.setXgsj(new Date());
-                        fpjService.save(fpj);
-                    }
-                }
-                String pdfdzs = "";
-                request.getSession().setAttribute("djh",list.get(0).getDjh());
-                request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
-                for (Kpls kpls2: list) {
-                    pdfdzs += kpls2.getPdfurl().replace(".pdf",".jpg") + ",";
-                }
-                if(pdfdzs.length() > 0){
-                    result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
-                    request.getSession().setAttribute("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
-                }
-                /**
-                 * num=2表示已经开过票
-                 */
-                result.put("num","2");
-                result.put("tqm",tqm);
+            if("ubm".equals(gsdm)){
+                Map<String, Object> params = new HashMap<>();
+                params.put("tqm",tqm);
+                params.put("gsdm",gsdm);
+                Jyxxsq jyxxsq= jyxxsqService.findOneByParams(params);
+                String jylsh= jyxxsq.getJylsh();
+                Map paramss=new HashMap();
+                paramss.put("gsdm","ubm");
+                paramss.put("ddh",jylsh);
+                Jymxsq jymxsq=jymxsqService.findOneByParams(paramss);
+                String spmc=jymxsq.getSpmc();
+                String spje=jymxsq.getSpje().toString();
+                String spsl=jymxsq.getSpsl().toString();
+                //查询交易信息
+                result.put("num","13");
                 result.put("gsdm",gsdm);
-                Tqjl tqjl = new Tqjl();
-                tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
-                tqjl.setJlly("1");
-                tqjl.setTqsj(new Date());
-                String visiterIP;
-                if(request.getHeader("x-forwarded-for") == null){
-                    visiterIP = request.getRemoteAddr();/*访问者IP*/
+                result.put("tqm",tqm);
+                result.put("spmc",spmc);
+                result.put("spje",spje);
+                result.put("spsl",spsl);
+                return result;
+            }else{
+                Map resultMap = new HashMap();
+                Map map = new HashMap<>();
+                List<Kpls> list = new ArrayList<>();
+                map.put("gsdm", gsdm);
+                if(null!=gsdm &&"cmsc".equals(gsdm)){
+                    map.put("khh",tqm);
                 }else {
-                    visiterIP = request.getHeader("x-forwarded-for");
+                    map.put("tqm", tqm);
                 }
-                tqjl.setIp(visiterIP);
-                String llqxx = request.getHeader("User-Agent");
-                tqjl.setLlqxx(llqxx);
-                tqjlService.save(tqjl);
-                //表示已经开过票 --领取发票类型
-                if(WeixinUtils.isWeiXinBrowser(request)){
-                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-                    if(null==wxFpxxByTqm){
-                        WxFpxx wFpxx = new WxFpxx();
-                        wFpxx.setTqm(tqm);
-                        wFpxx.setGsdm(gsdm);
-                        wFpxx.setOrderNo(tqm);
-                        wFpxx.setQ("");
-                        wFpxx.setWxtype("2");
-                        wFpxx.setOpenId(opendid);
-                        wFpxx.setKplsh(list.get(0).getKplsh().toString());
-                        try {
-                            wxfpxxJpaDao.save(wFpxx);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            logger.info("交易信息保存失败1");
-                            return null;
+                if(null!= gsdm && "cmsc".equals(gsdm)){
+                    list = jylsService.findBykhh(map);
+                }else {
+                    list = jylsService.findByTqm(map);
+                }
+                Jyls jyls = jylsService.findOne(map);
+                if (list.size() > 0) {
+                /*代表申请已完成开票,跳转最终开票页面*/
+                    if (opendid != null && !"null".equals(opendid)) {
+                        Map<String, Object> params = new HashMap<>();
+                        params.put("djh", jyls.getDjh());
+                        params.put("unionid",opendid);
+                        Fpj fpj = fpjService.findOneByParams(params);
+                        if(fpj == null){
+                            fpj = new Fpj();
+                            fpj.setDjh(jyls.getDjh());
+                            fpj.setUnionid(opendid);
+                            fpj.setYxbz("1");
+                            fpj.setLrsj(new Date());
+                            fpj.setXgsj(new Date());
+                            fpjService.save(fpj);
                         }
+                    }
+                    String pdfdzs = "";
+                    request.getSession().setAttribute("djh",list.get(0).getDjh());
+                    request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
+                    for (Kpls kpls2: list) {
+                        pdfdzs += kpls2.getPdfurl().replace(".pdf",".jpg") + ",";
+                    }
+                    if(pdfdzs.length() > 0){
+                        result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
+                        request.getSession().setAttribute("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
+                    }
+                    /**
+                     * num=2表示已经开过票
+                     */
+                    result.put("num","2");
+                    result.put("tqm",tqm);
+                    result.put("gsdm",gsdm);
+                    Tqjl tqjl = new Tqjl();
+                    tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
+                    tqjl.setJlly("1");
+                    tqjl.setTqsj(new Date());
+                    String visiterIP;
+                    if(request.getHeader("x-forwarded-for") == null){
+                        visiterIP = request.getRemoteAddr();/*访问者IP*/
                     }else {
-                        wxFpxxByTqm.setTqm(tqm);
-                        wxFpxxByTqm.setGsdm(gsdm);
-                        wxFpxxByTqm.setQ("");
-                        wxFpxxByTqm.setOpenId(opendid);
-                        wxFpxxByTqm.setOrderNo(tqm);
-                        wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
-                        wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
-                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                            String notNullCode= wxFpxxByTqm.getCode();
-                            wxFpxxByTqm.setCode(notNullCode);
+                        visiterIP = request.getHeader("x-forwarded-for");
+                    }
+                    tqjl.setIp(visiterIP);
+                    String llqxx = request.getHeader("User-Agent");
+                    tqjl.setLlqxx(llqxx);
+                    tqjlService.save(tqjl);
+                    //表示已经开过票 --领取发票类型
+                    if(WeixinUtils.isWeiXinBrowser(request)){
+                        WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                        if(null==wxFpxxByTqm){
+                            WxFpxx wFpxx = new WxFpxx();
+                            wFpxx.setTqm(tqm);
+                            wFpxx.setGsdm(gsdm);
+                            wFpxx.setOrderNo(tqm);
+                            wFpxx.setQ("");
+                            wFpxx.setWxtype("2");
+                            wFpxx.setOpenId(opendid);
+                            wFpxx.setKplsh(list.get(0).getKplsh().toString());
+                            try {
+                                wxfpxxJpaDao.save(wFpxx);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                logger.info("交易信息保存失败1");
+                                return null;
+                            }
+                        }else {
+                            wxFpxxByTqm.setTqm(tqm);
+                            wxFpxxByTqm.setGsdm(gsdm);
+                            wxFpxxByTqm.setQ("");
+                            wxFpxxByTqm.setOpenId(opendid);
+                            wxFpxxByTqm.setOrderNo(tqm);
+                            wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
+                            wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
+                            if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                                String notNullCode= wxFpxxByTqm.getCode();
+                                wxFpxxByTqm.setCode(notNullCode);
+                            }
+                            try {
+                                wxfpxxJpaDao.save(wxFpxxByTqm);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                logger.info("交易信息保存失败2");
+                                return null;
+                            }
                         }
-                        try {
-                            wxfpxxJpaDao.save(wxFpxxByTqm);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            logger.info("交易信息保存失败2");
-                            return null;
+                    }
+                }
+                else if(null != jyls && null !=jyls.getDjh()){
+                    result.put("num","6");
+                }else {
+                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
+                    if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
+                        //需要调用接口获取开票信息,并跳转发票提取页面
+                        logger.info("start+++++++++++调用接口获取开票如：绿地优鲜");
+                        //全家调用接口 解析xml
+                        if(gsdm.equals("ldyx")){
+                            logger.info("绿地优鲜拉取数据---------------------");
+                            //第一次请求url获取token 验证
+                            resultMap=getDataService.getldyxFirData(tqm,gsdm);
+                            String accessToken = (String) resultMap.get("accessToken");
+                            if(null == accessToken || "".equals(accessToken)){
+                                result.put("num","12");
+                                result.put("msg","获取数据失败，请重试！");
+                                return result;
+                            }else{
+                                resultMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
+                            }
+                            if(null!=resultMap.get("msg")){
+                                result.put("num","12");
+                                result.put("msg",resultMap.get("msg"));
+                                return result;
+                            }
+                        }else if("bqw".equals(gsdm)){
+                            logger.info("波奇网拉取数据--------------");
+                            Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
+                            resultMap = getDataService.getDataForBqw(tqm, gsdm,csz.getCsz());
                         }
+                        List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+                        List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+                        List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+                        if(null!=jyxxsqList){
+                            Jyxxsq jyxxsq=jyxxsqList.get(0);
+                            request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
+                        }
+                        if(resultMap!=null){
+                            request.getSession().setAttribute(gsdm+tqm+"resultMap",resultMap);
+                        }
+                        if(jymxsqList!=null) {
+                            request.getSession().setAttribute(gsdm+tqm+"jymxsqList", jymxsqList);
+                        }
+                        if(jyzfmxList!=null){
+                            request.getSession().setAttribute(gsdm+tqm+"jyzfmxList",jyzfmxList);
+                        }
+                        request.getSession().setAttribute(gsdm+"tqm",tqm);
+                        result.put("num","5");
+                        result.put("tqm",tqm);
+                        result.put("gsdm",gsdm);
+                    }
+                    else{
+                        //不用获取数据，数据为空
+                        result.put("num","1");
+                        result.put("tqm",tqm);
+                        result.put("gsdm",gsdm);
                     }
                 }
             }
-            else if(null != jyls && null !=jyls.getDjh()){
-                result.put("num","6");
-            }else {
-                Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
-                if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
-                    //需要调用接口获取开票信息,并跳转发票提取页面
-                   logger.info("start+++++++++++调用接口获取开票如：绿地优鲜");
-                    //全家调用接口 解析xml
-                    if(gsdm.equals("ldyx")){
-                        logger.info("绿地优鲜拉取数据---------------------");
-                        //第一次请求url获取token 验证
-                        resultMap=getDataService.getldyxFirData(tqm,gsdm);
-                        String accessToken = (String) resultMap.get("accessToken");
-                        if(null == accessToken || "".equals(accessToken)){
-                            result.put("num","12");
-                            result.put("msg","获取数据失败，请重试！");
-                            return result;
-                        }else{
-                            resultMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
-                        }
-                        if(null!=resultMap.get("msg")){
-                            result.put("num","12");
-                            result.put("msg",resultMap.get("msg"));
-                            return result;
-                        }
-                    }else if("bqw".equals(gsdm)){
-                        logger.info("波奇网拉取数据--------------");
-                        Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
-                        resultMap = getDataService.getDataForBqw(tqm, gsdm,csz.getCsz());
-                    }
-                    List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
-                    List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
-                    List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
-                    if(null!=jyxxsqList){
-                        Jyxxsq jyxxsq=jyxxsqList.get(0);
-                        request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
-                    }
-                    if(resultMap!=null){
-                        request.getSession().setAttribute(gsdm+tqm+"resultMap",resultMap);
-                    }
-                    if(jymxsqList!=null) {
-                        request.getSession().setAttribute(gsdm+tqm+"jymxsqList", jymxsqList);
-                    }
-                    if(jyzfmxList!=null){
-                        request.getSession().setAttribute(gsdm+tqm+"jyzfmxList",jyzfmxList);
-                    }
-                    request.getSession().setAttribute(gsdm+"tqm",tqm);
-                    result.put("num","5");
-                    result.put("tqm",tqm);
-                    result.put("gsdm",gsdm);
-                }
-                else{
-                    //不用获取数据，数据为空
-                    result.put("num","1");
-                    result.put("tqm",tqm);
-                    result.put("gsdm",gsdm);
-                }
-            }
-        }else {//校验码错误
+
+           }else {//校验码错误
             result.put("num","4");
         }
         return result;
     }
+
 
     /**
      *   获取商品明细
@@ -1023,6 +1075,64 @@ public class MbController extends BaseController {
         sb.append(1900 + d.getYear()).append("年").append(d.getMonth() + 1).append("月").append(d.getDate()).append("日");
         return sb.toString();
     }
+
+    /**
+     * 提取开票
+     * @return
+     */
+    @RequestMapping("/tqkp")
+    @ResponseBody
+    public Map tqkp(String gfmc,String gfsh,String gfdz,String gfdh,String gfyh,String gfyhzh,String email,String gsdm,String tqm ) throws Exception {
+        Map result=new HashMap();
+
+        Map param= new HashMap();
+        param.put("tqm",tqm);
+        param.put("gsdm",gsdm);
+        param.put("gfmc",gfmc);
+        param.put("gfsh",gfsh);
+        param.put("gfdz",gfdz);
+        param.put("gfdh",gfdh);
+        param.put("gfyh",gfyh);
+        param.put("gfyhzh",gfyhzh);
+        param.put("email",email);
+        jyxxsqService.updateGfxx(param);
+        Map paramss = new HashMap();
+        paramss.put("tqm",tqm);
+        paramss.put("gsdm",gsdm);
+        List<Jyxxsq> jyxxsqList=new ArrayList<>();
+        Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
+        int xfid=jyxxsq.getXfid();
+        int skpid=jyxxsq.getSkpid();
+        String jylsh= jyxxsq.getJylsh();
+        Map paramsss=new HashMap();
+        paramss.put("gsdm","ubm");
+        paramss.put("ddh",jylsh);
+        Jymxsq jymxsq=jymxsqService.findOneByParams(paramsss);
+        List<Jymxsq> jymxsqList = new ArrayList<>();
+        jymxsqList.add(jymxsq);
+        List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
+        List<Jyzfmx> jyzfmxList = new ArrayList<>();
+
+        String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqs,jyzfmxList);
+        Map gsdmmap=new HashMap();
+        gsdmmap.put("gsdm",gsdm);
+        Gsxx gsxx = gsxxservice.findOneByGsdm(gsdmmap);
+        String key = gsxx.getSecretKey();
+        String resultxml = HttpUtils.HttpUrlPost(xml, APP_ID, key);
+        Document document = DocumentHelper.parseText(resultxml);
+        Element root = document.getRootElement();
+        List<Element> childElements = root.elements();
+        Map xmlMap = new HashMap();
+        for (Element child : childElements) {
+            xmlMap.put(child.getName(),child.getText());
+        }
+        String returncode=(String)xmlMap.get("ReturnCode");
+        String ReturnMessage=(String)xmlMap.get("ReturnMessage");
+        result.put("returncode",returncode);
+        return result;
+    }
+
+
 
     // 判空
     private static Object null2Wz(Object s) {

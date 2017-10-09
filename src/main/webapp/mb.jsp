@@ -185,7 +185,10 @@
                         jAlert(firm, title);
                         loadimage();
                         $('#cwts').css('opacity','0');
-					}
+					}else if(data.num==13){
+                        myurl="../EX/input.html?gsdm="+data.gsdm+"&tqm="+data.tqm+"&spmc="+data.spmc+"&spsl="+data.spsl+"&spje="+data.spje;
+                        window.location.assign(encodeURI(myurl));
+                    }
 				}
 			);
 		}
