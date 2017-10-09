@@ -1110,20 +1110,19 @@ public class MbController extends BaseController {
         int skpid=jyxxsq.getSkpid();
         String jylsh= jyxxsq.getJylsh();
         Map paramsss=new HashMap();
-        paramss.put("gsdm","ubm");
+        paramss.put("gsdm",gsdm);
         paramss.put("ddh",jylsh);
         Jymxsq jymxsq=jymxsqService.findOneByParams(paramsss);
         List<Jymxsq> jymxsqList = new ArrayList<>();
         jymxsqList.add(jymxsq);
-        List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
         List<Jyzfmx> jyzfmxList = new ArrayList<>();
-
-        String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqs,jyzfmxList);
+        String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqList,jyzfmxList);
         Map gsdmmap=new HashMap();
         gsdmmap.put("gsdm",gsdm);
         Gsxx gsxx = gsxxservice.findOneByGsdm(gsdmmap);
         String key = gsxx.getSecretKey();
-        String resultxml = HttpUtils.HttpUrlPost(xml, APP_ID, key);
+        String appkey=gsxx.getAppKey();
+        String resultxml = HttpUtils.HttpUrlPost(xml, appkey, key);
         Document document = DocumentHelper.parseText(resultxml);
         Element root = document.getRootElement();
         List<Element> childElements = root.elements();
@@ -1132,7 +1131,6 @@ public class MbController extends BaseController {
             xmlMap.put(child.getName(),child.getText());
         }
         String returncode=(String)xmlMap.get("ReturnCode");
-        String ReturnMessage=(String)xmlMap.get("ReturnMessage");
         result.put("returncode",returncode);
         return result;
     }
