@@ -55,7 +55,7 @@ public class SimpleInvoiceServiceImpl implements SimpleInvoiceService {
                 String orderNo = (String)msg.get("OrderNo");
                 String totalAmount = (String)msg.get("TotalAmount");
                 String extractedCode = (String)msg.get("ExtractedCode");
-                ;
+
                 String gsdm = gsxx.getGsdm();
 
                 Map skpMap = new HashMap();
@@ -99,6 +99,7 @@ public class SimpleInvoiceServiceImpl implements SimpleInvoiceService {
                 orderMain.setOrderDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
                 orderMain.setTotalAmount(totalAmount);
                 orderMain.setTaxMark("1");
+                orderMain.setExtractedCode(extractedCode);
 
                 Order order = new Order();
                 order.setOrderMain(orderMain);
