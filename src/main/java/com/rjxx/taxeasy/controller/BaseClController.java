@@ -327,16 +327,15 @@ public class BaseClController extends BaseController {
                     }
                     Jyxxsq jyxxsq = jyxxsqList.get(0);
                     request.getSession().setAttribute("price", jyxxsq.getJshj());
-                    logger.info("-----存入session的金额"+jyxxsq.getJshj());
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
-                    logger.info("-----存入session的交易日期"+sdf.format(jyxxsq.getDdrq()));
                     request.getSession().setAttribute("resultMap", resultMap);
                     request.getSession().setAttribute("jymxsqList", jymxsqList);
                     request.getSession().setAttribute("tqm", tqm);
                     String xfsh = jyxxsq.getXfsh();
                     if(null!=xfsh && "9131000071785090X1".equals(xfsh)){
                         request.getSession().setAttribute("xf",xfsh);
+                        logger.info("-----------当销方是上海的时候放入---------"+xfsh);
                     }
                     result.put("num", "5");
                     if(WeixinUtils.isWeiXinBrowser(request)){
@@ -788,8 +787,8 @@ public class BaseClController extends BaseController {
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
         result.put("temp",request.getSession().getAttribute("temp"));
-        result.put("xf",request.getSession().getAttribute("xf"));
-
+        result.put("xfsh",request.getSession().getAttribute("xf"));
+        logger.info("------------------------------"+request.getSession().getAttribute("xf"));
         return  result;
     }
 }

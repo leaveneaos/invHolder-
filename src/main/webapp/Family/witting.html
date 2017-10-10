@@ -11,7 +11,10 @@
 			box-sizing: border-box;
 			font-size: 14px;
 		}
-		.content .kjz {
+		.content .kjz1 {
+			text-align: center;
+		}
+		.content .kjz2 {
 			text-align: center;
 		}
 		.content .kj {
@@ -89,7 +92,8 @@
                 "../fm/qrxxsession",
                 {},
                 function (data) {
-                    if(null!=data.xf && ""!=data.xf){
+                    alert(data.xfsh);
+                    if(null!=data.xfsh && ""!=data.xfsh){
                         $(".kjz2").css('display','block');
                         $(".kjz1").css('display','none');
                     }
