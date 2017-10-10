@@ -462,26 +462,33 @@ public class MbController extends BaseController {
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             if("ubm".equals(gsdm)){
-                Map<String, Object> params = new HashMap<>();
-                params.put("tqm",tqm);
-                params.put("gsdm",gsdm);
-                Jyxxsq jyxxsq= jyxxsqService.findOneByParams(params);
-                String jylsh= jyxxsq.getJylsh();
-                Map paramss=new HashMap();
-                paramss.put("gsdm","ubm");
-                paramss.put("ddh",jylsh);
-                Jymxsq jymxsq=jymxsqService.findOneByParams(paramss);
-                String spmc=jymxsq.getSpmc();
-                String spje=jymxsq.getSpje().toString();
-                String spsl=jymxsq.getSpsl().toString();
-                //查询交易信息
-                result.put("num","13");
-                result.put("gsdm",gsdm);
-                result.put("tqm",tqm);
-                result.put("spmc",spmc);
-                result.put("spje",spje);
-                result.put("spsl",spsl);
-                return result;
+                try{
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("tqm",tqm);
+                    params.put("gsdm",gsdm);
+                    Jyxxsq jyxxsq= jyxxsqService.findOneByParams(params);
+                    String jylsh= jyxxsq.getJylsh();
+                    Map paramss=new HashMap();
+                    paramss.put("gsdm","ubm");
+                    paramss.put("ddh",jylsh);
+                    Jymxsq jymxsq=jymxsqService.findOneByParams(paramss);
+                    String spmc=jymxsq.getSpmc();
+                    String spje=jymxsq.getSpje().toString();
+                    String spsl=jymxsq.getSpsl().toString();
+                    //查询交易信息
+                    result.put("num","13");
+                    result.put("gsdm",gsdm);
+                    result.put("tqm",tqm);
+                    result.put("spmc",spmc);
+                    result.put("spje",spje);
+                    result.put("spsl",spsl);
+                    return result;
+                }catch (NullPointerException e){
+                    result.put("num","14");
+                    return result;
+                }
+
+
             }else{
                 Map resultMap = new HashMap();
                 Map map = new HashMap<>();
@@ -1091,7 +1098,7 @@ public class MbController extends BaseController {
      */
     @RequestMapping("/tqkp")
     @ResponseBody
-    public Map tqkp(String gfmc,String gfsh,String gfdz,String gfdh,String gfyh,String gfyhzh,String email,String gsdm,String tqm ) throws Exception {
+    public Map tqkp(String gfmc,String gfsh,String gfdz,String gfdh,String gfyh,String gfyhzh,String email,String gsdm,String tqm ){
       Map resultMaps=new HashMap();
        String result="";
 
@@ -1111,15 +1118,26 @@ public class MbController extends BaseController {
         paramss.put("tqm",tqm);
         paramss.put("gsdm",gsdm);
         List<Jyxxsq> jyxxsqList=new ArrayList<>();
-        Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
         List resultList = new ArrayList();
-        resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
-        result = responseUtil.lpResponse(null);
-        System.out.println(result);
-        Map resultXmlMap=XmlUtil.xml2Map(result);
-        String ReturnCode=resultXmlMap.get("ReturnCode").toString();
-        String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
-        resultMaps.put("returnCode",ReturnCode);
+        try {
+            Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
+            resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
+            result = responseUtil.lpResponse(null);
+            System.out.println(result);
+            Map resultXmlMap=XmlUtil.xml2Map(result);
+            String ReturnCode=resultXmlMap.get("ReturnCode").toString();
+            String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
+            resultMaps.put("returnCode",ReturnCode);
+        }catch (NullPointerException e){
+            resultMaps.put("returnCode","9999");
+            return  resultMaps;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            resultMaps.put("returnCode","9999");
+            return  resultMaps;
+        }
+        return resultMaps;
 //        int xfid=jyxxsq.getXfid();
 //        int skpid=jyxxsq.getSkpid();
 //        String jylsh= jyxxsq.getJylsh();
@@ -1148,7 +1166,7 @@ public class MbController extends BaseController {
 //
 //        String returncode=(String)xmlMap.get("ReturnCode");
 //        result.put("returncode",returncode);
-        return resultMaps;
+
     }
 
 
