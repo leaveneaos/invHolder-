@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.JylsJpaDao;
+import com.rjxx.taxeasy.dao.KplsJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
@@ -102,7 +104,10 @@ public class MbController extends BaseController {
     private SpvoService spvoService;
     @Autowired
     private ResponseUtil responseUtil;
-
+    @Autowired
+    private JylsJpaDao jylsJpaDao;
+    @Autowired
+    private KplsJpaDao kplsJpaDao;
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
@@ -466,6 +471,31 @@ public class MbController extends BaseController {
                     Map<String, Object> params = new HashMap<>();
                     params.put("tqm",tqm);
                     params.put("gsdm",gsdm);
+                    //检验开具状态
+                    List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
+                    if(djhs.size()>0&&djhs!=null){
+                        for(Integer djh:djhs){
+                            if(djh!=null){
+                                Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                                String fpztdm = kpls.getFpztdm();
+                                String pdfurl = kpls.getPdfurl();
+                                String fphm = kpls.getFphm();
+                                String je = kpls.getJshj()+"";
+                                SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+                                String orderTime = sdf.format(kpls.getLrsj());
+                                String kplsh = kpls.getKplsh()+"";
+                                String serialorder=kpls.getSerialorder();
+                                if("00".equals(fpztdm)&& org.apache.commons.lang.StringUtils.isNotBlank(pdfurl)&& org.apache.commons.lang.StringUtils.isNotBlank(fphm)){
+                                    result.put("url",pdfurl+"+"+je+"+"+orderTime+"+"+kplsh+"+"+serialorder);
+                                    result.put("num","16");
+                                    return result;
+                                }else {
+                                    result.put("num","15");
+                                    return result;
+                                }
+                            }
+                        }
+                    }
                     Jyxxsq jyxxsq= jyxxsqService.findOneByParams(params);
                     String jylsh= jyxxsq.getJylsh();
                     Map paramss=new HashMap();
@@ -1101,7 +1131,6 @@ public class MbController extends BaseController {
     public Map tqkp(String gfmc,String gfsh,String gfdz,String gfdh,String gfyh,String gfyhzh,String email,String gsdm,String tqm ){
       Map resultMaps=new HashMap();
        String result="";
-
         Map param= new HashMap();
         param.put("tqm",tqm);
         param.put("gsdm",gsdm);
