@@ -486,7 +486,7 @@ public class MbController extends BaseController {
                                 String kplsh = kpls.getKplsh()+"";
                                 String serialorder=kpls.getSerialorder();
                                 if("00".equals(fpztdm)&& org.apache.commons.lang.StringUtils.isNotBlank(pdfurl)&& org.apache.commons.lang.StringUtils.isNotBlank(fphm)){
-                                    result.put("url",pdfurl+"+"+je+"+"+orderTime+"+"+kplsh+"+"+serialorder);
+                                    result.put("url",pdfurl);
                                     result.put("num","16");
                                     return result;
                                 }else {
