@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.NumberUtil;
+import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.taxeasy.vo.KplsVO4;
@@ -99,6 +100,9 @@ public class MbController extends BaseController {
     private KpspmxService kpspmxService;
     @Autowired
     private SpvoService spvoService;
+    @Autowired
+    private ResponseUtil responseUtil;
+
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
@@ -1088,7 +1092,8 @@ public class MbController extends BaseController {
     @RequestMapping("/tqkp")
     @ResponseBody
     public Map tqkp(String gfmc,String gfsh,String gfdz,String gfdh,String gfyh,String gfyhzh,String email,String gsdm,String tqm ) throws Exception {
-        Map result=new HashMap();
+      Map resultMaps=new HashMap();
+       String result="";
 
         Map param= new HashMap();
         param.put("tqm",tqm);
@@ -1101,38 +1106,49 @@ public class MbController extends BaseController {
         param.put("gfyhzh",gfyhzh);
         param.put("email",email);
         jyxxsqService.updateGfxx(param);
+        //交易信息
         Map paramss = new HashMap();
         paramss.put("tqm",tqm);
         paramss.put("gsdm",gsdm);
         List<Jyxxsq> jyxxsqList=new ArrayList<>();
         Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
-        int xfid=jyxxsq.getXfid();
-        int skpid=jyxxsq.getSkpid();
-        String jylsh= jyxxsq.getJylsh();
-        Map paramsss=new HashMap();
-        paramss.put("gsdm",gsdm);
-        paramss.put("ddh",jylsh);
-        Jymxsq jymxsq=jymxsqService.findOneByParams(paramsss);
-        List<Jymxsq> jymxsqList = new ArrayList<>();
-        jymxsqList.add(jymxsq);
-        List<Jyzfmx> jyzfmxList = new ArrayList<>();
-        String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqList,jyzfmxList);
-        Map gsdmmap=new HashMap();
-        gsdmmap.put("gsdm",gsdm);
-        Gsxx gsxx = gsxxservice.findOneByGsdm(gsdmmap);
-        String key = gsxx.getSecretKey();
-        String appkey=gsxx.getAppKey();
-        String resultxml = HttpUtils.HttpUrlPost(xml, appkey, key);
-        Document document = DocumentHelper.parseText(resultxml);
-        Element root = document.getRootElement();
-        List<Element> childElements = root.elements();
-        Map xmlMap = new HashMap();
-        for (Element child : childElements) {
-            xmlMap.put(child.getName(),child.getText());
-        }
-        String returncode=(String)xmlMap.get("ReturnCode");
-        result.put("returncode",returncode);
-        return result;
+        List resultList = new ArrayList();
+        resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
+        result = responseUtil.lpResponse(null);
+        System.out.println(result);
+        Map resultXmlMap=XmlUtil.xml2Map(result);
+        String ReturnCode=resultXmlMap.get("ReturnCode").toString();
+        String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
+        resultMaps.put("returnCode",ReturnCode);
+//        int xfid=jyxxsq.getXfid();
+//        int skpid=jyxxsq.getSkpid();
+//        String jylsh= jyxxsq.getJylsh();
+//        //交易明细
+//        Map paramsss=new HashMap();
+//        paramsss.put("gsdm",gsdm);
+//        paramsss.put("ddh",jylsh);
+//        Jymxsq jymxsq=jymxsqService.findOneByParams(paramsss);
+//        List<Jymxsq> jymxsqList = new ArrayList<>();
+//        jymxsqList.add(jymxsq);
+//        List<Jyzfmx> jyzfmxList = new ArrayList<>();
+//        String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqList,jyzfmxList);
+//        Map gsdmmap=new HashMap();
+//        gsdmmap.put("gsdm",gsdm);
+//        Gsxx gsxx = gsxxservice.findOneByGsdm(gsdmmap);
+//        String key = gsxx.getSecretKey();
+//        String appkey=gsxx.getAppKey();
+//        String resultxml = HttpUtils.HttpUrlPost(xml, appkey, key);
+//        Document document = DocumentHelper.parseText(resultxml);
+//        Element root = document.getRootElement();
+//        List<Element> childElements = root.elements();
+//        Map xmlMap = new HashMap();
+//        for (Element child : childElements) {
+//            xmlMap.put(child.getName(),child.getText());
+//        }
+//
+//        String returncode=(String)xmlMap.get("ReturnCode");
+//        result.put("returncode",returncode);
+        return resultMaps;
     }
 
 
