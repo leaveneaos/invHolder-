@@ -188,7 +188,13 @@
 					}else if(data.num==13){
                         myurl="../EX/input.html?gsdm="+data.gsdm+"&tqm="+data.tqm+"&spmc="+data.spmc+"&spsl="+data.spsl+"&spje="+data.spje;
                         window.location.assign(encodeURI(myurl));
-                    }
+                    }else if(data.num==14){
+                        firm = "未查询到数据,请检查提取码是否正确,或稍后再试!";
+                        title = "提示";
+                        jAlert(firm,title);
+                        $('#cwts').css('opacity','0');
+                        loadimage();
+					}
 				}
 			);
 		}
