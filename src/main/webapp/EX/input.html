@@ -398,9 +398,9 @@
                                 if(obj.returnCode=="0000"||obj.returnCode==null){
                                     window.location.href = "../EX/result.html";
                                 }else {
-//                                   var str = "../QR/error.html?msg="+new Date+"="+data.returnMsg;
-//                                    window.location.assign(encodeURI(str));
-                                    redirect(data.returnMsg);
+                                   var str = "../EX/error.html?msg="+new Date+"="+obj.returnMsg;
+                                    window.location.assign(encodeURI(str));
+//                                    redirect(obj.returnMsg);
                                 }
 
                         });

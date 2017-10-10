@@ -1129,44 +1129,19 @@ public class MbController extends BaseController {
             String ReturnCode=resultXmlMap.get("ReturnCode").toString();
             String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
             resultMaps.put("returnCode",ReturnCode);
+            resultMaps.put("returnMsg",ReturnMessage);
         }catch (NullPointerException e){
             resultMaps.put("returnCode","9999");
+            resultMaps.put("returnMsg","未查询到数据");
             return  resultMaps;
         }
         catch (Exception e) {
             e.printStackTrace();
             resultMaps.put("returnCode","9999");
+            resultMaps.put("returnMsg",e.getMessage());
             return  resultMaps;
         }
         return resultMaps;
-//        int xfid=jyxxsq.getXfid();
-//        int skpid=jyxxsq.getSkpid();
-//        String jylsh= jyxxsq.getJylsh();
-//        //交易明细
-//        Map paramsss=new HashMap();
-//        paramsss.put("gsdm",gsdm);
-//        paramsss.put("ddh",jylsh);
-//        Jymxsq jymxsq=jymxsqService.findOneByParams(paramsss);
-//        List<Jymxsq> jymxsqList = new ArrayList<>();
-//        jymxsqList.add(jymxsq);
-//        List<Jyzfmx> jyzfmxList = new ArrayList<>();
-//        String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqList,jyzfmxList);
-//        Map gsdmmap=new HashMap();
-//        gsdmmap.put("gsdm",gsdm);
-//        Gsxx gsxx = gsxxservice.findOneByGsdm(gsdmmap);
-//        String key = gsxx.getSecretKey();
-//        String appkey=gsxx.getAppKey();
-//        String resultxml = HttpUtils.HttpUrlPost(xml, appkey, key);
-//        Document document = DocumentHelper.parseText(resultxml);
-//        Element root = document.getRootElement();
-//        List<Element> childElements = root.elements();
-//        Map xmlMap = new HashMap();
-//        for (Element child : childElements) {
-//            xmlMap.put(child.getName(),child.getText());
-//        }
-//
-//        String returncode=(String)xmlMap.get("ReturnCode");
-//        result.put("returncode",returncode);
 
     }
 
