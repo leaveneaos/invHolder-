@@ -72,12 +72,10 @@ public class MbController extends BaseController {
 
     @Autowired
     private KplsService kplsService;
+
     @Autowired
     private SendalEmail se;
-    @Autowired
-    private SkpService skpService;
-    @Autowired
-    private XfService xfService;
+
     @Autowired
     private SpfyxService spfyxService;
 
@@ -92,22 +90,19 @@ public class MbController extends BaseController {
 
     @Autowired
     private  JymxsqService jymxsqService;
-    @Autowired
-    private CszbService cszbservice;
-    @Autowired
-    private GsxxService gsxxService;
+
     @Autowired
     private FpclService fpclservice;
-    @Autowired
-    private KpspmxService kpspmxService;
-    @Autowired
-    private SpvoService spvoService;
+
     @Autowired
     private ResponseUtil responseUtil;
+
     @Autowired
     private JylsJpaDao jylsJpaDao;
+
     @Autowired
     private KplsJpaDao kplsJpaDao;
+
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
@@ -116,10 +111,14 @@ public class MbController extends BaseController {
 
     @RequestMapping(value = "/mb", method = RequestMethod.GET)
     public void index(String g,String q) throws Exception{
-
         logger.info("-----参数q的值为"+q);
         logger.info("-----参数g的值为"+g);
         String gsdm = g;
+        if(null==gsdm || "".equals(gsdm)){
+            request.getSession().setAttribute("msg", "您输入的网址有误!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm",gsdm);
         request.getSession().setAttribute("gsdm",gsdm);
@@ -154,7 +153,13 @@ public class MbController extends BaseController {
         }
     }
 
-        public void barcodeCl(Gsxx gsxx, String q) throws IOException {
+    /**
+     * 带参数q的手机扫码提取---处理
+     * @param gsxx
+     * @param q
+     * @throws IOException
+     */
+    public void barcodeCl(Gsxx gsxx, String q) throws IOException {
         Map<String, Object> result = new HashMap<String, Object>();
             logger.info("进入判断是否手机扫码处理公司代码是-----"+gsxx.getGsdm());
         try {
