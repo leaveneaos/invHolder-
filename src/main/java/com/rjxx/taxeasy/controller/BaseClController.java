@@ -334,6 +334,10 @@ public class BaseClController extends BaseController {
                     request.getSession().setAttribute("resultMap", resultMap);
                     request.getSession().setAttribute("jymxsqList", jymxsqList);
                     request.getSession().setAttribute("tqm", tqm);
+                    String xfsh = jyxxsq.getXfsh();
+                    if(null!=xfsh && "9131000071785090X1".equals(xfsh)){
+                        request.getSession().setAttribute("xf",xfsh);
+                    }
                     result.put("num", "5");
                     if(WeixinUtils.isWeiXinBrowser(request)){
                         WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
@@ -784,6 +788,7 @@ public class BaseClController extends BaseController {
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
         result.put("temp",request.getSession().getAttribute("temp"));
+        result.put("xf",request.getSession().getAttribute("xf"));
 
         return  result;
     }
