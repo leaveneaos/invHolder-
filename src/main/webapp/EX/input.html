@@ -394,21 +394,15 @@
                             "tqm":tqm
 
                         }, function (obj) {
-                            if(obj.msg=="成功"){
                                 hideMask();
-                                var data = eval("(" + obj.data + ")");
-                                if(data.returnCode=="0000"||data.returnCode==null){
+                                if(obj.returnCode=="0000"||obj.returnCode==null){
                                     window.location.href = "../EX/result.html";
                                 }else {
 //                                   var str = "../QR/error.html?msg="+new Date+"="+data.returnMsg;
 //                                    window.location.assign(encodeURI(str));
                                     redirect(data.returnMsg);
                                 }
-                            }else{
-//                                var str = "../QR/error.html?msg="+new Date+"="+obj.msg;
-//                                window.location.assign(encodeURI(str));
-                                redirect(obj.msg);
-                            }
+
                         });
                     } else {
                         info.innerText = '请重新确认';

@@ -1121,6 +1121,7 @@ public class MbController extends BaseController {
         List resultList = new ArrayList();
         try {
             Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
+            jyxxsqList.add(jyxxsq);
             resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
             result = responseUtil.lpResponse(null);
             System.out.println(result);
