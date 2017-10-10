@@ -57,7 +57,7 @@
 		</form>
 		<p id="cwts">验证码输入错误</p>
 
-		<button id="Button1" onclick="tiqu()" style="padding: 8px 0;" class="mui-btn mui-btn-primary mui-btn-block">提&nbsp;&nbsp;交</button>
+		<button id="Button1" onclick="tiqu()"  class="mui-btn mui-btn-primary mui-btn-block">提&nbsp;&nbsp;交</button>
 
 	</section>
 
