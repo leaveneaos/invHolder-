@@ -394,14 +394,28 @@
                             "tqm":tqm
 
                         }, function (obj) {
+                            if(obj.num!=null){
+                                if(obj.num=="15"){
+                                    firm = "发票正在开具中";
+                                    title = "提示";
+                                    jAlert(firm,title);
+                                    $('#cwts').css('opacity','0');
+                                    loadimage();
+                                }
+                                if(obj.num="16"){
+                                    myurl=obj.url;
+                                    window.location.assign(encodeURI(myurl));
+                                }
+                            }else{
                                 hideMask();
                                 if(obj.returnCode=="0000"||obj.returnCode==null){
                                     window.location.href = "../EX/result.html";
                                 }else {
-                                   var str = "../EX/error.html?msg="+new Date+"="+obj.returnMsg;
+                                    var str = "../EX/error.html?msg="+new Date+"="+obj.returnMsg;
                                     window.location.assign(encodeURI(str));
 //                                    redirect(obj.returnMsg);
                                 }
+                            }
 
                         });
                     } else {
