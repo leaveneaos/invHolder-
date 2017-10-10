@@ -1135,45 +1135,65 @@ public class MbController extends BaseController {
     @ResponseBody
     public Map tqkp(String gfmc,String gfsh,String gfdz,String gfdh,String gfyh,String gfyhzh,String email,String gsdm,String tqm ){
       Map resultMaps=new HashMap();
-       String result="";
-        Map param= new HashMap();
-        param.put("tqm",tqm);
-        param.put("gsdm",gsdm);
-        param.put("gfmc",gfmc);
-        param.put("gfsh",gfsh);
-        param.put("gfdz",gfdz);
-        param.put("gfdh",gfdh);
-        param.put("gfyh",gfyh);
-        param.put("gfyhzh",gfyhzh);
-        param.put("email",email);
-        jyxxsqService.updateGfxx(param);
-        //交易信息
-        Map paramss = new HashMap();
-        paramss.put("tqm",tqm);
-        paramss.put("gsdm",gsdm);
-        List<Jyxxsq> jyxxsqList=new ArrayList<>();
-        List resultList = new ArrayList();
-        try {
-            Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
-            jyxxsqList.add(jyxxsq);
-            resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
-            result = responseUtil.lpResponse(null);
-            System.out.println(result);
-            Map resultXmlMap=XmlUtil.xml2Map(result);
-            String ReturnCode=resultXmlMap.get("ReturnCode").toString();
-            String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
-            resultMaps.put("returnCode",ReturnCode);
-            resultMaps.put("returnMsg",ReturnMessage);
-        }catch (NullPointerException e){
-            resultMaps.put("returnCode","9999");
-            resultMaps.put("returnMsg","未查询到数据");
-            return  resultMaps;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            resultMaps.put("returnCode","9999");
-            resultMaps.put("returnMsg",e.getMessage());
-            return  resultMaps;
+        List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
+        if(djhs.size()>0&&djhs!=null){
+            for(Integer djh:djhs){
+                if(djh!=null){
+                    Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                    String fpztdm = kpls.getFpztdm();
+                    String pdfurl = kpls.getPdfurl();
+                    String fphm = kpls.getFphm();
+                    if("00".equals(fpztdm)&& org.apache.commons.lang.StringUtils.isNotBlank(pdfurl)&& org.apache.commons.lang.StringUtils.isNotBlank(fphm)){
+                        resultMaps.put("url",pdfurl);
+                        resultMaps.put("num","16");
+                        return resultMaps;
+                    }else {
+                        resultMaps.put("num","15");
+                        return resultMaps;
+                    }
+                }
+            }
+        }else{
+            String result="";
+            Map param= new HashMap();
+            param.put("tqm",tqm);
+            param.put("gsdm",gsdm);
+            param.put("gfmc",gfmc);
+            param.put("gfsh",gfsh);
+            param.put("gfdz",gfdz);
+            param.put("gfdh",gfdh);
+            param.put("gfyh",gfyh);
+            param.put("gfyhzh",gfyhzh);
+            param.put("email",email);
+            jyxxsqService.updateGfxx(param);
+            //交易信息
+            Map paramss = new HashMap();
+            paramss.put("tqm",tqm);
+            paramss.put("gsdm",gsdm);
+            List<Jyxxsq> jyxxsqList=new ArrayList<>();
+            List resultList = new ArrayList();
+            try {
+                Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
+                jyxxsqList.add(jyxxsq);
+                resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
+                result = responseUtil.lpResponse(null);
+                System.out.println(result);
+                Map resultXmlMap=XmlUtil.xml2Map(result);
+                String ReturnCode=resultXmlMap.get("ReturnCode").toString();
+                String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
+                resultMaps.put("returnCode",ReturnCode);
+                resultMaps.put("returnMsg",ReturnMessage);
+            }catch (NullPointerException e){
+                resultMaps.put("returnCode","9999");
+                resultMaps.put("returnMsg","未查询到数据");
+                return  resultMaps;
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                resultMaps.put("returnCode","9999");
+                resultMaps.put("returnMsg",e.getMessage());
+                return  resultMaps;
+            }
         }
         return resultMaps;
 
