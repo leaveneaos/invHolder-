@@ -1166,6 +1166,7 @@ public class MbController extends BaseController {
             param.put("gfyh",gfyh);
             param.put("gfyhzh",gfyhzh);
             param.put("email",email);
+            param.put("sffsyj","1");
             jyxxsqService.updateGfxx(param);
             //交易信息
             Map paramss = new HashMap();
