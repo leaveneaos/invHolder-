@@ -414,9 +414,10 @@ public class MbController extends BaseController {
         Map params = new HashMap<>();
         params.put("gsdm",state);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(gsxx.getWxappid() == null || gsxx.getWxsecret() ==null){
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(null==gsxx){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
                 + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
