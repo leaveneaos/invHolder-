@@ -304,7 +304,7 @@ public class MbController extends BaseController {
                          * 等待页面
                          */
                         result.put("num", "6");
-                        response.sendRedirect(request.getContextPath() + "/Family/witting.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?_t=" + System.currentTimeMillis());
                         return;
                     } else {
                         /**
