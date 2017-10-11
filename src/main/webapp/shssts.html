@@ -92,8 +92,10 @@
 					},
 					function(data) {
 						if (data.num == 2) {
-							  if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
+							  if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc  || bIsCE || bIsWM) ){
 							    	window.open("dzfp.html?time=" + new Date());
+							    }if(!bIsAndroid){
+                                    window.location.href = "dzfp.html?time=" + new Date();
 							    }else{
 							    	window.location.href = "dzfp.html?time=" + new Date();
 							    }
