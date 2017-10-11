@@ -325,6 +325,8 @@ public class MbController extends BaseController {
                             request.getSession().setAttribute("msg", error);
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
+                        }else {
+                                request.getSession().setAttribute("error", "");
                         }
 
                         String msg = (String) resultMap.get("msg");
@@ -333,6 +335,8 @@ public class MbController extends BaseController {
                             request.getSession().setAttribute("msg", msg);
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
+                        }else {
+                            request.getSession().setAttribute("msg", "");
                         }
                         Jyxxsq jyxxsq = jyxxsqList.get(0);
                         request.getSession().setAttribute("price", jyxxsq.getJshj());
