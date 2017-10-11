@@ -77,6 +77,13 @@
 		function tiqu() {
 			var khh = $('#xh').val();
 			var code = $('#code').val();
+			if(khh!=""&&khh!=null){
+                btnArray = [ '确定' ];
+                firm = "请输入学号!";
+                title = "提示";
+                alert(firm, title);
+                return;
+			}
 			$.post(
 					"ssd/fptq",
 					{
