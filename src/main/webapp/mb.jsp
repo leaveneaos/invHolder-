@@ -161,15 +161,15 @@
                         loadimage();
 					}else if (data.num == 2) {
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-                                window.location.href= "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
+                                window.location.href= "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date().getTime();
                         }else{
-                                window.location.href = "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date();
+                                window.location.href = "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date().getTime();
 						}
 					}else if (data.num == 4) {
                         loadimage();
                         $('#cwts').css('opacity','1');
 					}else if (data.num == 5) {
-                        window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date();
+                        window.location.href = "mbfptt.html?gsdm="+data.gsdm+"&&tqm="+data.tqm+"&&time=" + new Date().getTime();
 					}else if (data.num == 6) {
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";
                         title = "提示";
