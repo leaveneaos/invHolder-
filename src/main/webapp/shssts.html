@@ -93,11 +93,11 @@
 					function(data) {
 						if (data.num == 2) {
 							  if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc  || bIsCE || bIsWM) ){
-                                  window.location.href="dzfp.html?time=" + new Date();
+                                  window.location.href="dzfp.html?time=" + new Date().getTime();
 							    }if(!bIsAndroid){
-                                    window.location.href = "dzfp.html?time=" + new Date();
+                                    window.location.href = "dzfp.html?time=" + new Date().getTime();
 							    }else{
-							    	window.location.href = "dzfp.html?time=" + new Date();
+							    	window.location.href = "dzfp.html?time=" + new Date().getTime();
 							    }
 						} else if (data.num == 3) {
 							btnArray = [ '确定' ];
