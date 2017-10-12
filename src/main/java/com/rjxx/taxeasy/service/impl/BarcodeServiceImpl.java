@@ -588,9 +588,11 @@ public Map sm(String gsdm, String q) {
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
                               String openid,String sjly,String access_token,String AppId,String key,String weixinOrderNo) {
             try {
-                if(resultSjMap==null){{
-                    return "-1";
-                }
+                if(resultSjMap==null){
+                    String reason="获取数据为空，开票失败，请重试!";
+                    String str= weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
+                    logger.info("拒绝开票状态"+str);
+                    return "-2";
                 }
                 List<Jyxxsq> jyxxsqList = (List) resultSjMap.get("jyxxsqList");
                 List<Jymxsq> jymxsqList = (List) resultSjMap.get("jymxsqList");
@@ -646,6 +648,11 @@ public Map sm(String gsdm, String q) {
                     String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
                     String resultxml= HttpUtils.HttpUrlPost(xml,AppId,key);
                     logger.info("-------返回值---------"+resultxml);
+                    if(null==resultxml){
+                        String reason="发票开具失败，请重试！";
+                        String str=  weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
+                        logger.info("拒绝开票状态"+str);
+                    }
                     Document document = DocumentHelper.parseText(resultxml);
                     Element root = document.getRootElement();
                     List<Element> childElements = root.elements();
