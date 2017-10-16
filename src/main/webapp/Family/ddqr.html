@@ -76,10 +76,10 @@
                             if(data.order==null){
                                 redirect("数据异常，请重新扫描！");
 							}
-							if(data.price){
+							if(null==data.price){
                                 redirect("数据异常，请重新扫描！");
 							}
-							if(data.orderTime){
+							if(null==data.orderTime){
                                 redirect("数据异常，请重新扫描！");
 							}
                             $('#orderNo').html(data.orderNo);
