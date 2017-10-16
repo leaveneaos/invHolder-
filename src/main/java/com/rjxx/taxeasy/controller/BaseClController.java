@@ -84,7 +84,8 @@ public class BaseClController extends BaseController {
     private WxfpxxJpaDao wxfpxxJpaDao;
     @Autowired
     private GsxxService gsxxService;
-
+    @Autowired
+    private FpgzService fpgzService;
 
     //正式
     //public static final String APP_ID ="wx9abc729e2b4637ee";
@@ -383,7 +384,17 @@ public class BaseClController extends BaseController {
                             }
                         }
                     }
-                    response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                    Map fpgzMap = new HashMap();
+                    fpgzMap.put("gsdm", gsxx.getGsdm());
+                    Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);
+                    //跳转地址
+                    String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis();
+                    //支付宝 和 分票 不拉授权页
+                    if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size()> fpgz.getDzphs()  ) {
+                        redirectUrl += "&isAlipay=true";
+                    }
+                    response.sendRedirect(redirectUrl);
+                    //response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
                     return;
                 }
             }

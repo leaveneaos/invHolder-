@@ -73,6 +73,15 @@
                             msg=data.temp;
                             $("#sure").attr("disabled","disabled");
                         }else{
+                            if(data.order==null){
+                                redirect("数据异常，请重新扫描！");
+							}
+							if(data.price){
+                                redirect("数据异常，请重新扫描！");
+							}
+							if(data.orderTime){
+                                redirect("数据异常，请重新扫描！");
+							}
                             $('#orderNo').html(data.orderNo);
                             $('#order').html(data.order);
                             $('#orderTime').html(data.orderTime);
@@ -114,10 +123,10 @@
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
             //var isUCBrowser = ua.indexOf('UCBrowser') != -1;
-            if(isAlipay){
+				var urlinfo = window.location.href; //获取当前页面的url
+            if(isAlipay || urlinfo.indexOf("isAlipay=true") != -1){
                 window.location.href = "../Family/ddmx.html?time=" + new Date();
-            }
-            if(isWeixin){
+            }else {
                 window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + pricese;
             }
