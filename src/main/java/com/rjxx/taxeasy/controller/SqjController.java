@@ -64,11 +64,11 @@ public class SqjController extends BaseController {
     @Autowired
     private FpjService fpjService;//发票夹
 
-    public static final String APP_ID = "wx9abc729e2b4637ee";
+    //public static final String APP_ID = "wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
 
-    public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
+    //public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
     @RequestMapping
     @ResponseBody
@@ -521,16 +521,22 @@ public class SqjController extends BaseController {
         params.put("gsdm", "sqj");
         String str = "sqj";
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(null==gsxx){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
+        if(request.getHeader("user-agent")==null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
@@ -555,16 +561,22 @@ public class SqjController extends BaseController {
         params.put("gsdm", "sqj");
         String str = "bss";
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(null==gsxx){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
+        if(request.getHeader("user-agent")==null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
@@ -589,16 +601,22 @@ public class SqjController extends BaseController {
         params.put("gsdm", "sqj");
         String str = "wdm";
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(null==gsxx){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
+        if(request.getHeader("user-agent")==null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
