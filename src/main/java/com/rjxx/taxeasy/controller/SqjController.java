@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.service.*;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -76,16 +77,22 @@ public class SqjController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(null==gsxx){
+            request.getSession().setAttribute("msg", "出现未知错误!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
+        if(request.getHeader("user-agent")== null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
@@ -104,12 +111,13 @@ public class SqjController extends BaseController {
         Map params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if(null==gsxx){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
         }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
-                + gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID  + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         HttpClient client = new DefaultHttpClient();
         HttpGet get = new HttpGet(turl);
@@ -491,18 +499,18 @@ public class SqjController extends BaseController {
         return result;
     }
 
-    public static void main(String[] args) {
-        String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
-        byte[] bt = null;
-        try {
-            sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-            bt = decoder.decodeBuffer(str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String csc = new String(bt);
-        System.out.println(csc);
-    }
+//    public static void main(String[] args) {
+//        String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
+//        byte[] bt = null;
+//        try {
+//            sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
+//            bt = decoder.decodeBuffer(str);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        String csc = new String(bt);
+//        System.out.println(csc);
+//    }
 
     // 食其家 采用提取码提取方式
     // 跳转到sqj提取码提取页面
