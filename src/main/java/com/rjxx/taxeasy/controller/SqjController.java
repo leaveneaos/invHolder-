@@ -662,17 +662,17 @@ public class SqjController extends BaseController {
                 return result;
             }
 
-            Map mapo = new HashMap<>();
-            mapo.put("ddh", tqm);
-            mapo.put("gsdm", "sqj");
-            Smtq smtq1 = smtqService.findOneByParams(mapo);
+            //Map mapo = new HashMap<>();
+            //mapo.put("ddh", tqm);
+            //mapo.put("gsdm", "sqj");
+            //Smtq smtq1 = smtqService.findOneByParams(mapo);
             Map map = new HashMap<>();
-            map.put("tqm", tqm);
-            Jyxx jyxxtq = jyxxservice.findOneByParams(map);
+            //map.put("tqm", tqm);
+            //Jyxx jyxxtq = jyxxservice.findOneByParams(map);
             map.put("je", je);
             map.put("gsdm", "sqj");
-            Jyxx jyxx = jyxxservice.findOneByParams(map);
-            Tqmtq tqmtq = tqmtqService.findOneByParams(map);
+            //Jyxx jyxx = jyxxservice.findOneByParams(map);
+            //Tqmtq tqmtq = tqmtqService.findOneByParams(map);
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
             if (list.size() > 0) {
@@ -717,11 +717,9 @@ public class SqjController extends BaseController {
                 tqjlService.save(tqjl);
             } else if (null != jyls && null != jyls.getDjh()) {
                 result.put("num", "6");
-            } else if (null != tqmtq && null != tqmtq.getId()) {
+            } /*else if (null != tqmtq && null != tqmtq.getId()) {
                 result.put("num", "7");
-            } else if (null != smtq1 && null != smtq1.getId()) {
-                result.put("num", "6");
-            } else if (null != jyxxtq && null == jyxx) {
+            }  else if (null != jyxxtq && null == jyxx) {
                 result.put("num", "9");
             } else if (null != jyxx && null != jyxx.getId()) {
                 request.getSession().setAttribute("tqm", tqm);
@@ -729,7 +727,7 @@ public class SqjController extends BaseController {
                 request.getSession().setAttribute("jyxx", jyxx);
                 request.getSession().setAttribute("ppjg", "1");
                 result.put("num", "5");
-            } else {
+            } */else {
                 request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute("je", je);
                 request.getSession().setAttribute("ppjg", "0");
