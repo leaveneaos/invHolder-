@@ -1,12 +1,15 @@
 package com.rjxx.taxeasy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjxx.taxeasy.bizcomm.utils.FpclService;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.XmlUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
@@ -24,10 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/dzfp_sqj")
@@ -63,6 +63,12 @@ public class SqjController extends BaseController {
     private SpService spService;//商品
     @Autowired
     private FpjService fpjService;//发票夹
+    @Autowired
+    private JyxxsqService jyxxsqService;
+    @Autowired
+    private FpclService fpclservice;
+    @Autowired
+    private ResponseUtil responseUtil;
 
     //public static final String APP_ID = "wx9abc729e2b4637ee";
 
@@ -233,7 +239,7 @@ public class SqjController extends BaseController {
             Map map = new HashMap<>();
             map.put("ddh", ddh);
             map.put("gsdm", "sqj");
-            Smtq smtq1 = smtqService.findOneByParams(map);
+            //Smtq smtq1 = smtqService.findOneByParams(map);
             Map mapo = new HashMap<>();
             mapo.put("tqm", ddh);
             mapo.put("je", String.valueOf(request.getSession().getAttribute("price")));
@@ -281,10 +287,10 @@ public class SqjController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
                 return;
             }
-            if (null != smtq1 && null != smtq1.getId()) {
+           /* if (null != smtq1 && null != smtq1.getId()) {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
-            } else if (null != tqmtq && null != tqmtq.getId()) {
+            }*/ else if (null != tqmtq && null != tqmtq.getId()) {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
             } else {
@@ -671,6 +677,11 @@ public class SqjController extends BaseController {
             //Jyxx jyxxtq = jyxxservice.findOneByParams(map);
             map.put("je", je);
             map.put("gsdm", "sqj");
+            Map mapo = new HashMap<>();
+            mapo.put("tqm", tqm);
+            mapo.put("je", je);
+            mapo.put("gsdm", "sqj");
+            Jyxxsq jyxxsq = jyxxsqService.findOneByParams(mapo);
             //Jyxx jyxx = jyxxservice.findOneByParams(map);
             //Tqmtq tqmtq = tqmtqService.findOneByParams(map);
             Jyls jyls = jylsService.findOne(map);
@@ -727,10 +738,13 @@ public class SqjController extends BaseController {
                 request.getSession().setAttribute("jyxx", jyxx);
                 request.getSession().setAttribute("ppjg", "1");
                 result.put("num", "5");
-            } */else {
+            } */else if(null == jyxxsq){
+                result.put("num","9");
+            }else {
                 request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute("je", je);
-                request.getSession().setAttribute("ppjg", "0");
+                request.getSession().setAttribute("jyxxsq", jyxxsq);
+                //request.getSession().setAttribute("ppjg", "1");
                 result.put("num", "5");
             }
         } else {
@@ -744,120 +758,62 @@ public class SqjController extends BaseController {
     @ResponseBody
     @Transactional
     public Map<String, Object> saveLs(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh,
-                                      String yx, String sj) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
-        String openid = String.valueOf(request.getSession().getAttribute("openid"));
-        if (null == tqm || "".equals(tqm)) {
-            result.put("msg", "1");
-            return result;
-        }
-        Map map = new HashMap<>();
-        map.put("tqm", tqm);
-        map.put("je", String.valueOf(request.getSession().getAttribute("je")));
-        map.put("gsdm", "sqj");
-        Tqmtq tqmtq = tqmtqService.findOneByParams(map);
-        Jyls jyls1 = jylsService.findOne(map);
-        if (null != tqmtq && null != tqmtq.getId()) {
-            result.put("msg", "该提取码已提交过申请!");
-            return result;
-        }
-        if (jyls1 != null) {
-            result.put("msg", "该订单正在开票!");
-            return result;
-        }
-        String ppjg = String.valueOf(request.getSession().getAttribute("ppjg"));
-        if ("1".equals(ppjg)) {
-            Jyxx jyxx = (Jyxx) request.getSession().getAttribute("jyxx");
-            Map map2 = new HashMap<>();
-            map2.put("gsdm", "sqj");
-            map2.put("kpddm", jyxx.getStoreNo());
-            Skp skp = skpService.findOneByParams(map2);
-            if (null != skp && !"".equals(skp.getXfid())) {
-                Xf xf = xfService.findOne(skp.getXfid());
-                if (null != xf) {
-                    Jyls jyls = new Jyls();
-                    jyls.setClztdm("03");
-                    jyls.setDdh(jyxx.getOrderNo());
-                    jyls.setGfsh(nsrsbh);
-                    jyls.setGfsjh(sj);
-                    jyls.setGfmc(fptt);
-                    jyls.setGfyh(khh);
-                    jyls.setGfyhzh(khhzh);
-                    jyls.setGflxr("");
-                    // jyls.setBz("");
-                    jyls.setGfemail(yx);
-                    jyls.setGfdz(dz);
-                    jyls.setTqm(jyxx.getOrderNo());
-                    jyls.setJylsh("SQJ" + new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()));
-                    jyls.setJshj(jyxx.getPrice());
-                    jyls.setYkpjshj(0.00);
-                    jyls.setHsbz("1");
-                    jyls.setXfid(xf.getId());
-                    jyls.setXfsh(xf.getXfsh());
-                    jyls.setXfmc(xf.getXfmc());
-                    // jyls.setXfid(331);
-                    // jyls.setXfmc("上海百旺测试盘");
-                    jyls.setXfsh(xf.getXfsh());
-                    jyls.setLrsj(new Date());
-                    jyls.setXgsj(new Date());
-                    jyls.setJylssj(new Date());
-                    jyls.setFpzldm("12");
-                    jyls.setFpczlxdm("11");
-                    jyls.setBz(jyxx.getStoreNo());
-                    jyls.setXfyh(xf.getXfyh());
-                    jyls.setXfyhzh(xf.getXfyhzh());
-                    jyls.setXfdz(xf.getXfdz());
-                    jyls.setXfdh(xf.getXfdh());
-                    if (StringUtils.isNotBlank(jyls.getGfemail())) {
-                        jyls.setSffsyj("1");
-                    }
-                    jyls.setKpr(xf.getKpr());
-                    jyls.setFhr(xf.getFhr());
-                    jyls.setSkr(xf.getSkr());
-                    jyls.setSsyf(new SimpleDateFormat("yyyyMM").format(new Date()));
-                    Map map3 = new HashMap<>();
-                    map3.put("gsdm", "sqj");
-                    Yh yh = yhService.findOneByParams(map3);
-                    jyls.setLrry(yh.getId());
-                    jyls.setXgry(yh.getId());
-                    jyls.setYxbz("1");
-                    jyls.setGsdm("sqj");
-                    jyls.setSkpid(skp.getId());
-                    Jyspmx jyspmx = new Jyspmx();
-                    jyspmx.setSpmxxh(1);
-                    jyspmx.setFphxz("0");
-                    Sp sp1 = new Sp();
-                    sp1.setGsdm("sqj");
-                    Sp sp = spService.findOneByParams(sp1);
-                    if (null != sp) {
-                        jyspmx.setSpmc(sp.getSpmc());
-                    } else {
-                        jyspmx.setSpmc("餐饮服务");
-                    }
-                    jyspmx.setSpdm("3070401000000000000");
-                    jyspmx.setSpje(jyxx.getPrice());
-                    String spsl = cszbService.getSpbmbbh("sqj", skp.getXfid(), skp.getId(), "spsl").getCsz();
-                    jyspmx.setSpsl(Double.valueOf(spsl));
-                    jyspmx.setLrsj(new Date());
-                    jyspmx.setXgsj(new Date());
-                    jyspmx.setLrry(yh.getId());
-                    jyspmx.setXgry(yh.getId());
-                    jyspmx.setGsdm("sqj");
-                    jyspmx.setSkpid(skp.getId());
-                    jylsService.save(jyls);
-                    if (openid != null && !"null".equals(openid)) {
-                        Fpj fpj = new Fpj();
-                        fpj.setDjh(jyls.getDjh());
-                        fpj.setUnionid(openid);
-                        fpj.setYxbz("1");
-                        fpj.setLrsj(new Date());
-                        fpj.setXgsj(new Date());
-                        fpjService.save(fpj);
-                    }
-                    jyspmx.setDjh(jyls.getDjh());
-                    jyspmx.setJshj(jyxx.getPrice());
-                    jyspmxService.save(jyspmx);
+                                      String yx) {
+            Map<String, Object> result = new HashMap<String, Object>();
+            String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+            String openid = String.valueOf(request.getSession().getAttribute("openid"));
+            try {
+                if (null == tqm || "".equals(tqm)) {
+                    request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Map map = new HashMap<>();
+            map.put("tqm", tqm);
+            map.put("je", String.valueOf(request.getSession().getAttribute("je")));
+            map.put("gsdm", "sqj");
+            Tqmtq tqmtq = tqmtqService.findOneByParams(map);
+            Jyls jyls1 = jylsService.findOne(map);
+            if (null != tqmtq && null != tqmtq.getId()) {
+                result.put("msg", "该提取码已提交过申请!");
+                return result;
+            }
+            if (jyls1 != null) {
+                result.put("msg", "该订单正在开票!");
+                return result;
+            }
+            Map param= new HashMap();
+            param.put("tqm",tqm);
+            param.put("gsdm","sqj");
+            param.put("gfmc",fptt);
+            param.put("gfsh",nsrsbh);
+            param.put("gfdz",dz);
+            param.put("gfdh",dh);
+            param.put("gfyh",khh);
+            param.put("gfyhzh",khhzh);
+            param.put("email",yx);
+            param.put("sffsyj","1");
+            jyxxsqService.updateGfxx(param);
+            //交易信息
+            Map paramss = new HashMap();
+            paramss.put("tqm",tqm);
+            paramss.put("gsdm","sqj");
+            paramss.put("je",String.valueOf(request.getSession().getAttribute("je")));
+            Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
+            List<Jyxxsq> jyxxsqList=new ArrayList<>();
+            jyxxsqList.add(jyxxsq);
+            String response = "";
+            try {
+                fpclservice.zjkp(jyxxsqList, "01");//录屏
+                response = responseUtil.lpResponse(null);
+                logger.info(response);
+                Map resultXmlMap= XmlUtil.xml2Map(response);
+                String ReturnCode=resultXmlMap.get("ReturnCode").toString();
+                String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
+                if(null!= ReturnCode && "0000".equals(ReturnCode)){
                     Tqmtq tqmtq1 = new Tqmtq();
                     tqmtq1.setDdh(tqm);
                     tqmtq1.setLrsj(new Date());
@@ -868,9 +824,8 @@ public class SqjController extends BaseController {
                     tqmtq1.setDh(dh);
                     tqmtq1.setKhh(khh);
                     tqmtq1.setKhhzh(khhzh);
-                    tqmtq1.setFpzt("1");
+                    tqmtq1.setFpzt("0");
                     tqmtq1.setYxbz("1");
-                    tqmtq1.setGfsjh(sj);
                     tqmtq1.setGfemail(yx);
                     tqmtq1.setGsdm("sqj");
                     String llqxx = request.getHeader("User-Agent");
@@ -880,37 +835,13 @@ public class SqjController extends BaseController {
                     }
                     tqmtqService.save(tqmtq1);
                     result.put("msg", "1");
-                } else {
-                    result.put("msg", "门店号为查询到销方!");
+                }else{
+                    result.put("msg",ReturnMessage);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            } else {
-                result.put("msg", "未查询到门店号!");
-            }
-        } else {
-            Tqmtq tqmtq1 = new Tqmtq();
-            tqmtq1.setDdh(tqm);
-            tqmtq1.setLrsj(new Date());
-            tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
-            tqmtq1.setGfmc(fptt);
-            tqmtq1.setNsrsbh(nsrsbh);
-            tqmtq1.setDz(dz);
-            tqmtq1.setDh(dh);
-            tqmtq1.setKhh(khh);
-            tqmtq1.setKhhzh(khhzh);
-            tqmtq1.setFpzt("0");
-            tqmtq1.setYxbz("1");
-            tqmtq1.setGfsjh(sj);
-            tqmtq1.setGfemail(yx);
-            tqmtq1.setGsdm("sqj");
-            String llqxx = request.getHeader("User-Agent");
-            tqmtq1.setLlqxx(llqxx);
-            if (openid != null && !"null".equals(openid)) {
-                tqmtq1.setOpenid(openid);
-            }
-            tqmtqService.save(tqmtq1);
-            result.put("msg", "1");
-        }
         return result;
     }
 }

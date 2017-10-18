@@ -1,5 +1,7 @@
 package com.rjxx.taxeasy.service;
 
+import com.rjxx.taxeasy.domains.Jyxxsq;
+
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +38,15 @@ public interface BarcodeService {
      *封装跳转方法
      */
     Map redirct(String tqm,String gsdm,String opendid,String visiterIP,String llqxx);
+
+    /**
+     * 食其家
+     * 封装开具
+     * @return
+     */
+    String sqjInvioce(Jyxxsq jyxxsq, String gsdm, String gfmc,
+                      String gfsh, String email, String gfyh,
+                      String gfyhzh, String gfdz, String gfdh, String tqm,
+                      String openid, String sjly , String access_token, String AppId, String key, String weixinOrderNo);
+
 }

@@ -1,6 +1,7 @@
 package com.rjxx.taxeasy.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rjxx.taxeasy.bizcomm.utils.FpclService;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
@@ -8,7 +9,9 @@ import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.NumberUtil;
+import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.vo.Spvo;
+import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.XmlUtil;
@@ -68,6 +71,15 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Autowired
     private  WeixinUtils weixinUtils;
+
+    @Autowired
+    private  JyxxsqService jyxxsqService;
+
+    @Autowired
+    private FpclService fpclservice;
+    @Autowired
+    private ResponseUtil responseUtil;
+
 //    @Override
 //    public Map sm2(String gsdm, String q) {
 //        try {
@@ -710,6 +722,97 @@ public Map sm(String gsdm, String q) {
 
     }
 
+    @Override
+    public String sqjInvioce(Jyxxsq jyxxsq,String gsdm,  String gfmc, String gfsh, String email,
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
+                              String openid,String sjly,String access_token,String AppId,String key,String weixinOrderNo) {
+            if(jyxxsq==null) {
+                String reason = "获取数据为空，开票失败，请重试!";
+                weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
+                return "1";
+            }
+            Map map = new HashMap<>();
+            map.put("tqm",jyxxsq.getTqm());
+            map.put("je",jyxxsq.getJshj());
+            map.put("gsdm",gsdm);
+            Tqmtq tqmtq = tqmtqService.findOneByParams(map);
+            Jyls jyls1 = jylsService.findOne(map);
+            if (null != tqmtq && null != tqmtq.getId()) {
+                String reason="该订单已提交过申请!";
+                if(null!=sjly && "4".equals(sjly)){
+                    weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
+                }
+                return "1";
+            }
+            if (jyls1 != null) {
+                String reason="该订单正在开票!";
+                if(null!=sjly && "4".equals(sjly)){
+                    weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
+                }
+                return  "1";
+            }
+            Map param= new HashMap();
+            param.put("tqm",tqm);
+            param.put("gsdm","sqj");
+            param.put("gfmc",gfmc);
+            param.put("gfsh",gfsh);
+            param.put("gfdz",gfdz);
+            param.put("gfdh",gfdh);
+            param.put("gfyh",gfyh);
+            param.put("gfyhzh",gfyhzh);
+            param.put("email",email);
+            param.put("sffsyj","1");
+            jyxxsqService.updateGfxx(param);
+            //交易信息
+            Map paramss = new HashMap();
+            paramss.put("tqm",tqm);
+            paramss.put("gsdm","sqj");
+            paramss.put("je",jyxxsq.getJshj());
+            Jyxxsq jyxxsqByParams = jyxxsqService.findOneByParams(paramss);
+            List<Jyxxsq> jyxxsqList=new ArrayList<>();
+            jyxxsqList.add(jyxxsqByParams);
+            String response = "";
+            try {
+                fpclservice.zjkp(jyxxsqList, "01");//录屏
+                response = responseUtil.lpResponse(null);
+                logger.info(response);
+                Map resultXmlMap= XmlUtil.xml2Map(response);
+                String ReturnCode=resultXmlMap.get("ReturnCode").toString();
+                String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
+                if(null!=ReturnCode && ReturnCode.equals("9999")){
+                    String reason="错误信息为"+ReturnMessage;
+                    if(null!=sjly && "4".equals(sjly)){
+                        weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
+                    }
+                    return "1";
+                }else {
+                    //插入表
+                    Tqmtq tqmtq1 = new Tqmtq();
+                    tqmtq1.setDdh(jyxxsq.getTqm());
+                    tqmtq1.setLrsj(new Date());
+                    tqmtq1.setZje(Double.valueOf(jyxxsq.getJshj()));
+                    tqmtq1.setGfmc(gfmc);
+                    tqmtq1.setNsrsbh(gfsh);
+                    tqmtq1.setDz(gfdz);
+                    tqmtq1.setDh(gfdh);
+                    tqmtq1.setKhh(gfyh);
+                    tqmtq1.setKhhzh(gfyhzh);
+                    tqmtq1.setFpzt("0");
+                    tqmtq1.setYxbz("1");
+                    tqmtq1.setGfemail(email);
+                    tqmtq1.setGsdm(jyxxsq.getGsdm());
+                    if(openid != null && !"null".equals(openid)){
+                        tqmtq1.setOpenid(openid);
+                    }
+                    tqmtqService.save(tqmtq1);
+                    return  "0";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return "0";
+
+    }
     @Override
     public  String savaWxFpxx(String tqm,String gsdm,String q,String openid,String orderNo){
         String status="";
