@@ -3,6 +3,7 @@ package com.rjxx.taxeasy.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.FpclService;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.ResponseUtil;
@@ -11,6 +12,7 @@ import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
 import com.rjxx.utils.XmlUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -70,6 +72,8 @@ public class SqjController extends BaseController {
     @Autowired
     private ResponseUtil responseUtil;
 
+    @Autowired
+    private WxfpxxJpaDao wxfpxxJpaDao;
     //public static final String APP_ID = "wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
@@ -239,7 +243,6 @@ public class SqjController extends BaseController {
             Map map = new HashMap<>();
             map.put("ddh", ddh);
             map.put("gsdm", "sqj");
-            //Smtq smtq1 = smtqService.findOneByParams(map);
             Map mapo = new HashMap<>();
             mapo.put("tqm", ddh);
             mapo.put("je", price);
@@ -284,13 +287,37 @@ public class SqjController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
+                //表示已经开过票
+                if(WeixinUtils.isWeiXinBrowser(request)){
+                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+                    if(null==wxFpxxByTqm){
+                        WxFpxx wFpxx = new WxFpxx();
+                        wFpxx.setTqm(orderNo);
+                        wFpxx.setGsdm(gsxx.getGsdm());
+                        wFpxx.setOrderNo(orderNo);
+                        wFpxx.setQ(state);
+                        wFpxx.setWxtype("2");
+                        wFpxx.setOpenId(openid);
+                        wFpxx.setKplsh(list.get(0).getKplsh().toString());
+                        wxfpxxJpaDao.save(wFpxx);
+                    }else {
+                        wxFpxxByTqm.setTqm(orderNo);
+                        wxFpxxByTqm.setGsdm(gsxx.getGsdm());
+                        wxFpxxByTqm.setQ(state);
+                        wxFpxxByTqm.setOpenId(openid);
+                        wxFpxxByTqm.setOrderNo(orderNo);
+                        wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
+                        wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
+                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                            String notNullCode= wxFpxxByTqm.getCode();
+                            wxFpxxByTqm.setCode(notNullCode);
+                        }
+                        wxfpxxJpaDao.save(wxFpxxByTqm);
+                    }
+                }
                 response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
                 return;
-            }
-           /* if (null != smtq1 && null != smtq1.getId()) {
-                response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
-                return;
-            }*/ else if (null != tqmtq && null != tqmtq.getId()) {
+            } else if (null != tqmtq && null != tqmtq.getId()) {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
             } else {
@@ -302,8 +329,8 @@ public class SqjController extends BaseController {
                         return;
                     }
                 } else {
-                    response.sendRedirect(
-                            request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
+                    //订单确认页面
+                    response.sendRedirect(request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
                     return;
                 }
             }

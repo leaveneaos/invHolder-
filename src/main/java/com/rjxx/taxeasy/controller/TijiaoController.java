@@ -365,6 +365,15 @@ public class TijiaoController extends BaseController {
         result.put("khh", request.getSession().getAttribute("khh"));
         result.put("gsdm", request.getSession().getAttribute("gsdm"));
         result.put("msg", request.getSession().getAttribute("msg"));
+        if(null!= request.getSession().getAttribute("orderNo")){
+            result.put("orderNo", request.getSession().getAttribute("orderNo"));
+        }
+        if(null!=request.getSession().getAttribute("orderTime")){
+            result.put("orderTime", request.getSession().getAttribute("orderTime"));
+        }
+        if(null!= request.getSession().getAttribute("price")){
+            result.put("price", request.getSession().getAttribute("price"));
+        }
         if(null!=request.getSession().getAttribute("khh")){
             Map map = new HashMap<>();
             map.put("khh", request.getSession().getAttribute("khh"));
