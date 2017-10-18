@@ -64,11 +64,14 @@ public class WeiXinController extends BaseController {
     @Autowired
     private CszbService cszbService;
 
+    @Autowired
+    private JyxxsqService jyxxsqService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Value("${rjxx.pdf_file_url:}")
     private String pdf_file_url;
 
-   // private  Integer counter = 0;
     /**
      * 获取微信授权回调
      */
@@ -92,16 +95,12 @@ public class WeiXinController extends BaseController {
 
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
-        System.out.println("进入微信发送的post请求");
         Map<String, String> requestMap = null;
         try {
-            System.out.println("微信推送事件");
-            //微信事件xml转map
             requestMap = parseXml(request);
             logger.info("接收微信返回xml变map"+requestMap.toString());
             //处理微信推送事件： 微信授权完成事件推送
             if(requestMap.get("MsgType").equals("event")&&requestMap.get("Event").equals("user_authorize_invoice")){
-                logger.info("进入开票处理----");
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
@@ -140,108 +139,121 @@ public class WeiXinController extends BaseController {
                     }
 
                     WxFpxx oneByOrderNo = wxfpxxJpaDao.selsetByOrderNo(orderno_old);
+                    if(null==oneByOrderNo){
+                        String re = "发票开具失败，请重试！";
+                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                    }
                     String gsdm = oneByOrderNo.getGsdm();
-                    logger.info("根据订单编号查询交易信息数据"+oneByOrderNo.toString());
-                    if(null==gsdm && gsdm.equals("")){
-                        logger.info("公司代码为空！");
-                        return "";
-                    }
                     String q = oneByOrderNo.getQ();
-                    if (null==q && q.equals("")){
-                        logger.info("参数q为空");
-                        return "";
-                    }
                     String tqm = oneByOrderNo.getTqm();
-                    if (null==tqm && tqm.equals("")){
-                        logger.info("提取码为空");
-                        return "";
-                    }
+
                     if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
                         logger.info("进入申请开票类型------------开始开票");
-                        //主动获取授权状态，成功会返回数据
                         Map resultMap =  weixinUtils.zdcxstatus(orderno_new,access_token);
                         if(null==resultMap){
-                            logger.info("进入--主动查询授权是空。");
+                            String re = "发票开具失败，请重试！";
+                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
                             return "";
                         }else {
-                            logger.info("开始封装数据并进行开票" + resultMap.toString());
-                            //全家进行开票
-                                if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm))) {
-                                    logger.info("进入全家开票处理---------");
+                            if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm))) {
                                     Map parms = new HashMap();
                                     parms.put("gsdm", gsdm);
                                     Gsxx gsxx = gsxxService.findOneByParams(parms);
                                     Map resultSjMap = new HashMap();
                                     if("Family".equals(gsdm)){
-                                        //拉取数据
-                                         resultSjMap = getDataService.getData(tqm, "Family");
+                                        logger.info("进入全家开票处理---------");
+                                        resultSjMap = getDataService.getData(tqm, "Family");
                                     }else if("bqw".equals(gsdm)){
+                                        logger.info("波奇网开票-------");
                                         Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
                                         resultSjMap = getDataService.getDataForBqw(tqm, gsxx.getGsdm(),zb1.getCsz());
                                     }
-                                    String status = barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
-                                            (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
-                                            , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                            tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),orderno_new);
-                                    if ("-1".equals(status)) {
-                                        logger.info("开具失败");
-                                    } else if ("-2".equals(status)) {
-                                        logger.info("开具失败，拒绝开票");
-                                    } else {
-                                        logger.info("开具成功");
-                                        System.out.println("开票成功");
+                                    try {
+                                        barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
+                                               (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
+                                               , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
+                                               tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),orderno_new);
+                                    } catch (Exception e) {
+                                        String re = "发票开具失败，请重试！";
+                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                        e.printStackTrace();
                                     }
                                     return "";
                                 }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm))) {
-                                    logger.info("进入一茶一坐开票处理");
-                                    String status = barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"),
-                                            (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
-                                            , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
-                                        if ("-1".equals(status)) {
-                                            logger.info("开具失败");
-                                        } else if ("0".equals(status)) {
-                                            logger.info("所需数据为空");
-                                        } else {
-                                            logger.info("开具成功");
-                                            System.out.println("开票成功");
-                                        }
-                                        return "";
-                                }else {
-                                    logger.info("------改公司"+gsdm+"未配置,开票处理！");
+                                    logger.info("一茶一坐开票---------");
+                                    try {
+                                        barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"), (String) resultMap.get("tax_no"),
+                                                (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
+                                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
+                                    } catch (Exception e) {
+                                        String re = "发票开具失败，请重试！";
+                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                        e.printStackTrace();
+                                    }
+                                    return "";
+                                }else if(null!=gsdm && gsdm.equals("sqj")){
+                                    logger.info("食其家微信开票----");
+                                    Map mappo = new HashMap();
+                                    mappo.put("gsdm","sqj");
+                                    mappo.put("tqm",tqm);
+                                    Jyxxsq jyxxsq=jyxxsqService.findOneByParams(mappo);
+                                    try {
+                                        barcodeService.sqjInvioce(jyxxsq,"sqj",(String) resultMap.get("title"), (String) resultMap.get("tax_no"),(String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
+                                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
+                                    } catch (Exception e) {
+                                        String re = "发票开具失败，请重试！";
+                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                        e.printStackTrace();
+                                    }
+                            }else {
+                                    logger.info("------没有该公司的开票处理，---------公司为"+gsdm);
+                                    String re = "发票开具异常,请联系商家！";
+                                    weixinUtils.jujuekp(FailOrderId,re,access_token);
                                 }
                             }
                         }
-                        if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())){
+                        if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())) {
                             logger.info("进入领取发票类型------------直接插入卡包");
                             WxFpxx wxFpxxIncard = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
-                            if(null==wxFpxxIncard.getCode()||"".equals(wxFpxxIncard.getCode())){
-                                logger.info("进入插卡方法-----");
-                                //没有插入过卡包
-                                Map kplsMap = new HashMap();
-                                kplsMap.put("kplsh",wxFpxxIncard.getKplsh());
-                                Kpls kpls = kplsService.findOneByParams(kplsMap);
-                                if(null==kpls){
-                                    logger.info("kpls为空");
+                            if (null == wxFpxxIncard) {
+                                String re = "插入卡包失败！";
+                                weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                            } else {
+                                if (null == wxFpxxIncard.getCode() || "".equals(wxFpxxIncard.getCode())) {
+                                    logger.info("进入插卡方法-----");
+                                    //没有插入过卡包
+                                    Map kplsMap = new HashMap();
+                                    kplsMap.put("kplsh", wxFpxxIncard.getKplsh());
+                                    Kpls kpls = kplsService.findOneByParams(kplsMap);
+                                    if (null == kpls) {
+                                        String re = "开票数据为空，插入卡包失败！";
+                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                        return "";
+                                    }
+                                    Map params2 = new HashMap();
+                                    params2.put("kplsh", wxFpxxIncard.getKplsh());
+                                    List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
+                                    if (null == kpspmxList) {
+                                        String re = "商品明细为空，插入卡包失败！";
+                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                        return "";
+                                    }
+                                    try {
+                                        //插入卡包
+                                        weixinUtils.fpInsertCardBox(SuccOrderId, pdf_file_url, kpspmxList, kpls);
+                                    } catch (Exception e) {
+                                        String re = "插入卡包失败！";
+                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                        e.printStackTrace();
+                                    }
                                     return "";
                                 }
-                                Map params2 = new HashMap();
-                                params2.put("kplsh", wxFpxxIncard.getKplsh());
-                                List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
-                                if(null==kpspmxList){
-                                    logger.info("商品明细为空");
-                                    return "";
-                                }
-                                logger.info("PDFurl---"+pdf_file_url);
-                                //插入卡包
-                                String result = weixinUtils.fpInsertCardBox(SuccOrderId, pdf_file_url, kpspmxList, kpls);
-                                return "";
                             }
                         }
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
-                    System.out.println("失败的订单id"+FailOrderId);
-                    String re = "微信授权失败,请重新开票";
-                    String msg= weixinUtils.jujuekp(FailOrderId,re,access_token);
+                    String re = "订单"+FailOrderId+"的发票开具异常,请联系商家！";
+                    weixinUtils.jujuekp(FailOrderId,re,access_token);
                 }
             }
         } catch (Exception e) {
@@ -250,8 +262,13 @@ public class WeiXinController extends BaseController {
         return "" ;
     }
 
+    /**
+     * 解析微信推送消息xml
+     * @param request
+     * @return
+     * @throws Exception
+     */
     public Map<String, String> parseXml(HttpServletRequest request) throws Exception {
-        System.out.println("解析微信推送xml————————————");
         // 将解析结果存储在HashMap中
         Map<String, String> map = new HashMap<String, String>();
         // 从request中取得输入流
@@ -357,82 +374,4 @@ public class WeiXinController extends BaseController {
         return null;
     }*/
 
-
-    /**
-     * 将发票信息同步到微信卡包
-     *
-     * @return
-     */
-//    @RequestMapping(value = "/syncWeiXin")
-//    @ResponseBody
-//    public String syncWeiXin(@RequestParam(required = false) String order_id) throws Exception {
-//        if (order_id == null) {
-//            Object orderObject = session.getAttribute("order");
-//            if (orderObject == null) {
-//                request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
-//                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                return null;
-//            }
-//            order_id = orderObject.toString();
-//        }
-//        logger.info("order_id++++++++++"+order_id);
-//        String serialorder= "";
-//        Object serialorderObject = session.getAttribute("serialorder");
-//        if (serialorderObject == null) {
-//            request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
-//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//            return null;
-//        }
-//        serialorder = serialorderObject.toString();
-//        logger.info("serialorder++++++++"+serialorder);
-//
-//        //判断是否是微信浏览
-////       if (!WeixinUtils.isWeiXinBrowser(request)) {
-////            request.getSession().setAttribute("msg", "请使用微信进行该操作");
-////            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-////            return null;
-////        }
-//        //主动查询授权状态
-//        WeixinUtils weixinUtils = new WeixinUtils();
-//        String  access_token = (String)weixinUtils.hqtk().get("access_token");
-//        request.setAttribute("access_token",access_token);
-//        Map weiXinDataMap = weixinUtils.zdcxstatus(order_id,access_token);
-//        if(null==weiXinDataMap){
-//            logger.info("主动查询授权失败++++++++++++");
-//            return null;
-//        }
-//        Map para = new HashMap();
-//        para.put("serialorder", serialorder);
-//        List<Kpls> kplsList = kplsService.findAll(para);
-//
-//        String openid=null;
-//        for (Kpls kpls : kplsList) {
-//            int kplsh = kpls.getKplsh();
-//            Map params2 = new HashMap();
-//            params2.put("kplsh", kplsh);
-//            List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
-//
-////            String s_media_id =weixinUtils.creatPDF(kpls.getPdfurl(),pdf_file_url);
-////            if(null==s_media_id&&StringUtils.isBlank(s_media_id)){
-////                logger.info("上传PDF失败获取s_media_id为null");
-////                return  null;
-////            }
-//
-////           openid =  weixinUtils.dzfpInCard(order_id,WeiXinConstants.FAMILY_CARD_ID,pdf_file_url,weiXinDataMap,kpspmxList,kpls,access_token);
-////            if(null==openid){
-////                request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
-////                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-////                return null;
-////            }
-//        }
-//
-//        if(null==openid){
-//            request.getSession().setAttribute("msg", "将发票插入用户卡包出现异常");
-//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//            return null;
-//        }else {
-//
-//        }
-//        return  null;
-//    }
 }

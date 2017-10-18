@@ -47,6 +47,6 @@ public interface BarcodeService {
     String sqjInvioce(Jyxxsq jyxxsq, String gsdm, String gfmc,
                       String gfsh, String email, String gfyh,
                       String gfyhzh, String gfdz, String gfdh, String tqm,
-                      String openid, String sjly , String access_token, String AppId, String key, String weixinOrderNo);
+                      String openid, String sjly , String access_token,String weixinOrderNo);
 
 }

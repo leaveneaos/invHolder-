@@ -725,7 +725,7 @@ public Map sm(String gsdm, String q) {
     @Override
     public String sqjInvioce(Jyxxsq jyxxsq,String gsdm,  String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
-                              String openid,String sjly,String access_token,String AppId,String key,String weixinOrderNo) {
+                              String openid,String sjly,String access_token,String weixinOrderNo) {
             if(jyxxsq==null) {
                 String reason = "获取数据为空，开票失败，请重试!";
                 weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
