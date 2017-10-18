@@ -64,14 +64,14 @@
                     "../fm/qrxxsession",
                     {},
                     function (data) {
-                        if(null!=data.error){
-                            redirect(data.error);
-                            //msg=data.error;
-                            //$("#sure").attr("disabled","disabled");
-                        }if(""!=data.temp){
+                        if(null!=data.error&&""!=data.error){
+                            alert(data.error);
+                            msg=data.error;
+                            $("#sure").attr("disabled","disabled");
+                        }if(null!=data.msg&&""!=data.temp){
                             redirect(data.temp);
-                            //msg=data.temp;
-                            //$("#sure").attr("disabled","disabled");
+                            msg=data.temp;
+                            $("#sure").attr("disabled","disabled");
                         }else{
                             if(data.order==null){
                                 redirect("数据异常，请重新扫描！");
