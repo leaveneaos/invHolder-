@@ -321,15 +321,49 @@ public class SqjController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
             } else {
+                if(WeixinUtils.isWeiXinBrowser(request)){
+                    logger.info("微信扫描------");
+                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+                    //第一次扫描
+                    if(null==wxFpxxByTqm){
+                        WxFpxx wxFpxx = new WxFpxx();
+                        wxFpxx.setTqm(orderNo);
+                        wxFpxx.setGsdm(gsxx.getGsdm());
+                        wxFpxx.setOrderNo(orderNo);
+                        wxFpxx.setQ(state);
+                        wxFpxx.setWxtype("1");
+                        //微信
+                        wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                        try {
+                            wxfpxxJpaDao.save(wxFpxx);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        wxFpxxByTqm.setTqm(orderNo);
+                        wxFpxxByTqm.setGsdm(gsxx.getGsdm());
+                        wxFpxxByTqm.setOrderNo(orderNo);
+                        wxFpxxByTqm.setQ(state);
+                        wxFpxxByTqm.setWxtype("1");
+                        wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
+                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                            String notNullCode= wxFpxxByTqm.getCode();
+                            wxFpxxByTqm.setCode(notNullCode);
+                        }
+                        try {
+                            wxfpxxJpaDao.save(wxFpxxByTqm);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 if (null != skp.getPid()) {
                     Pp pp = ppService.findOne(skp.getPid());
                     if (null != pp.getPpurl()) {
-                        response.sendRedirect(
-                                request.getContextPath() + pp.getPpurl() + "?_t" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + pp.getPpurl() + "?_t" + System.currentTimeMillis());
                         return;
                     }
                 } else {
-                    //订单确认页面
                     response.sendRedirect(request.getContextPath() + "/smtq/smtq1.html?_t=" + System.currentTimeMillis());
                     return;
                 }
