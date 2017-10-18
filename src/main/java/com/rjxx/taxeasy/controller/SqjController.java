@@ -242,10 +242,10 @@ public class SqjController extends BaseController {
             //Smtq smtq1 = smtqService.findOneByParams(map);
             Map mapo = new HashMap<>();
             mapo.put("tqm", ddh);
-            mapo.put("je", String.valueOf(request.getSession().getAttribute("price")));
+            mapo.put("je", price);
             mapo.put("gsdm", "sqj");
             Tqmtq tqmtq = tqmtqService.findOneByParams(mapo);
-            List<Kpls> list = jylsService.findByTqm(map);
+            List<Kpls> list = jylsService.findByTqm(mapo);
             if (list.size() > 0) {
                 if (openid != null && !"null".equals(openid)) {
                     Map<String, Object> param = new HashMap<>();
