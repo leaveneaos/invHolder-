@@ -53,7 +53,7 @@
 
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
-		var msg=null;
+//		var msg=null;
         function redirect(errorMsg){
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
@@ -65,14 +65,14 @@
                     {},
                     function (data) {
                         if(null!=data.error&&""!=data.error){
-                            alert(data.error);
+                            redirect(data.error);
 //                            msg=data.error;
-                            $("#sure").attr("disabled","disabled");
+//                            $("#sure").attr("disabled","disabled");
                         }
                         if(null!=data.temp&&""!=data.temp){
                             redirect(data.temp);
-                            msg=data.temp;
-                            $("#sure").attr("disabled","disabled");
+//                            msg=data.temp;
+//                            $("#sure").attr("disabled","disabled");
                         }else{
                             if(data.order==null){
                                 redirect("数据异常，请重新扫描！");
@@ -90,7 +90,7 @@
                             pricese = data.price;
                             $('#tqmhidden').html(data.tqm);
                             $("#sure").attr("disabled",false);
-                            msg=null;
+//                            msg=null;
 						}
                     }
                 )
