@@ -66,9 +66,10 @@
                     function (data) {
                         if(null!=data.error&&""!=data.error){
                             alert(data.error);
-                            msg=data.error;
+//                            msg=data.error;
                             $("#sure").attr("disabled","disabled");
-                        }if(null!=data.msg&&""!=data.temp){
+                        }
+                        if(null!=data.temp&&""!=data.temp){
                             redirect(data.temp);
                             msg=data.temp;
                             $("#sure").attr("disabled","disabled");
