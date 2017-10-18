@@ -243,6 +243,7 @@ public class SqjController extends BaseController {
             Map map = new HashMap<>();
             map.put("ddh", ddh);
             map.put("gsdm", "sqj");
+            Jyls jyls = jylsService.findOne(map);
             Map mapo = new HashMap<>();
             mapo.put("tqm", ddh);
             mapo.put("je", price);
@@ -317,7 +318,10 @@ public class SqjController extends BaseController {
                 }
                 response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
                 return;
-            } else if (null != tqmtq && null != tqmtq.getId()) {
+            } else if (null != jyls && null != jyls.getDjh()) {
+                response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
+                return;
+            }else if (null != tqmtq && null != tqmtq.getId()) {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
             } else {

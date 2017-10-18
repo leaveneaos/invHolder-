@@ -88,6 +88,8 @@
                 <div class="mui-input-row">
                     <label><font color="red">*</font>购方名称</label>
                     <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
+                    <select id="getFptt" oninput="changeFptt(this.value)">
+                    </select>
                 </div>
                 <div class="mui-input-row">
                     <label><font color="red" class="isCheck">*</font>纳税人识别号</label> 
@@ -152,6 +154,7 @@
     </footer>
 
     <script type="text/javascript">
+        var storage=window.localStorage;
         $(function () {
             $(".toggle dl dd").hide();
             $(".toggle dl dt").click(function () {
@@ -176,7 +179,91 @@
                             $('#tab').append("<tr style='background-color: #A1A2A4;'><td colspan='4' >合计：" + data.zje + "</td></tr>");
                         }
                     })
+
+            // 获取支付宝默认抬头信息
+            $.post(
+                '../getInvoiceTitle',
+                {},
+                function(test) {
+
+                    if(test.success) {
+                        $("#getFptt").css('display','block');
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+                            var fp=dataList[i];
+                            if(fp.default) {
+                                option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+                                $('#fptt').val(fp.titleName);
+                                $('#nsrsbh').val(fp.taxRegisterNo);
+                                $('#dz').val(fp.userAddress);
+                                $('#dh').val(fp.userMobile);
+                                $('#khh').val(fp.openBankName);
+                                $('#yhzh').val(fp.openBankAccount);
+                                $('#yx').val(fp.userEmail);
+                            }else{
+                                option+='<option vaLue="'+fp.titleName+'">'+fp.titleName+'</option>';
+                            }
+                        };
+                        $("#getFptt").append(option);
+                    };
+                }
+            );
+
         })
+
+        // 选择支付宝抬头信息
+        function changeFptt(obj){
+            $.post(
+                '../getInvoiceTitle',
+                {},
+                function(test) {
+                    if(test.success) {
+                        var option='';
+                        var dataList = test.data;
+                        for(var i=0;i<dataList.length;i++) {
+                            var fp = dataList[i];
+                            if (fp.titleName==obj) {
+                                $('#fptt').val(fp.titleName);
+                                $('#nsrsbh').val(fp.taxRegisterNo);
+                                $('#dz').val(fp.userAddress);
+                                $('#dh').val(fp.userMobile);
+                                $('#khh').val(fp.openBankName);
+                                $('#yhzh').val(fp.openBankAccount);
+                                $('#yx').val(fp.userEmail);
+                            }
+                        }
+                    }
+                }
+            )
+        };
+
+        // 本地存储
+        if(storage.data) {
+            var json=storage.getItem("data");
+            var obj = JSON.parse(json);
+            if(obj.fptt != '') {
+                document.getElementById('fptt').value = obj.fptt;
+            }
+            if(obj.nsrsbh != '') {
+                document.getElementById('nsrsbh').value = obj.nsrsbh;
+            }
+            if(obj.dz != '') {
+                document.getElementById('dz').value = obj.dz;
+            }
+            if(obj.dh != '') {
+                document.getElementById('dh').value = obj.dh;
+            }
+            if(obj.khh != '') {
+                document.getElementById('khh').value = obj.khh;
+            }
+            if(obj.yhzh != '') {
+                document.getElementById('yhzh').value = obj.yhzh;
+            }
+            if(obj.yx != '') {
+                document.getElementById('yx').value = obj.yx;
+            }
+        };
         function tk() {
             var info = document.getElementById("info");
             var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
