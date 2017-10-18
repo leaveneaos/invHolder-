@@ -241,7 +241,7 @@ public class SqjController extends BaseController {
             String ddh = (String) request.getSession().getAttribute("orderNo");
             String openid = (String) session.getAttribute("openid");
             Map map = new HashMap<>();
-            map.put("ddh", ddh);
+            map.put("tqm", ddh);
             map.put("gsdm", "sqj");
             Jyls jyls = jylsService.findOne(map);
             Map mapo = new HashMap<>();
