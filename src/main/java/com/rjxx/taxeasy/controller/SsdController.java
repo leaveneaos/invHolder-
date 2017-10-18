@@ -71,6 +71,7 @@ public class SsdController extends BaseController{
         }
         session.setAttribute(SESSION_KEY_FPTQ_GSDM, gsdm);
         String ua = request.getHeader("user-agent").toLowerCase();
+        logger.info("------------"+ua);
         if (ua.indexOf("micromessenger") > 0) {
             if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
                 gsxx.setWxappid(APP_ID);
@@ -147,6 +148,8 @@ public class SsdController extends BaseController{
                 e.printStackTrace();
             }
         }
+        String ua = request.getHeader("user-agent").toLowerCase();
+        logger.info("------------"+ua);
         String openid = (String) session.getAttribute("openid");
         String gsdm = (String) session.getAttribute(SESSION_KEY_FPTQ_GSDM);
         Map<String, Object> result = new HashMap<String, Object>();
