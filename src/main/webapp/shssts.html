@@ -61,7 +61,7 @@
 
 	<script type="text/javascript">
 	  	var sUserAgent = navigator.userAgent.toLowerCase();
-	  	alert(sUserAgent);
+	  	//alert(sUserAgent);
 	    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
 	    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
 	    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
@@ -69,10 +69,10 @@
 	    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
 	    var bIsAndroid = sUserAgent.match(/android/i) == "android";
 	    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile"
-		
+	    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
 
-		function loadimage() {
+
+        function loadimage() {
 			document.getElementById("randImage").src = "image.jsp?" + Math.random();
 		}
 		function tiqu() {
@@ -96,7 +96,8 @@
 							  if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc  || bIsCE || bIsWM) ){
                                   window.location.href="dzfp.html?time=" + new Date().getTime();
 							    }if(!bIsAndroid){
-                                    window.location.href = "dzfp.html?time=" + new Date().getTime();
+                                //window.open("dzfp.html?time=" + math.random(), "_blank");
+                                window.location.href = "dzfp.html?time=" + Math.random();
 							    }else{
 							    	window.location.href = "dzfp.html?time=" + new Date().getTime();
 							    }
