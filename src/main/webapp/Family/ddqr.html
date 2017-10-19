@@ -67,12 +67,12 @@
                         if(null!=data.error&&""!=data.error){
                             alert(data.error);
 //                            msg=data.error;
-//                            $("#sure").attr("disabled","disabled");
+                            $("#sure").attr("disabled","disabled");
                         }
                         if(null!=data.temp&&""!=data.temp){
                             alert(data.temp);
 //                            msg=data.temp;
-//                            $("#sure").attr("disabled","disabled");
+                            $("#sure").attr("disabled","disabled");
                         }
 						if(data.order!=null){
                                 $('#orderNo').html(data.orderNo);
@@ -82,10 +82,10 @@
                                 pricese = data.price;
                                 $('#tqmhidden').html(data.tqm);
                                 $("#sure").attr("disabled",false);
-						}else {
+						}/*else {
                             redirect("数据异常，请重新扫描！");
 						}
-
+*/
 //                            msg=null;
 
                     }
