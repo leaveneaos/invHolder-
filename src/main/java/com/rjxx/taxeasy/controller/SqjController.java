@@ -817,7 +817,6 @@ public class SqjController extends BaseController {
     // 获取购方信息,保存到交易流水
     @RequestMapping(value = "/saveLs")
     @ResponseBody
-    @Transactional
     public Map<String, Object> saveLs(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh,
                                       String yx) {
             Map<String, Object> result = new HashMap<String, Object>();
