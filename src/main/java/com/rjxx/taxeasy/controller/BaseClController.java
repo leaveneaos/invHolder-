@@ -792,14 +792,17 @@ public class BaseClController extends BaseController {
         result.put("yx", request.getSession().getAttribute("yx"));
         result.put("nsrsbh", request.getSession().getAttribute("nsrsbh"));
 
-        result.put("price",request.getSession().getAttribute("price"));
-        result.put("orderTime",request.getSession().getAttribute("orderTime"));
-        result.put("orderNo",request.getSession().getAttribute("orderNo"));
-        result.put("order",request.getSession().getAttribute("order"));
+
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
         result.put("temp",request.getSession().getAttribute("temp"));
         result.put("xfsh",request.getSession().getAttribute("xf"));
+        if(null==request.getSession().getAttribute("error")&&"".equals(request.getSession().getAttribute("temp"))){
+            result.put("price",request.getSession().getAttribute("price"));
+            result.put("orderTime",request.getSession().getAttribute("orderTime"));
+            result.put("orderNo",request.getSession().getAttribute("orderNo"));
+            result.put("order",request.getSession().getAttribute("order"));
+        }
         logger.info("------------------------------"+ JSON.toJSONString(result));
         //logger.info("------------------------------"+request.getSession().getAttribute("xf"));
         return  result;
