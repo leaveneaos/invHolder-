@@ -732,7 +732,8 @@ public class MbController extends BaseController {
                         result.put("tqm",tqm);
                         result.put("gsdm",gsdm);
                         String orderNo = tqm;
-                        String orderTime = jyxxsqList.get(0).getDdrq().toString();
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
                         String price = jyxxsqList.get(0).getJshj().toString();
                         if(WeixinUtils.isWeiXinBrowser(request)){
                             String access_token ="";
