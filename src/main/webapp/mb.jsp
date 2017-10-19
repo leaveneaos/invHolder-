@@ -203,6 +203,9 @@
                     }else if(data.num==16){
                         myurl=data.url;
                         window.location.assign(encodeURI(myurl));
+					}else if(data.num==20){
+                        redirectUrl = data.redirectUrl;
+                        window.location.assign(redirectUrl);
 					}
 				}
 			);

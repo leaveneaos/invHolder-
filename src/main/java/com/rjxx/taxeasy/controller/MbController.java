@@ -756,9 +756,11 @@ public class MbController extends BaseController {
                                 }
                                 String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
                                 String redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
-                                logger.info("微信跳转地址---"+redirectUrl);
-                                response.sendRedirect(redirectUrl);
-                                return null;
+                                //logger.info("微信跳转地址---"+redirectUrl);
+                                //response.sendRedirect(redirectUrl);
+                                result.put("num","20");
+                                result.put("redirectUrl",redirectUrl);
+                                return result;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
