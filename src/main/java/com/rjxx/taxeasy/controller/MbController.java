@@ -6,6 +6,7 @@ import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.JylsJpaDao;
 import com.rjxx.taxeasy.dao.KplsJpaDao;
+import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
@@ -22,6 +23,7 @@ import com.rjxx.taxeasy.wechat.vo.*;
 import com.rjxx.utils.*;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -102,6 +104,15 @@ public class MbController extends BaseController {
 
     @Autowired
     private KplsJpaDao kplsJpaDao;
+
+    @Autowired
+    private WeixinUtils weixinUtils;
+
+    @Autowired
+    private WxTokenJpaDao wxTokenJpaDao;
+
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
 
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
@@ -636,6 +647,43 @@ public class MbController extends BaseController {
                 else if(null != jyls && null !=jyls.getDjh()){
                     result.put("num","6");
                 }else {
+                    if(WeixinUtils.isWeiXinBrowser(request)){
+                        logger.info("微信扫描------");
+                        WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                        //第一次扫描
+                        if(null==wxFpxxByTqm){
+                            WxFpxx wxFpxx = new WxFpxx();
+                            wxFpxx.setTqm(tqm);
+                            wxFpxx.setGsdm(gsdm);
+                            wxFpxx.setOrderNo(tqm);
+                            wxFpxx.setQ("");
+                            wxFpxx.setWxtype("1");
+                            //微信
+                            wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                            try {
+                                wxfpxxJpaDao.save(wxFpxx);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            wxFpxxByTqm.setTqm(tqm);
+                            wxFpxxByTqm.setGsdm(gsdm);
+                            wxFpxxByTqm.setOrderNo(tqm);
+                            wxFpxxByTqm.setQ("");
+                            wxFpxxByTqm.setWxtype("1");
+                            wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
+                            if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                                String notNullCode= wxFpxxByTqm.getCode();
+                                wxFpxxByTqm.setCode(notNullCode);
+                            }
+                            try {
+                                wxfpxxJpaDao.save(wxFpxxByTqm);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
                         //需要调用接口获取开票信息,并跳转发票提取页面
@@ -683,6 +731,34 @@ public class MbController extends BaseController {
                         result.put("num","5");
                         result.put("tqm",tqm);
                         result.put("gsdm",gsdm);
+                        String orderNo = tqm;
+                        String orderTime = jyxxsqList.get(0).getDdrq().toString();
+                        String price = jyxxsqList.get(0).getJshj().toString();
+                        if(WeixinUtils.isWeiXinBrowser(request)){
+                            String access_token ="";
+                            String ticket = "";
+                            try {
+                            WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                            if(wxToken==null){
+                                access_token= (String) weixinUtils.hqtk().get("access_token");
+                                ticket = weixinUtils.getTicket(access_token);
+                            }else {
+                                access_token = wxToken.getAccessToken();
+                                ticket= wxToken.getTicket();
+                            }
+                                String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                                if(null==spappid ||"".equals(spappid)){
+                                    //获取授权失败
+                                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                                    return null;
+                                }
+                                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                                weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                     else{
                         //不用获取数据，数据为空
