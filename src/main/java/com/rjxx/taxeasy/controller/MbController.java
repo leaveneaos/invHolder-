@@ -735,7 +735,7 @@ public class MbController extends BaseController {
                         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
                         String price = jyxxsqList.get(0).getJshj().toString();
-                        if(WeixinUtils.isWeiXinBrowser(request)){
+                        if(WeixinUtils.isWeiXinBrowser(request)&&gsdm.equals("ldyx")){
                             String access_token ="";
                             String ticket = "";
                             try {
