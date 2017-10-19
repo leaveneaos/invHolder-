@@ -71,7 +71,7 @@
                             redirect(data.temp);
                             $("#sure").attr("disabled","disabled");
                         }
-						if(data.order!=null){
+						if(data.num!=null && data.num==2){
                                 $('#orderNo').html(data.orderNo);
                                 $('#order').html(data.order);
                                 $('#orderTime').html(data.orderTime);

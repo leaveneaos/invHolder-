@@ -800,11 +800,11 @@ public class BaseClController extends BaseController {
         result.put("price",request.getSession().getAttribute("price"));
         result.put("orderTime",request.getSession().getAttribute("orderTime"));
         result.put("orderNo",request.getSession().getAttribute("orderNo"));
+        result.put("order",request.getSession().getAttribute("order"));
         if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("temp"))){
-            result.put("order",request.getSession().getAttribute("order"));
+            result.put("num","2");
         }
-        logger.info("------------------------------"+ JSON.toJSONString(result));
-        //logger.info("------------------------------"+request.getSession().getAttribute("xf"));
+        //logger.info("------------------------------"+ JSON.toJSONString(result));
         return  result;
     }
 }
