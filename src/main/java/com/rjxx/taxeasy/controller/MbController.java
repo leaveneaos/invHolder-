@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
@@ -756,10 +757,9 @@ public class MbController extends BaseController {
                                 }
                                 String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
                                 String redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
-                                //logger.info("微信跳转地址---"+redirectUrl);
-                                //response.sendRedirect(redirectUrl);
                                 result.put("num","20");
                                 result.put("redirectUrl",redirectUrl);
+                                logger.info("------绿地跳转--------"+ JSON.toJSONString(result));
                                 return result;
                             } catch (Exception e) {
                                 e.printStackTrace();
