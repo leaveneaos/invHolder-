@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.*;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
@@ -799,6 +800,7 @@ public class BaseClController extends BaseController {
         result.put("error",request.getSession().getAttribute("error"));
         result.put("temp",request.getSession().getAttribute("temp"));
         result.put("xfsh",request.getSession().getAttribute("xf"));
+        logger.info("------------------------------"+ JSON.toJSONString(result));
         //logger.info("------------------------------"+request.getSession().getAttribute("xf"));
         return  result;
     }

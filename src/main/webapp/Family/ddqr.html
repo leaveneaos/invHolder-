@@ -65,33 +65,29 @@
                     {},
                     function (data) {
                         if(null!=data.error&&""!=data.error){
-                            redirect(data.error);
+                            alert(data.error);
 //                            msg=data.error;
 //                            $("#sure").attr("disabled","disabled");
                         }
                         if(null!=data.temp&&""!=data.temp){
-                            redirect(data.temp);
+                            alert(data.temp);
 //                            msg=data.temp;
 //                            $("#sure").attr("disabled","disabled");
-                        }else{
-                            if(data.order==null){
-                                redirect("数据异常，请重新扫描！");
-							}
-							if(null==data.price){
-                                redirect("数据异常，请重新扫描！");
-							}
-							if(null==data.orderTime){
-                                redirect("数据异常，请重新扫描！");
-							}
-                            $('#orderNo').html(data.orderNo);
-                            $('#order').html(data.order);
-                            $('#orderTime').html(data.orderTime);
-                            $('#price').html(RetainedDecimalPlaces(data.price)+"元");
-                            pricese = data.price;
-                            $('#tqmhidden').html(data.tqm);
-                            $("#sure").attr("disabled",false);
-//                            msg=null;
+                        }
+						if(data.order!=null){
+                                $('#orderNo').html(data.orderNo);
+                                $('#order').html(data.order);
+                                $('#orderTime').html(data.orderTime);
+                                $('#price').html(RetainedDecimalPlaces(data.price)+"元");
+                                pricese = data.price;
+                                $('#tqmhidden').html(data.tqm);
+                                $("#sure").attr("disabled",false);
+						}else {
+                            redirect("数据异常，请重新扫描！");
 						}
+
+//                            msg=null;
+
                     }
                 )
 	    });
