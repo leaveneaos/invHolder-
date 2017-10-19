@@ -65,7 +65,7 @@
                     {},
                     function (data) {
                         if(null!=data.error&&""!=data.error){
-                            alert(data.error);
+                            redirect(data.error);
 //                            msg=data.error;
                             $("#sure").attr("disabled","disabled");
                         }
