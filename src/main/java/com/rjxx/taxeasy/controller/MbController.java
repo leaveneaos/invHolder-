@@ -755,7 +755,15 @@ public class MbController extends BaseController {
                                     return null;
                                 }
                                 String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
-                                weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
+                                String redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
+                                if(null==redirectUrl||redirectUrl.equals("")){
+                                    //获取授权失败
+                                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                                    return null;
+                                }
+                                response.sendRedirect(redirectUrl);
+                                return null;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
