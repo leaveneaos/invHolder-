@@ -797,7 +797,7 @@ public class BaseClController extends BaseController {
         result.put("error",request.getSession().getAttribute("error"));
         result.put("temp",request.getSession().getAttribute("temp"));
         result.put("xfsh",request.getSession().getAttribute("xf"));
-        if(null==request.getSession().getAttribute("error")&&"".equals(request.getSession().getAttribute("temp"))){
+        if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("temp"))){
             result.put("price",request.getSession().getAttribute("price"));
             result.put("orderTime",request.getSession().getAttribute("orderTime"));
             result.put("orderNo",request.getSession().getAttribute("orderNo"));
