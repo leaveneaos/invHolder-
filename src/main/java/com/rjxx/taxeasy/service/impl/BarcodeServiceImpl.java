@@ -761,6 +761,13 @@ public Map sm(String gsdm, String q) {
             param.put("gfyhzh",gfyhzh);
             param.put("email",email);
             param.put("sffsyj","1");
+            param.put("openid",openid);
+            param.put("sjly",sjly);
+            if(null!=gfsh && !"".equals(gfsh)){
+                jyxxsq.setGflx("1");
+            }else {
+                jyxxsq.setGflx("0");
+            }
             jyxxsqService.updateGfxx(param);
             //交易信息
             Map paramss = new HashMap();
