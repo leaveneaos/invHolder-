@@ -288,6 +288,11 @@ public class CommonController extends BaseController {
                 return null;
             }
             WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+            if(wxFpxx==null){
+                request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
             if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
                 String access_token ="";
                 String ticket = "";
@@ -321,7 +326,6 @@ public class CommonController extends BaseController {
                     return null;
                 }
             }else {
-                logger.info("获取开票数据失败");
                 request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;

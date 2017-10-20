@@ -33,7 +33,6 @@ import java.util.*;
  * Created by wangyahui on 2017/8/9 0009
  */
 @Service
-@Transactional
 public class BarcodeServiceImpl implements BarcodeService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
