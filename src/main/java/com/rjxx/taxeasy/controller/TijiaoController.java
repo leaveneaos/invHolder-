@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.SendalEmail;
 import com.rjxx.taxeasy.comm.BaseController;
@@ -425,7 +426,7 @@ public class TijiaoController extends BaseController {
                 result.put("orderNo",jyls1.getTqm());
             }
         }
-
+        logger.info("----------------"+ JSON.toJSONString(result));
         return result;
     }
 
