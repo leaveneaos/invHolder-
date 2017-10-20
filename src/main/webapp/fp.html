@@ -268,7 +268,6 @@
 		<div id=parentIndustryUL class="mui-content-padded"></div>
 	</section>
 
-
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
 		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
@@ -289,12 +288,12 @@
         var isWeixin = ua.indexOf('micromessenger') != -1;
         var isAlipay = ua.indexOf('alipay') != -1;
         if(isWeixin){
-            $(".zfb").css('display','none');
-            $(".wx").css('display','block');
+            $("#fpj").css('display','block');
+            $("#zfb").css('display','none');
         }
         if(isAlipay){
-            $(".zfb").css('display','block');
-            $(".wx").css('display','none');
+            $("#fpj").css('display','none');
+            $("#zfb").css('display','block');
         }
 		$(function() {
 			$.post(
@@ -358,7 +357,7 @@
 			}
 			//发送邮箱
 			$('#you').click(function() {
-				window.location.href = "youxiang.html?_t=" + new Date().getTime();
+				window.location.href = "mbyouxiang.html?_t=" + new Date().getTime();
 			});
             //支付宝归入发票管家
             if(isAlipay){
