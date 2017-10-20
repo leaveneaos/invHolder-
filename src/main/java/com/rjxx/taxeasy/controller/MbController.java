@@ -468,7 +468,7 @@ public class MbController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
             return;
         }
-        response.sendRedirect(request.getContextPath() + "SQ/mb.html?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
+        response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
         return;
     }
 
