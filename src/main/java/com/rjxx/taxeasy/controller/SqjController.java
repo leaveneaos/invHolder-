@@ -787,6 +787,7 @@ public class SqjController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
+                request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
             } else if (null != jyls && null != jyls.getDjh()) {
                 result.put("num", "6");
             } /*else if (null != tqmtq && null != tqmtq.getId()) {

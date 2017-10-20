@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -403,30 +404,38 @@ public class TijiaoController extends BaseController {
     @ResponseBody
     public Map fpsession() {
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("serialorder", request.getSession().getAttribute("serialorder"));
-        result.put("djh", request.getSession().getAttribute("djh"));
-        result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
-        result.put("msg", request.getSession().getAttribute("msg"));
-        request.getSession().setAttribute("msg", "请重新扫描二维码");
-        Map map = new HashMap();
-        map.put("serialorder" ,request.getSession().getAttribute("serialorder"));
-        List<Kpls> kpls = kplsService.findAll(map);
-        if(kpls.size()>0){
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            result.put("kprq",sdf.format(kpls.get(0).getKprq()));
-            result.put("price",kpls.get(0).getJshj());
-            Jyls jyls = new Jyls();
-            jyls.setGsdm(kpls.get(0).getGsdm());
-            jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
-            jyls.setJylsh(kpls.get(0).getJylsh());
-            Jyls jyls1 = jylsService.findOneByParams(jyls);
-            if(jyls1.getGsdm().equals("hdsc")||jyls1.getGsdm().equals("cmsc")){
-                result.put("orderNo",jyls1.getKhh());
-            }else {
-                result.put("orderNo",jyls1.getTqm());
+        try {
+            result.put("serialorder", request.getSession().getAttribute("serialorder"));
+            result.put("djh", request.getSession().getAttribute("djh"));
+            result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
+            result.put("msg", request.getSession().getAttribute("msg"));
+            request.getSession().setAttribute("msg", "请重新扫描二维码");
+            Map map = new HashMap();
+            if(null==request.getSession().getAttribute("serialorder")){
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             }
+            map.put("serialorder" ,request.getSession().getAttribute("serialorder"));
+            List<Kpls> kpls = kplsService.findAll(map);
+            if(kpls.size()>0){
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                result.put("kprq",sdf.format(kpls.get(0).getKprq()));
+                result.put("price",kpls.get(0).getJshj());
+                Jyls jyls = new Jyls();
+                jyls.setGsdm(kpls.get(0).getGsdm());
+                jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
+                jyls.setJylsh(kpls.get(0).getJylsh());
+                Jyls jyls1 = jylsService.findOneByParams(jyls);
+                if(jyls1.getGsdm().equals("hdsc")||jyls1.getGsdm().equals("cmsc")){
+                    result.put("orderNo",jyls1.getKhh());
+                }else {
+                    result.put("orderNo",jyls1.getTqm());
+                }
+            }
+            logger.info("----------------"+ JSON.toJSONString(result));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        logger.info("----------------"+ JSON.toJSONString(result));
         return result;
     }
 

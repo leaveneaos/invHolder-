@@ -251,13 +251,16 @@
 		 orderTime = null;
 		 price = null;
 		var ua = navigator.userAgent.toLowerCase();
-		if (ua.match(/MicroMessenger/i) != "micromessenger") {
-			$('#fpj').hide();
-			$('#lifpj').hide();
-		}else{
-			$('#fpj1').hide();
-			$('#lifpj1').hide();
-		}
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var isAlipay = ua.indexOf('alipay') != -1;
+        if(isWeixin){
+            $(".zfb").css('display','none');
+            $(".wx").css('display','block');
+        }
+        if(isAlipay){
+            $(".zfb").css('display','block');
+            $(".wx").css('display','none');
+        }
 		$(function() {
 			$.post(
 				"tijiao/fpsession",
@@ -321,12 +324,6 @@
 			$('#you').click(function() {
 				window.location.href = "youxiang.html?_t=" + new Date().getTime();
 			});
-			/*$('#abc').click(function() {
-				window.location.href = "bangzhu.html?_t=" + new Date().getTime();
-			});
-			$('#fpj1').click(function() {
-				window.location.href = "ewmsc.html?_t=" + new Date().getTime();
-			});*/
 			$('#msg').click(function() {
 				$.ajax({
 					url : 'pjj/sendMessage',
