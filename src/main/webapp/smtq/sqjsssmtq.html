@@ -20,17 +20,53 @@
 </head>
 <body id="index">
 	<script type="text/javascript">
-	$(function() {
-			
-			$.post("../dzfp_sqj/getSmsj", {}, function(data) {
-				$('#orderNo').html(data.orderNo);
-				$('#orderTime').html(data.orderTime);
-				$('#price').html(data.price);
-				$('#sn').html(data.sn);
-			})
-		})
+        $(function() {
+            orderNo = null;
+            orderTime=null;
+            price = null;
+            storeNo= null;
+            function redirect(errorMsg){
+                var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+                window.location.assign(encodeURI(myurl));
+            }
+            $.post("../dzfp_sqj/getSmsj", {}, function(data) {
+                if(null==data.orderNo){
+                    redirect("数据异常，请重新扫描！");
+                }
+                if(null==data.price){
+                    redirect("数据异常，请重新扫描！");
+                }
+                if(null==data.orderTime){
+                    redirect("数据异常，请重新扫描！");
+                }
+                $('#orderNo').html(data.orderNo);
+                $('#orderTime').html(data.orderTime);
+                $('#price').html(RetainedDecimalPlaces(data.price)+"元");
+                $('#sn').html(data.sn);
+                orderNo = data.orderNo;
+                orderTime = data.orderTime;
+                price= data.price;
+                storeNo = data.sn;
+            })
+            function RetainedDecimalPlaces(num) {
+                num = parseFloat(num).toFixed(2);
+                var source = String(num).split(".");
+                source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+                return source.join(".");
+            };
+        })
 		function tk() {
-			window.location.href = "../dzfp_sqj/smtq2";
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            if(isAlipay){
+                window.location.href = "../dzfp_sqj/smtq2";
+            }else if(isWeixin) {
+                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + price;
+            }else {
+                window.location.href = "../dzfp_sqj/smtq2";
+            }
 		}
 	</script>
 	<div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
