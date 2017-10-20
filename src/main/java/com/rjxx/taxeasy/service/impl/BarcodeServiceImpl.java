@@ -681,9 +681,7 @@ public Map sm(String gsdm, String q) {
                             logger.info("进入拒绝开票-----"+ReturnMessage+"拒绝开票状态"+str);
                         }
                         return "-2";
-                    }else {
-                        logger.info("-------开票成功返回值---------" + resultxml);
-
+                    }
                         //插入表
                         Tqmtq tqmtq1 = new Tqmtq();
                         tqmtq1.setDdh(jyxxsq.getTqm());
@@ -706,7 +704,6 @@ public Map sm(String gsdm, String q) {
                         }
                         tqmtqService.save(tqmtq1);
                         return  "0";
-                        }
 
                 } catch (Exception e) {
                     e.printStackTrace();

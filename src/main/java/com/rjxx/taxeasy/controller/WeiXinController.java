@@ -155,7 +155,7 @@ public class WeiXinController extends BaseController {
                             weixinUtils.jujuekp(SuccOrderId, re, access_token);
                             return "";
                         }else {
-                            if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm))) {
+                            if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm) || "ldyx".equals(gsdm))) {
                                     Map parms = new HashMap();
                                     parms.put("gsdm", gsdm);
                                     Gsxx gsxx = gsxxService.findOneByParams(parms);
@@ -167,6 +167,16 @@ public class WeiXinController extends BaseController {
                                         logger.info("波奇网开票-------");
                                         Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
                                         resultSjMap = getDataService.getDataForBqw(tqm, gsxx.getGsdm(),zb1.getCsz());
+                                    }else if("ldyx".equals(gsdm)){
+                                        logger.info("绿地优鲜微信开票-------");
+                                        Map MapldyxToken = getDataService.getldyxFirData(tqm,gsdm);
+                                        String accessToken = (String) MapldyxToken.get("accessToken");
+                                        if(null == accessToken){
+                                            String re = "发票开具失败，请重试！";
+                                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                            return "";
+                                        }
+                                        resultSjMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
                                     }
                                     try {
                                         barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
