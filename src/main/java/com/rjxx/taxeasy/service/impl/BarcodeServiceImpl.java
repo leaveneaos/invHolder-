@@ -764,9 +764,9 @@ public Map sm(String gsdm, String q) {
             param.put("openid",openid);
             param.put("sjly",sjly);
             if(null!=gfsh && !"".equals(gfsh)){
-                jyxxsq.setGflx("1");
+                param.put("gflx","1");
             }else {
-                jyxxsq.setGflx("0");
+                param.put("gflx","0");
             }
             jyxxsqService.updateGfxx(param);
             //交易信息
