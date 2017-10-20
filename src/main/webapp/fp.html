@@ -12,6 +12,8 @@
 	<meta http-equiv="Cache" content="no-cache">
 	<link rel="stylesheet" type="text/css" href="css/common.css">
 	<link rel="stylesheet" type="text/css" href="Family/css/fpxq.css">
+	<link rel="stylesheet" type="text/css" href="css/iconfont.css">
+
 	<!--标准mui.css-->
 	<link rel="stylesheet" href="css/mui.min.css">
 	<!--App自定义的css-->
@@ -186,6 +188,16 @@
 			max-width: 100%;
 			height: auto;
 		}
+		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+			border: none;
+			border: 0;
+		}
+		.mui-col-xs-4 {
+			width: 33.33333333%;
+		}
+		.mui-grid-view.mui-grid-9 {
+			border-left: 0;
+		}
 	</style>
 </head>
 
@@ -194,12 +206,31 @@
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" onclick="history.go(-1)"></a>
 		<h1 class="mui-title">发票预览</h1>
 	</header>
-	<section class="mui-content">
-		<div id=parentIndustryUL class="mui-content-padded"></div>
+	<div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
+	<section>
+		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
+			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				<a id="you" class="yx">
+					<span class="mui-icon iconfont icon-youxiang"></span>
+					<div class="mui-media-body" style="color: #fff;">邮箱</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				<a id="fpj" style="display: none">
+					<span class="mui-icon iconfont icon-fapiaoguanli1"></span>
+					<div class="mui-media-body" style="color: #fff;">微信</div>
+				</a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				<a id="zfb" style="display: none">
+					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
+					<div class="mui-media-body" style="color: #fff;">支付宝</div>
+				</a>
+			</li>
+		</ul>
 	</section>
-
-	<section style="margin-top: 67%;">
-		<!--<ul class="mui-table-view">
+	<!--<section>
+		&lt;!&ndash;<ul class="mui-table-view">
 			<li class="mui-table-view-cell">
 				<a id="you" class="mui-navigate-right"> 发送到邮箱 </a>
 			</li>
@@ -209,7 +240,7 @@
 			<li class="mui-table-view-cell" id="lifpj1">
 				<a id="fpj1" class="mui-navigate-right"> 收藏到发票夹 </a>
 			</li>
-		</ul>-->
+		</ul>&ndash;&gt;
 		<div class="bottom btoTip">
 			<h4 class="save">您还可以通过以下方式保存发票：</h4>
 			<a id="you" class="yx">
@@ -232,13 +263,17 @@
 			</a>
 
 		</div>
+	</section>-->
+	<section class="mui-content">
+		<div id=parentIndustryUL class="mui-content-padded"></div>
 	</section>
+
 
 	<footer>
 		<p class="company">上海容津信息技术有限公司</p>
 		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
 	</footer>
-
+	</div>
 	<script src="js/mui.min.js"></script>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/wxkb.js"></script>
@@ -321,9 +356,25 @@
 					return;
 				}
 			}
+			//发送邮箱
 			$('#you').click(function() {
 				window.location.href = "youxiang.html?_t=" + new Date().getTime();
 			});
+            //支付宝归入发票管家
+            if(isAlipay){
+                $("#zfb").click(function () {
+                    window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+                });
+            }
+            //微信归入卡包
+            if(isWeixin){
+                $('#fpj').click(function() {
+                    if(null == orderNo|| null == price || null == orderTime){
+                        window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                    }
+                    window.location = "common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
+                });
+            }
 			$('#msg').click(function() {
 				$.ajax({
 					url : 'pjj/sendMessage',
