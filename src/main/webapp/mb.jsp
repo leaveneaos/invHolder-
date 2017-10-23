@@ -47,7 +47,7 @@
 	<section>
 		<form class="mui-input-group">
 			<div class="mui-input-row">
-				<input type="text" id="tqm" class="mui-input-clear" placeholder="点击此输入发票提取码">
+				<input type="text" id="tqm" class="mui-input-clear">
 			</div>
 			<input id="gsdm" name="gsdm" type="hidden" />
 			<div class="mui-input-row">
@@ -100,6 +100,11 @@
             var gsdm= $('#gsdm').val();
 			if(gsdm!=null && gsdm!=""){
                 $("#logo").attr("src", "images/" + gsdm + ".png");
+                if(gsdm=="ubm"){
+                    $("#tqm").attr("placeholder", "点击此输入条形码");
+                }else {
+                    $("#tqm").attr("placeholder", "点击此输入发票提取码");
+				}
 			}
             $.post(
                 "common/getGsxx",
