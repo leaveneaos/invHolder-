@@ -29,7 +29,10 @@
 			text-decoration:none;
 			color:#000000;
 		}
-
+		#date{
+			text-decoration:none;
+			color:#000000;
+		}
 	</style>
 </head>
 <body id="index" onload="load()">
@@ -41,7 +44,7 @@
 	
 	<section class="data-tip">
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对<a id="us">我们</a>
-		的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。
+		的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。<a id="date">开票有效期为<span style="font-weight: bold">30</span>天。</a>
 	</section>
 
 	<section>
@@ -102,8 +105,10 @@
                 $("#logo").attr("src", "images/" + gsdm + ".png");
                 if(gsdm=="ubm"){
                     $("#tqm").attr("placeholder", "点击此输入条形码");
+
                 }else {
                     $("#tqm").attr("placeholder", "点击此输入发票提取码");
+                    $("#date").css("display","none");
 				}
 			}
             $.post(
