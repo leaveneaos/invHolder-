@@ -718,6 +718,24 @@ public Map sm(String gsdm, String q) {
 
     }
 
+    /**
+     * 食其家开票方法
+     * @param jyxx
+     * @param gsdm
+     * @param gfmc
+     * @param gfsh
+     * @param email
+     * @param gfyh
+     * @param gfyhzh
+     * @param gfdz
+     * @param gfdh
+     * @param tqm
+     * @param openid
+     * @param sjly
+     * @param access_token
+     * @param weixinOrderNo
+     * @return
+     */
     @Override
     public String sqjInvioce(Jyxx jyxx,String gsdm,  String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
@@ -791,7 +809,7 @@ public Map sm(String gsdm, String q) {
                 jyxxsq.setSffsyj("1");
                 jyxxsq.setZsfs("0");
                 jyxxsq.setHsbz("1");
-                jyxxsq.setSjly("1");
+                jyxxsq.setSjly(sjly);
                 jyxxsq.setOpenid(openid);
                 jyxxsq.setLrsj(new Date());
                 jyxxsq.setXgsj(new Date());
