@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.service;
 
+import com.rjxx.taxeasy.domains.Jyxx;
 import com.rjxx.taxeasy.domains.Jyxxsq;
 
 import java.util.List;
@@ -44,9 +45,9 @@ public interface BarcodeService {
      * 封装开具
      * @return
      */
-    String sqjInvioce(Jyxxsq jyxxsq, String gsdm, String gfmc,
+    String sqjInvioce(Jyxx jyxx, String gsdm, String gfmc,
                       String gfsh, String email, String gfyh,
                       String gfyhzh, String gfdz, String gfdh, String tqm,
-                      String openid, String sjly , String access_token,String weixinOrderNo);
+                      String openid, String sjly , String access_token, String weixinOrderNo);
 
 }

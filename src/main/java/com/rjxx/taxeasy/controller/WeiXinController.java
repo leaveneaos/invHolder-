@@ -65,7 +65,7 @@ public class WeiXinController extends BaseController {
     private CszbService cszbService;
 
     @Autowired
-    private JyxxsqService jyxxsqService;
+    private JyxxService jyxxService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -206,9 +206,9 @@ public class WeiXinController extends BaseController {
                                     Map mappo = new HashMap();
                                     mappo.put("gsdm","sqj");
                                     mappo.put("tqm",tqm);
-                                    Jyxxsq jyxxsq=jyxxsqService.findOneByParams(mappo);
+                                    Jyxx jyxx=jyxxService.findOneByParams(mappo);
                                     try {
-                                        barcodeService.sqjInvioce(jyxxsq,"sqj",(String) resultMap.get("title"), (String) resultMap.get("tax_no"),(String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
+                                        barcodeService.sqjInvioce(jyxx,"sqj",(String) resultMap.get("title"), (String) resultMap.get("tax_no"),(String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
                                                 (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
                                     } catch (Exception e) {
                                         String re = "发票开具失败，请重试！";

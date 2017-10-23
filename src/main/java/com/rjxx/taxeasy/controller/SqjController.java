@@ -1,12 +1,20 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.FpclService;
+import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
+import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.GsxxJpaDao;
+import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.utils.ResponseUtil;
+import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
 import com.rjxx.utils.StringUtils;
@@ -74,6 +82,17 @@ public class SqjController extends BaseController {
 
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
+
+    @Autowired
+    private SkpJpaDao skpJpaDao;
+
+    @Autowired
+    private XfJpaDao xfJpaDao;
+
+    @Autowired
+    private SpvoService spvoService;
+    @Autowired
+    private GsxxJpaDao gsxxJpaDao;
     //public static final String APP_ID = "wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
@@ -87,15 +106,15 @@ public class SqjController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(null==gsxx){
+        if (null == gsxx) {
             request.getSession().setAttribute("msg", "出现未知错误!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
-        if(request.getHeader("user-agent")== null){
+        if (request.getHeader("user-agent") == null) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
@@ -121,12 +140,12 @@ public class SqjController extends BaseController {
         Map params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(null==gsxx){
+        if (null == gsxx) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID  + "&secret="
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
                 + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         HttpClient client = new DefaultHttpClient();
@@ -289,9 +308,9 @@ public class SqjController extends BaseController {
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
                 //表示已经开过票
-                if(WeixinUtils.isWeiXinBrowser(request)){
+                if (WeixinUtils.isWeiXinBrowser(request)) {
                     WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-                    if(null==wxFpxxByTqm){
+                    if (null == wxFpxxByTqm) {
                         WxFpxx wFpxx = new WxFpxx();
                         wFpxx.setTqm(orderNo);
                         wFpxx.setGsdm(gsxx.getGsdm());
@@ -301,7 +320,7 @@ public class SqjController extends BaseController {
                         wFpxx.setOpenId(openid);
                         wFpxx.setKplsh(list.get(0).getKplsh().toString());
                         wxfpxxJpaDao.save(wFpxx);
-                    }else {
+                    } else {
                         wxFpxxByTqm.setTqm(orderNo);
                         wxFpxxByTqm.setGsdm(gsxx.getGsdm());
                         wxFpxxByTqm.setQ(state);
@@ -309,8 +328,8 @@ public class SqjController extends BaseController {
                         wxFpxxByTqm.setOrderNo(orderNo);
                         wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
                         wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
-                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                            String notNullCode= wxFpxxByTqm.getCode();
+                        if (wxFpxxByTqm.getCode() != null || !"".equals(wxFpxxByTqm.getCode())) {
+                            String notNullCode = wxFpxxByTqm.getCode();
                             wxFpxxByTqm.setCode(notNullCode);
                         }
                         wxfpxxJpaDao.save(wxFpxxByTqm);
@@ -321,15 +340,15 @@ public class SqjController extends BaseController {
             } else if (null != jyls && null != jyls.getDjh()) {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
-            }else if (null != tqmtq && null != tqmtq.getId()) {
+            } else if (null != tqmtq && null != tqmtq.getId()) {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
             } else {
-                if(WeixinUtils.isWeiXinBrowser(request)){
+                if (WeixinUtils.isWeiXinBrowser(request)) {
                     logger.info("微信扫描------");
                     WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                     //第一次扫描
-                    if(null==wxFpxxByTqm){
+                    if (null == wxFpxxByTqm) {
                         WxFpxx wxFpxx = new WxFpxx();
                         wxFpxx.setTqm(orderNo);
                         wxFpxx.setGsdm(gsxx.getGsdm());
@@ -343,15 +362,15 @@ public class SqjController extends BaseController {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }else {
+                    } else {
                         wxFpxxByTqm.setTqm(orderNo);
                         wxFpxxByTqm.setGsdm(gsxx.getGsdm());
                         wxFpxxByTqm.setOrderNo(orderNo);
                         wxFpxxByTqm.setQ(state);
                         wxFpxxByTqm.setWxtype("1");
                         wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
-                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                            String notNullCode= wxFpxxByTqm.getCode();
+                        if (wxFpxxByTqm.getCode() != null || !"".equals(wxFpxxByTqm.getCode())) {
+                            String notNullCode = wxFpxxByTqm.getCode();
                             wxFpxxByTqm.setCode(notNullCode);
                         }
                         try {
@@ -592,22 +611,22 @@ public class SqjController extends BaseController {
         params.put("gsdm", "sqj");
         String str = "sqj";
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(null==gsxx){
+        if (null == gsxx) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
-        if(request.getHeader("user-agent")==null){
+        if (request.getHeader("user-agent") == null) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +WeiXinConstants.APP_ID + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "/dzfp_sqj/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
@@ -632,15 +651,15 @@ public class SqjController extends BaseController {
         params.put("gsdm", "sqj");
         String str = "bss";
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(null==gsxx){
+        if (null == gsxx) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
-        if(request.getHeader("user-agent")==null){
+        if (request.getHeader("user-agent") == null) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
@@ -672,15 +691,15 @@ public class SqjController extends BaseController {
         params.put("gsdm", "sqj");
         String str = "wdm";
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(null==gsxx){
+        if (null == gsxx) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
-        if(request.getHeader("user-agent")==null){
+        if (request.getHeader("user-agent") == null) {
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
+            return;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
@@ -712,8 +731,6 @@ public class SqjController extends BaseController {
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             //验证提取码
-            //201705122093019160,6%
-            //201705122113019160,3%
             String storeNo = null;
             if (tqm.length() > 12) {
                 storeNo = tqm.substring(8, 12);
@@ -732,19 +749,11 @@ public class SqjController extends BaseController {
                 result.put("num", "11");
                 return result;
             }
-
-            //Map mapo = new HashMap<>();
-            //mapo.put("ddh", tqm);
-            //mapo.put("gsdm", "sqj");
-            //Smtq smtq1 = smtqService.findOneByParams(mapo);
-            //Jyxx jyxxtq = jyxxservice.findOneByParams(map);
             Map map = new HashMap<>();
             map.put("tqm", tqm);
             map.put("je", je);
             map.put("gsdm", "sqj");
-            Jyxxsq jyxxsq = jyxxsqService.findOneByParams(map);
-            //Jyxx jyxx = jyxxservice.findOneByParams(map);
-            //Tqmtq tqmtq = tqmtqService.findOneByParams(map);
+            Jyxx jyxx = jyxxservice.findOneByParams(map);
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
             if (list.size() > 0) {
@@ -787,26 +796,15 @@ public class SqjController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
-                request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
+                request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
             } else if (null != jyls && null != jyls.getDjh()) {
                 result.put("num", "6");
-            } /*else if (null != tqmtq && null != tqmtq.getId()) {
-                result.put("num", "7");
-            }  else if (null != jyxxtq && null == jyxx) {
+            }  else if (null == jyxx) {
                 result.put("num", "9");
-            } else if (null != jyxx && null != jyxx.getId()) {
+            } else {
                 request.getSession().setAttribute("tqm", tqm);
                 request.getSession().setAttribute("je", je);
                 request.getSession().setAttribute("jyxx", jyxx);
-                request.getSession().setAttribute("ppjg", "1");
-                result.put("num", "5");
-            } */else if(null == jyxxsq){
-                result.put("num","9");
-            }else {
-                request.getSession().setAttribute("tqm", tqm);
-                request.getSession().setAttribute("je", je);
-                request.getSession().setAttribute("jyxxsq", jyxxsq);
-                //request.getSession().setAttribute("ppjg", "1");
                 result.put("num", "5");
             }
         } else {
@@ -820,17 +818,14 @@ public class SqjController extends BaseController {
     @ResponseBody
     public Map<String, Object> saveLs(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh,
                                       String yx) {
-            Map<String, Object> result = new HashMap<String, Object>();
-            String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
-            String openid = String.valueOf(request.getSession().getAttribute("openid"));
-            try {
-                if (null == tqm || "".equals(tqm)) {
-                    request.getSession().setAttribute("msg", "会话已过期，请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                    return null;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        Map<String, Object> result = new HashMap<String, Object>();
+        String tqm = String.valueOf(request.getSession().getAttribute("tqm"));
+        String openid = String.valueOf(request.getSession().getAttribute("openid"));
+        try {
+            if (null == tqm || "".equals(tqm)) {
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
             }
             Map map = new HashMap<>();
             map.put("tqm", tqm);
@@ -846,63 +841,124 @@ public class SqjController extends BaseController {
                 result.put("msg", "该订单正在开票!");
                 return result;
             }
-            Map param= new HashMap();
-            param.put("tqm",tqm);
-            param.put("gsdm","sqj");
-            param.put("gfmc",fptt);
-            param.put("gfsh",nsrsbh);
-            param.put("gfdz",dz);
-            param.put("gfdh",dh);
-            param.put("gfyh",khh);
-            param.put("gfyhzh",khhzh);
-            param.put("email",yx);
-            param.put("sffsyj","1");
-            jyxxsqService.updateGfxx(param);
-            //交易信息
-            Map paramss = new HashMap();
-            paramss.put("tqm",tqm);
-            paramss.put("gsdm","sqj");
-            paramss.put("je",String.valueOf(request.getSession().getAttribute("je")));
-            Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
-            List<Jyxxsq> jyxxsqList=new ArrayList<>();
-            jyxxsqList.add(jyxxsq);
-            String response = "";
-            try {
-                fpclservice.zjkp(jyxxsqList, "01");//录屏
-                response = responseUtil.lpResponse(null);
-                logger.info(response);
-                Map resultXmlMap= XmlUtil.xml2Map(response);
-                String ReturnCode=resultXmlMap.get("ReturnCode").toString();
-                String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
-                if(null!= ReturnCode && "0000".equals(ReturnCode)){
-                    Tqmtq tqmtq1 = new Tqmtq();
-                    tqmtq1.setDdh(tqm);
-                    tqmtq1.setLrsj(new Date());
-                    tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
-                    tqmtq1.setGfmc(fptt);
-                    tqmtq1.setNsrsbh(nsrsbh);
-                    tqmtq1.setDz(dz);
-                    tqmtq1.setDh(dh);
-                    tqmtq1.setKhh(khh);
-                    tqmtq1.setKhhzh(khhzh);
-                    tqmtq1.setFpzt("0");
-                    tqmtq1.setYxbz("1");
-                    tqmtq1.setGfemail(yx);
-                    tqmtq1.setGsdm("sqj");
-                    String llqxx = request.getHeader("User-Agent");
-                    tqmtq1.setLlqxx(llqxx);
-                    if (openid != null && !"null".equals(openid)) {
-                        tqmtq1.setOpenid(openid);
-                    }
-                    tqmtqService.save(tqmtq1);
-                    result.put("msg", "1");
-                }else{
-                    result.put("msg",ReturnMessage);
+            Jyxx jyxx = jyxxservice.findOneByParams(map);
+            String orderNo = jyxx.getOrderNo();
+            String orderTime = jyxx.getOrderTime();
+            String price = jyxx.getPrice().toString();
+            String storeNo = jyxx.getStoreNo();
+
+            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(jyxx.getStoreNo(), "sqj");
+            Integer xfid = skp.getXfid(); //销方id
+            Xf xf = xfJpaDao.findOneById(xfid);
+            Integer kpdid = skp.getId();//税控盘id(开票点id)
+            Jyxxsq jyxxsq = new Jyxxsq();
+            jyxxsq.setJshj(Double.valueOf(price));
+            jyxxsq.setDdh(orderNo);
+            jyxxsq.setGsdm("sqj");
+            jyxxsq.setKpddm(storeNo);
+            jyxxsq.setXfmc(xf.getXfmc());
+            jyxxsq.setKpr(skp.getKpr());
+            jyxxsq.setFhr(skp.getFhr());
+            jyxxsq.setSkr(skp.getSkr());
+            jyxxsq.setXfid(xfid);
+            jyxxsq.setXfsh(xf.getXfsh());
+            jyxxsq.setXfyhzh(skp.getYhzh());
+            jyxxsq.setXfyh(skp.getKhyh());
+            jyxxsq.setXfdh(skp.getLxdh());//销方电话
+            jyxxsq.setXfdz(skp.getLxdz());//销方地址
+            jyxxsq.setXflxr(xf.getXflxr());//销方联系人
+            jyxxsq.setXfyb(xf.getXfyb());//销方邮编
+            jyxxsq.setGfmc(fptt);
+            jyxxsq.setGfsh(nsrsbh);
+            if (null != nsrsbh && !"".equals(nsrsbh)) {
+                jyxxsq.setGflx("1");
+            } else {
+                jyxxsq.setGflx("0");
+            }
+            jyxxsq.setGfemail(yx);
+            jyxxsq.setGfdz(dz);
+            jyxxsq.setGfdh(dh);
+            jyxxsq.setGfyhzh(khhzh);
+            jyxxsq.setGfyh(khh);
+            jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + NumberUtil.getRandomLetter());
+            jyxxsq.setFpzldm("12");
+            jyxxsq.setFpczlxdm("11");
+            jyxxsq.setSffsyj("1");
+            jyxxsq.setZsfs("0");
+            jyxxsq.setHsbz("1");
+            jyxxsq.setSjly("1");
+            jyxxsq.setOpenid(openid);
+            jyxxsq.setLrsj(new Date());
+            jyxxsq.setXgsj(new Date());
+            jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
+            jyxxsq.setTqm(orderNo);
+
+            List<Jymxsq> jymxsqList = new ArrayList<>();
+            Jymxsq jymxsq = new Jymxsq();
+            jymxsq.setJshj(Double.valueOf(price));
+            Cszb cszb = cszbService.getSpbmbbh("sqj", xfid, kpdid, "dyspbmb");
+            Map mapoo = new HashMap();
+            mapoo.put("gsdm", "sqj");
+            if (cszb.getCsz() != null) {
+                mapoo.put("spdm", cszb.getCsz());
+            }
+            Spvo spvo = spvoService.findOneSpvo(mapoo);
+            jymxsq.setSpdm(spvo.getSpbm());
+            jymxsq.setYhzcmc(spvo.getYhzcmc());
+            jymxsq.setYhzcbs(spvo.getYhzcbs());
+            jymxsq.setLslbz(spvo.getLslbz());
+            jymxsq.setFphxz("0");
+            jymxsq.setSpmc(spvo.getSpmc());
+            jymxsq.setLrsj(new Date());
+            jymxsq.setXgsj(new Date());
+            jymxsq.setSpsl(spvo.getSl());
+            jymxsq.setSpje(jymxsq.getJshj());
+            jymxsqList.add(jymxsq);
+
+            List<Jyzfmx> jyzfmxList = new ArrayList<>();
+
+            String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqList, jyzfmxList);
+            Gsxx oneByGsdm = gsxxJpaDao.findOneByGsdm("sqj");
+            String appid = oneByGsdm.getAppKey();
+            String key = oneByGsdm.getSecretKey();
+            String resultxml = HttpUtils.HttpUrlPost(xml, appid, key);
+
+            Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
+            String returnMsg = resultMap.get("ReturnMessage").toString();
+            String returnCode = resultMap.get("ReturnCode").toString();
+            Map map2 = new HashMap();
+            map2.put("returnMsg", returnMsg);
+            map2.put("returnCode", returnCode);
+            map2.put("serialorder",  jyxxsq.getJylsh()+jyxxsq.getDdh());
+            if (null != returnCode && "0000".equals(returnCode)) {
+                Tqmtq tqmtq1 = new Tqmtq();
+                tqmtq1.setDdh(tqm);
+                tqmtq1.setLrsj(new Date());
+                tqmtq1.setZje(Double.valueOf(String.valueOf(request.getSession().getAttribute("je"))));
+                tqmtq1.setGfmc(fptt);
+                tqmtq1.setNsrsbh(nsrsbh);
+                tqmtq1.setDz(dz);
+                tqmtq1.setDh(dh);
+                tqmtq1.setKhh(khh);
+                tqmtq1.setKhhzh(khhzh);
+                tqmtq1.setFpzt("0");
+                tqmtq1.setYxbz("1");
+                tqmtq1.setGfemail(yx);
+                tqmtq1.setGsdm("sqj");
+                String llqxx = request.getHeader("User-Agent");
+                tqmtq1.setLlqxx(llqxx);
+                if (openid != null && !"null".equals(openid)) {
+                    tqmtq1.setOpenid(openid);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                tqmtqService.save(tqmtq1);
+                result.put("msg", "1");
+            } else {
+                result.put("msg", returnMsg);
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
     }
 }
