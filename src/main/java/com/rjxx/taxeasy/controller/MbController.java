@@ -354,6 +354,7 @@ public class MbController extends BaseController {
                         request.getSession().setAttribute("jymxsqList", jymxsqList);
                         request.getSession().setAttribute("tqm", tqm);
                         result.put("num", "5");
+                        logger.info("订单编号"+tqm+"金额"+jyxxsq.getJshj()+"日期"+sdf.format(jyxxsq.getDdrq()));
                         if(WeixinUtils.isWeiXinBrowser(request)){
                             WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                             //第一次扫描
