@@ -331,8 +331,8 @@ public class MbController extends BaseController {
                         if(error!=null){
                             logger.info("---------错误信息------------"+error);
                             request.getSession().setAttribute("msg", error);
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                            return;
+                            //response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            //return;
                         }else {
                                 request.getSession().setAttribute("error", "");
                         }
@@ -341,8 +341,8 @@ public class MbController extends BaseController {
                         if(null!= msg && !"".equals(resultMap.get("msg"))){
                             logger.info("---------校验信息------------"+msg);
                             request.getSession().setAttribute("msg", msg);
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                            return;
+                            //response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            //return;
                         }else {
                             request.getSession().setAttribute("msg", "");
                         }
@@ -402,8 +402,6 @@ public class MbController extends BaseController {
                         }
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
                                       +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
-                        logger.info("手机扫码跳转订单确认页面地址------"+request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
-                                +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
                         return;
                     }
                 }else {
@@ -1086,6 +1084,9 @@ public class MbController extends BaseController {
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
         result.put("msg",request.getSession().getAttribute("msg"));
+        if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("temp"))){
+            result.put("num","2");
+        }
         return  result;
     }
 

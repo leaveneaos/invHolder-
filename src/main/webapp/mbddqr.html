@@ -73,18 +73,17 @@
                 {},
                 function (data) {
                     if(null!=data.error&&""!=data.error){
-                        alert(data.error);
-                        msg=data.error;
+                        redirect(data.error);
                         $("#sure").attr("disabled","disabled");
-                    }if(null!=data.msg &&""!=data.msg){
-                        alert(data.msg);
-                        msg=data.msg;
+                    }
+                    if(null!=data.temp&&""!=data.temp){
+                        redirect(data.temp);
                         $("#sure").attr("disabled","disabled");
-                    }else{
+                    }
+                    if(data.num!=null && data.num==2){
                         $('#orderTime').html(data.orderTime);
                         orderTime=data.orderTime;
                         $("#sure").attr("disabled",false);
-                        msg=null;
                     }
                 }
             )
