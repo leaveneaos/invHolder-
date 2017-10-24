@@ -335,6 +335,7 @@ public class SqjController extends BaseController {
                         wxfpxxJpaDao.save(wxFpxxByTqm);
                     }
                 }
+                request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
                 response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
                 return;
             } else if (null != jyls && null != jyls.getDjh()) {
