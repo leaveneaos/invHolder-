@@ -29,7 +29,6 @@ import java.util.Map;
 @RequestMapping("/common")
 public class CommonController extends BaseController {
 
-
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
     @Autowired
@@ -218,9 +217,7 @@ public class CommonController extends BaseController {
                 Integer kplsh=kpls.get(0).getKplsh();
                 response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?kbs="+kplsh+"&&_t=" + System.currentTimeMillis());
                 return;
-            }
-            else
-            {
+            } else {
                 request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return;
@@ -241,7 +238,6 @@ public class CommonController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return null;
         }
-        logger.info("拿到kplsh----------"+kplsh);
         Map kplsMap = new HashMap();
         kplsMap.put("kplsh",kplsh);
         Kpls kpls = kplsService.findOneByParams(kplsMap);
@@ -287,9 +283,7 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-            logger.info("+++++++++++++"+orderNo);
             WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-            logger.info("-----------"+wxFpxx);
             if(wxFpxx==null){
                 request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
