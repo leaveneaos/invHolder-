@@ -11,7 +11,6 @@ import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.vo.Spvo;
-import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.XmlUtil;
@@ -24,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -272,6 +270,7 @@ public Map sm(String gsdm, String q) {
                 result.put("price", price);
                 result.put("spsl", spsl.toString());
                 result.put("spmc", spmc.toString());
+                result.put("kpdmc", skp.getKpdmc());
                 Integer pid=skp.getPid();
                 if(pid==null){
                     result.put("tqm", orderNo);

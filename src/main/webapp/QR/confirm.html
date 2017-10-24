@@ -167,7 +167,7 @@
                         storeNo = data.storeNo;
                         $('#orderNo').html(data.orderNo);
                         $('#orderTime').html(data.orderTime);
-                        $('#storeNo').html(data.storeNo);
+                        $('#storeNo').html(data.kpdmc+"("+data.storeNo+")");
                         $('#price').html(RetainedDecimalPlaces(lastPrice)+"元");
                     }else{
                         redirect(obj.msg)
