@@ -426,7 +426,8 @@ public class MbController extends BaseController {
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state,String code) throws IOException{
-        logger.info("进入获取微信openid---");
+        logger.info("state"+state);
+        logger.info("code"+code);
         Map params = new HashMap<>();
         params.put("gsdm",state);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
@@ -467,8 +468,12 @@ public class MbController extends BaseController {
         if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
             response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
             return;
+        }else {
+            response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
         }
-        response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
+//        if(null!=code){
+//            barcodeCl(gsxx,code);
+//        }
         return;
     }
 
