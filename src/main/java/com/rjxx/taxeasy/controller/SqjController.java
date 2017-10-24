@@ -269,6 +269,20 @@ public class SqjController extends BaseController {
             mapo.put("gsdm", "sqj");
             Tqmtq tqmtq = tqmtqService.findOneByParams(mapo);
             List<Kpls> list = jylsService.findByTqm(mapo);
+            //是否离线开票
+            Cszb zb1 = cszbService.getSpbmbbh("sqj", null,null, "sflxkp");
+            if(null==zb1.getCsz()|| zb1.getCsz().equals("否")){
+                Map jyxxmap = new HashMap();
+                jyxxmap.put("tqm",orderNo);
+                jyxxmap.put("je",price);
+                jyxxmap.put("gsdm","sqj");
+                Jyxx jyxx = jyxxservice.findOneByParams(jyxxmap);
+                if(jyxx==null){
+                    request.getSession().setAttribute("msg", "交易数据未上传，请联系商家!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
+            }
             if (list.size() > 0) {
                 if (openid != null && !"null".equals(openid)) {
                     Map<String, Object> param = new HashMap<>();
