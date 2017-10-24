@@ -37,8 +37,10 @@ public class MyInterceptor implements HandlerInterceptor {
                     String g = request.getParameter("g");
                     if(null!=g){
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?q="+q+"&g="+g);
+
+                    }else {
+                        AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?q="+q);
                     }
-                    AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?q="+q);
                     logger.info("-----初始化支付宝授权----end------");
                     logger.info("-----初始化URL----end-----"+request.getServletPath());
                     return false;
