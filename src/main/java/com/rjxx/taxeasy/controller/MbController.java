@@ -1085,9 +1085,10 @@ public class MbController extends BaseController {
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
         result.put("msg",request.getSession().getAttribute("msg"));
-        if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("temp"))){
+        if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("msg"))){
             result.put("num","2");
         }
+        logger.info("----------------"+JSON.toJSONString(result));
         return  result;
     }
 
