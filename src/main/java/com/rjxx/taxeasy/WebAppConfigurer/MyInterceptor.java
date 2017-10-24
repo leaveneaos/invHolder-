@@ -21,11 +21,11 @@ public class MyInterceptor implements HandlerInterceptor {
         HttpSession session=request.getSession();
 //        long l1 = System.currentTimeMillis();
 //        long l2 = session.getCreationTime();
-        if((System.currentTimeMillis()-session.getCreationTime())/1000 > 30*60){
-            logger.info("session过期了");
-            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=session_out");
-            return true;
-        }
+//        if((System.currentTimeMillis()-session.getCreationTime())/1000 > 30*60){
+//            logger.info("session过期了");
+//            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=session_out");
+//            return true;
+//        }
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
         if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||url.equals("/mb")){
