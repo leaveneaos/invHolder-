@@ -107,22 +107,31 @@
 	<script type="text/javascript">
         var gsdms = location.href.split('?')[1].split('&')[0].split('=')[1];
         var tqms = location.href.split('?')[1].split('&&')[1].split('=')[1];
+
+        function redirect(errorMsg){
+            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            window.location.assign(encodeURI(myurl));
+        }
             $(function () {
                $('#gsdm').val(gsdms);
                $('#tqm').val(tqms);
                 var tqm = $('#tqm').val();
                 var gsdm =   $('#gsdm').val();
                 $.post(
-                    "qrxxsession",/*确认信息*/
+                    "qrxxsession",
                     {
                         "gsdm":gsdm,
 						"tqm":tqm
 					},
                     function (data) {
+                        if(data.num!=null && data.num==31){
+                            $("#fptt2").after("<span class='lht'>" + data.fptt + "<span>")
+                            $("#fpje2").after("<span class='lht'>" +RetainedDecimalPlaces(data.sjkpje) + "元" + " <span>")
+                            $("#yx2").after("<span class='lht'>" + data.yx + "<span>")
+                        }else {
+                            redirect("请求已过期，请重试！");
+						}
 
-                        $("#fptt2").after("<span class='lht'>" + data.fptt + "<span>")
-                        $("#fpje2").after("<span class='lht'>" +RetainedDecimalPlaces(data.sjkpje) + "元" + " <span>")
-                        $("#yx2").after("<span class='lht'>" + data.yx + "<span>")
 
                     }
                 );

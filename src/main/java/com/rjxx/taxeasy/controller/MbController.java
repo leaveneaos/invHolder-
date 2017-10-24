@@ -269,14 +269,10 @@ public class MbController extends BaseController {
                                 wFpxx.setWxtype("2");
                                 wFpxx.setOpenId(opendid);
                                 wFpxx.setKplsh(list.get(0).getKplsh().toString());
-                                logger.info("已完成开票,归入卡包---"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+
-                                        q+"----微信"+opendid+
-                                        "------订单编号"+wFpxx.getOrderNo()+"------发票类型"+wFpxx.getWxtype());
                                 try {
                                     wxfpxxJpaDao.save(wFpxx);
                                 }catch (Exception e){
                                     e.printStackTrace();
-                                    logger.info("交易信息保存失败");
                                     return ;
                                 }
                             }else {
@@ -295,7 +291,6 @@ public class MbController extends BaseController {
                                     wxfpxxJpaDao.save(wxFpxxByTqm);
                                 }catch (Exception e){
                                     e.printStackTrace();
-                                    logger.info("交易信息保存失败");
                                     return ;
                                 }
                             }
@@ -367,14 +362,10 @@ public class MbController extends BaseController {
                                 wxFpxx.setWxtype("1");
                                 //微信
                                 wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                                logger.info("第一次扫码存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+
-                                        q+"----openid"+wxFpxx.getOpenId()+"----支付宝"+wxFpxx.getUserid()+
-                                        "------订单编号"+wxFpxx.getOrderNo()+"------发票类型"+wxFpxx.getWxtype());
                                 try {
                                     wxfpxxJpaDao.save(wxFpxx);
                                 }catch (Exception e){
                                     e.printStackTrace();
-                                    logger.info("交易信息保存失败");
                                     return ;
                                 }
                             }else {
@@ -389,14 +380,10 @@ public class MbController extends BaseController {
                                     String notNullCode= wxFpxxByTqm.getCode();
                                     wxFpxxByTqm.setCode(notNullCode);
                                 }
-                                logger.info("第一次扫码之后所有---存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+q+
-                                        "----微信openid"+wxFpxxByTqm.getOpenId()+"-------支付宝userid"
-                                        +wxFpxxByTqm.getUserid()+"------订单编号"+wxFpxxByTqm.getOrderNo()+"-----发票类型"+wxFpxxByTqm.getWxtype());
                                 try {
                                     wxfpxxJpaDao.save(wxFpxxByTqm);
                                 }catch (Exception e){
                                     e.printStackTrace();
-                                    logger.info("交易信息保存失败");
                                     return ;
                                 }
                             }
@@ -462,7 +449,6 @@ public class MbController extends BaseController {
             String q =(String) session.getAttribute("q");
             barcodeCl(gsxx,q);
         }else {
-            //宏康页面已经有了,不跳模板
             if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
                 response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
                 return;
@@ -621,7 +607,6 @@ public class MbController extends BaseController {
                                 wxfpxxJpaDao.save(wFpxx);
                             }catch (Exception e){
                                 e.printStackTrace();
-                                logger.info("交易信息保存失败1");
                                 return null;
                             }
                         }else {
@@ -640,7 +625,6 @@ public class MbController extends BaseController {
                                 wxfpxxJpaDao.save(wxFpxxByTqm);
                             }catch (Exception e){
                                 e.printStackTrace();
-                                logger.info("交易信息保存失败2");
                                 return null;
                             }
                         }
@@ -1077,6 +1061,9 @@ public class MbController extends BaseController {
         result.put("je", request.getSession().getAttribute(gsdm+tqm+"je"));
         result.put("sjkpje", request.getSession().getAttribute(gsdm+tqm+"sjkpje"));
 
+        if((!"".equals(request.getSession().getAttribute(gsdm+tqm+"sjkpje"))) && (null!=request.getSession().getAttribute(gsdm+tqm+"sjkpje"))){
+            result.put("num","31");
+        }
         //System.out.println(""+session.getAttribute(gsdm+tqm+"fptt").toString());
         result.put("price",request.getSession().getAttribute("price"));
         result.put("orderTime",request.getSession().getAttribute("orderTime"));
