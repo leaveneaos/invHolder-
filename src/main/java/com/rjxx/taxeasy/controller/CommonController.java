@@ -287,7 +287,9 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
+            logger.info("+++++++++++++"+orderNo);
             WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+            logger.info("-----------"+wxFpxx);
             if(wxFpxx==null){
                 request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
