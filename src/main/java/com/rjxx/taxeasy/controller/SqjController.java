@@ -137,6 +137,7 @@ public class SqjController extends BaseController {
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state, String code) throws IOException {
+        logger.info("获取微信ope------------------"+state+"===="+code);
         Map params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
