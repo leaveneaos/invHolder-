@@ -134,6 +134,7 @@ public class MbController extends BaseController {
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm",gsdm);
         request.getSession().setAttribute("gsdm",gsdm);
+        request.getSession().setAttribute("q",q);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx == null){
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
@@ -180,12 +181,8 @@ public class MbController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return ;
             }
-            /**
-             * 如果q参数为空则跳转到发票提取页面
-             */
             if (null==q) {
                 logger.info("不带参数q,进入浏览器页面-------");
-                //宏康页面已经有了,不跳模板
                 if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
                     response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
                     return;
@@ -302,7 +299,6 @@ public class MbController extends BaseController {
                                     return ;
                                 }
                             }
-
                         }
                         //如果是多张的话，只能领取第一张
                         String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
@@ -426,8 +422,6 @@ public class MbController extends BaseController {
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state,String code) throws IOException{
-        logger.info("state"+state);
-        logger.info("code"+code);
         Map params = new HashMap<>();
         params.put("gsdm",state);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
@@ -464,16 +458,19 @@ public class MbController extends BaseController {
             //关闭连接,释放资源
             client.getConnectionManager().shutdown();
         }
-        //宏康页面已经有了,不跳模板
-        if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
-            response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
-            return;
+
+        if(null!= session.getAttribute("q")){
+            String q =(String) session.getAttribute("q");
+            barcodeCl(gsxx,q);
         }else {
+            //宏康页面已经有了,不跳模板
+            if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
+                response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
+                return;
+            }
             response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm="+gsxx.getGsdm()+"&&t=" + System.currentTimeMillis());
+            return;
         }
-//        if(null!=code){
-//            barcodeCl(gsxx,code);
-//        }
         return;
     }
 
