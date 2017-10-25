@@ -14,6 +14,8 @@ import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.utils.ResponseUtil;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.MD5Util;
@@ -916,6 +918,7 @@ public class SqjController extends BaseController {
             } else {
                 jyxxsq.setGflx("0");
             }
+
             jyxxsq.setGfemail(yx);
             jyxxsq.setGfdz(dz);
             jyxxsq.setGfdh(dh);
@@ -927,7 +930,17 @@ public class SqjController extends BaseController {
             jyxxsq.setSffsyj("1");
             jyxxsq.setZsfs("0");
             jyxxsq.setHsbz("1");
-            jyxxsq.setSjly("1");
+            //jyxxsq.setSjly("1");
+            String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
+            if(AlipayUtils.isAlipayBrowser(request)){
+                jyxxsq.setOpenid(userId);
+                jyxxsq.setSjly("5");//数据来源--支付宝
+            }else if(WeixinUtils.isWeiXinBrowser(request)){
+                jyxxsq.setOpenid(openid);
+                jyxxsq.setSjly("4");//数据来源--微信
+            }else {
+                jyxxsq.setSjly("1");//数据来源 --接口
+            }
             jyxxsq.setOpenid(openid);
             jyxxsq.setLrsj(new Date());
             jyxxsq.setXgsj(new Date());
