@@ -888,7 +888,7 @@ public class SqjController extends BaseController {
                 request.getSession().setAttribute("msg", "没有交易数据，请联系商家!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             }
-            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(jyxx.getStoreNo(), "sqj");
+            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo, "sqj");
             Integer xfid = skp.getXfid(); //销方id
             Xf xf = xfJpaDao.findOneById(xfid);
             Integer kpdid = skp.getId();//税控盘id(开票点id)
