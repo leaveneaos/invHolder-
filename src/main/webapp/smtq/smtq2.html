@@ -348,8 +348,8 @@
                  } */
                 title = "信息确认";
                 $("#confirmBtn").attr("disabled", true);
-                jConfirm(firm, title, function (r) {
-                    if (r) {
+               /* jConfirm(firm, title, function (r) {
+                    if (r) {*/
                         $.post("../dzfp_sqj/saveLs", {
                             "fptt": fptt,
                             "nsrsbh": nsrsbh,
@@ -364,7 +364,8 @@
                                 info.innerText = data.xx;
                                 $("#confirmBtn").attr("disabled", false);
                             } else*/
-                            var obj = jQuery.parseJSON(data);
+                            console.log(data);
+                            /*var obj =eval("("+data+")");
                             alert(obj.msg);
                             if (obj.msg == 1 || obj.msg =='1') {
                                 alert("111");
@@ -372,13 +373,13 @@
                             } else {
                                 alert("222");
                                 window.location.href = "demo.html";
-                            }
+                            }*/
                         });
-                    } else {
+                   /* } else {
                         info.innerText = '请重新确认';
                         $("#confirmBtn").attr("disabled", false);
-                    }
-                });
+
+                });}*/
             }
         }
         function CheckAll(obj) {
