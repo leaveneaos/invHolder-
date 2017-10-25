@@ -262,6 +262,8 @@ public class SqjController extends BaseController {
             request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                     .format(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime)));
             request.getSession().setAttribute("price", price);
+            request.getSession().setAttribute("tqm", orderNo);
+            request.getSession().setAttribute("je", price);
             request.getSession().setAttribute("sn", sn);
             String ddh = (String) request.getSession().getAttribute("orderNo");
             String openid = (String) session.getAttribute("openid");
