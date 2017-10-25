@@ -31,6 +31,8 @@ public class InvoiceRequest {
 
     private Seller Seller;
 
+    private String DataSource;
+
     @XmlElementWrapper(name = "OrderSize")
     private List<Order> Order;
 
@@ -112,5 +114,13 @@ public class InvoiceRequest {
 
     public void setOrder(List<Order> order) {
         Order = order;
+    }
+
+    public String getDataSource() {
+        return DataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        DataSource = dataSource;
     }
 }

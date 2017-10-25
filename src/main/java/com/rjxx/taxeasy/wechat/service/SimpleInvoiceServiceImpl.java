@@ -84,6 +84,7 @@ public class SimpleInvoiceServiceImpl implements SimpleInvoiceService {
                 request.setPayee(skr);
                 request.setReviewer(fhr);
                 request.setSerialNumber(orderNo);
+                request.setDataSource("1");
 
                 Seller seller = new Seller();
                 seller.setIdentifier(xfsh);
