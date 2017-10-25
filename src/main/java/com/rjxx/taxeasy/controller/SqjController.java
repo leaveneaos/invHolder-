@@ -872,15 +872,15 @@ public class SqjController extends BaseController {
             jyxxsq.setGsdm("sqj");
             jyxxsq.setKpddm(storeNo);
             jyxxsq.setXfmc(xf.getXfmc());
-            jyxxsq.setKpr(skp.getKpr());
-            jyxxsq.setFhr(skp.getFhr());
-            jyxxsq.setSkr(skp.getSkr());
+            jyxxsq.setKpr(xf.getKpr());
+            jyxxsq.setFhr(xf.getFhr());
+            jyxxsq.setSkr(xf.getSkr());
             jyxxsq.setXfid(xfid);
             jyxxsq.setXfsh(xf.getXfsh());
-            jyxxsq.setXfyhzh(skp.getYhzh());
-            jyxxsq.setXfyh(skp.getKhyh());
-            jyxxsq.setXfdh(skp.getLxdh());//销方电话
-            jyxxsq.setXfdz(skp.getLxdz());//销方地址
+            jyxxsq.setXfyhzh(xf.getXfyhzh());
+            jyxxsq.setXfyh(xf.getXfyh());
+            jyxxsq.setXfdh(xf.getXfdh());//销方电话
+            jyxxsq.setXfdz(xf.getXfdz());//销方地址
             jyxxsq.setXflxr(xf.getXflxr());//销方联系人
             jyxxsq.setXfyb(xf.getXfyb());//销方邮编
             jyxxsq.setGfmc(fptt);
