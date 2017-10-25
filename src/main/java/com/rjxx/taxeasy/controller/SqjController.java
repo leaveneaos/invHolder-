@@ -872,7 +872,7 @@ public class SqjController extends BaseController {
             //是否离线开票
             Cszb zb1 = cszbService.getSpbmbbh("sqj", null,null, "sflxkp");
             if(zb1.getCsz().equals("是")){
-                if(null!=request.getSession().getAttribute("q")&& !"".equals(request.getSession().getAttribute("q"))){
+                if(null!=request.getSession().getAttribute("q")){
                     String q = request.getSession().getAttribute("q").toString();
                     byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(q);
                     String csc = new String(bytes);
