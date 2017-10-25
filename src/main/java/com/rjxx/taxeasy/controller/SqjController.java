@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.FpclService;
@@ -1009,7 +1010,7 @@ public class SqjController extends BaseController {
             } else {
                 result.put("msg", returnMsg);
             }
-
+            logger.info("=++++++++++++++++++++++++++++++++食其家跳转-----+++++"+ JSON.toJSONString(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
