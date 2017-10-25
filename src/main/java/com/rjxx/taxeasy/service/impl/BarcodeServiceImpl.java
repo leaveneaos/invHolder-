@@ -15,6 +15,7 @@ import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.XmlUtil;
 import com.rjxx.utils.weixin.WeixinUtils;
+import org.apache.commons.codec.binary.*;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -719,7 +720,7 @@ public Map sm(String gsdm, String q) {
 
     /**
      * 食其家开票方法
-     * @param jyxx
+     * @param q
      * @param gsdm
      * @param gfmc
      * @param gfsh
@@ -736,18 +737,25 @@ public Map sm(String gsdm, String q) {
      * @return
      */
     @Override
-    public String sqjInvioce(Jyxx jyxx,String gsdm,  String gfmc, String gfsh, String email,
+    public String sqjInvioce(String q,String gsdm,  String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
                               String openid,String sjly,String access_token,String weixinOrderNo) {
         try {
-                if(jyxx==null) {
-                    String reason = "获取数据为空，开票失败，请重试!";
-                    weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
-                    return "1";
-                }
+            byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(q);
+            String csc = new String(bytes);
+            String[] cssz = csc.split("&");
+            String orderNo = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
+            String orderTime = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
+            String price = cssz[2].substring(cssz[2].lastIndexOf("=") + 1);
+            String storeNo = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
+//                if(jyxx==null) {
+//                    String reason = "获取数据为空，开票失败，请重试!";
+//                    weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
+//                    return "1";
+//                }
                 Map map = new HashMap<>();
-                map.put("tqm",jyxx.getOrderNo());
-                map.put("je",jyxx.getPrice());
+                map.put("tqm",orderNo);
+                map.put("je",price);
                 map.put("gsdm",gsdm);
                 Tqmtq tqmtq = tqmtqService.findOneByParams(map);
                 Jyls jyls1 = jylsService.findOne(map);
@@ -765,11 +773,11 @@ public Map sm(String gsdm, String q) {
                     }
                     return  "1";
                 }
-                String orderNo = jyxx.getOrderNo();
-                String orderTime = jyxx.getOrderTime();
-                String price = jyxx.getPrice().toString();
-                String storeNo = jyxx.getStoreNo();
-                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(jyxx.getStoreNo(), "sqj");
+                //String orderNo = jyxx.getOrderNo();
+                //String orderTime = jyxx.getOrderTime();
+                //String price = jyxx.getPrice().toString();
+                //String storeNo = jyxx.getStoreNo();
+                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo, "sqj");
                 Integer xfid = skp.getXfid(); //销方id
                 Xf xf = xfJpaDao.findOneById(xfid);
                 Integer kpdid = skp.getId();//税控盘id(开票点id)

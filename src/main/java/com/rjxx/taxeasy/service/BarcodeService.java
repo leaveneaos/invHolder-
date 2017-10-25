@@ -45,7 +45,7 @@ public interface BarcodeService {
      * 封装开具
      * @return
      */
-    String sqjInvioce(Jyxx jyxx, String gsdm, String gfmc,
+    String sqjInvioce(String q, String gsdm, String gfmc,
                       String gfsh, String email, String gfyh,
                       String gfyhzh, String gfdz, String gfdh, String tqm,
                       String openid, String sjly , String access_token, String weixinOrderNo);

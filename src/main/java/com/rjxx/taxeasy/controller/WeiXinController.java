@@ -203,12 +203,12 @@ public class WeiXinController extends BaseController {
                                     return "";
                                 }else if(null!=gsdm && gsdm.equals("sqj")){
                                     logger.info("食其家微信开票----");
-                                    Map mappo = new HashMap();
-                                    mappo.put("gsdm","sqj");
-                                    mappo.put("tqm",tqm);
-                                    Jyxx jyxx=jyxxService.findOneByParams(mappo);
+//                                    Map mappo = new HashMap();
+//                                    mappo.put("gsdm","sqj");
+//                                    mappo.put("tqm",tqm);
+//                                    Jyxx jyxx=jyxxService.findOneByParams(mappo);
                                     try {
-                                        barcodeService.sqjInvioce(jyxx,"sqj",(String) resultMap.get("title"), (String) resultMap.get("tax_no"),(String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
+                                        barcodeService.sqjInvioce(q,"sqj",(String) resultMap.get("title"), (String) resultMap.get("tax_no"),(String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
                                                 (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
                                     } catch (Exception e) {
                                         String re = "发票开具失败，请重试！";
