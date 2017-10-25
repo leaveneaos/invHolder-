@@ -109,7 +109,7 @@
         var tqms = location.href.split('?')[1].split('&&')[1].split('=')[1];
 
         function redirect(errorMsg){
-            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            var myurl = "QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
             $(function () {
@@ -124,7 +124,7 @@
 						"tqm":tqm
 					},
                     function (data) {
-                        if(data.num!=null && data.num==31){
+                        if(data.numkp!=null && data.numkp==31){
                             $("#fptt2").after("<span class='lht'>" + data.fptt + "<span>")
                             $("#fpje2").after("<span class='lht'>" +RetainedDecimalPlaces(data.sjkpje) + "元" + " <span>")
                             $("#yx2").after("<span class='lht'>" + data.yx + "<span>")
