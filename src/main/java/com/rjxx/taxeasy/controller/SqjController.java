@@ -107,6 +107,7 @@ public class SqjController extends BaseController {
     @ResponseBody
     public void index() throws Exception {
         String str = request.getParameter("q");
+        request.getSession().setAttribute("q",str);
         Map<String, Object> params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
