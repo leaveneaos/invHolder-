@@ -350,7 +350,7 @@
                 $("#confirmBtn").attr("disabled", true);
                 jConfirm(firm, title, function (r) {
                     if (r) {
-                        $.post("../dzfp_sqj/save", {
+                        $.post("../dzfp_sqj/saveLs", {
                             "fptt": fptt,
                             "nsrsbh": nsrsbh,
                             "dz": dz,

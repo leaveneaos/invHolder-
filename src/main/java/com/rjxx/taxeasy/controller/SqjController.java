@@ -251,6 +251,7 @@ public class SqjController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return;
             }
+            request.getSession().setAttribute("q", state);
             request.getSession().setAttribute("orderNo", orderNo);
             request.getSession().setAttribute("orderTime1", orderTime);
             request.getSession().setAttribute("orderTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -857,11 +858,36 @@ public class SqjController extends BaseController {
                 return result;
             }
             Jyxx jyxx = jyxxservice.findOneByParams(map);
-            String orderNo = jyxx.getOrderNo();
-            String orderTime = jyxx.getOrderTime();
-            String price = jyxx.getPrice().toString();
-            String storeNo = jyxx.getStoreNo();
-
+            String orderNo="";
+            String orderTime="";
+            String price = "";
+            String storeNo = "";
+            //是否离线开票
+            Cszb zb1 = cszbService.getSpbmbbh("sqj", null,null, "sflxkp");
+            if(null!=zb1.getCsz()|| zb1.getCsz().equals("是")){
+                if(null!=request.getSession().getAttribute("q")&& !"".equals(request.getSession().getAttribute("q"))){
+                    String q = request.getSession().getAttribute("q").toString();
+                    byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(q);
+                    String csc = new String(bytes);
+                    String[] cssz = csc.split("&");
+                    orderNo = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
+                    orderTime = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
+                    price = cssz[2].substring(cssz[2].lastIndexOf("=") + 1);
+                    storeNo = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
+                }else {
+                    request.getSession().setAttribute("msg", "没有交易数据，请联系商家!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                }
+            }
+            if(null!=jyxx){
+                 orderNo = jyxx.getOrderNo();
+                 orderTime = jyxx.getOrderTime();
+                 price = jyxx.getPrice().toString();
+                 storeNo = jyxx.getStoreNo();
+            }else {
+                request.getSession().setAttribute("msg", "没有交易数据，请联系商家!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            }
             Skp skp = skpJpaDao.findOneByKpddmAndGsdm(jyxx.getStoreNo(), "sqj");
             Integer xfid = skp.getXfid(); //销方id
             Xf xf = xfJpaDao.findOneById(xfid);
