@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -833,7 +834,7 @@ public class SqjController extends BaseController {
     }
 
     // 获取购方信息,保存到交易流水
-    @RequestMapping(value = "/saveLs")
+    @RequestMapping(value = "/saveLs" ,method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Map<String, Object> saveLs(String fptt, String nsrsbh, String dz, String dh, String khh, String khhzh,
                                       String yx) {
@@ -880,6 +881,7 @@ public class SqjController extends BaseController {
                 }else {
                     request.getSession().setAttribute("msg", "没有交易数据，请联系商家!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
                 }
             }
             if(null!=jyxx){
@@ -890,6 +892,7 @@ public class SqjController extends BaseController {
             }else {
                 request.getSession().setAttribute("msg", "没有交易数据，请联系商家!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
             }
             Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo, "sqj");
             Integer xfid = skp.getXfid(); //销方id
