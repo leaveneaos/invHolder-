@@ -447,7 +447,7 @@ public class MbController extends BaseController {
         if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
             response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
             return;
-        }if(null!=gsxx.getGsdm()&& gsxx.getGsdm().equals("bqw")){
+        }if(null!=state&& state.equals("bqw")){
             barcodeCl(gsxx,request.getSession().getAttribute("q").toString());
         }else {
             response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm=" + gsxx.getGsdm() + "&&t=" + System.currentTimeMillis());
