@@ -1076,7 +1076,7 @@ public class MbController extends BaseController {
         result.put("je", request.getSession().getAttribute(gsdm+tqm+"je"));
         result.put("sjkpje", request.getSession().getAttribute(gsdm+tqm+"sjkpje"));
 
-        if((!"".equals(request.getSession().getAttribute(gsdm+tqm+"sjkpje"))) && (null!=request.getSession().getAttribute(gsdm+tqm+"sjkpje"))){
+        if(null!=request.getSession().getAttribute(gsdm+tqm+"fptt")){
             result.put("numkp","31");
         }
         //System.out.println(""+session.getAttribute(gsdm+tqm+"fptt").toString());
