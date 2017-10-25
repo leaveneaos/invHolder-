@@ -1000,6 +1000,7 @@ public class MbController extends BaseController {
             }
             tqmtqService.save(tqmtq1);
             result.put("msg", "1");
+            JSON.toJSONString("-------------------返回值"+result);
         }
         }catch(Exception e){
             e.printStackTrace();
