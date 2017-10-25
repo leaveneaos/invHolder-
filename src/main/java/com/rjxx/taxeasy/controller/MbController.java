@@ -892,6 +892,10 @@ public class MbController extends BaseController {
         Map<String,Object> result = new HashMap<String,Object>();
         Map  resultMap=(Map)request.getSession().getAttribute(gsdm+tqm+"resultMap");
         String openid = String.valueOf(request.getSession().getAttribute("openid"));
+        if(resultMap == null){
+            result.put("msg","该会话已过期，请重试!");
+            return result;
+        }
         List<Jyxxsq> jyxxsqList = new ArrayList<>() ;
         List<Jymxsq> jymxsqList = new ArrayList<>() ;
         List<Jyzfmx> jyzfmxList = new ArrayList<>() ;
@@ -914,6 +918,17 @@ public class MbController extends BaseController {
         jyxxsq.setGfemail(yx.trim());
         if (StringUtils.isNotBlank(jyxxsq.getGfemail())) {
             jyxxsq.setSffsyj("1");
+        }
+        jyxxsq.setTqm(tqm);
+        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
+        if(AlipayUtils.isAlipayBrowser(request)){
+            jyxxsq.setOpenid(userId);
+            jyxxsq.setSjly("5");//数据来源--支付宝
+        }else if(WeixinUtils.isWeiXinBrowser(request)){
+            jyxxsq.setOpenid(openid);
+            jyxxsq.setSjly("4");//数据来源--微信
+        }else {
+            jyxxsq.setSjly("1");//数据来源 --接口
         }
         jyxxsq.setGfsh(nsrsbh.trim());
         jyxxsq.setGfdz(dz.trim());
