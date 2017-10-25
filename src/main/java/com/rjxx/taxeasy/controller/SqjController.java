@@ -882,6 +882,7 @@ public class SqjController extends BaseController {
                     price = cssz[2].substring(cssz[2].lastIndexOf("=") + 1);
                     storeNo = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
                 }else {
+                    request.getSession().setAttribute("msg","交易数据为上传，请联系商家！");
                     result.put("msg", "2");
                     return result;
                 }
@@ -892,6 +893,7 @@ public class SqjController extends BaseController {
                     price = jyxx.getPrice().toString();
                     storeNo = jyxx.getStoreNo();
                 }else {
+                    request.getSession().setAttribute("msg","交易数据为上传，请联系商家！");
                     result.put("msg", "2");
                     return result;
                 }
