@@ -363,10 +363,13 @@
                             /*if (data.failure) {
                                 info.innerText = data.xx;
                                 $("#confirmBtn").attr("disabled", false);
-                            } else*/ if (data.msg == 1) {
+                            } else*/
+                           alert(data.msg);
+                            if (data.msg == 1 || data.msg =='1') {
                                 alert("111");
                                 window.location.href = "../smtq/smtq3"+ new Date();
                             } else {
+                                alert("222");
                                 window.location.href = "demo.html";
                             }
                         });
