@@ -365,10 +365,8 @@
                                 $("#confirmBtn").attr("disabled", false);
                             } else*/
                             console.log(data);
-                            //var obj =eval("("+data+")");
-                            //alert(obj.msg);
                             if (data.msg == 1 ) {
-                                window.location.href = "../smtq/smtq3"+ new Date();
+                                window.location.href = "../smtq/smtq3.html?time=" + new Date();
                             } else if(data.msg == 2){
                                 window.location.href = "demo.html";
                             }else {
