@@ -872,7 +872,9 @@ public class SqjController extends BaseController {
             //是否离线开票
             Cszb zb1 = cszbService.getSpbmbbh("sqj", null,null, "sflxkp");
             if(zb1.getCsz().equals("是")){
+                logger.info("+++++++++++++++++++++++=1111111111111111111");
                 if(null!=request.getSession().getAttribute("q")){
+                    logger.info("+++++++++++++++++++++++++++2222222222222222");
                     String q = request.getSession().getAttribute("q").toString();
                     byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(q);
                     String csc = new String(bytes);
@@ -882,17 +884,20 @@ public class SqjController extends BaseController {
                     price = cssz[2].substring(cssz[2].lastIndexOf("=") + 1);
                     storeNo = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
                 }else {
+                    logger.info("+++++++++++++++++++++++++++3333333333333333");
                     request.getSession().setAttribute("msg", "没有交易数据，请联系商家!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
             }
             if(null!=jyxx){
+                logger.info("+++++++++++++++++++++++++++4444444444444444");
                  orderNo = jyxx.getOrderNo();
                  orderTime = jyxx.getOrderTime();
                  price = jyxx.getPrice().toString();
                  storeNo = jyxx.getStoreNo();
             }else {
+                logger.info("+++++++++++++++++++++++++++555555555555555555555555");
                 request.getSession().setAttribute("msg", "没有交易数据，请联系商家!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
