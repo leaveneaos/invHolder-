@@ -39,16 +39,17 @@
 		#fptt {
 			position: relative;
 		}
-		/*#getFptt {
+		#getFptt {
 			padding: 0;
 			width: 20px;
 			height: 20px;
-		    position: absolute;
-		    -webkit-appearance: normal;
-    		top: 13px;
-    		right: 20px;
-    		background-color: #ccc;
-		}*/
+			position: absolute;
+			-webkit-appearance: normal;
+			top: 13px;
+			right: 15px;
+			background-color: #ccc;
+			display: none;
+		}
 	</style>
 </head>
 <body>
@@ -68,9 +69,6 @@
 				<div class="mui-input-row">
 					<label id="fptt2"><span  style="color: red;">*</span>发票抬头</label>
 					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头">
-					<!-- <select id="getFptt" oninput="changeFptt(this.value)">
-					  <option value="getFptt">
-					</select> -->
 					<!--选择支付宝抬头-->
 					<select id="getFptt" oninput="changeFptt(this.value)">
 					</select>
@@ -171,10 +169,11 @@
 			});
             // 获取支付宝默认抬头信息
             $.post(
-                'getInvoiceTitle',
+                '../getInvoiceTitle',
                 {},
                 function(test) {
                     if(test.success) {
+                        $("#getFptt").css('display','block');
                         var option='';
                         var dataList = test.data;
                         for(var i=0;i<dataList.length;i++) {
