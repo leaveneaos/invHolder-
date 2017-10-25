@@ -364,8 +364,9 @@
                                 info.innerText = data.xx;
                                 $("#confirmBtn").attr("disabled", false);
                             } else*/
-                           alert(data.msg);
-                            if (data.msg == 1 || data.msg =='1') {
+                            var obj = jQuery.parseJSON(data);
+                            alert(obj.msg);
+                            if (obj.msg == 1 || obj.msg =='1') {
                                 alert("111");
                                 window.location.href = "../smtq/smtq3"+ new Date();
                             } else {
