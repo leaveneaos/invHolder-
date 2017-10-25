@@ -360,11 +360,12 @@
                             "yx": yx
                             //"sj" : sj
                         }, function (data) {
-                            if (data.failure) {
+                            /*if (data.failure) {
                                 info.innerText = data.xx;
                                 $("#confirmBtn").attr("disabled", false);
-                            } else if (data.msg == 1) {
-                                window.location.href = "../dzfp_sqj/smtq3"+ new Date();
+                            } else*/ if (data.msg == 1) {
+                                alert("111");
+                                window.location.href = "../smtq/smtq3"+ new Date();
                             } else {
                                 window.location.href = "demo.html";
                             }
