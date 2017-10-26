@@ -362,7 +362,8 @@
             //支付宝归入发票管家
             if(isAlipay){
                 $("#zfb").click(function () {
-                    window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+                    alert("111");
+                    window.location = "syncAlipay?_t=" + (new Date()).getTime();
                 });
             }
             //微信归入卡包
