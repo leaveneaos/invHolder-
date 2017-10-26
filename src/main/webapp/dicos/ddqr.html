@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>信息确认</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/ddqr.css">
+</head>
+<body>
+	<header>
+		<header>
+			<img id="logo" src="logo/rjxx.jpg"/>
+		</header>
+	</header>
+	<section class="main">
+		<div class="content">
+			<div class="middle" style="height: 460px;">
+				<div class="bgimage">
+					<img src="../images/sqj.png"  id="bgimg" class="img">
+				</div>
+		        <ul>
+		            <li class="fl">订单编号 :</li>
+		            <li class="fr omit" id="orderNo"></li>
+		        </ul>
+		         <ul>
+		            <li class="fl">门店编号 :</li>
+		            <li class="fr omit" id="order"></li>
+		        </ul>
+		        <ul>
+		            <li class="fl">交易时间 :</li>
+		            <li class="fr omit" id="orderTime"></li>
+		        </ul>
+		        <ul>
+		            <li class="fl">订单金额 :</li>
+		            <li class="fr omit" id="price" ></li>
+		        </ul>
+				<div class="bottom">
+					<input type="hidden" id="tqmhidden">
+					<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+				</div>
+			</div>
+		</div>
+		<div class="shadow2"></div>
+		<div class="shadow1"></div>
+	</section>
+	<footer>
+		<p class="company fl">泰易电子发票云服务平台</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+	</footer>
+
+	<script src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+        function redirect(errorMsg){
+            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            window.location.assign(encodeURI(myurl));
+        }
+        /*$(function () {
+            var thisURL = document.URL;
+            var  getval =thisURL.split('?')[1];
+            var ppdm= getval.split("=")[2];
+            if(ppdm!="no"){
+                $("#logo").attr("src", "../QR/logo/" + ppdm + ".png");
+            }
+            $.post(
+                "../scan/scanConfirm",
+                {},
+                function (obj) {
+                    if(obj.code=="1"){
+                        var data = eval("(" + obj.data + ")");
+                        //价格，多个则显示带逗号的多个，一个则显示一个
+                        price =data.price;
+                        //最后价格，如果是多个价格则算总和，如果只有一个只算一个
+                        lastPrice=null;
+                        lastSpsl = data.spsl;
+                        lastSpmc=data.spmc;
+
+                        if(price.indexOf(",")!=-1 &&lastSpsl.indexOf(",")!=-1 &&lastSpmc.indexOf(",")!=-1){
+                            var pricesize=price.length-(price.replace(/,/g, "").length);
+                            var spslsize=lastSpsl.length-(lastSpsl.replace(/,/g, "").length);
+                            var spmcsize=lastSpmc.length-(lastSpmc.replace(/,/g, "").length);
+                            //如果传过来的数据个数匹配
+                            if(pricesize==spslsize && pricesize==spmcsize){
+                                for(var i=0;i<pricesize+1;i++){
+                                    lastPrice+=parseFloat(price.split(",")[i]);
+                                }
+                            }else {
+                                redirect("传入数据有误,confirm.line[155]");
+                            }
+                        }else{
+                            //如果传过来的数据，有的是多个有的是一个
+                            if(lastSpsl.indexOf(",")!=-1 || lastSpmc.indexOf(",")!=-1 ||price.indexOf(",")!=-1 ){
+                                redirect("传入数据有误,confirm.line[160]");
+                            }
+                            lastPrice = price;
+                        }
+
+                        orderNo = data.orderNo;
+                        orderTime = data.orderTime;
+                        storeNo = data.storeNo;
+                        $('#orderNo').html(data.orderNo);
+                        $('#orderTime').html(data.orderTime);
+                        $('#storeNo').html(data.kpdmc+"("+data.storeNo+")");
+                        $('#price').html(RetainedDecimalPlaces(lastPrice)+"元");
+                    }else{
+                        redirect(obj.msg)
+                    }
+                }
+            )
+        })
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
+        function tk() {
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            if(isAlipay){
+                var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
+                window.location.assign(encodeURI(myurl));
+            }else if(isWeixin){
+                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + lastPrice;
+            }else{
+                redirect("请用微信或支付宝扫码");
+            }
+        }*/
+	</script>
+</body>
+</html>
