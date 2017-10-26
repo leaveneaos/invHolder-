@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<title>订单确认</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<style type="text/css">
+		.content {
+			padding: 50px 0px 30px;
+			box-sizing: border-box;
+			font-size: 14px;
+			height: 409px;
+		}
+		.content .kjz1 {
+			text-align: center;
+		}
+		.content li{
+			text-align: left;
+			margin-left: 10%;
+			width: 85%;
+			font-weight: 400;
+		}
+		.content p{
+			font-size: 16px;
+			font-weight: 600;
+		}
+		.icon {
+			width: 4em; height: 3em;
+			vertical-align: -0.15em;
+			fill: currentColor;
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<img src="../images/nav.png" style="max-height: 55px;max-width: 100%;">
+	</header>
+
+	<section class="main">
+		<div class="content">
+			<div class="kjz1">
+				<svg class="icon" id="you" aria-hidden="true">
+					<use xlink:href="#icon-youxiang"></use>
+				</svg>
+				<svg class="icon" id="wechat" style="display: none" aria-hidden="true">
+					<use xlink:href="#icon-weixin"></use>
+				</svg>
+				<svg class="icon" id="alipay" style="display: none" aria-hidden="true">
+					<use xlink:href="#icon-zfb"></use>
+				</svg>
+				<p>您将通过以下途径获取电子发票：</p>
+				<li>1、发送至您的个人邮箱。</li>
+				<li>2、关注公众号，及时获取发票通知。</li>
+				<li class="wdpq" style="display: none">3、发票自动存入微信卡包"我的票券"。</li>
+				<li class="fpgj" style="display: none">3、发票自动存入支付宝"发票管家"。</li>
+			</div>
+
+			<div class="ewm" style="margin-top: 22%">
+				<img class="fl" src="../images/fwh.jpg">
+				<span class="fr">长按识别二维码,关注公众号及时收到发票信息</span>
+			</div>
+		</div>
+		<div class="shadow2"></div>
+		<div class="shadow1"></div>
+	</section>
+	<footer>
+		<p class="company fl">泰易电子发票云服务平台</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+	</footer>
+	<script src="../js/jquery.min.js"></script>
+	<script src="js/iconfont.js"></script>
+	<script type="text/javascript">
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var isAlipay = ua.indexOf('alipay') != -1;
+        if(isWeixin){
+            $(".wdpq").css('display','block');
+            $(".fpgj").css('display','none');
+            $("#wechat").css('display','block');
+            $("#alipay").css('display','none');
+		}
+		if(isAlipay){
+            $(".wdpq").css('display','none');
+            $(".fpgj").css('display','block');
+            $("#wechat").css('display','none');
+            $("#alipay").css('display','block');
+		}
+	</script>
+</body>
+</html>

@@ -13,7 +13,7 @@ header img{
 	width: 100%;
 }
 body {
-	background-color: #e6a84a;
+	background-color: #efc78d;
 }
 ul, ol, li, a{
 	list-style: none;
@@ -37,7 +37,7 @@ button {
 	width: 80%;
 	height: 36px;
 	line-height: 36px;  /*解决在IE下文字显示不出问题*/
-	background-color: #4BB4F7;
+	background-color: #22c774;
 	list-style-type: none; 
 	color: #fff;
 	border-radius: 18px;
@@ -76,13 +76,13 @@ button {
 }
 .top {
 	text-align: center;
-	height: 50px;
+	height: 40px;
 	line-height: 50px;
 	background-color: #F7F8FA;
 	font-size: 13px;
 	color: #ccc;
-	padding: 0 10px;
-	border-bottom: 1px solid #D6D6D6;
+	border-bottom: 1px solid #ececec;
+	margin-top: -8px;
 }
 .one,.two,.three,.four {
 	color: #4BB4F7;
@@ -94,7 +94,7 @@ button {
 .bottom {
 	width: 100%;
 	height: 80px;
-	line-height: 80px;
+	line-height: 40px;
 	text-align: center;
 }
 .bottom:before {
