@@ -938,18 +938,18 @@ public class SqjController extends BaseController {
             jyxxsq.setSffsyj("1");
             jyxxsq.setZsfs("0");
             jyxxsq.setHsbz("1");
-            //jyxxsq.setSjly("1");
             String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
+            logger.info("++++++++++++++++++++++++++++++++++1111111111111111111++++++++++++支付宝userID++++++"+userId);
             if(AlipayUtils.isAlipayBrowser(request)){
                 jyxxsq.setOpenid(userId);
-                jyxxsq.setSjly("5");//数据来源--支付宝
+                jyxxsq.setSjly("5");//数据来源
             }else if(WeixinUtils.isWeiXinBrowser(request)){
                 jyxxsq.setOpenid(openid);
-                jyxxsq.setSjly("4");//数据来源--微信
+                jyxxsq.setSjly("4");//数据来源
             }else {
-                jyxxsq.setSjly("1");//数据来源 --接口
+                jyxxsq.setSjly("1");//数据来源接口
             }
-            jyxxsq.setOpenid(openid);
+            logger.info("++++++++++++++++++++++++++++++++++1111111111111111111++++++++++++jyxxsq++++++"+jyxxsq.getOpenid());
             jyxxsq.setLrsj(new Date());
             jyxxsq.setXgsj(new Date());
             jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
@@ -1017,7 +1017,6 @@ public class SqjController extends BaseController {
             } else {
                 result.put("msg", returnMsg);
             }
-            logger.info("=++++++++++++++++++++++++++++++++食其家跳转-----+++++"+ JSON.toJSONString(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
