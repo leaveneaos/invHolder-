@@ -111,7 +111,7 @@ public class CommonController extends BaseController {
                         String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
                         logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
                         //可开具 跳转微信授权链接
-                        redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
+                        redirectUrl = weixinUtils.getTiaoURL(wxFpxx.getGsdm(),weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){
                             //获取授权失败
                             request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
@@ -310,7 +310,7 @@ public class CommonController extends BaseController {
                 String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
                 logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
                 //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(weixinOrderNo,price,orderTime, "","2",access_token,ticket,spappid);
+                redirectUrl = weixinUtils.getTiaoURL(wxFpxx.getGsdm(),weixinOrderNo,price,orderTime, "","2",access_token,ticket,spappid);
                 if(null==redirectUrl||redirectUrl.equals("")){
                     //获取授权失败
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");

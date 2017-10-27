@@ -13,9 +13,9 @@
 	</header>
 	<section class="main">
 		<div class="content">
-			<div class="middle" style="height: 460px;">
-				<div class="bgimage">
-					<img src="../images/sqj.png"  id="bgimg" class="img">
+			<div class="middle" style="height: 480px;">
+				<div class="advertimg">
+					<img src="../images/sqj.png"  id="advertimg" class="advertimg">
 				</div>
 				<div class="top">
 					<span class="one">信息确认</span><span class="one">&gt;</span>
@@ -39,7 +39,6 @@
 		            <li class="fr omit" id="price" ></li>
 		        </ul>
 				<div class="bottom">
-					<input type="hidden" id="tqmhidden">
 					<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
 				</div>
 			</div>
@@ -58,12 +57,12 @@
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
-        /*$(function () {
+        $(function () {
             var thisURL = document.URL;
             var  getval =thisURL.split('?')[1];
             var ppdm= getval.split("=")[2];
             if(ppdm!="no"){
-                $("#logo").attr("src", "../QR/logo/" + ppdm + ".png");
+                $("#logo").attr("src", "../dicos/logo/" + ppdm + ".png");
             }
             $.post(
                 "../scan/scanConfirm",
@@ -117,7 +116,7 @@
             source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
             return source.join(".");
         };
-        function tk() {
+        function sure() {
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
@@ -125,12 +124,15 @@
                 var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
                 window.location.assign(encodeURI(myurl));
             }else if(isWeixin){
+                if(null==orderNo || orderTime==null|| lastPrice == null){
+                    redirect("传入数据有误,请重新扫描！");
+				}
                 window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + lastPrice;
             }else{
-                redirect("请用微信或支付宝扫码");
+                redirect("请用使用微信或支付宝扫码！");
             }
-        }*/
+        }
 	</script>
 </body>
 </html>
