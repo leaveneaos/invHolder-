@@ -9,7 +9,7 @@
 </head>
 <body>
 	<header>
-		<img id="logo" class="logo" src="../images/nav.png"/>
+		<img id="logo" class="logo" src="logo/dicos.png"/>
 	</header>
 	<section class="main">
 		<div class="content">
@@ -28,7 +28,7 @@
 		        </ul>
 		         <ul>
 		            <li class="fl">门店编号 :</li>
-		            <li class="fr omit" id="order"></li>
+		            <li class="fr omit" id="storeNo"></li>
 		        </ul>
 		        <ul>
 		            <li class="fl">交易时间 :</li>
@@ -53,17 +53,23 @@
 
 	<script src="../js/jquery.min.js"></script>
 	<script type="text/javascript">
-        function redirect(errorMsg){
+       function redirect(errorMsg){
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
         $(function () {
+           /* var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
             var thisURL = document.URL;
             var  getval =thisURL.split('?')[1];
             var ppdm= getval.split("=")[2];
-            if(ppdm!="no"){
-                $("#logo").attr("src", "../dicos/logo/" + ppdm + ".png");
+           if(ppdm!="no"){
+                $("#logo").attr("src", "logo/" + ppdm + ".png");
             }
+            if(isWeixin){
+                $(".top").css('display','none');
+			}
             $.post(
                 "../scan/scanConfirm",
                 {},
@@ -108,9 +114,9 @@
                         redirect(obj.msg)
                     }
                 }
-            )
+            )*/
         })
-        function RetainedDecimalPlaces(num) {
+      /* function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);
             var source = String(num).split(".");
             source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
@@ -132,7 +138,7 @@
             }else{
                 redirect("请用使用微信或支付宝扫码！");
             }
-        }
+        }*/
 	</script>
 </body>
 </html>
