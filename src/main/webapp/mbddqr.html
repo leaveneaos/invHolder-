@@ -76,8 +76,8 @@
                         redirect(data.error);
                         $("#sure").attr("disabled","disabled");
                     }
-                    if(null!=data.temp&&""!=data.temp){
-                        redirect(data.temp);
+                    if(null!=data.msg&&""!=data.msg){
+                        redirect(data.msg);
                         $("#sure").attr("disabled","disabled");
                     }
                     if(data.num!=null && data.num==2){
