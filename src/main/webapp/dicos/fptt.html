@@ -10,12 +10,13 @@
 </head>
 <body onresize="document.activeElement.scrollIntoView(true);">
 	<header>
-		<img src="../images/nav.png">
+		<img id="logo" class="logo" src="logo/dicos.png"/>
 	</header>
 	<section class="main">
-		<div class="shadow1"></div>
-		<div class="shadow2"></div>
 		<div class="content">
+			<div class="advertimg">
+				<img src="logo/dicos_advert.png"  id="advert" class="advertimg">
+			</div>
 			<div class="top">
 				<span>信息确认</span><span>&gt;</span>
 				<span class="three">发票抬头</span><span class="three">&gt;</span>
@@ -23,7 +24,6 @@
 			</div>
 			<div class="middle">
 				<div class="type">
-					<!--<div class="checkType">抬头类型</div>-->
 					<button id="company">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
 					<button id="personal" class="checkStyle" type="submit">个人/其他</button>
 				</div>
@@ -37,12 +37,27 @@
 						</div>
 						<div class="entry">
 							<span style="color: red;">*</span><label>购方税号</label>
-							<input id="nsrsbh" maxlength="20"
-							name="nsrsbh" type="text" class="" placeholder="请输入纳税人识别号(15,18或20位)">
+							<input id="nsrsbh" maxlength="20" name="nsrsbh" type="text" class="" placeholder="15,18或20位(必填)">
 						</div>
 						<div class="entry">
-							<label>电子邮箱</label>
-							<input name="yx" id="yx" type="text" class="" placeholder="请输入邮箱用于接收发票">
+							<label>单位地址</label>
+							<input id="dz" maxlength="100" name="dz" type="text" class="" placeholder="收票单位注册地址">
+						</div>
+						<div class="entry">
+							<label>电话号码</label>
+							<input id="dh" maxlength="30" name="dh" type="text" class="" placeholder="请输入公司电话号码">
+						</div>
+						<div class="entry">
+							<label>开户银行</label>
+							<input id="khh" maxlength="50" name="khh" type="text" class="" placeholder="收票单位开户银行">
+						</div>
+						<div class="entry">
+							<label>银行账号</label>
+							<input id="yhzh" maxlength="50" name="yhzh" type="text" class="" placeholder="收票单位银行帐号">
+						</div>
+						<div class="entry">
+							<label>邮箱地址</label>
+							<input name="yx" id="yx" type="text" class="" placeholder="建议填写，取票更方便">
 						</div>
 		    		</form>
 				</div>
@@ -51,6 +66,8 @@
 				<button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
 			</div>
 		</div>
+		<div class="shadow2"></div>
+		<div class="shadow1"></div>
 	</section>
 	<footer>
 		<p class="company fl">泰易电子发票云服务平台</p>
@@ -60,48 +77,46 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/jquery.alerts.js"></script>
 	<script type="text/javascript">
-		// 解决browser对象不被支持的问题
-		jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
-       function redirect(errorMsg){
-            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
-            window.location.assign(encodeURI(myurl));
-        }
-        $(function () {
-		 /* $(".toggle dl dd").hide();
-            $(".toggle dl dt").click(function () {
-                $(".toggle dl dd").not($(this).next()).hide();
-                $(".toggle dl dt").not($(this).next()).removeClass("current");
-                $(this).next().slideToggle(500);
-                $(this).toggleClass("current");
-            });
+        // 解决browser对象不被支持的问题
+        jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+        var djh;
+        var storage=window.localStorage;
+        $(function() {
             var thisURL = document.URL;
             var myurl=decodeURI(thisURL);
             var getval =myurl.split('?')[1];
-            var spsl= getval.split("=")[2];
-            var spmc= getval.split("=")[3];
-            var price= getval.split("=")[4];
-            if(spsl.indexOf(",")!=-1 && spmc.indexOf(",")!=-1 && price.indexOf(",")!=-1){
-                var pricesize=price.length-(price.replace(/,/g, "").length);
-                var spslsize=spsl.length-(spsl.replace(/,/g, "").length);
-                var spmcsize=spmc.length-(spmc.replace(/,/g, "").length);
-                if(pricesize==spslsize && pricesize==spmcsize){
-                    for(var i=0;i<pricesize+1;i++){
-                        $('#tab').append("<tr><td>"+spmc.split(",")[i]+"</td><td>" + price.split(",")[i] + "</td><td>" + spsl.split(",")[i] + "%</td></tr>");
-                    }
-                }else {
-                    redirect("传入信息有误,input.line[234]");
-                }
-            }else{
-                if(spsl.indexOf(",")!=-1 || spmc.indexOf(",")!=-1 ||price.indexOf(",")!=-1 ){
-                    redirect("传入信息有误,input.line[239]");
-                }
-                $('#tab').append("<tr><td>"+spmc+"</td><td>" + price + "</td><td>" + spsl + "%</td></tr>");
+            var pp= getval.split("=")[2];
+            if(pp!="no"){
+                $("#logo").attr("src", "logo/" + pp + ".png");
+                $("#advert").attr("src", "logo/" + pp + "_advert.png");
             }
+            // 选择抬头类型
+            var $fptt = $('#fptt');
+            	$nsrsbh = $('#nsrsbh'),
+                $dz = $('#dz'),
+                $dh = $('#dh'),
+                $khh = $('#khh'),
+                $yhzh = $('#yhzh'),
+                $yx = $('#yx');
+            var arr = [$nsrsbh,$dz,$khh,$yhzh];
+            $('#personal').on('click',function() {
+                $('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
+                for(var i=0;i<arr.length;i++) {
+                    arr[i].parent().css('display','none');
+                }
+            })
+            $('#company').on('click',function() {
+                $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
+                for(var i=0;i<arr.length;i++) {
+                    arr[i].parent().css('display','block');
+                }
+            })
             // 获取支付宝默认抬头信息
             $.post(
                 '../getInvoiceTitle',
                 {},
                 function(test) {
+
                     if(test.success) {
                         $("#getFptt").css('display','block');
                         var option='';
@@ -124,10 +139,9 @@
                         $("#getFptt").append(option);
                     };
                 }
-            );*/
+            );
         })
-
-       /* // 选择支付宝抬头信息
+        // 选择支付宝抬头信息
         function changeFptt(obj){
             $.post(
                 '../getInvoiceTitle',
@@ -152,19 +166,6 @@
                 }
             )
         };
-
-        // 模态框
-        function showMask(){
-            $("#mask").css("height",$(document).height());
-            $("#mask").css("width",$(document).width());
-            $("#mask").show();
-            loading.innerHTML = "<img src='../images/loading1.gif' class='loadingImg'><p class='state'>正在提交......</p>";
-        }
-        function hideMask(){
-            $("#mask").hide();
-            loading.innerHTML = '';
-        }
-
         // 税号校验
         function CheckSocialCreditCode() {
             var Code = $('#nsrsbh').val();
@@ -210,10 +211,36 @@
             }
             return true;
         };
-
-        function tk() {
-            var info = document.getElementById("info");
-            var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        // 本地存储
+        if(storage.data) {
+            var json=storage.getItem("data");
+            var obj = JSON.parse(json);
+            if(obj.fptt != '') {
+                document.getElementById('fptt').value = obj.fptt;
+            }
+            if(obj.nsrsbh != '') {
+                document.getElementById('nsrsbh').value = obj.nsrsbh;
+            }
+            if(obj.dz != '') {
+                document.getElementById('dz').value = obj.dz;
+            }
+            if(obj.dh != '') {
+                document.getElementById('dh').value = obj.dh;
+            }
+            if(obj.khh != '') {
+                document.getElementById('khh').value = obj.khh;
+            }
+            if(obj.yhzh != '') {
+                document.getElementById('yhzh').value = obj.yhzh;
+            }
+            if(obj.yx != '') {
+                document.getElementById('yx').value = obj.yx;
+            }
+        };
+        // 点击确认
+        function sure() {
+            // 邮箱校验
+            var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             var fptt = $('#fptt').val();
             var nsrsbh = $('#nsrsbh').val();
             var dz = $('#dz').val();
@@ -221,24 +248,19 @@
             var khh = $('#khh').val();
             var yhzh = $('#yhzh').val();
             var yx = $('#yx').val().trim();
-
             var firm;
             var title;
+
+
             if (null == fptt || "" == fptt) {
-                var btnArray = ['是'];
+                var btnArray = [ '是' ];
                 firm = "请输入发票抬头!";
                 title = "提示";
                 alert(firm, title);
                 return;
-            } else if (null == yx || "" == yx) {
-                var btnArray = ['是'];
-                firm = "请输入邮箱!";
-                title = "提示";
-                alert(firm, title);
-                return;
-            }else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
+            }else if ( (null==nsrsbh || nsrsbh=='') && ($('#personal').hasClass('checkStyle')) ) {
                 var btnArray = [ '是' ];
-                firm = "请输纳税人识别号!";
+                firm = "请输入购方税号!";
                 title = "提示";
                 alert(firm, title);
                 return;
@@ -258,61 +280,78 @@
                         return;
                     }
                 }
-                firm = "发票抬头:" + fptt + "</br>";
-                var btnArray = ['否', '是'];
-                if (null != nsrsbh && "" != nsrsbh) {
-                    firm += "纳税人识别号:" + nsrsbh + "</br>";
-                }
-                if (null != dz && "" != dz) {
-                    firm += "地址:" + dz + "</br>";
-                }
-                if (null != dh && "" != dh) {
-                    firm += "电话:" + dh + "</br>";
-                }
-                if (null != khh && "" != khh) {
-                    firm += "开户行:" + khh + "</br>";
-                }
-                if (null != yhzh && "" != yhzh) {
-                    firm += "银行账号:" + yhzh + "</br>";
-                }
-                if (null != yx && "" != yx) {
-                    firm += "邮箱:" + yx + "</br>";
-                }
-                title = "信息确认";
-                $("#confirmBtn").attr("disabled", true);
+                // 本地缓存
+                if(!window.localStorage){
+                    return false;
+                }else{
 
-                jConfirm(firm, title, function (r) {
-                    if (r) {
-                        showMask();
-                        $.post("../scan/submit", {
-                            "gfmc": fptt,
-                            "gfsh": nsrsbh,
-                            "gfdz": dz,
-                            "gfdh": dh,
-                            "gfyh": khh,
-                            "gfyhzh": yhzh,
-                            "email": yx
-                        }, function (obj) {
-                            if(obj.msg=="成功"){
-                                hideMask();
-                                var data = eval("(" + obj.data + ")");
-                                if(data.returnCode=="0000"||data.returnCode==null){
-                                    window.location.href = "../QR/result.html";
-                                }else {
-                                    redirect(data.returnMsg);
-                                }
-                            }else{
-                                redirect(obj.msg);
-                            }
-                        });
-                    } else {
-                        info.innerText = '请重新确认';
-                        $("#confirmBtn").attr("disabled", false);
+                    var data={
+                        fptt: fptt,
+                        nsrsbh: nsrsbh,
+                        dz: dz,
+                        dh: dh,
+                        khh: khh,
+                        yhzh: yhzh,
+                        yx: yx
+                    };
+                    var d=JSON.stringify(data);
+                    storage.setItem("data",d);
+                }
+				/*var btnArray = [ '否', '是' ];
+				 title = "信息确认";
+				 firm = "发票抬头:" + fptt + "</br>";
+
+				 if (null != nsrsbh && "" != nsrsbh) {
+				 firm += "购方税号:" + nsrsbh + "</br>";
+				 }
+				 if (null != dz && "" != dz) {
+				 firm += "地址:" + dz +  "</br>";
+				 }
+				 if (null != dh && "" != dh) {
+				 firm += "电话:" + dh +  "</br>";
+				 }
+				 if (null != khh && "" != khh) {
+				 firm += "开户行:" + khh +  "</br>";
+				 }
+				 if (null != yhzh && "" != yhzh) {
+				 firm += "银行账号:" + yhzh +  "</br>";
+				 }
+				 if (null != yx && "" != yx) {
+				 firm += "邮箱:" + yx +  "</br>";
+				 }	*/
+
+                $("#sure").attr("disabled",true);
+				/*jConfirm(firm,title, function(r) {
+				 if(r){*/
+                $.post(
+                    "../fm/sqkpsession",/*申请开票  信息放入session*/
+                    {
+                        "fptt" : fptt,
+                        "nsrsbh" : nsrsbh,
+                        "dz" : dz,
+                        "dh" : dh,
+                        "khh" : khh,
+                        "yhzh" : yhzh,
+                        "yx" :yx
+                    },
+                    function(data) {
+                        if (data.msg == 1) {
+                            window.location.href = "fpbc.html?time=" + new Date();
+                        } else {
+                            btnArray = [ '确定' ];
+                            firm = data.msg;
+                            title = "提示";
+                            alert(firm, title);
+                            $("#sure").attr("disabled",false);
+                        }
                     }
-                });
+                );
+				/*	}else{
+				 $("#sure").attr("disabled",false);
+				 }
+				 });*/
             }
-        }*/
-
+        };
 	</script>
 </body>
 </html>

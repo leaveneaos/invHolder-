@@ -325,7 +325,7 @@ public class MbController extends BaseController {
                         String error = (String) resultMap.get("error");
                         if(error!=null){
                             logger.info("---------错误信息------------"+error);
-                            request.getSession().setAttribute("msg", error);
+                            request.getSession().setAttribute("error", error);
                             //response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             //return;
                         }else {

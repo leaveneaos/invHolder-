@@ -1,3 +1,10 @@
+body{
+	overflow-x: hidden;
+	overflow: hidden;
+}
+header{
+	background-color: #67481b;
+}
 .entry {
 	width: 90%;
 	height: 35px;

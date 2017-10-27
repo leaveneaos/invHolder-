@@ -15,7 +15,7 @@
 		<div class="content">
 			<div class="middle" style="height: 480px;">
 				<div class="advertimg">
-					<img src="../images/sqj.png"  id="advertimg" class="advertimg">
+					<img src="logo/dicos_advert.png"  id="advert" class="advertimg">
 				</div>
 				<div class="top">
 					<span class="one">信息确认</span><span class="one">&gt;</span>
@@ -57,15 +57,18 @@
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
+        pp = null;
         $(function () {
-           /* var ua = navigator.userAgent.toLowerCase();
+            var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
             var thisURL = document.URL;
             var  getval =thisURL.split('?')[1];
             var ppdm= getval.split("=")[2];
+                 pp =getval.split("=")[2];
            if(ppdm!="no"){
                 $("#logo").attr("src", "logo/" + ppdm + ".png");
+                $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
             }
             if(isWeixin){
                 $(".top").css('display','none');
@@ -114,9 +117,9 @@
                         redirect(obj.msg)
                     }
                 }
-            )*/
+            )
         })
-      /* function RetainedDecimalPlaces(num) {
+      function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);
             var source = String(num).split(".");
             source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
@@ -127,7 +130,10 @@
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
             if(isAlipay){
-                var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
+                if(pp==null){
+                    redirect("跳转出现错误，请重新扫描！");
+				}
+                var myurl = "dicos/fptt.html?param="+new Date()+"="+pp;
                 window.location.assign(encodeURI(myurl));
             }else if(isWeixin){
                 if(null==orderNo || orderTime==null|| lastPrice == null){
@@ -138,7 +144,7 @@
             }else{
                 redirect("请用使用微信或支付宝扫码！");
             }
-        }*/
+        }
 	</script>
 </body>
 </html>
