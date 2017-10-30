@@ -57,13 +57,16 @@
 				function(data) {
                     serialorder = data.serialorder;
 					if (null == serialorder || "" == serialorder) {
-						window.location.href = "/smtq/demo.html?time=" + new Date();
+						window.location.href = "/smtq/demo.html?time=" + new Date().getTime();
 					}
 				}
 			)
 		});
 		function fpfs() {
 			var youxiang = $('#username').val();
+            if (null == serialorder || "" == serialorder) {
+                window.location.href = "/smtq/demo.html?time=" + new Date().getTime();
+            }
 			if (null == youxiang || "" == youxiang) {
 				$('#cwxx').html("请输入邮箱!");
 			} else if (/^([a-zA-Z0-9]|[._-])+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
@@ -80,6 +83,9 @@
 						window.location.href = "tishi2.html?time="
 								+ new Date();
 					}else{
+					    if(data.session=="outoftime"){
+                            window.location.href = "/smtq/demo.html?time=" + new Date().getTime();
+						}
 						$('#cwxx').html("请检查您的邮箱!");
 					}
 				})

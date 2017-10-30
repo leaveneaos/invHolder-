@@ -167,8 +167,12 @@ public class TijiaoController extends BaseController {
         Map params = new HashMap<>();
         params.put("serialorder", serialorder);
         params.put("yx", yx);
-
         boolean flag = false;
+        if(("").equals(serialorder)||null==serialorder){
+            result.put("msg", flag);
+            result.put("session","outoftime");
+            return result;
+        }
         List<Kpls> kplsList = kplsService.findAll(params);
         params.put("djh",kplsList.get(0).getDjh());
         Jyls jyls = jylsService.findOne(params);
