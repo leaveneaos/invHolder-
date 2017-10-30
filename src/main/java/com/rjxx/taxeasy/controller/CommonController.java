@@ -2,13 +2,11 @@ package com.rjxx.taxeasy.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
-import com.rjxx.taxeasy.service.BarcodeService;
-import com.rjxx.taxeasy.service.GsxxService;
-import com.rjxx.taxeasy.service.JyxxsqService;
-import com.rjxx.taxeasy.service.KplsService;
+import com.rjxx.taxeasy.service.*;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -51,6 +49,12 @@ public class CommonController extends BaseController {
 
     @Autowired
     private wechatFpxxServiceImpl wechatFpxxService;
+
+    @Autowired
+    private SkpService skpService;
+
+    @Autowired
+    private PpJpaDao ppJpaDao;
 
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
@@ -110,8 +114,28 @@ public class CommonController extends BaseController {
                         }
                         String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
                         logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
+                        String gsdm = wxFpxx.getGsdm();
+                        if(gsdm.equals("dicos")){
+                            Map params = new HashMap();
+                            params.put("kpddm", storeNo);
+                            Skp skp = skpService.findOneByParams(params);
+                            if(skp == null){
+                                request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                                return null;
+                            }else {
+                                if(skp.getPid()==null || "".equals(skp.getPid())){
+                                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                                    return null;
+                                }
+                                Pp pp = ppJpaDao.findOneById(skp.getPid());
+                                gsdm=pp.getPpdm();
+                                logger.info("德克士的品牌代码-----"+gsdm);
+                            }
+                        }
                         //可开具 跳转微信授权链接
-                        redirectUrl = weixinUtils.getTiaoURL(wxFpxx.getGsdm(),weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
+                        redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){
                             //获取授权失败
                             request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");

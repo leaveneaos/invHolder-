@@ -81,7 +81,7 @@
         jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
         var djh;
         var storage=window.localStorage;
-
+		 ppdm = null;
         function redirect(errorMsg){
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
@@ -91,6 +91,9 @@
             var myurl=decodeURI(thisURL);
             var getval =myurl.split('?')[1];
             var pp= getval.split("=")[2];
+
+            ppdm = getval.split("=")[2];
+
             if(pp!="no"){
                 $("#logo").attr("src", "logo/" + pp + ".png");
                 $("#advert").attr("src", "logo/" + pp + "_advert.png");
@@ -320,8 +323,8 @@
                             if(obj.msg=="成功"){
                                 var data = eval("(" + obj.data + ")");
                                 if(data.returnCode=="0000"||data.returnCode==null){
-                                    alert("11");
-                                    window.location.href = "../dicos/witting.html";
+                                    alert(ppdm);
+                                    window.location.href = "../dicos/witting.html"+new Date()+"="+ppdm;
                                 }else {
                                     redirect(data.returnMsg);
                                 }

@@ -34,11 +34,14 @@
 		body{
 			overflow: hidden;
 		}
+		header{
+			background-color: #67481b;
+		}
 	</style>
 </head>
 <body>
 	<header>
-		<img src="../images/nav.png" style="max-height: 55px;max-width: 100%;">
+		<img id="logo" class="logo" src="logo/dicos.png"/>
 	</header>
 
 	<section class="main">
@@ -85,6 +88,7 @@
         var ua = navigator.userAgent.toLowerCase();
         var isWeixin = ua.indexOf('micromessenger') != -1;
         var isAlipay = ua.indexOf('alipay') != -1;
+
         if(isWeixin){
             $(".wdpq").css('display','block');
             $(".fpgj").css('display','none');
@@ -97,6 +101,16 @@
             $("#wechat").css('display','none');
             $("#alipay").css('display','block');
 		}
+        $(function() {
+            var thisURL = document.URL;
+            var myurl=decodeURI(thisURL);
+            var getval =myurl.split('?')[1];
+            var pp = getval.split("=")[2];
+			alert(pp);
+            if(pp!="no"){
+                $("#logo").attr("src", "logo/" + pp + ".png");
+            }
+        })
 	</script>
 </body>
 </html>
