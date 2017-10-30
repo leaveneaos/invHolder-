@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="UTF-8">
+	<title>发票详情</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/fpxq.css">
+	<style>
+		.middle li.fl {
+			width: 35%;
+		}
+		.middle li.fr {
+			width: 57%;
+		}
+		.middle ul{
+			height: 40px;
+			text-indent: 17px;
+		}
+	</style>
+</head>
+<body >
+	<header>
+	</header>
+	<section class="main" style="width: 92%">
+		<div class="content">
+			<div class="middle" style="height:386px;margin-top: 15px;">
+				<div style="text-align: center;padding: 5%">增值税电子普通发票</div>
+				<div class="fpxqxx">
+					<!--<ul>
+						<li class="fl">付款方:&nbsp;&nbsp;&nbsp;&nbsp;</li>
+						<li class="fr omit" id="gfmc"></li>
+					</ul>
+					 <ul>
+						<li class="fl">收款方:&nbsp;&nbsp;&nbsp;&nbsp;</li>
+						<li class="fr omit" id="xfmc"></li>
+					</ul>
+					<ul>
+						<li class="fl">开票金额:</li>
+						<li class="fr omit" id="fpje"></li>
+					</ul>
+					<ul class="kprq">
+						<li class="fl">开票日期:</li>
+						<li class="fr omit" id="kprq"></li>
+					</ul>
+					<ul>
+						<li class="fl">发票代码:</li>
+						<li class="fr omit" id="fpdm"></li>
+					</ul>
+					<ul>
+						<li class="fl">发票号码:</li>
+						<li class="fr omit" id="fphm"></li>
+					</ul>
+					<div  class="ck">
+						<a id="pdf" >查看PDF</a>
+					</div>-->
+				</div>
+			</div>
+			<div class="bottom btoTip">
+				<a href="../youxiang1.html" class="yx">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-youxiang1"></use>
+					</svg>
+					<span>邮箱</span>
+				</a>
+				<a href="javascript:void(0);" class="wx">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-weixin"></use>
+					</svg>
+					<span>微信</span>
+				</a>
+				<a href="javascript:void(0);" class="zfb">
+					<svg class="icon" aria-hidden="true">
+						<use xlink:href="#icon-zhifubao"></use>
+					</svg>
+					<span>支付宝</span>
+				</a>
+			</div>
+		</div>
+	</section>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/iconfont.js"></script>
+	<script type="text/javascript">
+		var serialOrder =location.href.split('?')[1].split('&')[0].split('=')[1];;
+      $(function () {
+            $.post(
+                "../common/smfpxq",
+                {
+                    "serialOrder":serialOrder
+				},
+                function (data) {
+//                    var data = jQuery.parseJSON(obj);
+//                        $("#xfmc").html(data.xfmc);
+//                        $("#gfmc").html(data.gfmc);
+//                        $("#kprq").html(data.kprq);
+//                        $("#fpdm").html(data.fpdm);
+//                        $("#fphm").html(data.fphm);
+//                        $("#jym").html(data.jym);
+//                        $("#pdf").attr("href",data.pdfurl);
+//                    	$("#fpje").html(RetainedDecimalPlaces(data.jshj)+"元");
+                    var items = data.kplsList;
+                    console.log(items);
+                    var html='';
+                    for(var i = 0; i < items.length; i++) {
+                        html+='<ul><li class="fl">销方名称</li><li class="fr omit" id="xfmc">'+items[i].xfmc+'</li></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul> <ul><li class="fl">开票金额</li><li class="fr omit" id="kpje">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul><ul><li class="fl">开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="fpdm">'+items[i].fpdm+'</li></ul> <ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fphm+'</li></ul><div class="ck"><a id="pdf" href='+items[i].pdfurl+'>查看发票</a></div>';
+                    }
+                    //在页面显示数据
+                    $(".fpxqxx").html(html);
+                }
+            )
+        })
+        //金额千位分隔2
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
+	</script>
+</body>
+</html>

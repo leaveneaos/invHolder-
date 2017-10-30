@@ -220,7 +220,7 @@ public class CommonController extends BaseController {
             List<Kpls> kpls = kplsService.findAll(kplsMap);
             if(kpls.size() > 0 ){
                 Integer kplsh=kpls.get(0).getKplsh();
-                response.sendRedirect(request.getContextPath() + "/Family/wxfpxq.html?kbs="+kplsh+"&&_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/Family/smfpxq.html?kplsh="+kplsh+"&&_t=" + System.currentTimeMillis());
                 return;
             } else {
                 request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
@@ -234,29 +234,26 @@ public class CommonController extends BaseController {
         }
 
     }
-    @RequestMapping(value = "/wxfpxq")
+    @RequestMapping(value = "/smfpxq")
     @ResponseBody
-    public String wxfpxq(String kplsh ) throws IOException {
-        logger.info("收到请求-----"+kplsh);
-        if(null == kplsh ){
-            request.getSession().setAttribute("msg", "发票跳转失败了，请重试!");
+    public Map smfpxq(String serialOrder ) throws IOException {
+        logger.info("收到请求-----"+serialOrder);
+        Map<String, Object> result = new HashMap<String, Object>();
+        if(null == serialOrder ){
+            request.getSession().setAttribute("msg", "出现未知错误，请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return null;
         }
-        Map kplsMap = new HashMap();
-        kplsMap.put("kplsh",kplsh);
-        Kpls kpls = kplsService.findOneByParams(kplsMap);
-        Map map = new HashMap();
-        map.put("gfmc",kpls.getGfmc());
-        map.put("xfmc",kpls.getXfmc());
-        map.put("jshj",kpls.getJshj());
-        map.put("kprq", DateFormatUtils.format(kpls.getKprq(),"yyyy-MM-dd"));
-        map.put("xfsh",kpls.getXfsh());
-        map.put("fpdm",kpls.getFpdm());
-        map.put("fphm",kpls.getFphm());
-        map.put("jym", kpls.getJym());
-        map.put("pdfurl",kpls.getPdfurl());
-        return  JSON.toJSONString(map);
+        Map map2 = new HashMap();
+        map2.put("serialorder",serialOrder);
+        List<Kpls> kplsList = kplsService.findAll(map2);
+        if(kplsList ==null){
+            request.getSession().setAttribute("msg", "出现未知错误，请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
+        }
+        result.put("kplsList", kplsList);
+        return  result;
     }
 
     @RequestMapping(value = "/syncWeiXin")
@@ -350,5 +347,29 @@ public class CommonController extends BaseController {
             gsInfo=gsxx.getGsmc();
         }
         return gsInfo;
+    }
+
+    /**
+     * 扫码发票归入支付宝、微信
+     * @param serialOrder
+     * @return
+     */
+    @RequestMapping(value = "/smInOut")
+    @ResponseBody
+    private String smInOut(String serialOrder){
+        try {
+            if(serialOrder==null){
+                //获取授权失败
+                request.getSession().setAttribute("msg", "扫码信息有误!请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }else {
+                response.sendRedirect(request.getContextPath() + "/Family/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
