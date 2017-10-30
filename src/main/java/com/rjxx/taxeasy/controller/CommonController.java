@@ -257,7 +257,7 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-            String gsdm=kplsList.get(0).getGsdm();
+            String gsdm = kplsList.get(0).getGsdm();
             result.put("price",kplsList.get(0).getJshj());
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             result.put("orderTime",sdf.format(kplsList.get(0).getKprq()));
@@ -283,15 +283,17 @@ public class CommonController extends BaseController {
                     wxFpxx.setTqm(orderNo);
                     wxFpxx.setGsdm(gsdm);
                     wxFpxx.setOrderNo(orderNo);
-                    wxFpxx.setWxtype("1");
+                    wxFpxx.setWxtype("2");
                     wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                    wxFpxx.setKplsh(kplsList.get(0).getKplsh().toString());
                     wxfpxxJpaDao.save(wxFpxx);
                 }else {
                     wxFpxxByTqm.setTqm(orderNo);
                     wxFpxxByTqm.setGsdm(gsdm);
                     wxFpxxByTqm.setOrderNo(orderNo);
-                    wxFpxxByTqm.setWxtype("1");
+                    wxFpxxByTqm.setWxtype("2");
                     wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
+                    wxFpxxByTqm.setKplsh(kplsList.get(0).getKplsh().toString());
                     if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
                         String notNullCode= wxFpxxByTqm.getCode();
                         wxFpxxByTqm.setCode(notNullCode);
