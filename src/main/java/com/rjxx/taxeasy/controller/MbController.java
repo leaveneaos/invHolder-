@@ -1011,36 +1011,45 @@ public class MbController extends BaseController {
     @ResponseBody
     public Map fpsession(String tqm,String gsdm) {
         Map<String, Object> result = new HashMap<String, Object>();
-        Map csmap = new HashMap<>();
-        csmap.put("tqm", tqm);
-        csmap.put("gsdm", gsdm);
-        List<Kpls> jylslist = jylsService.findByTqm(csmap);
-        Map map2 = new HashMap();
-        if(jylslist.size()>0){
-            map2.put("serialorder",jylslist.get(0).getSerialorder());
-        }
-        List<Kpls> kplsList = kplsService.findAll(map2);
-        String pdfdzs = "";
-        for (Kpls kpls2 : kplsList) {
-            pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
-        }
-        if (pdfdzs.length() > 0) {
-            result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-        }
-        result.put("serialorder", jylslist.get(0).getSerialorder());
-        //request.getSession().setAttribute("msg", "请重新扫描二维码");
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        result.put("kprq",sdf.format(kplsList.get(0).getKprq()));
-        result.put("price",kplsList.get(0).getJshj());
-        Jyls jyls = new Jyls();
-        jyls.setGsdm(kplsList.get(0).getGsdm());
-        jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
-        jyls.setJylsh(kplsList.get(0).getJylsh());
-        Jyls jyls1 = jylsService.findOneByParams(jyls);
-        if(jyls1.getGsdm().equals("hdsc")||jyls1.getGsdm().equals("cmsc")){
-            result.put("orderNo",jyls1.getKhh());
-        }else {
-            result.put("orderNo",jyls1.getTqm());
+        try {
+            if(tqm==null||gsdm==null){
+                request.getSession().setAttribute("msg", "出现未知错误，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            Map csmap = new HashMap<>();
+            csmap.put("tqm", tqm);
+            csmap.put("gsdm", gsdm);
+            List<Kpls> jylslist = jylsService.findByTqm(csmap);
+            Map map2 = new HashMap();
+            if(jylslist.size()>0){
+                map2.put("serialorder",jylslist.get(0).getSerialorder());
+            }
+            List<Kpls> kplsList = kplsService.findAll(map2);
+            String pdfdzs = "";
+            for (Kpls kpls2 : kplsList) {
+                pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+            }
+            if (pdfdzs.length() > 0) {
+                result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+            }
+            result.put("serialorder", jylslist.get(0).getSerialorder());
+            //request.getSession().setAttribute("msg", "请重新扫描二维码");
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            result.put("kprq",sdf.format(kplsList.get(0).getKprq()));
+            result.put("price",kplsList.get(0).getJshj());
+            Jyls jyls = new Jyls();
+            jyls.setGsdm(kplsList.get(0).getGsdm());
+            jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
+            jyls.setJylsh(kplsList.get(0).getJylsh());
+            Jyls jyls1 = jylsService.findOneByParams(jyls);
+            if(jyls1.getGsdm().equals("hdsc")||jyls1.getGsdm().equals("cmsc")){
+                result.put("orderNo",jyls1.getKhh());
+            }else {
+                result.put("orderNo",jyls1.getTqm());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }

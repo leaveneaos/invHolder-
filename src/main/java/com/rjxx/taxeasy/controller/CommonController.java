@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,9 @@ public class CommonController extends BaseController {
 
     @Autowired
     private PpJpaDao ppJpaDao;
+
+    @Autowired
+    private JylsService jylsService;
 
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
@@ -239,20 +243,37 @@ public class CommonController extends BaseController {
     public Map smfpxq(String serialOrder ) throws IOException {
         logger.info("收到请求-----"+serialOrder);
         Map<String, Object> result = new HashMap<String, Object>();
-        if(null == serialOrder ){
-            request.getSession().setAttribute("msg", "出现未知错误，请重试!");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
+        try {
+            if(null == serialOrder ){
+                request.getSession().setAttribute("msg", "出现未知错误，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            Map map2 = new HashMap();
+            map2.put("serialorder",serialOrder);
+            List<Kpls> kplsList = kplsService.findAll(map2);
+            if(kplsList ==null){
+                request.getSession().setAttribute("msg", "出现未知错误，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            result.put("price",kplsList.get(0).getJshj());
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            result.put("orderTime",sdf.format(kplsList.get(0).getKprq()));
+            Jyls jyls = new Jyls();
+            jyls.setGsdm(kplsList.get(0).getGsdm());
+            jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
+            jyls.setJylsh(kplsList.get(0).getJylsh());
+            Jyls jylsxx = jylsService.findOneByParams(jyls);
+            if(jylsxx.getGsdm().equals("hdsc")||jylsxx.getGsdm().equals("cmsc")){
+                result.put("orderNo",jylsxx.getKhh());
+            }else {
+                result.put("orderNo",jylsxx.getTqm());
+            }
+            result.put("kplsList", kplsList);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        Map map2 = new HashMap();
-        map2.put("serialorder",serialOrder);
-        List<Kpls> kplsList = kplsService.findAll(map2);
-        if(kplsList ==null){
-            request.getSession().setAttribute("msg", "出现未知错误，请重试!");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
-        }
-        result.put("kplsList", kplsList);
         return  result;
     }
 

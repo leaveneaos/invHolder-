@@ -9,10 +9,10 @@
 	<link rel="stylesheet" type="text/css" href="css/fpxq.css">
 	<style>
 		.middle li.fl {
-			width: 35%;
+			width: 25%;
 		}
 		.middle li.fr {
-			width: 57%;
+			width: 70%;
 		}
 		.middle ul{
 			height: 40px;
@@ -64,13 +64,13 @@
 					</svg>
 					<span>邮箱</span>
 				</a>
-				<a href="javascript:void(0);" class="wx">
+				<a href="javascript:void(0);" class="wx" style="display: none">
 					<svg class="icon" aria-hidden="true">
 						<use xlink:href="#icon-weixin"></use>
 					</svg>
 					<span>微信</span>
 				</a>
-				<a href="javascript:void(0);" class="zfb">
+				<a href="javascript:void(0);" class="zfb" style="display: none">
 					<svg class="icon" aria-hidden="true">
 						<use xlink:href="#icon-zhifubao"></use>
 					</svg>
@@ -82,8 +82,26 @@
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
-		var serialOrder =location.href.split('?')[1].split('&')[0].split('=')[1];;
-      $(function () {
+        function redirect(errorMsg){
+            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            window.location.assign(encodeURI(myurl));
+        }
+        var serialOrder =location.href.split('?')[1].split('&')[0].split('=')[1];
+		orderNo = null;
+		orderTime = null;
+		price =null;
+      	$(function () {
+			  var ua = navigator.userAgent.toLowerCase();
+			  var isWeixin = ua.indexOf('micromessenger') != -1;
+			  var isAlipay = ua.indexOf('alipay') != -1;
+			  if(isWeixin){
+				  $(".zfb").css('display','none');
+				  $(".wx").css('display','block');
+			  }
+			  if(isAlipay){
+				  $(".zfb").css('display','block');
+				  $(".wx").css('display','none');
+			  }
             $.post(
                 "../common/smfpxq",
                 {
@@ -99,6 +117,9 @@
 //                        $("#jym").html(data.jym);
 //                        $("#pdf").attr("href",data.pdfurl);
 //                    	$("#fpje").html(RetainedDecimalPlaces(data.jshj)+"元");
+					orderNo = data.orderNo;
+					price = data.price;
+					orderTime = data.orderTime;
                     var items = data.kplsList;
                     console.log(items);
                     var html='';
@@ -110,6 +131,18 @@
                 }
             )
         })
+            //归入支付宝发票管家
+            $(".zfb").click(function () {
+                window.location = "../syncAlipay?_t=" + (new Date()).getTime();
+            });
+            //归入微信卡包
+            $(".wx").click(function () {
+                if(null==orderNo || null==price||orderTime==null){
+                    redirect("归入微信卡包出现未知错误，请重试！");
+                }
+                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
+            });
+
         //金额千位分隔2
         function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);
