@@ -257,20 +257,48 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
+            String gsdm=kplsList.get(0).getGsdm();
             result.put("price",kplsList.get(0).getJshj());
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             result.put("orderTime",sdf.format(kplsList.get(0).getKprq()));
             Jyls jyls = new Jyls();
-            jyls.setGsdm(kplsList.get(0).getGsdm());
+            jyls.setGsdm(gsdm);
             jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
             jyls.setJylsh(kplsList.get(0).getJylsh());
             Jyls jylsxx = jylsService.findOneByParams(jyls);
+            String orderNo= "";
             if(jylsxx.getGsdm().equals("hdsc")||jylsxx.getGsdm().equals("cmsc")){
-                result.put("orderNo",jylsxx.getKhh());
+                orderNo = jylsxx.getKhh();
+                result.put("orderNo",orderNo);
             }else {
-                result.put("orderNo",jylsxx.getTqm());
+                orderNo = jylsxx.getTqm();
+                result.put("orderNo",orderNo);
             }
             result.put("kplsList", kplsList);
+            //保存微信发票信息
+            if(WeixinUtils.isWeiXinBrowser(request)){
+                WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+                if(null==wxFpxxByTqm){
+                    WxFpxx wxFpxx = new WxFpxx();
+                    wxFpxx.setTqm(orderNo);
+                    wxFpxx.setGsdm(gsdm);
+                    wxFpxx.setOrderNo(orderNo);
+                    wxFpxx.setWxtype("1");
+                    wxFpxx.setOpenId((String) session.getAttribute("openid"));
+                    wxfpxxJpaDao.save(wxFpxx);
+                }else {
+                    wxFpxxByTqm.setTqm(orderNo);
+                    wxFpxxByTqm.setGsdm(gsdm);
+                    wxFpxxByTqm.setOrderNo(orderNo);
+                    wxFpxxByTqm.setWxtype("1");
+                    wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
+                    if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                        String notNullCode= wxFpxxByTqm.getCode();
+                        wxFpxxByTqm.setCode(notNullCode);
+                    }
+                    wxfpxxJpaDao.save(wxFpxxByTqm);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
