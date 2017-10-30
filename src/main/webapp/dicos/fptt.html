@@ -251,20 +251,14 @@
             var firm;
             var title;
             if (null == fptt || "" == fptt) {
-                var btnArray = ['是'];
+                var btnArray = [ '是' ];
                 firm = "请输入发票抬头!";
                 title = "提示";
                 alert(firm, title);
                 return;
-            } else if (null == yx || "" == yx) {
-                var btnArray = ['是'];
-                firm = "请输入邮箱!";
-                title = "提示";
-                alert(firm, title);
-                return;
-            }else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
+            }else if ( (null==nsrsbh || nsrsbh=='') && ($('#personal').hasClass('checkStyle')) ) {
                 var btnArray = [ '是' ];
-                firm = "请输纳税人识别号!";
+                firm = "请输入购方税号!";
                 title = "提示";
                 alert(firm, title);
                 return;
@@ -309,7 +303,6 @@
 
                 jConfirm(firm, title, function (r) {
                     if (r) {
-                        showMask();
                         $.post("../scan/submit", {
                             "gfmc": fptt,
                             "gfsh": nsrsbh,
@@ -320,7 +313,6 @@
                             "email": yx
                         }, function (obj) {
                             if(obj.msg=="成功"){
-                                hideMask();
                                 var data = eval("(" + obj.data + ")");
                                 if(data.returnCode=="0000"||data.returnCode==null){
                                     window.location.href = "../dicos/witting.html"+ new Date();
