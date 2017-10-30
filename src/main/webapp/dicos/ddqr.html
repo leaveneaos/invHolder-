@@ -133,7 +133,7 @@
                 if(pp==null){
                     redirect("跳转出现错误，请重新扫描！");
 				}
-                var myurl = "dicos/fptt.html?param="+new Date()+"="+pp;
+                var myurl = "../dicos/fptt.html?param="+new Date()+"="+pp;
                 window.location.assign(encodeURI(myurl));
             }else if(isWeixin){
                 if(null==orderNo || orderTime==null|| lastPrice == null){
