@@ -115,25 +115,6 @@ public class CommonController extends BaseController {
                         String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
                         logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
                         String gsdm = wxFpxx.getGsdm();
-                        if(gsdm.equals("dicos")){
-                            Map params = new HashMap();
-                            params.put("kpddm", storeNo);
-                            Skp skp = skpService.findOneByParams(params);
-                            if(skp == null){
-                                request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                                return null;
-                            }else {
-                                if(skp.getPid()==null || "".equals(skp.getPid())){
-                                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                                    return null;
-                                }
-                                Pp pp = ppJpaDao.findOneById(skp.getPid());
-                                gsdm=pp.getPpdm();
-                                logger.info("德克士的品牌代码-----"+gsdm);
-                            }
-                        }
                         //可开具 跳转微信授权链接
                         redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){

@@ -41,10 +41,9 @@
 </head>
 <body>
 	<header>
-		<img id="logo" class="logo" src="logo/dicos.png"/>
+		<!--<img id="logo" class="logo" src="logo/dicos.png"/>-->
 	</header>
-
-	<section class="main">
+	<section class="main" style="margin: 32px auto 30px;">
 		<div class="content">
 			<div style="width: 100%">
 				<div id="you" style="float: left;width: 30%;margin-left: 10%">
@@ -101,16 +100,7 @@
             $("#wechat").css('display','none');
             $("#alipay").css('display','block');
 		}
-        $(function() {
-            var thisURL = document.URL;
-            var myurl=decodeURI(thisURL);
-            var getval =myurl.split('?')[1];
-            var pp = getval.split("=")[2];
-			alert(pp);
-            if(pp!="no"){
-                $("#logo").attr("src", "logo/" + pp + ".png");
-            }
-        })
+
 	</script>
 </body>
 </html>

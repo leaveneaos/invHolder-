@@ -323,8 +323,7 @@
                             if(obj.msg=="成功"){
                                 var data = eval("(" + obj.data + ")");
                                 if(data.returnCode=="0000"||data.returnCode==null){
-                                    alert(ppdm);
-                                    window.location.href = "../dicos/witting.html?param="+new Date()+"="+ppdm;
+                                    window.location.href = "../dicos/witting.html";
                                 }else {
                                     redirect(data.returnMsg);
                                 }
