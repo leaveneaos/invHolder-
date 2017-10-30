@@ -100,10 +100,10 @@
 			  var isAlipay = ua.indexOf('alipay') != -1;
 			  if(isWeixin){
 				  $(".zfb").css('display','none');
-				  $(".wx").css('display','block');
+				  $(".wx").css('display',"");
 			  }
 			  if(isAlipay){
-				  $(".zfb").css('display','block');
+				  $(".zfb").css('display',"");
 				  $(".wx").css('display','none');
 			  }
             $.post(
