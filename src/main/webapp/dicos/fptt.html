@@ -81,6 +81,11 @@
         jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
         var djh;
         var storage=window.localStorage;
+
+        function redirect(errorMsg){
+            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            window.location.assign(encodeURI(myurl));
+        }
         $(function() {
             var thisURL = document.URL;
             var myurl=decodeURI(thisURL);
