@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -55,16 +56,21 @@ public class WljqrController extends BaseController{
 		params.put("gsdm", "wljqr");
 		String str = "wljqr";
 		Gsxx gsxx = gsxxService.findOneByParams(params);
-    	if (gsxx.getWxappid() == null || gsxx.getWxsecret() == null) {
-			gsxx.setWxappid(APP_ID);
-			gsxx.setWxsecret(SECRET);
+		if (gsxx == null) {
+			response.sendError(501,  " not exist!!!");
+			return null;
+		}
+		if(null==request.getHeader("user-agent")){
+			request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+			response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+			return null;
 		}
 		String ua = request.getHeader("user-agent").toLowerCase();
 		if (ua.indexOf("micromessenger") > 0) {
 			String url = HtmlUtils.getBasePath(request);
 			String openid = String.valueOf(session.getAttribute("openid"));
 			if (openid == null || "null".equals(openid)) {
-				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+				String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
 						+ url + "dzfp_wljqr/getWx&" + "response_type=code&scope=snsapi_base&state=" + str
 						+ "#wechat_redirect";
 				response.sendRedirect(ul);
@@ -89,8 +95,8 @@ public class WljqrController extends BaseController{
 			gsxx.setWxappid(APP_ID);
 			gsxx.setWxsecret(SECRET);
 		}
-   		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
-   				+ gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+   		String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+   				+ WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
    		// https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
    		HttpClient client = new DefaultHttpClient();
    		HttpGet get = new HttpGet(turl);
@@ -135,57 +141,66 @@ public class WljqrController extends BaseController{
         String sessionCode = (String) session.getAttribute("rand");
         String openid = (String)session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
-        if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            Map map = new HashMap<>();
-            map.put("tqm", tqm);
-            map.put("gsdm", "wljqr");
-            List<Kpls> list = jylsService.findByTqm(map);
-            if (list.size() > 0) {
-                String pdfdzs = "";
-                request.getSession().setAttribute("djh", list.get(0).getDjh());
-                for (Kpls kpls2 : list) {
-                    pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
-                }
-                if (pdfdzs.length() > 0) {
-                    result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                    request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                }
-                if (openid != null && !"null".equals(openid)) {
-			        Map<String, Object> params = new HashMap<>();
-			        params.put("djh", list.get(0).getDjh());
-			        params.put("unionid", openid);
-			        Fpj fpj = fpjService.findOneByParams(params);
-			        if (fpj == null) {
-			        	fpj = new Fpj();
-						fpj.setDjh(list.get(0).getDjh());
-						fpj.setUnionid(openid);
-						fpj.setYxbz("1");
-						fpj.setLrsj(new Date());
-						fpj.setXgsj(new Date());
-						fpjService.save(fpj);
-					}
-				}
-                result.put("num", "2");
-                Tqjl tqjl = new Tqjl();
-                tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
-                tqjl.setJlly("1");
-                tqjl.setTqsj(new Date());
-                String visiterIP;
-                if (request.getHeader("x-forwarded-for") == null) {
-                    visiterIP = request.getRemoteAddr();// 访问者IP
-                } else {
-                    visiterIP = request.getHeader("x-forwarded-for");
-                }
-                tqjl.setIp(visiterIP);
-                String llqxx = request.getHeader("User-Agent");
-                tqjl.setLlqxx(llqxx);
-                tqjlService.save(tqjl);
-            } else {
-                result.put("num", "3");
+		try {
+			if(tqm==null || code ==null || sessionCode==null){
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
             }
-        } else {
-            result.put("num", "4");
-        }
-        return result;
+			if (code != null && sessionCode != null && code.equals(sessionCode)) {
+                Map map = new HashMap<>();
+                map.put("tqm", tqm);
+                map.put("gsdm", "wljqr");
+                List<Kpls> list = jylsService.findByTqm(map);
+                if (list.size() > 0) {
+                    String pdfdzs = "";
+                    request.getSession().setAttribute("djh", list.get(0).getDjh());
+                    for (Kpls kpls2 : list) {
+                        pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+                    }
+                    if (pdfdzs.length() > 0) {
+                        result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                        request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                    }
+                    if (openid != null && !"null".equals(openid)) {
+                        Map<String, Object> params = new HashMap<>();
+                        params.put("djh", list.get(0).getDjh());
+                        params.put("unionid", openid);
+                        Fpj fpj = fpjService.findOneByParams(params);
+                        if (fpj == null) {
+                            fpj = new Fpj();
+                            fpj.setDjh(list.get(0).getDjh());
+                            fpj.setUnionid(openid);
+                            fpj.setYxbz("1");
+                            fpj.setLrsj(new Date());
+                            fpj.setXgsj(new Date());
+                            fpjService.save(fpj);
+                        }
+                    }
+                    result.put("num", "2");
+                    Tqjl tqjl = new Tqjl();
+                    tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+                    tqjl.setJlly("1");
+                    tqjl.setTqsj(new Date());
+                    String visiterIP;
+                    if (request.getHeader("x-forwarded-for") == null) {
+                        visiterIP = request.getRemoteAddr();// 访问者IP
+                    } else {
+                        visiterIP = request.getHeader("x-forwarded-for");
+                    }
+                    tqjl.setIp(visiterIP);
+                    String llqxx = request.getHeader("User-Agent");
+                    tqjl.setLlqxx(llqxx);
+                    tqjlService.save(tqjl);
+                } else {
+                    result.put("num", "3");
+                }
+            } else {
+                result.put("num", "4");
+            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
     }
 }

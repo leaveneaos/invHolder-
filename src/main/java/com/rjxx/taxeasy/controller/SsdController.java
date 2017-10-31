@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.TqjlService;
 import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -70,6 +71,11 @@ public class SsdController extends BaseController{
             return null;
         }
         session.setAttribute(SESSION_KEY_FPTQ_GSDM, gsdm);
+        if(null==request.getHeader("user-agent")){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
+        }
         String ua = request.getHeader("user-agent").toLowerCase();
         logger.info("------------"+ua);
         if (ua.indexOf("micromessenger") > 0) {
@@ -80,7 +86,7 @@ public class SsdController extends BaseController{
             String url = HtmlUtils.getBasePath(request);
             String openid = (String) session.getAttribute("openid");
             if (openid == null || "null".equals(openid)) {
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + gsxx.getWxappid() + "&redirect_uri="
+                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "ssd/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm
                         + "#wechat_redirect";
                 response.sendRedirect(ul);
@@ -105,8 +111,8 @@ public class SsdController extends BaseController{
             gsxx.setWxappid(APP_ID);
             gsxx.setWxsecret(SECRET);
         }
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + gsxx.getWxappid() + "&secret="
-                + gsxx.getWxsecret() + "&code=" + code + "&grant_type=authorization_code";
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         // https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
         HttpClient client = new DefaultHttpClient();
         HttpGet get = new HttpGet(turl);
@@ -141,7 +147,7 @@ public class SsdController extends BaseController{
     @ResponseBody
     public Map Fptq(String khh, String code) {
         String sessionCode = (String) session.getAttribute("rand");
-        if(sessionCode==null){
+        if(sessionCode==null || khh==null || code==null){
             try {
                 response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=您的会话已过期，请重新扫码");
             } catch (IOException e) {
@@ -187,6 +193,14 @@ public class SsdController extends BaseController{
     @ResponseBody
     public Map xfp(String khh, String gsdm,String month) {
         Map result=new HashMap();
+        try {
+            if(null==khh||null==gsdm||month==null){
+                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=您的会话已过期，请重新扫码");
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         String openid = (String) session.getAttribute("openid");
         Map map = new HashMap<>();
         map.put("khh", khh);

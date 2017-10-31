@@ -93,6 +93,11 @@ public class WeiXinController extends BaseController {
         }
     }
 
+    /**
+     * 接收微信事件推送
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
         Map<String, String> requestMap = null;
@@ -323,65 +328,4 @@ public class WeiXinController extends BaseController {
         cacheList.add(flag);
         return true;
     }
-
-    /**
-     * 获取微信授权链接
-     *
-     * @return
-     */
-    /*@RequestMapping(value = WeiXinConstants.BEFORE_WEIXIN_REDIRECT_URL)
-    @ResponseBody
-    public String getTiaozhuanURL(*//*String orderid,int money,int timestamp,String mendianId*//*) throws Exception {
-
-        WeixinUtils weixinUtils = new WeixinUtils();
-        //判断是否是微信浏览器
-       *//* if (!weixinUtils.isWeiXinBrowser(request)) {
-            request.getSession().setAttribute("msg", "请使用支付宝进行该操作");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return null;
-        }*//*
-
-        String access_token = (String) weixinUtils.hqtk().get("access_token");//获取token
-        request.getSession().setAttribute("access_token",access_token);//token放进session里
-        String spappid =  weixinUtils.getSpappid();//获取开票平台
-        String ticket = weixinUtils.getTicket();
-        String orderid="123145322200112234";
-        int money = 12;
-        int timestamp = 1574875876;
-        String  source = "web";
-        String redirect_url = "https://baidu.com";
-        int type = 1;//填写抬头申请开票类型
-        Map nvps = new HashMap();
-        nvps.put("s_pappid",spappid);
-        nvps.put("order_id",orderid);
-        nvps.put("money",money);
-        nvps.put("timestamp",timestamp);
-        nvps.put("source",source);
-        nvps.put("redirect_url",redirect_url);
-        nvps.put("ticket",ticket);
-        nvps.put("type",type);
-        String sj = JSON.toJSONString(nvps);
-        System.out.println("封装数据"+sj);
-        String urls ="https://api.weixin.qq.com/card/invoice/getauthurl?access_token="+access_token;
-        String jsonStr3 = WeixinUtil.httpRequest(urls, "POST", sj);
-        System.out.println("返回信息"+jsonStr3.toString());
-        if(null!=jsonStr3){
-            ObjectMapper jsonparer = new ObjectMapper();// 初始化解析json格式的对象
-            try {
-                Map map = jsonparer.readValue(jsonStr3, Map.class);
-                String auth_url = (String) map.get("auth_url");
-                System.out.println("授权链接"+auth_url);
-                logger.info("跳转url"+auth_url);
-                response.sendRedirect(auth_url);
-                request.getSession().setAttribute(orderid+"auth_url",auth_url);//跳转url放进session
-            } catch (Exception e) {
-                //处理异常
-                logger.error("Get Ali Access_token error", e);
-                request.getSession().setAttribute("msg", "获取微信授权出现异常!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            }
-        }
-        return null;
-    }*/
-
 }

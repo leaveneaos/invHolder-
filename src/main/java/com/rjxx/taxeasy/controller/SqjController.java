@@ -461,15 +461,24 @@ public class SqjController extends BaseController {
     @ResponseBody
     public Map getSmsj() {
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("orderNo", request.getSession().getAttribute("orderNo"));
-        result.put("orderTime", request.getSession().getAttribute("orderTime"));
-        result.put("price", request.getSession().getAttribute("price"));
-        result.put("sn", request.getSession().getAttribute("sn"));
-        String llqxx = request.getHeader("User-Agent");
-        if (llqxx.contains("MicroMessenger")) {
-            result.put("isWx", true);
-        } else {
-            result.put("isWx", false);
+        try {
+            if(null==request.getSession().getAttribute("orderNo")){
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            result.put("orderNo", request.getSession().getAttribute("orderNo"));
+            result.put("orderTime", request.getSession().getAttribute("orderTime"));
+            result.put("price", request.getSession().getAttribute("price"));
+            result.put("sn", request.getSession().getAttribute("sn"));
+            String llqxx = request.getHeader("User-Agent");
+            if (llqxx.contains("MicroMessenger")) {
+                result.put("isWx", true);
+            } else {
+                result.put("isWx", false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }
@@ -555,18 +564,27 @@ public class SqjController extends BaseController {
     @ResponseBody
     public Map getZje() {
         Map<String, Object> result = new HashMap<>();
-        String sn = (String) request.getSession().getAttribute("sn");
-        if (StringUtils.isNotBlank(sn)) {
-            Map map2 = new HashMap<>();
-            map2.put("gsdm", "sqj");
-            map2.put("kpddm", sn);
-            Skp skp = skpService.findOneByParams(map2);
-            if (skp != null) {
-                String spsl = cszbService.getSpbmbbh("sqj", skp.getXfid(), skp.getId(), "spsl").getCsz();
-                result.put("slv", spsl);
+        try {
+            if(null==request.getSession().getAttribute("sn")){
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
             }
+            String sn = (String) request.getSession().getAttribute("sn");
+            if (StringUtils.isNotBlank(sn)) {
+                Map map2 = new HashMap<>();
+                map2.put("gsdm", "sqj");
+                map2.put("kpddm", sn);
+                Skp skp = skpService.findOneByParams(map2);
+                if (skp != null) {
+                    String spsl = cszbService.getSpbmbbh("sqj", skp.getXfid(), skp.getId(), "spsl").getCsz();
+                    result.put("slv", spsl);
+                }
+            }
+            result.put("zje", request.getSession().getAttribute("price"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        result.put("zje", request.getSession().getAttribute("price"));
         return result;
     }
 
@@ -583,8 +601,17 @@ public class SqjController extends BaseController {
     @ResponseBody
     public Map fpsession() {
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("djh", request.getSession().getAttribute("djh"));
-        result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
+        try {
+            if(null==request.getSession().getAttribute("djh")){
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            result.put("djh", request.getSession().getAttribute("djh"));
+            result.put("pdfdz", request.getSession().getAttribute("pdfdzs"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
@@ -611,19 +638,6 @@ public class SqjController extends BaseController {
         }
         return result;
     }
-
-//    public static void main(String[] args) {
-//        String str = "b3JkZXJObz0yMDE2MTAxMzEyNTUxMTEyMzQmb3JkZXJUaW1lPTIwMTYxMDEzMTI1NTExJnByaWNlPTIzJnNpZ249YjBjODdjY2U4NmE0ZGZlYmVkYzA1ZDgzZTdmNzY3OTA=";
-//        byte[] bt = null;
-//        try {
-//            sun.misc.BASE64Decoder decoder = new sun.misc.BASE64Decoder();
-//            bt = decoder.decodeBuffer(str);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        String csc = new String(bt);
-//        System.out.println(csc);
-//    }
 
     // 食其家 采用提取码提取方式
     // 跳转到sqj提取码提取页面
@@ -752,86 +766,95 @@ public class SqjController extends BaseController {
         String sessionCode = (String) session.getAttribute("rand");
         String openid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
-        if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            //验证提取码
-            String storeNo = null;
-            if (tqm.length() > 12) {
-                storeNo = tqm.substring(8, 12);
-                Map params = new HashMap();
-                params.put("kpddm", storeNo);
-                Skp skp = skpService.findOneByParams(params);
-                if (skp == null) {
+        try {
+            if(null == tqm || code ==null || je==null||sessionCode==null){
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
+            }
+            if (code != null && sessionCode != null && code.equals(sessionCode)) {
+                //验证提取码
+                String storeNo = null;
+                if (tqm.length() > 12) {
+                    storeNo = tqm.substring(8, 12);
+                    Map params = new HashMap();
+                    params.put("kpddm", storeNo);
+                    Skp skp = skpService.findOneByParams(params);
+                    if (skp == null) {
+                        //提取码不正确
+                        result.put("num", "11");
+                        return result;
+                    }
+                    Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
+                    request.getSession().setAttribute("slv", cszb.getCsz());
+                } else {
                     //提取码不正确
                     result.put("num", "11");
                     return result;
                 }
-                Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
-                request.getSession().setAttribute("slv", cszb.getCsz());
-            } else {
-                //提取码不正确
-                result.put("num", "11");
-                return result;
-            }
-            Map map = new HashMap<>();
-            map.put("tqm", tqm);
-            map.put("je", je);
-            map.put("gsdm", "sqj");
-            Jyxx jyxx = jyxxservice.findOneByParams(map);
-            Jyls jyls = jylsService.findOne(map);
-            List<Kpls> list = jylsService.findByTqm(map);
-            if (list.size() > 0) {
-                if (openid != null && !"null".equals(openid)) {
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("djh", jyls.getDjh());
-                    params.put("unionid", openid);
-                    Fpj fpj = fpjService.findOneByParams(params);
-                    if (fpj == null) {
-                        fpj = new Fpj();
-                        fpj.setDjh(jyls.getDjh());
-                        fpj.setUnionid(openid);
-                        fpj.setYxbz("1");
-                        fpj.setLrsj(new Date());
-                        fpj.setXgsj(new Date());
-                        fpjService.save(fpj);
+                Map map = new HashMap<>();
+                map.put("tqm", tqm);
+                map.put("je", je);
+                map.put("gsdm", "sqj");
+                Jyxx jyxx = jyxxservice.findOneByParams(map);
+                Jyls jyls = jylsService.findOne(map);
+                List<Kpls> list = jylsService.findByTqm(map);
+                if (list.size() > 0) {
+                    if (openid != null && !"null".equals(openid)) {
+                        Map<String, Object> params = new HashMap<>();
+                        params.put("djh", jyls.getDjh());
+                        params.put("unionid", openid);
+                        Fpj fpj = fpjService.findOneByParams(params);
+                        if (fpj == null) {
+                            fpj = new Fpj();
+                            fpj.setDjh(jyls.getDjh());
+                            fpj.setUnionid(openid);
+                            fpj.setYxbz("1");
+                            fpj.setLrsj(new Date());
+                            fpj.setXgsj(new Date());
+                            fpjService.save(fpj);
+                        }
                     }
-                }
-                String pdfdzs = "";
-                request.getSession().setAttribute("djh", list.get(0).getDjh());
-                for (Kpls kpls2 : list) {
-                    pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
-                }
-                if (pdfdzs.length() > 0) {
-                    result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                    request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
-                }
-                result.put("num", "2");
-                Tqjl tqjl = new Tqjl();
-                tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
-                tqjl.setJlly("1");
-                tqjl.setTqsj(new Date());
-                String visiterIP;
-                if (request.getHeader("x-forwarded-for") == null) {
-                    visiterIP = request.getRemoteAddr();// 访问者IP
+                    String pdfdzs = "";
+                    request.getSession().setAttribute("djh", list.get(0).getDjh());
+                    for (Kpls kpls2 : list) {
+                        pdfdzs += kpls2.getPdfurl().replace(".pdf", ".jpg") + ",";
+                    }
+                    if (pdfdzs.length() > 0) {
+                        result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                        request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
+                    }
+                    result.put("num", "2");
+                    Tqjl tqjl = new Tqjl();
+                    tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
+                    tqjl.setJlly("1");
+                    tqjl.setTqsj(new Date());
+                    String visiterIP;
+                    if (request.getHeader("x-forwarded-for") == null) {
+                        visiterIP = request.getRemoteAddr();// 访问者IP
+                    } else {
+                        visiterIP = request.getHeader("x-forwarded-for");
+                    }
+                    tqjl.setIp(visiterIP);
+                    String llqxx = request.getHeader("User-Agent");
+                    tqjl.setLlqxx(llqxx);
+                    tqjlService.save(tqjl);
+                    request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
+                } else if (null != jyls && null != jyls.getDjh()) {
+                    result.put("num", "6");
+                }  else if (null == jyxx) {
+                    result.put("num", "9");
                 } else {
-                    visiterIP = request.getHeader("x-forwarded-for");
+                    request.getSession().setAttribute("tqm", tqm);
+                    request.getSession().setAttribute("je", je);
+                    request.getSession().setAttribute("jyxx", jyxx);
+                    result.put("num", "5");
                 }
-                tqjl.setIp(visiterIP);
-                String llqxx = request.getHeader("User-Agent");
-                tqjl.setLlqxx(llqxx);
-                tqjlService.save(tqjl);
-                request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
-            } else if (null != jyls && null != jyls.getDjh()) {
-                result.put("num", "6");
-            }  else if (null == jyxx) {
-                result.put("num", "9");
             } else {
-                request.getSession().setAttribute("tqm", tqm);
-                request.getSession().setAttribute("je", je);
-                request.getSession().setAttribute("jyxx", jyxx);
-                result.put("num", "5");
+                result.put("num", "4");
             }
-        } else {
-            result.put("num", "4");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }
