@@ -152,7 +152,7 @@ public class MbController extends BaseController {
             if (openid == null || "null".equals(openid)) {
                 logger.info("进入重定向");
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                        + url + "/getWx" + "&response_type=code&scope=snsapi_base&code="+q+ "#wechat_redirect";
+                        + url + "/getWx" + "&response_type=code&scope=snsapi_base&state="+ q + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
