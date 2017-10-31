@@ -121,7 +121,7 @@ public class MbController extends BaseController {
 
     public static final String SECRET = "6415ee7a53601b6a0e8b4ac194b382eb";
 
-    @RequestMapping(value = "/mb", method = RequestMethod.GET)
+    @RequestMapping(value = "/mb")
     public void index(String g,String q) throws Exception{
         logger.info("-----参数q的值为"+q);
         logger.info("-----参数g的值为"+g);
@@ -134,7 +134,7 @@ public class MbController extends BaseController {
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm",gsdm);
         request.getSession().setAttribute("gsdm",gsdm);
-        request.getSession().setAttribute("q",q);
+        //request.getSession().setAttribute("barcode",barcode);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx == null){
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
@@ -153,7 +153,7 @@ public class MbController extends BaseController {
             if (openid == null || "null".equals(openid)) {
                 logger.info("进入重定向");
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                        + url + "/getWx" + "&response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
+                        + url + "/getWx" + "&response_type=code&scope=snsapi_base&gsdm="+gsdm+"&q=" + q + "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
@@ -342,7 +342,7 @@ public class MbController extends BaseController {
                         }
                         Jyxxsq jyxxsq = jyxxsqList.get(0);
                         request.getSession().setAttribute("price", jyxxsq.getJshj());
-                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
                         request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
                         request.getSession().setAttribute("resultMap", resultMap);
                         request.getSession().setAttribute("jymxsqList", jymxsqList);
@@ -406,9 +406,10 @@ public class MbController extends BaseController {
 
     @RequestMapping(value = "/getWx")
     @ResponseBody
-    public void getWx(String state,String code) throws IOException{
+    public void getWx(String gsdm,String q,String code) throws IOException{
+        logger.info("——————————————————获取微信参数"+gsdm+"====="+q+"---"+code);
         Map params = new HashMap<>();
-        params.put("gsdm",state);
+        params.put("gsdm",gsdm);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(null==gsxx){
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
@@ -443,16 +444,16 @@ public class MbController extends BaseController {
             //关闭连接,释放资源
             client.getConnectionManager().shutdown();
         }
-        if(null!=gsxx.getGsdm()&&gsxx.getGsdm().equals("hongkang")){
+        if(null!=gsdm&&gsdm.equals("hongkang")){
             response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
             return;
-        }if(null!=state&& state.equals("bqw")){
-            if(null==request.getSession().getAttribute("q")){
+        }if(null!=gsdm&& gsdm.equals("bqw")){
+            if(null==q){
                 request.getSession().setAttribute("msg", "会话已过期!请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return ;
             }
-            barcodeCl(gsxx,request.getSession().getAttribute("q").toString());
+            barcodeCl(gsxx,q);
         }else {
             response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm=" + gsxx.getGsdm() + "&&t=" + System.currentTimeMillis());
             return;
