@@ -150,11 +150,17 @@ public class MbController extends BaseController {
             String url = HtmlUtils.getBasePath(request);
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
-                logger.info("进入重定向");
-                String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                        + url + "getWx" + "&response_type=code&scope=snsapi_base&state="+ q + "#wechat_redirect";
-                response.sendRedirect(ul);
-                logger.info("转发的url为"+ul);
+                if(gsdm.equals("bqw")){
+                    String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
+                            + url + "/bqwgetWx" + "&response_type=code&scope=snsapi_base&state="+ q + "#wechat_redirect";
+                    response.sendRedirect(ul);
+                    logger.info("波奇网---进入重定向----转发的url为"+ul);
+                }else {
+                    String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
+                            + url + "/getWx" + "&response_type=code&scope=snsapi_base&state=" + q + "#wechat_redirect";
+                    response.sendRedirect(ul);
+                    logger.info("进入重定向----转发的url为" + ul);
+                }
                 return;
             } else {
                 barcodeCl(gsxx, q);
@@ -404,24 +410,13 @@ public class MbController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/getWx")
+    @RequestMapping(value = "/bqwgetWx")
     @ResponseBody
-    public void getWx(String state,String code) throws IOException{
-        logger.info("——————————————————获取微信参数"+state);
-        if(request.getSession().getAttribute("gsdm")==null){
-            request.getSession().setAttribute("msg", "会话已过期!请重试!");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return;
-        }
-        String gsdm =  request.getSession().getAttribute("gsdm").toString();
+    public void bqwgetWx(String state,String code) throws IOException{
+        logger.info("——波奇网————————获取微信参数"+state);
         Map params = new HashMap<>();
-        params.put("gsdm",gsdm);
+        params.put("gsdm","bqw");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(null==gsxx){
-            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
-            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            return ;
-        }
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
                 + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         HttpClient client = new DefaultHttpClient();
@@ -450,16 +445,51 @@ public class MbController extends BaseController {
             //关闭连接,释放资源
             client.getConnectionManager().shutdown();
         }
-        if(null!=gsdm&&gsdm.equals("hongkang")){
+            barcodeCl(gsxx,state);
+        return;
+    }
+    @RequestMapping(value = "/getWx")
+    @ResponseBody
+    public void getWx(String state,String code) throws IOException{
+        logger.info("——————————————————获取微信参数"+state);
+        Map params = new HashMap<>();
+        params.put("gsdm",state);
+        Gsxx gsxx = gsxxservice.findOneByParams(params);
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get  = new HttpGet(turl);
+        ObjectMapper jsonparer = new ObjectMapper();
+        try{
+            HttpResponse res = client.execute(get);
+            String responseContent = null;
+            HttpEntity entity = res.getEntity();
+            responseContent = EntityUtils.toString(entity,"UTF-8");
+            Map map = jsonparer.readValue(responseContent,Map.class);
+
+            //将json字符串转为json对象
+            if(res.getStatusLine().getStatusCode()== HttpStatus.SC_OK){
+                if(map.get("errcode") != null){
+                }else{
+                    session.setAttribute("access_token",map.get("access_token"));
+                    session.setAttribute("openid", map.get("openid"));
+                    logger.info(session.getAttribute("openid").toString());
+                    map.put("success", true);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            //关闭连接,释放资源
+            client.getConnectionManager().shutdown();
+        }
+        if(null!=state&&state.equals("hongkang")){
             response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
             return;
-        }if(null!=gsdm&& gsdm.equals("bqw")){
-            barcodeCl(gsxx,state);
         }else {
             response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm=" + gsxx.getGsdm() + "&&t=" + System.currentTimeMillis());
             return;
         }
-        return;
     }
 
     /**
