@@ -157,7 +157,7 @@ public class MbController extends BaseController {
                     logger.info("波奇网---进入重定向----转发的url为"+ul);
                 }else {
                     String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                            + url + "/getWx" + "&response_type=code&scope=snsapi_base&state=" + q + "#wechat_redirect";
+                            + url + "/getWx" + "&response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                     response.sendRedirect(ul);
                     logger.info("进入重定向----转发的url为" + ul);
                 }
