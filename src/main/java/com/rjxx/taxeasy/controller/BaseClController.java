@@ -489,6 +489,10 @@ public class BaseClController extends BaseController {
         String opendid = (String) session.getAttribute("openid");
         String gsdm = (String) session.getAttribute("gsdm");
         Map<String, Object> result = new HashMap<String, Object>();
+        if(tqm==null || code ==null){
+            result.put("num","3");
+            return result;
+        }
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             Map map = new HashMap<>();
             map.put("tqm", tqm);

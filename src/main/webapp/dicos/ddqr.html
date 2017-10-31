@@ -66,12 +66,14 @@
             var  getval =thisURL.split('?')[1];
             var ppdm= getval.split("=")[2];
                  pp =getval.split("=")[2];
-           if(ppdm!="no"){
+            if(ppdm!="no"){
                 $("#logo").attr("src", "logo/" + ppdm + ".png");
                 $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
             }
             if(isWeixin){
                 $(".top").css('display','none');
+			}else {
+                $(".top").css('display',"");
 			}
             $.post(
                 "../scan/scanConfirm",

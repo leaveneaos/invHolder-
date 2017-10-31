@@ -241,7 +241,6 @@ public class CommonController extends BaseController {
     @RequestMapping(value = "/smfpxq")
     @ResponseBody
     public Map smfpxq(String serialOrder ) throws IOException {
-        logger.info("收到请求-----"+serialOrder);
         Map<String, Object> result = new HashMap<String, Object>();
         try {
             if(null == serialOrder ){
@@ -249,6 +248,7 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
+            logger.info("收到请求-----"+serialOrder);
             Map map2 = new HashMap();
             map2.put("serialorder",serialOrder);
             List<Kpls> kplsList = kplsService.findAll(map2);

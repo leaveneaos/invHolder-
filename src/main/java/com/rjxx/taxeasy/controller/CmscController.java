@@ -56,15 +56,19 @@ public class CmscController extends BaseController {
 
         return init("cmsc");
     }
-    @RequestMapping(value = "/mb", method = RequestMethod.GET)
     public String init(String gsdm ) throws Exception{
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm",gsdm);
         request.getSession().setAttribute("gsdm",gsdm);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-        if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
-            gsxx.setWxappid(APP_ID);
-            gsxx.setWxsecret(SECRET);
+        if (gsxx == null) {
+            response.sendError(501, gsdm + " not exist!!!");
+            return null;
+        }
+        if(null==request.getHeader("user-agent")){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return null;
         }
         String ua = request.getHeader("user-agent").toLowerCase();
         if (ua.indexOf("micromessenger") > 0) {
@@ -92,7 +96,11 @@ public class CmscController extends BaseController {
         Map params = new HashMap<>();
         params.put("gsdm",state);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
-
+        if(gsxx==null){
+            request.getSession().setAttribute("msg", "出现未知异常!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return ;
+        }
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
                 + WeiXinConstants.APP_SECRET+ "&code=" + code + "&grant_type=authorization_code";
         HttpClient client = new DefaultHttpClient();
@@ -129,40 +137,49 @@ public class CmscController extends BaseController {
     @RequestMapping(value = "/fptq")
     @ResponseBody
     public Map Fptq(String khh, String code) {
-        String sessionCode = (String) session.getAttribute("rand");
-        String opendid = (String) session.getAttribute("openid");
-        String gsdm = (String) session.getAttribute("gsdm");
-        Map<String, Object> result = new HashMap<String, Object>();
-        if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            List<Kpls> list = new ArrayList<>();
-
-            Map map = new HashMap<>();
-            map.put("khh", khh);
-            map.put("gsdm", gsdm);
-            map.put("month", "");
-            list = jylsService.findBykhh(map);
-            boolean f = true;
-            for (int i = 0; i < list.size(); i++) {
-                if (!list.get(0).getFpztdm().equals("00")) {
-                    f = false;
-                }
+        Map<String, Object> result = null;
+        try {
+            String sessionCode = (String) session.getAttribute("rand");
+            String opendid = (String) session.getAttribute("openid");
+            String gsdm = (String) session.getAttribute("gsdm");
+            if(gsdm==null || sessionCode == null||khh==null){
+                request.getSession().setAttribute("msg", "会话已过期，请重试!");
+                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
             }
-            if (f) {
-                if (list.size() > 0) {
-                    result.put("khh", khh);
-                    result.put("num", "2");
-                    result.put("gsdm", gsdm);
-                    request.getSession().setAttribute("khh", khh);
-                    request.getSession().setAttribute("gsdm", gsdm);
+            result = new HashMap<String, Object>();
+            if (code != null && sessionCode != null && code.equals(sessionCode)) {
+                List<Kpls> list = new ArrayList<>();
+                Map map = new HashMap<>();
+                map.put("khh", khh);
+                map.put("gsdm", gsdm);
+                map.put("month", "");
+                list = jylsService.findBykhh(map);
+                boolean f = true;
+                for (int i = 0; i < list.size(); i++) {
+                    if (!list.get(0).getFpztdm().equals("00")) {
+                        f = false;
+                    }
+                }
+                if (f) {
+                    if (list.size() > 0) {
+                        result.put("khh", khh);
+                        result.put("num", "2");
+                        result.put("gsdm", gsdm);
+                        request.getSession().setAttribute("khh", khh);
+                        request.getSession().setAttribute("gsdm", gsdm);
 
+                    } else {
+                        result.put("num", "3");
+                    }
                 } else {
                     result.put("num", "3");
                 }
             } else {
-                result.put("num", "3");
+                result.put("num", "4");
             }
-        } else {
-            result.put("num", "4");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }

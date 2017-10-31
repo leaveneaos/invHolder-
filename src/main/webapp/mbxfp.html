@@ -81,12 +81,12 @@
     var isWeixin = ua.indexOf('micromessenger') != -1;
     var isAlipay = ua.indexOf('alipay') != -1;
     if(isWeixin){
-        $("#fpj").css('display','block');
+        $("#fpj").css('display',"");
         $("#zfb").css('display','none');
     }
     if(isAlipay){
         $("#fpj").css('display','none');
-        $("#zfb").css('display','block');
+        $("#zfb").css('display',"");
     }
     orderNo = null;
     price = null;

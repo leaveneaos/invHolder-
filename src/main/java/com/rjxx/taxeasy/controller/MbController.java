@@ -470,6 +470,10 @@ public class MbController extends BaseController {
 
         String opendid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
+        if(tqm==null || code==null||gsdm==null){
+            result.put("num","4");
+            return result;
+        }
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             if("ubm".equals(gsdm)){
                 try{
@@ -772,7 +776,7 @@ public class MbController extends BaseController {
     public Map<String,Object> spmx(String tqm,String gsdm) {
         Map<String, Object> result = new HashMap<String, Object>();
         try {
-            if(gsdm==null) {
+            if(gsdm==null || tqm==null) {
                 request.getSession().setAttribute("msg", "会话已过期，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
@@ -886,6 +890,10 @@ public class MbController extends BaseController {
     @ResponseBody
     public  Map<String,Object> savels(String gsdm,String tqm){
         Map<String,Object> result = new HashMap<String,Object>();
+        if(gsdm==null || tqm==null){
+            result.put("msg","该会话已过期，请重试!");
+            return result;
+        }
         Map  resultMap=(Map)request.getSession().getAttribute(gsdm+tqm+"resultMap");
         String openid = String.valueOf(request.getSession().getAttribute("openid"));
         if(resultMap == null){
@@ -1081,11 +1089,9 @@ public class MbController extends BaseController {
         result.put("yx", request.getSession().getAttribute(gsdm+tqm+"yx"));
         result.put("je", request.getSession().getAttribute(gsdm+tqm+"je"));
         result.put("sjkpje", request.getSession().getAttribute(gsdm+tqm+"sjkpje"));
-
         if(null!=request.getSession().getAttribute(gsdm+tqm+"fptt")){
             result.put("numkp","31");
         }
-        //System.out.println(""+session.getAttribute(gsdm+tqm+"fptt").toString());
         result.put("price",request.getSession().getAttribute("price"));
         result.put("orderTime",request.getSession().getAttribute("orderTime"));
         result.put("orderNo",request.getSession().getAttribute("orderNo"));
