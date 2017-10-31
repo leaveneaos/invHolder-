@@ -348,7 +348,7 @@ public class MbController extends BaseController {
                         }
                         Jyxxsq jyxxsq = jyxxsqList.get(0);
                         request.getSession().setAttribute("price", jyxxsq.getJshj());
-                        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
                         request.getSession().setAttribute("resultMap", resultMap);
                         request.getSession().setAttribute("jymxsqList", jymxsqList);
