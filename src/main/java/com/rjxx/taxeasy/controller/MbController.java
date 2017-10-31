@@ -134,14 +134,6 @@ public class MbController extends BaseController {
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm",gsdm);
         request.getSession().setAttribute("gsdm",gsdm);
-        //request.getSession().setAttribute("barcode",barcode);
-        String state="";
-        if(q!=null){
-             state = gsdm+"-"+q;
-        }else {
-            state=gsdm;
-        }
-        logger.info("--------传给微信的参数state---------------"+state);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx == null){
             request.getSession().setAttribute("msg", "出现未知异常!请重试!");
@@ -160,7 +152,7 @@ public class MbController extends BaseController {
             if (openid == null || "null".equals(openid)) {
                 logger.info("进入重定向");
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                        + url + "/getWx" + "&response_type=code&scope=snsapi_base&code="+state+ "#wechat_redirect";
+                        + url + "/getWx" + "&response_type=code&scope=snsapi_base&code="+q+ "#wechat_redirect";
                 response.sendRedirect(ul);
                 return;
             } else {
@@ -414,20 +406,13 @@ public class MbController extends BaseController {
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state,String code) throws IOException{
-        logger.info("——————————————————获取微信参数"+state+"---"+code);
-        String gsdm = "";
-        String q= "";
-        int i = state.indexOf("-");
-        if(i<0){
-            logger.info("没有-，表示只有公司代码---"+state);
-            gsdm=state;
-        }else {
-            String[] split = state.split("-");
-            gsdm = split[0];
-            q=split[1];
-            logger.info("-------------公司代码"+gsdm);
-            logger.info("++++++++++++++有q+++++++++"+q);
+        logger.info("——————————————————获取微信参数"+state);
+        if(request.getSession().getAttribute("gsdm")==null){
+            request.getSession().setAttribute("msg", "会话已过期!请重试!");
+            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+            return;
         }
+        String gsdm =  request.getSession().getAttribute("gsdm").toString();
         Map params = new HashMap<>();
         params.put("gsdm",gsdm);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
@@ -468,12 +453,7 @@ public class MbController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/" + gsxx.getGsdm() + "_page.jsp?gsdm="+gsxx.getGsdm()+"&&_t=" + System.currentTimeMillis());
             return;
         }if(null!=gsdm&& gsdm.equals("bqw")){
-            if(null==q&&q.equals("")){
-                request.getSession().setAttribute("msg", "会话已过期!请重试!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                return ;
-            }
-            barcodeCl(gsxx,q);
+            barcodeCl(gsxx,state);
         }else {
             response.sendRedirect(request.getContextPath() + "/mb.jsp?gsdm=" + gsxx.getGsdm() + "&&t=" + System.currentTimeMillis());
             return;
