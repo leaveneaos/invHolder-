@@ -1,0 +1,94 @@
+body,html {
+	margin: 0 auto;
+}
+header {
+	margin: 0 auto;
+}
+header img {
+	width: 100%;
+	height: 100%;
+}
+#index {
+	position: relative;
+}
+.title {
+	margin: 20px 15px 7px;
+	color: #6d6d72;
+	font-size: 15px;
+}
+footer {
+	position: fixed;
+	bottom: 0; 
+	width: 80%;
+	background-color: #F7F7F7;
+	border-top: 1px solid #CBCBCB;
+	min-width: 320px;
+	max-width: 800px;
+	margin: 0 auto;
+
+}
+footer p {
+	margin: 10px;
+	color: #000;
+	box-sizing: border-box;
+	line-height: 40px;
+}
+.step {
+	margin: 10px 0;
+}
+.eTip {
+	color: red;
+	margin-left: 2%;
+}
+.company {
+	font-size: 16px;
+	float: left;
+}
+.help {
+	font-size: 18px;
+	float: right;
+}
+.saveEwm {
+	width: 50px; 
+	height: 50px; 
+	float: left;
+}
+.sendEvm {
+	line-height: 50px; 
+	font-size: 15px; 
+	font-weight: 700;
+}				
+.data-tip {
+	padding: 7px 15px;
+}
+.data-yzm {
+	width: 27%;
+	height: 50px;
+	float: right;
+}
+.star {
+	color: red;
+}
+.ctr {
+	text-align: center;
+}
+
+#Button1 {
+	margin-bottom: 65px;
+}
+ul, ol, li, a{
+	list-style: none;
+}
+button {
+	width: 80%;
+	height: 36px;
+	line-height: 36px;  /*解决在IE下文字显示不出问题*/
+	background-color: #4BB4F7;
+	list-style-type: none;
+	color: #fff;
+	border-radius: 18px;
+}
+button,input {
+	border: none;
+	outline:none;
+}
