@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayEbppInvoiceUserTradeQueryRequest;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
+import com.alipay.api.response.AlipayEbppInvoiceUserTradeQueryResponse;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.domains.Kpspmx;
@@ -13,6 +16,7 @@ import com.rjxx.taxeasy.domains.Pp;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.service.KpspmxService;
 import com.rjxx.taxeasy.service.PpService;
+import com.rjxx.taxeasy.utils.alipay.AlipayBizInvoiceObject;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
@@ -83,7 +87,30 @@ public class AlipayController extends BaseController {
         }
 
     }
-
+    /**
+     * 查询用户 的开票要素信息
+     */
+    @RequestMapping(value = AlipayConstants.AFTER_ALIPAY_INVOICE_REDIRECT_URL,method = RequestMethod.GET)
+    @ResponseBody
+    public String getAlipayInvoice(String einv_trade_id, String m_short_name,String random,String sign,String sub_m_short_name,String timestamp,String token) throws Exception{
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL,AlipayConstants.APP_ID,AlipayConstants.PRIVATE_KEY,AlipayConstants.FORMAT,"GBK",AlipayConstants.ALIPAY_PUBLIC_KEY,AlipayConstants.SIGN_TYPE);
+        AlipayEbppInvoiceUserTradeQueryRequest request = new AlipayEbppInvoiceUserTradeQueryRequest();
+        AlipayBizInvoiceObject alipayBizInvoiceObject=new AlipayBizInvoiceObject();
+        alipayBizInvoiceObject.setEinv_trade_id(einv_trade_id);
+        alipayBizInvoiceObject.setRandom(random);
+        alipayBizInvoiceObject.setTimestamp(timestamp);
+        alipayBizInvoiceObject.setToken(token);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result = objectMapper.writeValueAsString(alipayBizInvoiceObject);
+        request.setBizContent(result);
+        AlipayEbppInvoiceUserTradeQueryResponse response = alipayClient.execute(request,token);
+        if(response.isSuccess()){
+            System.out.println("调用成功");
+        } else {
+            System.out.println("调用失败");
+        }
+            return null;
+    }
     private void refreshToken(String refreshToken) throws AlipayApiException {
         logger.info("--------刷新令牌----Start application---------");
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY, AlipayConstants.FORMAT, AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY, AlipayConstants.SIGN_TYPE);

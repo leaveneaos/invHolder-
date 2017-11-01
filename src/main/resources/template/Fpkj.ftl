@@ -33,7 +33,7 @@
 				<Buyer>
 					<CustomerType>${jyxxsq.gflx!}</CustomerType>
 					<Identifier>${jyxxsq.gfsh!}</Identifier>
-					<Name>${jyxxsq.gfmc!}</Name>
+					<Name><![CDATA[${jyxxsq.gfmc!}]]></Name>
 					<Address>${jyxxsq.gfdz!}</Address>
 					<TelephoneNo>${jyxxsq.gfdh!}</TelephoneNo>
 					<Bank>${jyxxsq.gfyh!}</Bank>

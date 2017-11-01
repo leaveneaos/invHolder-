@@ -92,4 +92,7 @@ public class AlipayConstants {
 
     public static final String AFTER_ALIPAY_AUTHORIZED_REDIRECT_URL = "/getAlipay";
 
+    public static final String AFTER_ALIPAY_INVOICE_REDIRECT_URL = "/getAlipayInvoice";
+
+
 }
