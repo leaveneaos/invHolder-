@@ -418,7 +418,9 @@ public class TijiaoController extends BaseController {
             if(null==request.getSession().getAttribute("serialorder")){
                 request.getSession().setAttribute("msg", "会话已过期，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                return null;
             }
+
             map.put("serialorder" ,request.getSession().getAttribute("serialorder"));
             List<Kpls> kpls = kplsService.findAll(map);
             if(kpls.size()>0){
