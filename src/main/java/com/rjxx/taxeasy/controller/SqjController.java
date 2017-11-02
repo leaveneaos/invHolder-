@@ -895,7 +895,7 @@ public class SqjController extends BaseController {
             //是否离线开票
             Cszb zb1 = cszbService.getSpbmbbh("sqj", null,null, "sflxkp");
             if(zb1.getCsz().equals("是")){
-                if(null!=request.getSession().getAttribute("q")&&!"".equals(request.getSession().getAttribute("q"))){
+                if(null!=request.getSession().getAttribute("q")){
                     String q = request.getSession().getAttribute("q").toString();
                     byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(q);
                     String csc = new String(bytes);
@@ -904,9 +904,14 @@ public class SqjController extends BaseController {
                     orderTime = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
                     price = cssz[2].substring(cssz[2].lastIndexOf("=") + 1);
                     storeNo = cssz[3].substring(cssz[3].lastIndexOf("=") + 1);
+                }else if(null!=jyxx) {
+                    orderNo = jyxx.getOrderNo();
+                    orderTime = jyxx.getOrderTime();
+                    price = jyxx.getPrice().toString();
+                    storeNo = jyxx.getStoreNo();
                 }else {
-                    request.getSession().setAttribute("msg","会话已过期，请重试！");
-                    result.put("msg", "会话已过期，请重试！");
+                    request.getSession().setAttribute("msg","交易数据未上传，请联系商家！");
+                    result.put("msg", "交易数据未上传，请联系商家！");
                     return result;
                 }
             } else {
