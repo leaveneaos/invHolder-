@@ -58,7 +58,7 @@ public class GvcController extends BaseController {
             String openid = String.valueOf(session.getAttribute("openid"));
             if (openid == null || "null".equals(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                        + url + "fm/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
+                        + url + "gvc/getWx&" + "response_type=code&scope=snsapi_base&state=" + gsdm + "#wechat_redirect";
                 response.sendRedirect(ul);
                 logger.info("转发的url为"+ul);
                 return;
