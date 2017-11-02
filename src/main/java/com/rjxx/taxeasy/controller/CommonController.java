@@ -271,7 +271,7 @@ public class CommonController extends BaseController {
                 orderNo = jylsxx.getKhh();
                 result.put("orderNo",orderNo);
             }else {
-                orderNo = jylsxx.getTqm();
+                orderNo = jylsxx.getDdh();
                 result.put("orderNo",orderNo);
             }
             result.put("kplsList", kplsList);
@@ -415,6 +415,7 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }else {
+                request.getSession().setAttribute("serialorder",serialOrder);
                 response.sendRedirect(request.getContextPath() + "/Family/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                 return null;
             }

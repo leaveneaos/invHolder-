@@ -2,9 +2,10 @@ package com.rjxx.taxeasy.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.comm.BaseController;
-import com.rjxx.taxeasy.domains.Gsxx;
-import com.rjxx.taxeasy.service.GsxxService;
+import com.rjxx.taxeasy.domains.*;
+import com.rjxx.taxeasy.service.*;
 import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.IMEIGenUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,10 +17,13 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +36,17 @@ public class GvcController extends BaseController {
     @Autowired
     private GsxxService gsxxService;
 
+    @Autowired
+    private JylsService jylsService;
 
+    @Autowired
+    private KplsService kplsService;
+
+    @Autowired
+    private FpjService fpjService;
+
+    @Autowired
+    private TqjlService tqjlService;
 
     @RequestMapping
     @ResponseBody
@@ -118,5 +132,75 @@ public class GvcController extends BaseController {
         }
         response.sendRedirect(request.getContextPath() + "/GV/gvc.html?gsdm=" + state + "&&t=" + System.currentTimeMillis());
         return;
+    }
+
+    /**
+     * 发票提交--提取验证
+     * @param tqm
+     * @param price
+     * @param gsdm
+     * @param code
+     * @return
+     */
+    @RequestMapping(value = "/tqyz",method = {RequestMethod.POST,RequestMethod.GET})
+    @ResponseBody
+    public Map<String,Object> tqyz(String tqm,String price,String gsdm,String code) {
+        String sessionCode = (String) session.getAttribute("rand");
+        String opendid = (String) session.getAttribute("openid");
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (code != null && sessionCode != null && code.equals(sessionCode)) {
+            Map map = new HashMap<>();
+            map.put("tqm", tqm);
+            map.put("gsdm", gsdm);
+            map.put("je",price);
+            Jyls jyls = jylsService.findOne(map);
+            List<Kpls> list = jylsService.findByTqm(map);
+            if (list.size() > 0) {
+                if (opendid != null && !"null".equals(opendid)) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("djh", jyls.getDjh());
+                    params.put("unionid",opendid);
+                    Fpj fpj = fpjService.findOneByParams(params);
+                    if(fpj == null){
+                        fpj = new Fpj();
+                        fpj.setDjh(jyls.getDjh());
+                        fpj.setUnionid(opendid);
+                        fpj.setYxbz("1");
+                        fpj.setLrsj(new Date());
+                        fpj.setXgsj(new Date());
+                        fpjService.save(fpj);
+                    }
+                }
+                String pdfdzs = "";
+                request.getSession().setAttribute("djh",list.get(0).getDjh());
+                request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
+                for (Kpls kpls2: list) {
+                    pdfdzs += kpls2.getPdfurl().replace(".pdf",".jpg") + ",";
+                }
+                if(pdfdzs.length() > 0){
+                    result.put("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
+                    request.getSession().setAttribute("pdfdzs",pdfdzs.substring(0,pdfdzs.length() - 1));
+                }
+                Tqjl tqjl = new Tqjl();
+                tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
+                tqjl.setJlly("1");
+                tqjl.setTqsj(new Date());
+                String visiterIP;
+                if(request.getHeader("x-forwarded-for") == null){
+                    visiterIP = request.getRemoteAddr();/*访问者IP*/
+                }else {
+                    visiterIP = request.getHeader("x-forwarded-for");
+                }
+                tqjl.setIp(visiterIP);
+                String llqxx = request.getHeader("User-Agent");
+                tqjl.setLlqxx(llqxx);
+                tqjlService.save(tqjl);
+                result.put("num","2");
+                result.put("serialOrder",list.get(0).getSerialorder());
+            }
+        }else {
+            result.put("num","4");
+        }
+        return result;
     }
 }

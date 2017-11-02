@@ -17,6 +17,7 @@ public class TqController extends BaseController{
     @ResponseBody
     public void index() throws Exception{
         String serialOrder = request.getParameter("q");
+        request.getSession().setAttribute("serialorder",serialOrder);
         if(serialOrder==null ||"".equals(serialOrder)){
             //获取授权失败
             request.getSession().setAttribute("msg", "扫码信息有误!请重试!");
