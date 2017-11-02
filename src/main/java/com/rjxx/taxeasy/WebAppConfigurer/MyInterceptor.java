@@ -28,7 +28,8 @@ public class MyInterceptor implements HandlerInterceptor {
 //        }
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
-        if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||url.equals("/mb") || url.equals("/dzfp_sqj")){
+        if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||
+                url.equals("/mb") || url.equals("/dzfp_sqj")||url.equals("tq")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
