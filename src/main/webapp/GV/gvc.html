@@ -7,25 +7,44 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
-	<title>输入提取码</title>
+	<title>发票提取</title>
 	<link rel="stylesheet" type="text/css" href="css/gvc.css">
 	<link href="../css/mui.min.css" rel="stylesheet" />
 	<link href="../css/jquery.alerts.css" rel="stylesheet" />
 	<style type="text/css">
 		header{
-			width: 80%;
+			width: 92%;
 		}
 		section{
-			width: 80%;
-			margin-left: 10%;
+			width: 92%;
+			margin-left: 4%;
+		}
+		.abroad{
+			background-color: #fff;
+			border-radius: 10px;
+			box-shadow: 0 0 50px 5px rgb(230, 235, 239);
+			height: 560px;
+			padding-top: 30px;
+			margin: 8px;
 		}
 		.data-tip{
 			padding: 4px 4px;
+			letter-spacing: 1px;
+			line-height: 25px;
+			font-size: 15px;
 		}
 		#code {
-			width: 45%;
+			width: 35%;
 			float: left;
 			font-size: 15px;
+		}
+		#price{
+			width: 65%;
+			font-size: 15px
+		}
+		#tqm{
+			width: 65%;
+			font-size: 15px
 		}
 		#cwts {
 			color: red;
@@ -34,47 +53,46 @@
 		}
 		.mui-input-group .mui-input-row label{
 		    height: 45px;
-			width: 28%;
-			font-size: 13px;
-		}
-		#us {
-			text-decoration:none;
-			color:#000000;
+			width: 35%;
+			font-size: 16px;
 		}
 		.mui-btn-primary{
-			border: 1px solid orange;
-			background-color: orange;
+			border: 1px solid #1CAB1A;
+			background-color: #1CAB1A;
+		}
+		#img{
+			height: 200px;
 		}
 	</style>
 </head>
 <body id="index" onload="load()">
+<div class="abroad">
 <header>
 	<div id="img">
 		<img id="logo" src="../images/gvc.png"/>
 	</div>
 </header>
-	
+
 	<section class="data-tip">
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对<a id="us">我们</a>
-		的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您选择观视界! 根据税收政策，电子发票与纸质发票有同等法律效力。请输入销售票据上的订单编号和订单金额，及时获得电子发票。
 	</section>
 
 	<section>
 		<form class="mui-input-group" >
 			<div class="mui-input-row">
 				<label >订单号:</label>
-				<input id="tqm" type="text" style="width: 72%" class="mui-input-clear" placeholder="请输入订单号">
+				<input id="tqm" type="text" style="" class="mui-input-clear" placeholder="请输入订单号">
 			</div>
 			<div class="mui-input-row">
 				<div class="mui-input-row">
 					<label >订单金额:</label>
-					<input id="price" style="width: 72%" type="text" class="mui-input-clear" placeholder="请输入订单金额">
+					<input id="price"  type="text" class="mui-input-clear" placeholder="请输入订单金额">
 				</div>
 			</div>
 			<div class="mui-input-row">
 				<div class="mui-input-row">
 					<label >验证码:</label>
-					<input id="code" type="text" class="mui-input-clear" placeholder="请输入右侧验证码">
+					<input id="code" type="text" class="mui-input-clear" placeholder="请输入验证码">
 					<img src="../image.jsp" name="randImage" class="data-yzm" id="randImage" onclick="loadimage()"/>
 				</div>
 			</div>
@@ -83,10 +101,8 @@
 		<p id="cwts">验证码输入错误</p>
 		<button id="Button1" onclick="tiqu()"  class="mui-btn mui-btn-primary mui-btn-block">提&nbsp;&nbsp;交</button>
 	</section>
-
+	</div>
 	<footer>
-		<!--<p class="company">上海容津信息技术有限公司</p>
-		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>-->
 	</footer>
 	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script type="text/javascript" src="../js/jquery-ui.js"></script>
@@ -115,26 +131,15 @@
 			$('#code').val('');
 		}
         $(function () {
-            var gsdm = location.href.split('?')[1].split('&')[0].split('=')[1];
+            var gsdm = location.href.split('?')[1].split('&&')[0].split('=')[1];
             $('#gsdm').val(gsdm);
             var gsdm= $('#gsdm').val();
             if(gsdm!=null && gsdm!=""){
                 $("#logo").attr("src", "../images/" + gsdm + ".png");
 			}
-            $.post(
-                "../common/getGsxx",
-                {
-                    "gsdm":gsdm
-				},
-                function (data) {
-					if(data!=null && data!=""){
-					$('#us').text(data);
-					}
-                }
-            )
 
         })
-		function tiqu() {
+		/*function tiqu() {
 			var tqm = $('#tqm').val();
 			var num = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/;		
 			var code = $('#code').val();
@@ -229,7 +234,7 @@
 					}
 				}
 			);
-		}
+		}*/
 	</script>
 </body>
 </html>
