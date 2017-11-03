@@ -260,7 +260,7 @@ public class CommonController extends BaseController {
             String gsdm = kplsList.get(0).getGsdm();
             result.put("price",kplsList.get(0).getJshj());
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            result.put("orderTime",sdf.format(kplsList.get(0).getKprq()));
+            result.put("orderTime",sdf.format(kplsList.get(0).getLrsj()));
             Jyls jyls = new Jyls();
             jyls.setGsdm(gsdm);
             jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
