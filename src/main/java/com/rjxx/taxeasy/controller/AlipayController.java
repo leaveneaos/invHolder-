@@ -87,8 +87,18 @@ public class AlipayController extends BaseController {
         }
 
     }
+
     /**
-     * 查询用户 的开票要素信息
+     *
+     * @param einv_trade_id   发票管家交易id
+     * @param m_short_name    支付宝简称
+     * @param random          随机数
+     * @param sign            签名
+     * @param sub_m_short_name  支付宝品牌简称
+     * @param timestamp       时间戳
+     * @param token           支付宝回传token
+     * @return
+     * @throws Exception
      */
     @RequestMapping(value = AlipayConstants.AFTER_ALIPAY_INVOICE_REDIRECT_URL,method = RequestMethod.GET)
     @ResponseBody
