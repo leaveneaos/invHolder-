@@ -19,13 +19,8 @@ header img {
 footer {
 	position: fixed;
 	bottom: 0; 
-	width: 80%;
-	background-color: #F7F7F7;
-	border-top: 1px solid #CBCBCB;
-	min-width: 320px;
-	max-width: 800px;
 	margin: 0 auto;
-
+	width: 98%;
 }
 footer p {
 	margin: 10px;
