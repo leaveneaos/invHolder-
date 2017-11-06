@@ -109,6 +109,12 @@ public class CommonController extends BaseController {
                             access_token = wxToken.getAccessToken();
                             ticket= wxToken.getTicket();
                         }
+                        if(ticket==null){
+                            //获取授权失败
+                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return null;
+                        }
                         String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
                         if(null==spappid ||"".equals(spappid)){
                             //获取授权失败
