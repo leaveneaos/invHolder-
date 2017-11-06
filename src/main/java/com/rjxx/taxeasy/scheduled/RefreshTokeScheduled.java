@@ -34,6 +34,9 @@ public class RefreshTokeScheduled {
         WxToken wxToken = wxTokenJpaDao.findByFlag(flag);
         Map map = weixinUtils.hqtk();
         String accessToken = (String) map.get("access_token");
+        if(accessToken==null||"".equals(accessToken)){
+            accessToken = (String) weixinUtils.hqtk().get("access_token");
+        }
         String ticket = weixinUtils.getTicket(accessToken);
         if(wxToken==null){
             WxToken wxToken1 = new WxToken();
@@ -42,7 +45,9 @@ public class RefreshTokeScheduled {
             wxToken1.setExpiresin("7200");
             wxToken1.setFlag("01");
             wxToken1.setTicket(ticket);
-
+            if(ticket==null || accessToken==null){
+                return;
+            }
             wxTokenJpaDao.save(wxToken1);
             logger.info("第一次定时任务获取微信token-----"+ JSON.toJSONString(wxToken1));
         }else {
@@ -53,11 +58,11 @@ public class RefreshTokeScheduled {
             wxTokens.setExpiresin("7200");
             wxTokens.setFlag("01");
             wxTokens.setTicket(ticket);
-
+            if(ticket==null || accessToken==null){
+                return;
+            }
             wxTokenJpaDao.save(wxTokens);
             logger.info("微信更新token-----------------"+JSON.toJSONString(wxTokens));
         }
-
-
     }
 }
