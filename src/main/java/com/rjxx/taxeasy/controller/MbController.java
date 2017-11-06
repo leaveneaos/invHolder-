@@ -543,10 +543,10 @@ public class MbController extends BaseController {
                         }
                     }
                     Jyxxsq jyxxsq= jyxxsqService.findOneByParams(params);
-                    String jylsh= jyxxsq.getJylsh();
+                    Integer sqlsh= jyxxsq.getSqlsh();
                     Map paramss=new HashMap();
-                    paramss.put("gsdm","ubm");
-                    paramss.put("ddh",jylsh);
+                    //paramss.put("gsdm","ubm");
+                    paramss.put("sqlsh",sqlsh);
                     Jymxsq jymxsq=jymxsqService.findOneByParams(paramss);
                     String spmc=jymxsq.getSpmc();
                     String spje=jymxsq.getSpje().toString();

@@ -86,7 +86,7 @@ public class BarcodeController extends BaseController {
                         String serialOrder = status.get(0).split("[+]")[4];
                         session.setAttribute("serialorder", serialOrder);
                         //response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+sb.toString());
-                        response.sendRedirect(request.getContextPath() + "/Family/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/common/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                     }
 //                    switch (status) {
 //                        case "可开具":

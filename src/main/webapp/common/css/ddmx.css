@@ -1,0 +1,67 @@
+footer {
+	padding: 0;
+}
+button {
+	width: 100%;
+	border-radius: 0px;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+	height: 45px;
+}
+.middle {
+    margin: 0 0 20px;
+    border-bottom: none;
+}
+.title {
+	border-bottom: 1px dashed #ECECEC;
+	font-size: 0;
+    height: 20px;
+	line-height: 20px;
+	color: ;
+}
+.title.th {
+	color: #ccc;
+}
+.name,.num,.price {
+	display: inline-block;
+	text-align: center;
+	font-size: 14px;
+}
+.name {
+	width: 50%;
+}
+.th .num,.th .price {
+	border-left: 1px dashed #ECECEC;
+	box-sizing:border-box;
+}
+.num {
+	width: 20%;
+}
+.price {
+	width: 30%;
+}
+.bottom {
+	height: auto;
+	line-height: normal;
+	text-align: left;
+	border-top: 1px dashed #D7D7D9;
+	padding: 10px;
+	box-sizing: border-box;
+}
+.btoPrice {
+	text-align: center;
+	height: 65px;
+	font-size: 0;
+	line-height: 45px;
+}
+.btoPrice ul li {
+	display: inline-block;
+}
+.btoPrice .total {
+	font-size: 16px;
+	color: #DE6168;
+}
+.btoPrice .totPrice {
+	font-size: 17px;
+	color: #DE4D4D;
+}

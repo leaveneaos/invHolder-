@@ -230,7 +230,7 @@ public class CommonController extends BaseController {
             List<Kpls> kpls = kplsService.findAll(kplsMap);
             if(kpls.size() > 0 ){
                 Integer kplsh=kpls.get(0).getKplsh();
-                response.sendRedirect(request.getContextPath() + "/Family/smfpxq.html?kplsh="+kplsh+"&&_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/common/smfpxq.html?kplsh="+kplsh+"&&_t=" + System.currentTimeMillis());
                 return;
             } else {
                 request.getSession().setAttribute("msg", "获取数据失败了，请重试!");
@@ -422,7 +422,7 @@ public class CommonController extends BaseController {
                 return null;
             }else {
                 request.getSession().setAttribute("serialorder",serialOrder);
-                response.sendRedirect(request.getContextPath() + "/Family/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/common/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                 return null;
             }
         } catch (IOException e) {
