@@ -24,7 +24,7 @@ public class TqController extends BaseController{
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return;
         }else {
-            response.sendRedirect(request.getContextPath() + "/common/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+            response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
             return;
         }
     }
