@@ -131,19 +131,19 @@ public class WeiXinController extends BaseController {
                     String orderno_old="";
                     //拒绝之后的订单 --- 传给微信的订单---weixinorderno
                     String orderno_new="";
-                    int i = SuccOrderId.indexOf("-");
-                    if(i<0){
-                        logger.info("没有-，表示没有拒绝过开票");
-                        orderno_old=SuccOrderId;
-                        orderno_new=SuccOrderId;
-                    }else {
-                        logger.info("表示拒绝过开票");
-                        orderno_new = SuccOrderId;
-                        String[] split = SuccOrderId.split("-");
-                        orderno_old = split[0];
-                    }
+                    //int i = SuccOrderId.indexOf("-");
+                    //if(i<0){
+                    //    logger.info("没有-，表示没有拒绝过开票");
+                    //    orderno_old=SuccOrderId;
+                    //    orderno_new=SuccOrderId;
+                    //}else {
+                    //    logger.info("表示拒绝过开票");
+                    //    orderno_new = SuccOrderId;
+                    //    String[] split = SuccOrderId.split("-");
+                    //    orderno_old = split[0];
+                    //}
 
-                    WxFpxx oneByOrderNo = wxfpxxJpaDao.selsetByOrderNo(orderno_old);
+                    WxFpxx oneByOrderNo = wxfpxxJpaDao.selectByWeiXinOrderNo(SuccOrderId);
                     if(null==oneByOrderNo){
                         String re = "发票开具失败，请重试！";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
