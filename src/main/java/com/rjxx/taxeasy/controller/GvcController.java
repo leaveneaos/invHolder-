@@ -1,7 +1,10 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
@@ -9,6 +12,7 @@ import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.IMEIGenUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,9 +47,6 @@ public class GvcController extends BaseController {
     private JylsService jylsService;
 
     @Autowired
-    private KplsService kplsService;
-
-    @Autowired
     private FpjService fpjService;
 
     @Autowired
@@ -52,6 +54,21 @@ public class GvcController extends BaseController {
 
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
+
+    @Autowired
+    private CszbService cszbService;
+
+    @Autowired
+    private GetDataService getDataService;
+
+    @Autowired
+    private WeixinUtils weixinUtils;
+
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
+
+    @Autowired
+    private WxTokenJpaDao wxTokenJpaDao;
 
     @RequestMapping
     @ResponseBody
@@ -206,6 +223,7 @@ public class GvcController extends BaseController {
                 }if(null != jyls && null !=jyls.getDjh()){
                     result.put("num","3");
                 }else {
+                    Map resultMap = new HashMap();
                     //调用接口获取数据--首先存入微信发票信息
                     if(WeixinUtils.isWeiXinBrowser(request)){
                         logger.info("光唯尚----微信扫描存入微信发票信息------");
@@ -233,7 +251,51 @@ public class GvcController extends BaseController {
                             wxfpxxJpaDao.save(wxFpxxByTqm);
                         }
                     }
-
+                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
+                    if(zb1.getCsz().equals("是")){
+                        Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
+                        resultMap = getDataService.getDataForGvc(tqm, gsdm, csz.getCsz());
+                    }
+                    if(null!=resultMap.get("msg")){
+                        result.put("num","12");
+                        result.put("msg",resultMap.get("msg"));
+                        return result;
+                    }
+                    List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
+                    List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
+                    List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+                    String orderNo = tqm;
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
+                    if(WeixinUtils.isWeiXinBrowser(request)){
+                        String access_token ="";
+                        String ticket = "";
+                        try {
+                            WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                            if(wxToken==null){
+                                result.put("num","12");
+                                result.put("msg","出现未知异常，请重试！");
+                                return result;
+                            }else {
+                                access_token = wxToken.getAccessToken();
+                                ticket= wxToken.getTicket();
+                            }
+                            String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                            if(null==spappid ||"".equals(spappid)){
+                                result.put("num","12");
+                                result.put("msg","出现未知异常，请重试！");
+                                return result;
+                            }
+                            String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
+                            result.put("num","20");
+                            result.put("redirectUrl",redirectUrl);
+                            logger.info("------光唯尚微信跳转--------"+ JSON.toJSONString(result));
+                            return result;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }else {
                 result.put("num","4");

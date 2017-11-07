@@ -177,13 +177,7 @@
 					"gsdm":  gsdm
 				}, 
 				function(data) {
-					/*if (data.num == 1) {
-						firm = "无此销售单，请检查输入的订单号是否正确!";
-						title = "提示";
-                        jAlert(firm,title);
-                        $('#cwts').css('opacity','0');
-                        loadimage();
-					}else*/ if (data.num == 2) {
+					 if (data.num == 2) {
                         if(data.serialOrder==null){
                             firm = "出现未知异常，请稍后再试!";
                             title = "提示";
@@ -202,7 +196,16 @@
                         jAlert(firm, title);
                         loadimage();
                         $('#cwts').css('opacity','0');
-                    }
+                    }else if(data.num ==12){
+                         firm = data.msg;
+                         title = "提示";
+                         jAlert(firm, title);
+                         loadimage();
+                         $('#cwts').css('opacity','0');
+					 }else if(data.num==20){
+                         redirectUrl = data.redirectUrl;
+                         window.location.assign(redirectUrl);
+                     }
 				}
 			);
 		}
