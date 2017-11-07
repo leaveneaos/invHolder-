@@ -184,8 +184,8 @@ public class WeiXinController extends BaseController {
                                     }else if("gvc".equals(gsdm)){
                                         logger.info("进入光唯尚微信开票---------");
                                         Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
-                                        resultMap = getDataService.getDataForGvc(tqm, gsdm, csz.getCsz());
-                                        String msg = (String) resultMap.get("msg");
+                                        resultSjMap = getDataService.getDataForGvc(tqm, gsdm, csz.getCsz());
+                                        String msg = (String) resultSjMap.get("msg");
                                         if(msg!=null){
                                             String re = msg;
                                             weixinUtils.jujuekp(SuccOrderId, re, access_token);
