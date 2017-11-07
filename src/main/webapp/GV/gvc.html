@@ -14,6 +14,7 @@
 	<style type="text/css">
 		header{
 			width: 92%;
+			height: 212px;
 		}
 		section{
 			width: 92%;
@@ -31,7 +32,8 @@
 			padding: 4px 4px;
 			letter-spacing: 1px;
 			line-height: 25px;
-			font-size: 15px;
+			font-size: 14px;
+			margin-bottom: 10px;
 		}
 		#code {
 			width: 35%;
@@ -45,11 +47,6 @@
 		#orderNo{
 			width: 65%;
 			font-size: 15px
-		}
-		#cwts {
-			color: red;
-			margin-left: 23px;
-			opacity: 0;
 		}
 		.mui-input-group .mui-input-row label{
 		    height: 45px;
@@ -96,11 +93,11 @@
 			</div>
 		</form>
 		<input id="gsdm" name="gsdm" type="hidden" />
-		<p id="cwts">验证码输入错误!</p>
+		<!--<p id="cwts">验证码输入错误!</p>-->
 		<button id="Button1" onclick="tiqu()"  class="mui-btn mui-btn-primary mui-btn-block">提&nbsp;&nbsp;交</button>
 	</section>
 	<footer>
-		<p class="company ">开票通2.0</p>
+		<p class="company ">泰易开票通</p>
 		<p class="help "><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
 	</div>
@@ -168,7 +165,7 @@
 				jAlert(firm, title);
 				return;
             }
-			$.post(
+			/*$.post(
 				"../gvc/tqyz",
 				{
 					"tqm" : tqm,
@@ -182,32 +179,31 @@
                             firm = "出现未知异常，请稍后再试!";
                             title = "提示";
                             jAlert(firm,title);
-                            $('#cwts').css('opacity','0');
                             loadimage();
 						}else {
 							window.location.href= "../Family/smfpxq.html?serialOrder="+data.serialOrder+"&&t=" + new Date().getTime();
 						}
 					}else if (data.num == 4) {
+                         firm = "验证码输入错误!";
+                         title = "提示";
+                         jAlert(firm,title);
                         loadimage();
-                        $('#cwts').css('opacity','1');
 					}else if (data.num == 3) {
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";
                         title = "提示";
                         jAlert(firm, title);
                         loadimage();
-                        $('#cwts').css('opacity','0');
                     }else if(data.num ==12){
                          firm = data.msg;
                          title = "提示";
                          jAlert(firm, title);
                          loadimage();
-                         $('#cwts').css('opacity','0');
 					 }else if(data.num==20){
                          redirectUrl = data.redirectUrl;
                          window.location.assign(redirectUrl);
                      }
 				}
-			);
+			);*/
 		}
 	</script>
 </body>
