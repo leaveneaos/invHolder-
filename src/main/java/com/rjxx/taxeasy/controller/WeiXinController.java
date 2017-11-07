@@ -126,11 +126,11 @@ public class WeiXinController extends BaseController {
                     access_token = wxToken.getAccessToken();
                 }
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
-                    System.out.println("拿到成功的订单id了");
+                    logger.info("拿到微信回传的订单编号为"+SuccOrderId);
                     //原始订单 ----- 开票平台的订单
-                    String orderno_old="";
+                    //String orderno_old="";
                     //拒绝之后的订单 --- 传给微信的订单---weixinorderno
-                    String orderno_new="";
+                    //String orderno_new="";
                     //int i = SuccOrderId.indexOf("-");
                     //if(i<0){
                     //    logger.info("没有-，表示没有拒绝过开票");
@@ -142,7 +142,6 @@ public class WeiXinController extends BaseController {
                     //    String[] split = SuccOrderId.split("-");
                     //    orderno_old = split[0];
                     //}
-
                     WxFpxx oneByOrderNo = wxfpxxJpaDao.selectByWeiXinOrderNo(SuccOrderId);
                     if(null==oneByOrderNo){
                         String re = "发票开具失败，请重试！";
@@ -154,7 +153,7 @@ public class WeiXinController extends BaseController {
 
                     if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
                         logger.info("进入申请开票类型------------开始开票");
-                        Map resultMap =  weixinUtils.zdcxstatus(orderno_new,access_token);
+                        Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
                         if(null==resultMap){
                             String re = "发票开具失败，请重试！";
                             weixinUtils.jujuekp(SuccOrderId, re, access_token);
@@ -197,7 +196,7 @@ public class WeiXinController extends BaseController {
                                         barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
                                                (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
                                                , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                               tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),orderno_new);
+                                               tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),SuccOrderId);
                                     } catch (Exception e) {
                                         String re = "发票开具失败，请重试！";
                                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
