@@ -28,8 +28,8 @@
 				<ChargeTaxWay>0</ChargeTaxWay>
 				<TotalAmount>${jyxxsq.jshj?c!}</TotalAmount>
 				<TotalDiscount>
-				<#if (jymxsq.qjzk)??>
-				${jymxsq.qjzk?c!}
+				<#if (jyxxsq.qjzk)??>
+				${jyxxsq.qjzk?c!}
 				<#else>
 				</#if>
 				</TotalDiscount>
