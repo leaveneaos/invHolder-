@@ -14,7 +14,7 @@
 	<style type="text/css">
 		header{
 			width: 92%;
-			height: 212px;
+			height: 250px;
 		}
 		section{
 			width: 92%;
@@ -64,7 +64,7 @@
 <div class="abroad">
 <header>
 	<div id="img">
-		<img id="logo" src="../images/gvc.png"/>
+		<img id="logo" src="logo/gvc.png"/>
 	</div>
 </header>
 
@@ -128,14 +128,14 @@
 			document.getElementById("randImage").src = "../image.jsp?" + Math.random();
 			$('#code').val('');
 		}
-        $(function () {
+        /*$(function () {
             var gsdm = location.href.split('?')[1].split('&&')[0].split('=')[1];
             $('#gsdm').val(gsdm);
             var gsdm= $('#gsdm').val();
             if(gsdm!=null && gsdm!=""){
-                $("#logo").attr("src", "../images/" + gsdm + ".png");
+                $("#logo").attr("src", "logo/" + gsdm + ".png");
 			}
-        });
+        });*/
 		function tiqu() {
 			var tqm = $('#orderNo').val();
 			var code = $('#code').val();
@@ -165,7 +165,7 @@
 				jAlert(firm, title);
 				return;
             }
-			/*$.post(
+			$.post(
 				"../gvc/tqyz",
 				{
 					"tqm" : tqm,
@@ -203,7 +203,7 @@
                          window.location.assign(redirectUrl);
                      }
 				}
-			);*/
+			);
 		}
 	</script>
 </body>
