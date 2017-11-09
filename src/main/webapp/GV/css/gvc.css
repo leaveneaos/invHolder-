@@ -26,7 +26,7 @@ footer p {
 	margin: 10px;
 	color: #000;
 	box-sizing: border-box;
-	line-height: 40px;
+	line-height: 25px;
 }
 .step {
 	margin: 10px 0;
@@ -70,7 +70,7 @@ footer p {
 
 #Button1 {
 	margin-bottom: 65px;
-	margin-top: 12px;
+	margin-top: 10px;
 }
 ul, ol, li, a{
 	list-style: none;

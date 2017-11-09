@@ -287,6 +287,11 @@ public class GvcController extends BaseController {
                                 return result;
                             }
                             String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                            if(weixinOrderNo==null){
+                                result.put("num","12");
+                                result.put("msg","出现未知异常，请重试！");
+                                return result;
+                            }
                             String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
                             result.put("num","20");
                             result.put("redirectUrl",redirectUrl);
