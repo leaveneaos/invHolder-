@@ -220,7 +220,7 @@ public class GvcController extends BaseController {
                     tqjlService.save(tqjl);
                     result.put("num","2");
                     result.put("serialOrder",list.get(0).getSerialorder());
-                }if(null != jyls && null !=jyls.getDjh()){
+                }else if(null != jyls && null !=jyls.getDjh()){
                     result.put("num","3");
                 }else {
                     Map resultMap = new HashMap();
