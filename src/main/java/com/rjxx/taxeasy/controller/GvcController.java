@@ -175,7 +175,7 @@ public class GvcController extends BaseController {
                 Map map = new HashMap<>();
                 map.put("tqm", tqm);
                 map.put("gsdm", gsdm);
-                map.put("je",price);
+                //map.put("je",price);
                 Jyls jyls = jylsService.findOne(map);
                 List<Kpls> list = jylsService.findByTqm(map);
                 if (list.size() > 0) {
@@ -264,6 +264,12 @@ public class GvcController extends BaseController {
                     List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
                     List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+                    String resultPrice = jyxxsqList.get(0).getJshj().toString();
+                    if(!price.equals(resultPrice)){
+                        result.put("num","12");
+                        result.put("msg","无此销售单，请检查输入的订单号或者金额是否正确！");
+                        return result;
+                    }
                     String orderNo = tqm;
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
