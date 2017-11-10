@@ -25,36 +25,9 @@
 	</header>
 	<section class="main" style="width: 92%">
 		<div class="content">
-			<div class="middle" style="height:386px;margin-top: 15px;">
+			<div class="middle" style="margin-top: 15px;">
 				<div style="text-align: center;padding: 5%">增值税电子普通发票</div>
-				<div class="fpxqxx">
-					<!--<ul>
-						<li class="fl">付款方:&nbsp;&nbsp;&nbsp;&nbsp;</li>
-						<li class="fr omit" id="gfmc"></li>
-					</ul>
-					 <ul>
-						<li class="fl">收款方:&nbsp;&nbsp;&nbsp;&nbsp;</li>
-						<li class="fr omit" id="xfmc"></li>
-					</ul>
-					<ul>
-						<li class="fl">开票金额:</li>
-						<li class="fr omit" id="fpje"></li>
-					</ul>
-					<ul class="kprq">
-						<li class="fl">开票日期:</li>
-						<li class="fr omit" id="kprq"></li>
-					</ul>
-					<ul>
-						<li class="fl">发票代码:</li>
-						<li class="fr omit" id="fpdm"></li>
-					</ul>
-					<ul>
-						<li class="fl">发票号码:</li>
-						<li class="fr omit" id="fphm"></li>
-					</ul>
-					<div  class="ck">
-						<a id="pdf" >查看PDF</a>
-					</div>-->
+				<div class="fpxq">
 				</div>
 			</div>
 			<div class="bottom btoTip">
@@ -112,25 +85,16 @@
                     "serialOrder":serialOrder
 				},
                 function (data) {
-//                    var data = jQuery.parseJSON(obj);
-//                        $("#xfmc").html(data.xfmc);
-//                        $("#gfmc").html(data.gfmc);
-//                        $("#kprq").html(data.kprq);
-//                        $("#fpdm").html(data.fpdm);
-//                        $("#fphm").html(data.fphm);
-//                        $("#jym").html(data.jym);
-//                        $("#pdf").attr("href",data.pdfurl);
-//                    	$("#fpje").html(RetainedDecimalPlaces(data.jshj)+"元");
 					orderNo = data.orderNo;
 					price = data.price;
 					orderTime = data.orderTime;
                     var items = data.kplsList;
                     var html='';
                     for(var i = 0; i < items.length; i++) {
-                        html+='<ul><li class="fl">销方名称</li><li class="fr omit" id="xfmc">'+items[i].xfmc+'</li></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul> <ul><li class="fl">开票金额</li><li class="fr omit" id="kpje">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul><ul><li class="fl">开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="fpdm">'+items[i].fpdm+'</li></ul> <ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fphm+'</li></ul><div class="ck"><a id="pdf" href='+items[i].pdfurl+'>查看发票</a></div>';
+                        html+='<div class="fpxqxx" style="background-color: white;padding-bottom: 20px;"><ul><li class="fl">销方名称</li><li class="fr omit" id="xfmc">'+items[i].xfmc+'</li></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul> <ul><li class="fl">开票金额</li><li class="fr omit" id="kpje">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul><ul><li class="fl">开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="fpdm">'+items[i].fpdm+'</li></ul> <ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fphm+'</li></ul><div class="ck"><a id="pdf" href='+items[i].pdfurl+'>查看发票</a></div></div>';
                     }
                     //在页面显示数据
-                    $(".fpxqxx").html(html);
+                    $(".fpxq").html(html);
                 }
             )
         })
