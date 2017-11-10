@@ -166,7 +166,7 @@ public class GvcController extends BaseController {
      */
     @RequestMapping(value = "/tqyz",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
-    public Map<String,Object> tqyz(String tqm,String price,String gsdm,String code) {
+    public Map<String,Object> tqyz(String tqm,Double price,String gsdm,String code) {
         String sessionCode = (String) session.getAttribute("rand");
         String opendid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
@@ -264,8 +264,10 @@ public class GvcController extends BaseController {
                     List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
                     List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
-                    String resultPrice = jyxxsqList.get(0).getJshj().toString();
-                    if(!price.equals(resultPrice)){
+                    Double resultPrice = jyxxsqList.get(0).getJshj();
+                    logger.info("----"+price);
+                    logger.info("+++++"+resultPrice);
+                    if(price==resultPrice){
                         result.put("num","12");
                         result.put("msg","无此销售单，请检查输入的订单号或者金额是否正确！");
                         return result;
@@ -298,7 +300,7 @@ public class GvcController extends BaseController {
                                 result.put("msg","出现未知异常，请重试！");
                                 return result;
                             }
-                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
+                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price.toString(),orderTime, "","1",access_token,ticket,spappid);
                             result.put("num","20");
                             result.put("redirectUrl",redirectUrl);
                             logger.info("------光唯尚微信跳转--------"+ JSON.toJSONString(result));
