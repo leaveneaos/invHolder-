@@ -258,7 +258,7 @@ public class CommonController extends BaseController {
             Map map2 = new HashMap();
             map2.put("serialorder",serialOrder);
             List<Kpls> kplsList = kplsService.findAll(map2);
-            if(kplsList ==null){
+            if(kplsList.size()==0){
                 request.getSession().setAttribute("msg", "出现未知错误，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
