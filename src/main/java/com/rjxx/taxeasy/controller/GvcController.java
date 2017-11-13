@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -265,6 +266,23 @@ public class GvcController extends BaseController {
                     List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
                     List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
                     String nowdate = (String) resultMap.get("nowdate");
+                    String storeno = (String) resultMap.get("storeno");
+                    DateFormat df = new SimpleDateFormat("HH:mm:ss");
+                    Date dt1 = df.parse(nowdate);
+                    Date dt2 = df.parse("16:00:00");
+                    Date dt3 = df.parse("10:00:00");
+                    //比较时间大小,系统时间大于晚上6点
+                    if(dt1.getTime()>dt2.getTime()){
+                        logger.info("-----------------系统时间大于晚上6点");
+                        result.put("num","22");
+                        return result;
+                    }
+                    //比较时间大小,系统时间小于早上十点
+                    if(dt1.getTime()<dt3.getTime()){
+                        logger.info("-----------------系统时间小于早上10点");
+                        result.put("num","22");
+                        return result;
+                    }
                     Double resultPrice = jyxxsqList.get(0).getJshj();
                     logger.info("+++++++++++++++++当前时间"+nowdate);
                     if(price==resultPrice){

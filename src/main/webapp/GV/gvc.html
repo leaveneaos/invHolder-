@@ -201,7 +201,13 @@
 					 }else if(data.num==20){
                          redirectUrl = data.redirectUrl;
                          window.location.assign(redirectUrl);
-                     }
+                     }else if(data.num == 22){
+                         firm = "请在上午10时至晚上10时之间申请开具发票!";
+                         title = "提示";
+                         jAlert(firm, title);
+                         loadimage();
+                         $("#tiqu").attr("disabled","disabled");
+					 }
 				}
 			);
 		}
