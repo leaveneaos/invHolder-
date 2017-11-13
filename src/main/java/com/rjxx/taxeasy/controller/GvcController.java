@@ -285,7 +285,7 @@ public class GvcController extends BaseController {
                     }
                     Double resultPrice = jyxxsqList.get(0).getJshj();
                     logger.info("+++++++++++++++++当前时间"+nowdate);
-                    if(price==resultPrice){
+                    if(price!=resultPrice){
                         result.put("num","12");
                         result.put("msg","无此销售单，请检查输入的订单号或者金额是否正确！");
                         return result;
