@@ -285,7 +285,6 @@ public class GvcController extends BaseController {
                         result.put("num","22");
                         return result;
                     }
-                    String resultPrice = (String) resultMap.get("zkjine");
                     logger.info("+++++++++++++++++当前时间"+nowdate);
                     logger.info("+++++++++++++++++输入金额"+price);
                     DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
@@ -323,7 +322,7 @@ public class GvcController extends BaseController {
                                 result.put("msg","出现未知异常，请重试！");
                                 return result;
                             }
-                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,resultPrice,orderTime, "","1",access_token,ticket,spappid);
+                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
                             result.put("num","20");
                             result.put("redirectUrl",redirectUrl);
                             logger.info("------光唯尚微信跳转--------"+ JSON.toJSONString(result));
