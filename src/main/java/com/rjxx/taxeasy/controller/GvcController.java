@@ -269,7 +269,7 @@ public class GvcController extends BaseController {
                     String storeno = (String) resultMap.get("storeno");
                     DateFormat df = new SimpleDateFormat("HH:mm:ss");
                     Date dt1 = df.parse(nowdate);
-                    Date dt2 = df.parse("16:00:00");
+                    Date dt2 = df.parse("20:00:00");
                     Date dt3 = df.parse("10:00:00");
                     //比较时间大小,系统时间大于晚上6点
                     if(dt1.getTime()>dt2.getTime()){
