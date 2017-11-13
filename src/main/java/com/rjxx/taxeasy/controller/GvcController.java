@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -287,8 +288,9 @@ public class GvcController extends BaseController {
                     String resultPrice = (String) resultMap.get("zkjine");
                     logger.info("+++++++++++++++++当前时间"+nowdate);
                     logger.info("+++++++++++++++++输入金额"+price);
-                    logger.info("+++++++++++++++++返回金额"+resultPrice);
-                    if(!price.equals(resultPrice)){
+                    DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
+                    logger.info("+++++++++++++++++返回金额"+decimalFormat.format(resultPrice));
+                    if(!price.equals(decimalFormat.format(resultPrice))){
                         result.put("num","12");
                         result.put("msg","金额输入错误，请重新输入！");
                         return result;
