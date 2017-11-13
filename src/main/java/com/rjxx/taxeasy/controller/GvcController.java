@@ -284,13 +284,13 @@ public class GvcController extends BaseController {
                         result.put("num","22");
                         return result;
                     }
-                    String resultPrice = jyxxsqList.get(0).getJshj().toString();
+                    String resultPrice = (String) resultMap.get("zkjine");
                     logger.info("+++++++++++++++++当前时间"+nowdate);
                     logger.info("+++++++++++++++++输入金额"+price);
                     logger.info("+++++++++++++++++返回金额"+resultPrice);
                     if(!price.equals(resultPrice)){
                         result.put("num","12");
-                        result.put("msg","无此销售单，请检查输入的订单号或者金额是否正确！");
+                        result.put("msg","金额输入错误，请重新输入！");
                         return result;
                     }
                     String orderNo = tqms;
@@ -321,7 +321,7 @@ public class GvcController extends BaseController {
                                 result.put("msg","出现未知异常，请重试！");
                                 return result;
                             }
-                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price.toString(),orderTime, "","1",access_token,ticket,spappid);
+                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,resultPrice,orderTime, "","1",access_token,ticket,spappid);
                             result.put("num","20");
                             result.put("redirectUrl",redirectUrl);
                             logger.info("------光唯尚微信跳转--------"+ JSON.toJSONString(result));
