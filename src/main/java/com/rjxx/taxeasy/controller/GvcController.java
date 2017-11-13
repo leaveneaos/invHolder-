@@ -289,8 +289,8 @@ public class GvcController extends BaseController {
                     logger.info("+++++++++++++++++当前时间"+nowdate);
                     logger.info("+++++++++++++++++输入金额"+price);
                     DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
-                    logger.info("+++++++++++++++++返回金额"+decimalFormat.format(resultPrice));
-                    if(!price.equals(decimalFormat.format(resultPrice))){
+                    logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
+                    if(!price.equals(decimalFormat.format(resultMap.get("zkjine")))){
                         result.put("num","12");
                         result.put("msg","金额输入错误，请重新输入！");
                         return result;
