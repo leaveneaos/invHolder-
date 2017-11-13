@@ -264,9 +264,9 @@ public class GvcController extends BaseController {
                     List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
                     List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
+                    String nowdate = (String) resultMap.get("nowdate");
                     Double resultPrice = jyxxsqList.get(0).getJshj();
-                    logger.info("----"+price);
-                    logger.info("+++++"+resultPrice);
+                    logger.info("+++++++++++++++++当前时间"+nowdate);
                     if(price==resultPrice){
                         result.put("num","12");
                         result.put("msg","无此销售单，请检查输入的订单号或者金额是否正确！");
