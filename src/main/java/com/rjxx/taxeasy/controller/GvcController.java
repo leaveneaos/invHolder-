@@ -172,9 +172,10 @@ public class GvcController extends BaseController {
         String opendid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
         try {
+            String tqms = tqm.toUpperCase();
             if (code != null && sessionCode != null && code.equals(sessionCode)) {
                 Map map = new HashMap<>();
-                map.put("tqm", tqm);
+                map.put("tqm", tqms);
                 map.put("gsdm", gsdm);
                 //map.put("je",price);
                 Jyls jyls = jylsService.findOne(map);
@@ -228,20 +229,20 @@ public class GvcController extends BaseController {
                     //调用接口获取数据--首先存入微信发票信息
                     if(WeixinUtils.isWeiXinBrowser(request)){
                         logger.info("光唯尚----微信扫描存入微信发票信息------");
-                        WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                        WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqms);
                         if(null==wxFpxxByTqm){
                             WxFpxx wxFpxx = new WxFpxx();
-                            wxFpxx.setTqm(tqm);
+                            wxFpxx.setTqm(tqms);
                             wxFpxx.setGsdm(gsdm);
-                            wxFpxx.setOrderNo(tqm);
+                            wxFpxx.setOrderNo(tqms);
                             wxFpxx.setQ("");
                             wxFpxx.setWxtype("1");
                             wxFpxx.setOpenId((String) session.getAttribute("openid"));
                             wxfpxxJpaDao.save(wxFpxx);
                         }else {
-                            wxFpxxByTqm.setTqm(tqm);
+                            wxFpxxByTqm.setTqm(tqms);
                             wxFpxxByTqm.setGsdm(gsdm);
-                            wxFpxxByTqm.setOrderNo(tqm);
+                            wxFpxxByTqm.setOrderNo(tqms);
                             wxFpxxByTqm.setQ("");
                             wxFpxxByTqm.setWxtype("1");
                             wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
@@ -255,7 +256,7 @@ public class GvcController extends BaseController {
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(zb1.getCsz().equals("是")){
                         Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
-                        resultMap = getDataService.getDataForGvc(tqm, gsdm, csz.getCsz());
+                        resultMap = getDataService.getDataForGvc(tqms, gsdm, csz.getCsz());
                     }
                     if(null!=resultMap.get("msg")){
                         result.put("num","12");
@@ -290,7 +291,7 @@ public class GvcController extends BaseController {
                         result.put("msg","无此销售单，请检查输入的订单号或者金额是否正确！");
                         return result;
                     }
-                    String orderNo = tqm;
+                    String orderNo = tqms;
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
                     if(WeixinUtils.isWeiXinBrowser(request)){
