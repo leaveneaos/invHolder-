@@ -167,7 +167,7 @@ public class GvcController extends BaseController {
      */
     @RequestMapping(value = "/tqyz",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
-    public Map<String,Object> tqyz(String tqm,Double price,String gsdm,String code) {
+    public Map<String,Object> tqyz(String tqm,String price,String gsdm,String code) {
         String sessionCode = (String) session.getAttribute("rand");
         String opendid = (String) session.getAttribute("openid");
         Map<String, Object> result = new HashMap<String, Object>();
@@ -284,11 +284,11 @@ public class GvcController extends BaseController {
                         result.put("num","22");
                         return result;
                     }
-                    Double resultPrice = jyxxsqList.get(0).getJshj();
+                    String resultPrice = jyxxsqList.get(0).getJshj().toString();
                     logger.info("+++++++++++++++++当前时间"+nowdate);
                     logger.info("+++++++++++++++++输入金额"+price);
                     logger.info("+++++++++++++++++返回金额"+resultPrice);
-                    if(price!=resultPrice){
+                    if(!price.equals(resultPrice)){
                         result.put("num","12");
                         result.put("msg","无此销售单，请检查输入的订单号或者金额是否正确！");
                         return result;
