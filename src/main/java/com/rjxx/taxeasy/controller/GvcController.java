@@ -306,7 +306,7 @@ public class GvcController extends BaseController {
                     logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
                     if(!price.equals(decimalFormat.format(resultMap.get("zkjine")))){
                         result.put("num","12");
-                        result.put("msg","金额输入错误，请重新输入！");
+                        result.put("msg","金额输入错误，请输入销售票据上的“订单总计”金额！");
                         return result;
                     }
                     String orderNo = tqms;
