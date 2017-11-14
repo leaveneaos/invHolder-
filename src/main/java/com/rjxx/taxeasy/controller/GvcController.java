@@ -269,21 +269,29 @@ public class GvcController extends BaseController {
                     List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
                     String nowdate = (String) resultMap.get("nowdate");
                     String storeno = (String) resultMap.get("storeno");
+                    String kpqssj = (String) resultMap.get("kpqssj");
+                    String kpjssj = (String) resultMap.get("kpjssj");
+                    logger.info("------开票起始时间------"+kpqssj);
+                    logger.info("------开票结束时间------"+kpjssj);
                     DateFormat df = new SimpleDateFormat("HH:mm:ss");
                     Date dt1 = df.parse(nowdate);
-                    Date dt2 = df.parse("20:00:00");
-                    Date dt3 = df.parse("10:00:00");
-                    //比较时间大小,系统时间大于晚上6点
-                    if(dt1.getTime()>dt2.getTime()){
-                        logger.info("-----------------系统时间大于晚上6点");
-                        result.put("num","22");
-                        return result;
+                    Date dt2 = df.parse(kpjssj);
+                    Date dt3 = df.parse(kpqssj);
+                    if(!kpqssj.equals("")){
+                        //比较时间大小,系统时间小于早上十点
+                        if(dt1.getTime()<dt3.getTime()){
+                            logger.info("-----------------系统时间小于早上10点");
+                            result.put("num","22");
+                            return result;
+                        }
                     }
-                    //比较时间大小,系统时间小于早上十点
-                    if(dt1.getTime()<dt3.getTime()){
-                        logger.info("-----------------系统时间小于早上10点");
-                        result.put("num","22");
-                        return result;
+                    if(!kpjssj.equals("")){
+                        //比较时间大小,系统时间大于晚上6点
+                        if(dt1.getTime()>dt2.getTime()){
+                            logger.info("-----------------系统时间大于晚上6点");
+                            result.put("num","22");
+                            return result;
+                        }
                     }
                     logger.info("+++++++++++++++++当前时间"+nowdate);
                     logger.info("+++++++++++++++++输入金额"+price);
