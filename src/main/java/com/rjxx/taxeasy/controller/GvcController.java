@@ -271,24 +271,31 @@ public class GvcController extends BaseController {
                     String storeno = (String) resultMap.get("storeno");
                     String kpqssj = (String) resultMap.get("kpqssj");
                     String kpjssj = (String) resultMap.get("kpjssj");
+                    logger.info("--------当前时间-------"+nowdate);
                     logger.info("------开票起始时间------"+kpqssj);
                     logger.info("------开票结束时间------"+kpjssj);
                     DateFormat df = new SimpleDateFormat("HH:mm:ss");
                     Date dt1 = df.parse(nowdate);
-                    Date dt2 = df.parse(kpjssj);
-                    Date dt3 = df.parse(kpqssj);
+                    if(nowdate.equals("")){
+                        result.put("num","12");
+                        result.put("msg","系统出现错误，请重新输入！");
+                        return result;
+                    }
                     if(!kpqssj.equals("")){
+                        Date dt3 = df.parse(kpqssj);
                         //比较时间大小,系统时间小于早上十点
                         if(dt1.getTime()<dt3.getTime()){
-                            logger.info("-----------------系统时间小于早上10点");
+                            logger.info("-----------------系统时间小于开票起始时间"+kpqssj);
                             result.put("num","22");
+                            result.put("msg","");
                             return result;
                         }
                     }
                     if(!kpjssj.equals("")){
+                        Date dt2 = df.parse(kpjssj);
                         //比较时间大小,系统时间大于晚上6点
                         if(dt1.getTime()>dt2.getTime()){
-                            logger.info("-----------------系统时间大于晚上6点");
+                            logger.info("-----------------系统时间大于开票结束时间"+kpjssj);
                             result.put("num","22");
                             return result;
                         }
