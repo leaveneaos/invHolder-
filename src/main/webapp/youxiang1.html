@@ -84,8 +84,9 @@
 					if (data.msg) {
 						//window.location.href = "tishi2.html?time="
 						//		+ new Date();
-                        $('#cwxx').css('display',"");
-                        $('#success').css('display',"block");
+                        $('#cwxx').css('display',"none");
+                        $('#success').css('display',"");
+                        $("#yjfs").attr("disabled","disabled");
 					}else{
 					    if(data.session=="outoftime"){
                             window.location.href = "/smtq/demo.html?time=" + new Date().getTime();
