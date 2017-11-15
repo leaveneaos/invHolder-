@@ -40,7 +40,9 @@
 		<p id="cwxx" class="eTip"></p>
 
 		<button id="yjfs" type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block">发送</button>
-		<p id="cwxx1" class="eTip"></p>
+		<img style="width: 50px;height: 50px;float: left;" src="images/6755670_142153201143_2.png"/>
+		<span style="line-height: 50px;font-size: 15px;font-weight: 700 ;" id="cwxx1" class="eTip">发送成功（请及时关注您的邮箱）。</span>
+
 	</section>
 	
 	<footer>
@@ -79,10 +81,10 @@
 				},
 				function(data) {
 					$('#yjfs').removeAttr("disabled");
-					alert(data.msg);
 					if (data.msg) {
 						//window.location.href = "tishi2.html?time="
 						//		+ new Date();
+                        $('#cwxx').css('display',"");
                         $('#cwxx1').html("邮件发送成功，请及时关注您的邮箱!");
 					}else{
 					    if(data.session=="outoftime"){
