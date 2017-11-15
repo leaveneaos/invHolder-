@@ -182,6 +182,18 @@ public class GvcController extends BaseController {
                 Jyls jyls = jylsService.findOne(map);
                 List<Kpls> list = jylsService.findByTqm(map);
                 if (list.size() > 0) {
+                    Map maps = new HashMap();
+                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
+                    if(zb1.getCsz().equals("是")){
+                        Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
+                        maps = getDataService.getDataForGvc(tqms, gsdm, csz.getCsz());
+                    }
+                    DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
+                    if(!price.equals(decimalFormat.format(maps.get("zkjine")))){
+                        result.put("num","12");
+                        result.put("msg","金额输入错误，请输入销售票据上的“订单总计”金额！");
+                        return result;
+                    }
                     if (opendid != null && !"null".equals(opendid)) {
                         Map<String, Object> params = new HashMap<>();
                         params.put("djh", jyls.getDjh());
