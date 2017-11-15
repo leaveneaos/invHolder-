@@ -232,11 +232,12 @@ public class ScanController extends BaseController {
                             }
 
                         }
-                        logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
-                                + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
+                        String serialOrder = status.get(0).split("[+]")[4];
+                        logger.info("跳转的url--"+request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                         //有pdf对应的url
-                        response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
-                                + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
+                        //response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
+                        //        + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
+                        response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                     }
 //                    switch (status) {
 //                        case "可开具":
