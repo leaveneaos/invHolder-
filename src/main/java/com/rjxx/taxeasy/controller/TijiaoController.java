@@ -415,13 +415,17 @@ public class TijiaoController extends BaseController {
             result.put("msg", request.getSession().getAttribute("msg"));
             request.getSession().setAttribute("msg", "请重新扫描二维码");
             Map map = new HashMap();
-            if(null==request.getSession().getAttribute("serialorder")){
+            if(null==request.getSession().getAttribute("serialorder") &&null==request.getSession().getAttribute("djh")){
                 request.getSession().setAttribute("msg", "会话已过期，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-
-            map.put("serialorder" ,request.getSession().getAttribute("serialorder"));
+            if(null!=request.getSession().getAttribute("serialorder")){
+                map.put("serialorder" ,request.getSession().getAttribute("serialorder"));
+            }
+            if(null!=request.getSession().getAttribute("djh")){
+                map.put("djh" ,request.getSession().getAttribute("djh"));
+            }
             List<Kpls> kpls = kplsService.findAll(map);
             if(kpls.size()>0){
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
