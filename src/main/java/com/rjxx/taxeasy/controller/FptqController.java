@@ -183,6 +183,8 @@ public class FptqController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
+				request.getSession().setAttribute("djh",list.get(0).getDjh());
+				request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
             } else {
                 result.put("num", "3");
             }
