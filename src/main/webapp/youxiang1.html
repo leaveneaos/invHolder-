@@ -40,7 +40,7 @@
 		<p id="cwxx" class="eTip"></p>
 
 		<button id="yjfs" type="button" onclick="fpfs()" class="mui-btn mui-btn-primary mui-btn-block">发送</button>
-
+		<p id="cwxx1" class="eTip"></p>
 	</section>
 	
 	<footer>
@@ -79,18 +79,20 @@
 				},
 				function(data) {
 					$('#yjfs').removeAttr("disabled");
+					alert(data.msg);
 					if (data.msg) {
-						window.location.href = "tishi2.html?time="
-								+ new Date();
+						//window.location.href = "tishi2.html?time="
+						//		+ new Date();
+                        $('#cwxx1').html("邮件发送成功，请及时关注您的邮箱!");
 					}else{
 					    if(data.session=="outoftime"){
                             window.location.href = "/smtq/demo.html?time=" + new Date().getTime();
 						}
-						$('#cwxx').html("请检查您的邮箱!");
+						$('#cwxx1').html("请检查您的邮箱!");
 					}
 				})
 			} else {
-				$('#cwxx').html("请输入正确的邮箱格式!");
+				$('#cwxx1').html("请输入正确的邮箱格式!");
 			}
 		}
 	</script>
