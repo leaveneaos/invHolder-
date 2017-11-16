@@ -197,6 +197,7 @@ public class TijiaoController extends BaseController {
                 flag = false;
             }
         }
+        result.put("gsdm",jyls.getGsdm());
         result.put("msg", flag);
         return result;
     }
