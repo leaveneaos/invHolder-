@@ -141,12 +141,7 @@ public class CmscController extends BaseController {
         try {
             String sessionCode = (String) session.getAttribute("rand");
             String opendid = (String) session.getAttribute("openid");
-            String gsdm = (String) session.getAttribute("gsdm");
-            if(gsdm==null || sessionCode == null||khh==null){
-                request.getSession().setAttribute("msg", "会话已过期，请重试!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                return null;
-            }
+            String gsdm = "cmsc";
             result = new HashMap<String, Object>();
             if (code != null && sessionCode != null && code.equals(sessionCode)) {
                 List<Kpls> list = new ArrayList<>();
@@ -178,7 +173,7 @@ public class CmscController extends BaseController {
             } else {
                 result.put("num", "4");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return result;

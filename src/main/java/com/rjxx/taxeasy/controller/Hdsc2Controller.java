@@ -162,7 +162,7 @@ public class Hdsc2Controller extends BaseController {
         try {
             String sessionCode = (String) session.getAttribute("rand");
             String openid = (String) session.getAttribute("openid");
-            String gsdm = (String) session.getAttribute(SESSION_KEY_FPTQ_GSDM);
+            String gsdm = "hdsc";
             result = new HashMap<String, Object>();
             if(code ==null||khh==null||sessionCode==null){
                 request.getSession().setAttribute("msg", "会话已过期，请重试!");
@@ -230,7 +230,7 @@ public class Hdsc2Controller extends BaseController {
             List<Kpls> list = null;
             //if(null!=gsdm&&gsdm.equals("hdsc")){
             map.put("khh", khh);
-            map.put("gsdm", gsdm);
+            map.put("gsdm", "hdsc");
             map.put("kplsh",kplsh);
             // }
         /*if(null!=gsdm&&gsdm.equals("hongkang")){
@@ -337,7 +337,7 @@ public class Hdsc2Controller extends BaseController {
                     request.getSession().setAttribute("msg", "暂时未有发票开具");
                     return null;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
