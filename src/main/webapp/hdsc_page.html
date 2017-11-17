@@ -97,11 +97,7 @@
 				},
 				function(data) {
 					if (data.num == 2) {
-					    if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-					    	window.open("dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date().getTime());
-					    }else{
-					    	window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date().getTime();
-					    }
+					    window.location.href = "dzfp.html?gsdm="+data.gsdm+"&khh="+data.khh+"&time=" + new Date().getTime();
 					} else if (data.num == 3) {
 						firm = "您提取的发票尚未开具,请检查客户编号是否正确,或稍后再试!";
 						title = "提示";
