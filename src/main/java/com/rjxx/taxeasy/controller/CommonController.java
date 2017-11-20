@@ -260,8 +260,8 @@ public class CommonController extends BaseController {
             List<Kpls> kplsList = kplsService.findAll(map2);
             if(kplsList.size()==0){
                 request.getSession().setAttribute("msg", "出现未知错误，请重试!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                return null;
+                result.put("msg","未查询到发票详情，请重试！");
+                return result;
             }
             String gsdm = kplsList.get(0).getGsdm();
             result.put("price",kplsList.get(0).getJshj());
@@ -307,6 +307,7 @@ public class CommonController extends BaseController {
                     wxfpxxJpaDao.save(wxFpxxByTqm);
                 }
             }
+            result.put("gsdm",kplsList.get(0).getGsdm());
         } catch (IOException e) {
             e.printStackTrace();
         }

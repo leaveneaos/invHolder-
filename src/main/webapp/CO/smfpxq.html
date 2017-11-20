@@ -85,16 +85,25 @@
                     "serialOrder":serialOrder
 				},
                 function (data) {
-					orderNo = data.orderNo;
-					price = data.price;
-					orderTime = data.orderTime;
-                    var items = data.kplsList;
-                    var html='';
-                    for(var i = 0; i < items.length; i++) {
-                        html+='<div class="fpxqxx" style="background-color: white;padding-bottom: 20px;"><ul><li class="fl">销方名称</li><li class="fr omit" id="xfmc">'+items[i].xfmc+'</li></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul> <ul><li class="fl">开票金额</li><li class="fr omit" id="kpje">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul><ul><li class="fl">开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="fpdm">'+items[i].fpdm+'</li></ul> <ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fphm+'</li></ul><div class="ck"><a id="pdf" href='+items[i].pdfurl+'>查看发票</a></div></div>';
-                    }
-                    //在页面显示数据
-                    $(".fpxq").html(html);
+					if(data.msg!=null&&data.msg!=""){
+                        redirect(data.msg);
+					}else {
+                        orderNo = data.orderNo;
+                        price = data.price;
+                        orderTime = data.orderTime;
+                        if(data.gsdm!=null&&data.gsdm=='gvc'){
+                            $(".company").css('display','none');
+                            $(".help").css('display','none');
+                        }
+                        var items = data.kplsList;
+                        var html='';
+                        for(var i = 0; i < items.length; i++) {
+                            html+='<div class="fpxqxx" style="background-color: white;padding-bottom: 20px;"><ul><li class="fl">销方名称</li><li class="fr omit" id="xfmc">'+items[i].xfmc+'</li></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul> <ul><li class="fl">开票金额</li><li class="fr omit" id="kpje">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul><ul><li class="fl">开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="fpdm">'+items[i].fpdm+'</li></ul> <ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fphm+'</li></ul><div class="ck"><a id="pdf" href='+items[i].pdfurl+'>查看发票</a></div></div>';
+                        }
+                        //在页面显示数据
+                        $(".fpxq").html(html);
+					}
+
                 }
             )
         })
