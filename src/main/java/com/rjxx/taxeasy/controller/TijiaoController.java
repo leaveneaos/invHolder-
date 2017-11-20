@@ -397,6 +397,9 @@ public class TijiaoController extends BaseController {
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("djh", request.getSession().getAttribute("djh"));
         result.put("serialorder", request.getSession().getAttribute("serialorder"));
+        if(null!=request.getSession().getAttribute("gsdm")&&"gvc".equals(request.getSession().getAttribute("gsdm"))){
+            result.put("num","1");
+        }
         if (null != request.getSession().getAttribute("djh")) {
             Map params = new HashMap<>();
             params.put("djh", String.valueOf(request.getSession().getAttribute("djh")));

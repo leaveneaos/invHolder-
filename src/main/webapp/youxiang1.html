@@ -60,6 +60,9 @@
                     serialorder = data.serialorder;
 					if (null == serialorder || "" == serialorder) {
 						window.location.href = "/smtq/demo.html?time=" + new Date().getTime();
+					}else if(null!=data.num && data.num==1){
+                        $(".company").css('display','none');
+                        $(".help").css('display','none');
 					}
 				}
 			)
@@ -86,8 +89,6 @@
                             $('#cwxx').css('display',"none");
                             $('#success').css('display',"");
                             $("#yjfs").attr("disabled","disabled");
-                            $('.company').css('display',"none");
-                            $('.help').css('display',"none");
 						}else {
                             window.location.href = "tishi2.html?time="
                             		+ new Date();

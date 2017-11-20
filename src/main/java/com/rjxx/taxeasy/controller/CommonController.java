@@ -307,6 +307,9 @@ public class CommonController extends BaseController {
                     wxfpxxJpaDao.save(wxFpxxByTqm);
                 }
             }
+            if(kplsList.get(0).getGsdm().equals("gvc")){
+                request.getSession().setAttribute("gsdm",kplsList.get(0).getGsdm());
+            }
             result.put("gsdm",kplsList.get(0).getGsdm());
         } catch (IOException e) {
             e.printStackTrace();
