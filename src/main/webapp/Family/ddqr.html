@@ -64,7 +64,6 @@
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
-
 		$(function () {
             pricese=null;
             var thisURL = document.URL;
@@ -73,17 +72,20 @@
             price=null;
             orderTime=null;
             storeNo=null;
+            tqm=null;
             storeNo = getval.split("=")[2];
             orderNo = getval.split("=")[3];
             price = getval.split("=")[4];
             orderTime = getval.split("=")[5];
+            tqm = getval.split("=")[6];
             if(storeNo == null || orderNo ==null || price==null){
                 redirect("出现未知错误，请重新扫码或联系商户！")
             }else {
                 $('#orderNo').html(storeNo);
                 $('#order').html(orderNo);
-                $('#orderTime').html(orderTime);
+                $('#orderTime').html(formatDate(orderTime));
                 $('#price').html(RetainedDecimalPlaces(price)+"元");
+                $('#tqmhidden').html(tqm);
                 pricese = price;
             }
             $.ajax({
@@ -107,8 +109,8 @@
                         //$('#order').html(data.order);
                         //$('#orderTime').html(data.orderTime);
                         //$('#price').html(RetainedDecimalPlaces(data.price)+"元");
-                        pricese = data.price;
-                        $('#tqmhidden').html(data.tqm);
+                        //pricese = data.price;
+                        //$('#tqmhidden').html(data.tqm);
                         $("#sure").attr("disabled",false);
                     }
                 },
@@ -116,36 +118,47 @@
                     alert("Error");
 				}
             });
-               /* $.post(
-                    "../fm/qrxxsession",
-                    {},
-                    function (data) {
-                        if(null!=data.error&&""!=data.error){
-                            redirect(data.error);
-                            $("#sure").attr("disabled","disabled");
-                        }
-                        if(null!=data.temp&&""!=data.temp){
-                            redirect(data.temp);
-                            $("#sure").attr("disabled","disabled");
-                        }
-						if(data.num!=null && data.num==2){
-                                $('#orderNo').html(data.orderNo);
-                                $('#order').html(data.order);
-                                $('#orderTime').html(data.orderTime);
-                                $('#price').html(RetainedDecimalPlaces(data.price)+"元");
-                                pricese = data.price;
-                                $('#tqmhidden').html(data.tqm);
-                                $("#sure").attr("disabled",false);
-						}
-                    }
-                )*/
+//                $.post(
+//                    "../fm/qrxxsession",
+//                    {},
+//                    function (data) {
+//                        if(null!=data.error&&""!=data.error){
+//                            redirect(data.error);
+//                            $("#sure").attr("disabled","disabled");
+//                        }
+//                        if(null!=data.temp&&""!=data.temp){
+//                            redirect(data.temp);
+//                            $("#sure").attr("disabled","disabled");
+//                        }
+//						if(data.num!=null && data.num==2){
+//                                $('#orderNo').html(data.orderNo);
+//                                $('#order').html(data.order);
+//                                $('#orderTime').html(data.orderTime);
+//                                $('#price').html(RetainedDecimalPlaces(data.price)+"元");
+//                                pricese = data.price;
+//                                $('#tqmhidden').html(data.tqm);
+//                                $("#sure").attr("disabled",false);
+//						}
+//                    }
+//                )
 	    });
-
+		//格式化金额
         function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);
             var source = String(num).split(".");
             source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
             return source.join(".");
+        };
+		//格式化日期
+        function formatDate(dateTime) {
+            var YYYY = dateTime.substring(0,4);
+            var MM = dateTime.substring(4,6);
+            var dd = dateTime.substring(6,8);
+            var HH = dateTime.substring(8,10);
+            var ss = dateTime.substring(10,12);
+            var mm = dateTime.substring(12,14);
+            var date = YYYY+"-"+MM+"-"+dd+" "+HH+":"+ss+":"+mm;
+            return date;
         };
         function sure() {
             var storeNo = $('#orderNo').text(),
