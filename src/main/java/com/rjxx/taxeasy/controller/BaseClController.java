@@ -353,9 +353,6 @@ public class BaseClController extends BaseController {
                             wxFpxx.setWxtype("1");
                             //微信
                             wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                            logger.info("第一次扫码存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+
-                                    state+"----openid"+wxFpxx.getOpenId()+"----支付宝"+wxFpxx.getUserid()+
-                                    "------订单编号"+wxFpxx.getOrderNo()+"------发票类型"+wxFpxx.getWxtype());
                             try {
                                 wxfpxxJpaDao.save(wxFpxx);
                             }catch (Exception e){
@@ -374,9 +371,6 @@ public class BaseClController extends BaseController {
                                 String notNullCode= wxFpxxByTqm.getCode();
                                 wxFpxxByTqm.setCode(notNullCode);
                             }
-                            logger.info("第一次扫码之后所有---存入数据提取码"+tqm+"----公司代码"+gsxx.getGsdm()+"----q值"+state+
-                                    "----微信openid"+wxFpxxByTqm.getOpenId()+"-------支付宝userid"
-                                    +wxFpxxByTqm.getUserid()+"------订单编号"+wxFpxxByTqm.getOrderNo()+"-----发票类型"+wxFpxxByTqm.getWxtype());
                             try {
                                 wxfpxxJpaDao.save(wxFpxxByTqm);
                             }catch (Exception e){
@@ -390,7 +384,8 @@ public class BaseClController extends BaseController {
                     Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);
                     //跳转地址
                     String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                            +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq());
+                            +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + jyxxsq.getDdrq();
+                    logger.info("重定向url====="+redirectUrl);
                     //支付宝 和 分票 不拉授权页
                     if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size()> fpgz.getDzphs()) {
                         redirectUrl += "&isAlipay=true";
