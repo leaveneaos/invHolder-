@@ -67,17 +67,24 @@
 		$(function () {
             pricese=null;
             var thisURL = document.URL;
+//            var thisURL = "/einv/Family/ddqr.html?_t=1511354036898=202481=72383060=6.0=20171122201221=112220248101723830607=";
             var  getval =thisURL.split('?')[1];
             orderNo= null;
             price=null;
             orderTime=null;
             storeNo=null;
             tqm=null;
+            msg=null;
             storeNo = getval.split("=")[2];
             orderNo = getval.split("=")[3];
             price = getval.split("=")[4];
             orderTime = getval.split("=")[5];
             tqm = getval.split("=")[6];
+            msg = getval.split("=")[7];
+            if(msg!=""){
+                redirect(data.msg);
+                $("#sure").attr("disabled","disabled");
+			}
 			$('#orderNo').html(storeNo);
 			$('#order').html(orderNo);
 			$('#orderTime').html(formatDate(orderTime));
