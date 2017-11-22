@@ -316,8 +316,8 @@ public class BaseClController extends BaseController {
                     request.getSession().setAttribute("tqm", tqm);
                     if(error!=null){
                         request.getSession().setAttribute("error", error);
-                        request.getSession().setAttribute("msg", error);
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/QR/error.html?_t=" + System.currentTimeMillis()+"="+error);
+                        logger.info("---错误跳转1"+request.getContextPath() + "/QR/error.html?_t=" + System.currentTimeMillis()+"="+error);
                         result.put("error", error);
                         return;
                     }else{
@@ -328,8 +328,8 @@ public class BaseClController extends BaseController {
 
                     if (!"".equals(temp)) {
                         request.getSession().setAttribute("temp", temp);
-                        request.getSession().setAttribute("msg", temp);
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/QR/error.html?_t=" + System.currentTimeMillis()+"="+temp);
+                        logger.info("---错误跳转2"+request.getContextPath() + "/QR/error.html?_t=" + System.currentTimeMillis()+"="+temp);
                         result.put("temp", temp);
                         return;
                     }else{
