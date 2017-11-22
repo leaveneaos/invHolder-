@@ -307,7 +307,13 @@ public class BaseClController extends BaseController {
                     List<Jyxxsq> jyxxsqList = (List) resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
                     String error = (String) resultMap.get("error");
-                    logger.info("---------错误信息------------"+error);
+                    Jyxxsq jyxxsq = jyxxsqList.get(0);
+                    request.getSession().setAttribute("price", jyxxsq.getJshj());
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
+                    request.getSession().setAttribute("resultMap", resultMap);
+                    request.getSession().setAttribute("jymxsqList", jymxsqList);
+                    request.getSession().setAttribute("tqm", tqm);
                     if(error!=null){
                         request.getSession().setAttribute("error", error);
                         response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
@@ -316,8 +322,8 @@ public class BaseClController extends BaseController {
                     }else{
                         request.getSession().setAttribute("error", "");
                     }
+                    logger.info("---------错误信息------------"+error);
                     String temp = (String) resultMap.get("tmp");
-                    logger.info("---------校验错误信息------------"+temp);
 
                     if (!"".equals(temp)) {
                         request.getSession().setAttribute("temp", temp);
@@ -327,13 +333,7 @@ public class BaseClController extends BaseController {
                     }else{
                         request.getSession().setAttribute("temp", "");
                     }
-                    Jyxxsq jyxxsq = jyxxsqList.get(0);
-                    request.getSession().setAttribute("price", jyxxsq.getJshj());
-                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
-                    request.getSession().setAttribute("resultMap", resultMap);
-                    request.getSession().setAttribute("jymxsqList", jymxsqList);
-                    request.getSession().setAttribute("tqm", tqm);
+                    logger.info("---------校验错误信息------------"+temp);
 //                    String xfsh = jyxxsq.getXfsh();
 //                    if(null!=xfsh && "9131000071785090X1".equals(xfsh)){
 //                        request.getSession().setAttribute("xf",xfsh);
@@ -808,7 +808,7 @@ public class BaseClController extends BaseController {
         if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("temp"))){
             result.put("num","2");
         }
-        //logger.info("------------------------------"+ JSON.toJSONString(result));
+        logger.info("------------------------------"+ JSON.toJSONString(result));
         return  result;
     }
 }
