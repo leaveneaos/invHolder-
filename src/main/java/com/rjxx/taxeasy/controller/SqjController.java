@@ -594,6 +594,7 @@ public class SqjController extends BaseController {
         Map<String, Object> result = new HashMap<>();
         result.put("msg", request.getSession().getAttribute("msg"));
         result.put("clztdm", request.getSession().getAttribute("clztdm"));
+        logger.info("跳转错误页面信息："+request.getSession().getAttribute("msg"));
         return result;
     }
 
