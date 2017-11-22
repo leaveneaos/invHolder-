@@ -309,7 +309,7 @@ public class BaseClController extends BaseController {
                     String error = (String) resultMap.get("error");
                     Jyxxsq jyxxsq = jyxxsqList.get(0);
                     request.getSession().setAttribute("price", jyxxsq.getJshj());
-                    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
                     request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
                     request.getSession().setAttribute("resultMap", resultMap);
                     request.getSession().setAttribute("jymxsqList", jymxsqList);
@@ -384,7 +384,7 @@ public class BaseClController extends BaseController {
                     Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);
                     //跳转地址
                     String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                            +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + jyxxsq.getDdrq();
+                            +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq());
                     logger.info("重定向url====="+redirectUrl);
                     //支付宝 和 分票 不拉授权页
                     if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size()> fpgz.getDzphs()) {

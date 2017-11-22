@@ -3,7 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>订单确认</title>
-	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
 	<link rel="stylesheet" type="text/css" href="css/common.css">
 	<link rel="stylesheet" type="text/css" href="css/ddqr.css">
 </head>
@@ -52,14 +58,65 @@
 	</footer>
 
 	<script src="../js/jquery.min.js"></script>
+	<script src="../js/fpj.js"></script>
 	<script type="text/javascript">
         function redirect(errorMsg){
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
-        pricese=null;
+
 		$(function () {
-                $.post(
+            pricese=null;
+            var thisURL = document.URL;
+            var  getval =thisURL.split('?')[1];
+            orderNo= null;
+            price=null;
+            orderTime=null;
+            storeNo=null;
+            storeNo = getval.split("=")[2];
+            orderNo = getval.split("=")[3];
+            price = getval.split("=")[4];
+            orderTime = getval.split("=")[5];
+            if(storeNo == null || orderNo ==null || price==null){
+                redirect("出现未知错误，请重新扫码或联系商户！")
+            }else {
+                $('#orderNo').html(storeNo);
+                $('#order').html(orderNo);
+                $('#orderTime').html(orderTime);
+                $('#price').html(RetainedDecimalPlaces(price)+"元");
+                pricese = price;
+            }
+            $.ajax({
+                method : 'post',
+                url:"../fm/qrxxsession",
+                timeout : 5000,
+				cache:false,
+                data:{},
+                dataType:"json",
+                success: function (data) {
+                    if(null!=data.error&&""!=data.error){
+                        redirect(data.error);
+                        $("#sure").attr("disabled","disabled");
+                    }
+                    if(null!=data.temp&&""!=data.temp){
+                        redirect(data.temp);
+                        $("#sure").attr("disabled","disabled");
+                    }
+                    if(data.status!=null && data.status=="2"){
+                        //$('#orderNo').html(data.orderNo);
+                        //$('#order').html(data.order);
+                        //$('#orderTime').html(data.orderTime);
+                        //$('#price').html(RetainedDecimalPlaces(data.price)+"元");
+                        pricese = data.price;
+                        $('#tqmhidden').html(data.tqm);
+                        $("#sure").attr("disabled",false);
+                    }
+                },
+                error:function(){
+                    alert("Error");
+				}
+            });
+               /* $.post(
                     "../fm/qrxxsession",
                     {},
                     function (data) {
@@ -81,7 +138,7 @@
                                 $("#sure").attr("disabled",false);
 						}
                     }
-                )
+                )*/
 	    });
 
         function RetainedDecimalPlaces(num) {
@@ -107,7 +164,6 @@
             if(orderTime==null){
                 redirect("数据异常，不能提交！请联系商家");
             }
-             if(tqm!=null){
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
@@ -119,9 +175,6 @@
                 window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + pricese;
             }
-             }else{
-                 alert("数据异常，不能提交！请联系商家");
-			 }
         }
 	</script>
 </body>
