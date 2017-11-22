@@ -80,11 +80,6 @@
             price = getval.split("=")[4];
             orderTime = getval.split("=")[5];
             tqm = getval.split("=")[6];
-            msg = getval.split("=")[7];
-            if(msg!=""){
-                redirect(data.msg);
-                $("#sure").attr("disabled","disabled");
-			}
 			$('#orderNo').html(storeNo);
 			$('#order').html(orderNo);
 			$('#orderTime').html(formatDate(orderTime));

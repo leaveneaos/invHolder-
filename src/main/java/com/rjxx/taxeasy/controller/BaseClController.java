@@ -316,10 +316,8 @@ public class BaseClController extends BaseController {
                     request.getSession().setAttribute("tqm", tqm);
                     if(error!=null){
                         request.getSession().setAttribute("error", error);
-                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                                +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm+"="+error);
-                        logger.info("重定向error  url====="+request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                                +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm+"="+error);
+                        request.getSession().setAttribute("msg", error);
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         result.put("error", error);
                         return;
                     }else{
@@ -330,10 +328,8 @@ public class BaseClController extends BaseController {
 
                     if (!"".equals(temp)) {
                         request.getSession().setAttribute("temp", temp);
-                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                                +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm+"="+temp);
-                        logger.info("重定向temp  url====="+request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                                +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm+"="+temp);
+                        request.getSession().setAttribute("msg", temp);
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         result.put("temp", temp);
                         return;
                     }else{
@@ -390,7 +386,7 @@ public class BaseClController extends BaseController {
                     Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);
                     //跳转地址
                     String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                            +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm+"=";
+                            +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm;
                     logger.info("重定向url====="+redirectUrl);
                     //支付宝 和 分票 不拉授权页
                     if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size()> fpgz.getDzphs()) {
