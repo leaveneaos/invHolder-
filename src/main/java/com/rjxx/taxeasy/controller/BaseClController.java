@@ -788,15 +788,13 @@ public class BaseClController extends BaseController {
         result.put("spmc",request.getSession().getAttribute("spmc"));
         return  result;
     }
-    @RequestMapping(value = "/qrxxsession" ,method = RequestMethod.POST)//确认信息
+    @RequestMapping(value = "/qrxxsession")//确认信息
     @ResponseBody
     public Map xgsession(){
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("fptt", request.getSession().getAttribute("fptt"));
         result.put("yx", request.getSession().getAttribute("yx"));
         result.put("nsrsbh", request.getSession().getAttribute("nsrsbh"));
-
-
         result.put("tqm",request.getSession().getAttribute("tqm"));
         result.put("error",request.getSession().getAttribute("error"));
         result.put("temp",request.getSession().getAttribute("temp"));
@@ -806,7 +804,7 @@ public class BaseClController extends BaseController {
         result.put("orderNo",request.getSession().getAttribute("orderNo"));
         result.put("order",request.getSession().getAttribute("order"));
         if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("temp"))){
-            result.put("num","2");
+            result.put("status","2");
         }
         logger.info("------------------------------"+ JSON.toJSONString(result));
         return  result;
