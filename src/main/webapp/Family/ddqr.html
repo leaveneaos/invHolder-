@@ -78,16 +78,12 @@
             price = getval.split("=")[4];
             orderTime = getval.split("=")[5];
             tqm = getval.split("=")[6];
-            if(storeNo == null || orderNo ==null || price==null){
-                redirect("出现未知错误，请重新扫码或联系商户！")
-            }else {
-                $('#orderNo').html(storeNo);
-                $('#order').html(orderNo);
-                $('#orderTime').html(formatDate(orderTime));
-                $('#price').html(RetainedDecimalPlaces(price)+"元");
-                $('#tqmhidden').html(tqm);
-                pricese = price;
-            }
+			$('#orderNo').html(storeNo);
+			$('#order').html(orderNo);
+			$('#orderTime').html(formatDate(orderTime));
+			$('#price').html(RetainedDecimalPlaces(price)+"元");
+			$('#tqmhidden').html(tqm);
+			pricese = price;
             $.ajax({
                 method : 'post',
                 url:"../fm/qrxxsession",

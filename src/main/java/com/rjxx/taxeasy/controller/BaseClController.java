@@ -316,7 +316,8 @@ public class BaseClController extends BaseController {
                     request.getSession().setAttribute("tqm", tqm);
                     if(error!=null){
                         request.getSession().setAttribute("error", error);
-                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
+                                +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm);
                         result.put("error", error);
                         return;
                     }else{
@@ -327,7 +328,8 @@ public class BaseClController extends BaseController {
 
                     if (!"".equals(temp)) {
                         request.getSession().setAttribute("temp", temp);
-                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
+                                +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm);
                         result.put("temp", temp);
                         return;
                     }else{
