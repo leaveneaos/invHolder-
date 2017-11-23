@@ -316,27 +316,25 @@ public class BaseClController extends BaseController {
                     request.getSession().setAttribute("tqm", tqm);
                     if(error!=null){
                         //request.getSession().setAttribute("error", error);
+                        logger.info("---------错误信息------------"+error);
                         request.getSession().setAttribute("msg", error);
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                        logger.info("---错误跳转1---"+request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         //result.put("error", error);
                         return;
                     }else{
                         request.getSession().setAttribute("error", "");
                     }
-                    logger.info("---------错误信息------------"+error);
                     String temp = (String) resultMap.get("tmp");
                     if (!"".equals(temp)) {
                         //request.getSession().setAttribute("temp", temp);
+                        logger.info("---------校验错误信息------------"+temp);
                         request.getSession().setAttribute("msg", temp);
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                        logger.info("---错误跳转2-----"+request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         //result.put("temp", temp);
                         return;
                     }else{
                         request.getSession().setAttribute("temp", "");
                     }
-                    logger.info("---------校验错误信息------------"+temp);
 //                    String xfsh = jyxxsq.getXfsh();
 //                    if(null!=xfsh && "9131000071785090X1".equals(xfsh)){
 //                        request.getSession().setAttribute("xf",xfsh);
