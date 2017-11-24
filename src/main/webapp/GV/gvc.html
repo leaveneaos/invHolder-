@@ -206,7 +206,11 @@
                          redirectUrl = data.redirectUrl;
                          window.location.assign(redirectUrl);
                      }else if(data.num == 22){
-                         firm = "请在上午10时至晚上10时之间申请开具发票!";
+                         if(data.msg!=null&&data.msg !=""){
+                             firm=data.msg;
+                         }else {
+                             firm = "请在"+data.startDate+"至"+data.endDate+"之间申请开具发票!";
+                         }
                          title = "提示";
                          jAlert(firm, title);
                          loadimage();

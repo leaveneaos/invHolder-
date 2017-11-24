@@ -72,6 +72,9 @@ public class GvcController extends BaseController {
     @Autowired
     private WxTokenJpaDao wxTokenJpaDao;
 
+    @Autowired
+    private SkpService skpService;
+
     @RequestMapping
     @ResponseBody
     public void index() throws Exception{
@@ -296,11 +299,18 @@ public class GvcController extends BaseController {
                     if(!kpqssj.equals("") && !kpjssj.equals("")){
                         Date endDate = df.parse(kpjssj);
                         Date startDate = df.parse(kpqssj);
-                        //比较时间大小,系统时间小于早上十点
                         if(nowDate.getTime()<endDate.getTime() && nowDate.getTime()>startDate.getTime()){
                             logger.info("-----------------系统时间小于开票起始时间"+kpqssj);
                             result.put("num","22");
-                            result.put("msg","");
+                            result.put("endDate",kpjssj);
+                            result.put("startDate",kpqssj);
+                            if(kpjssj.equals(kpqssj)){
+                                Map skpmap = new HashMap();
+                                skpmap.put("gsdm", "gvc");
+                                skpmap.put("kpddm", storeno);
+                                Skp skpdata = skpService.findOneByParams(skpmap);
+                                result.put("msg",skpdata.getKpdmc()+"为联营店，不提供发票，请联系商场开票！");
+                            }
                             return result;
                         }
                     }
