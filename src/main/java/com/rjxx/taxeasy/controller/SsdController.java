@@ -178,6 +178,7 @@ public class SsdController extends BaseController{
                     result.put("gsdm", gsdm);
                     request.getSession().setAttribute("khh", khh);
                     request.getSession().setAttribute("gsdm", gsdm);
+                    result.put("serialOrder",list.get(0).getSerialorder());
                 } else {
                     result.put("num", "3");
                 }
