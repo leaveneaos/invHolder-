@@ -287,28 +287,20 @@ public class GvcController extends BaseController {
                     logger.info("------开票起始时间------"+kpqssj);
                     logger.info("------开票结束时间------"+kpjssj);
                     DateFormat df = new SimpleDateFormat("HH:mm:ss");
-                    Date dt1 = df.parse(nowdate);
+                    Date nowDate = df.parse(nowdate);
                     if(nowdate.equals("")){
                         result.put("num","12");
                         result.put("msg","系统出现错误，请重新输入！");
                         return result;
                     }
-                    if(!kpqssj.equals("")){
-                        Date dt3 = df.parse(kpqssj);
+                    if(!kpqssj.equals("") && !kpjssj.equals("")){
+                        Date endDate = df.parse(kpjssj);
+                        Date startDate = df.parse(kpqssj);
                         //比较时间大小,系统时间小于早上十点
-                        if(dt1.getTime()<dt3.getTime()){
+                        if(nowDate.getTime()<endDate.getTime() && nowDate.getTime()>startDate.getTime()){
                             logger.info("-----------------系统时间小于开票起始时间"+kpqssj);
                             result.put("num","22");
                             result.put("msg","");
-                            return result;
-                        }
-                    }
-                    if(!kpjssj.equals("")){
-                        Date dt2 = df.parse(kpjssj);
-                        //比较时间大小,系统时间大于晚上6点
-                        if(dt1.getTime()>dt2.getTime()){
-                            logger.info("-----------------系统时间大于开票结束时间"+kpjssj);
-                            result.put("num","22");
                             return result;
                         }
                     }
