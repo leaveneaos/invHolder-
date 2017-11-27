@@ -179,7 +179,7 @@ public class GvcController extends BaseController {
         String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
         Map<String, Object> result = new HashMap<String, Object>();
         try {
-            String tqms = tqm.toUpperCase();
+            String tqms = tqm.toUpperCase().trim();
             if (code != null && sessionCode != null && code.equals(sessionCode)) {
                 Map map = new HashMap<>();
                 map.put("tqm", tqms);

@@ -514,10 +514,9 @@ public class MbController extends BaseController {
     @RequestMapping(value = "/tqyz")
     @ResponseBody
     public Map<String,Object> tqyz(String tqm,String code,String gsdm) {
-
         String sessionCode = (String) session.getAttribute("rand");
-
         String opendid = (String) session.getAttribute("openid");
+        String tqms =tqm.trim();
         Map<String, Object> result = new HashMap<String, Object>();
         if(tqm==null || code==null||gsdm==null){
             result.put("num","4");
@@ -527,10 +526,10 @@ public class MbController extends BaseController {
             if("ubm".equals(gsdm)){
                 try{
                     Map<String, Object> params = new HashMap<>();
-                    params.put("tqm",tqm);
+                    params.put("tqm",tqms);
                     params.put("gsdm",gsdm);
                     //检验开具状态
-                    List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
+                    List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqms, gsdm);
                     if(djhs.size()>0&&djhs!=null){
                         for(Integer djh:djhs){
                             if(djh!=null){
@@ -566,7 +565,7 @@ public class MbController extends BaseController {
                     //查询交易信息
                     result.put("num","13");
                     result.put("gsdm",gsdm);
-                    result.put("tqm",tqm);
+                    result.put("tqm",tqms);
                     result.put("spmc",spmc);
                     result.put("spje",spje);
                     result.put("spsl",spsl);
@@ -575,17 +574,15 @@ public class MbController extends BaseController {
                     result.put("num","14");
                     return result;
                 }
-
-
             }else{
                 Map resultMap = new HashMap();
                 Map map = new HashMap<>();
                 List<Kpls> list = new ArrayList<>();
                 map.put("gsdm", gsdm);
                 if(null!=gsdm &&"cmsc".equals(gsdm)){
-                    map.put("khh",tqm);
+                    map.put("khh",tqms);
                 }else {
-                    map.put("tqm", tqm);
+                    map.put("tqm", tqms);
                 }
                 if(null!= gsdm && "cmsc".equals(gsdm)){
                     list = jylsService.findBykhh(map);
@@ -624,7 +621,7 @@ public class MbController extends BaseController {
                      * num=2表示已经开过票
                      */
                     result.put("num","2");
-                    result.put("tqm",tqm);
+                    result.put("tqm",tqms);
                     result.put("gsdm",gsdm);
                     Tqjl tqjl = new Tqjl();
                     tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
@@ -640,7 +637,7 @@ public class MbController extends BaseController {
                     String llqxx = request.getHeader("User-Agent");
                     tqjl.setLlqxx(llqxx);
                     tqjlService.save(tqjl);
-                    boolean b = wechatFpxxService.InFapxx(tqm, gsdm, tqm, "", "2", opendid,
+                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, "", "2", opendid,
                             (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID),
                             list.get(0).getKplsh().toString(), request);
                     if(!b){
@@ -688,7 +685,7 @@ public class MbController extends BaseController {
                     result.put("num","6");
                 }else {
 
-                    boolean b = wechatFpxxService.InFapxx(tqm, gsdm, tqm, "", "1", opendid,
+                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, "", "1", opendid,
                             (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
                     if(!b){
                         result.put("num","12");
@@ -736,14 +733,14 @@ public class MbController extends BaseController {
                     if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
                         if(gsdm.equals("ldyx")){
                             //第一次请求url获取token 验证
-                            resultMap=getDataService.getldyxFirData(tqm,gsdm);
+                            resultMap=getDataService.getldyxFirData(tqms,gsdm);
                             String accessToken = (String) resultMap.get("accessToken");
                             if(null == accessToken || "".equals(accessToken)){
                                 result.put("num","12");
                                 result.put("msg","获取数据失败，请重试！");
                                 return result;
                             }else{
-                                resultMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
+                                resultMap = getDataService.getldyxSecData(tqms,gsdm,accessToken);
                             }
                             if(null!=resultMap.get("msg")){
                                 result.put("num","12");
@@ -753,29 +750,29 @@ public class MbController extends BaseController {
                         }else if("bqw".equals(gsdm)){
                             logger.info("波奇网拉取数据--------------");
                             Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
-                            resultMap = getDataService.getDataForBqw(tqm, gsdm,csz.getCsz());
+                            resultMap = getDataService.getDataForBqw(tqms, gsdm,csz.getCsz());
                         }
                         List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
                         List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
                         List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
                         if(null!=jyxxsqList){
                             Jyxxsq jyxxsq=jyxxsqList.get(0);
-                            request.getSession().setAttribute(gsdm+tqm+"je",jyxxsq.getJshj());
+                            request.getSession().setAttribute(gsdm+tqms+"je",jyxxsq.getJshj());
                         }
                         if(resultMap!=null){
-                            request.getSession().setAttribute(gsdm+tqm+"resultMap",resultMap);
+                            request.getSession().setAttribute(gsdm+tqms+"resultMap",resultMap);
                         }
                         if(jymxsqList!=null) {
-                            request.getSession().setAttribute(gsdm+tqm+"jymxsqList", jymxsqList);
+                            request.getSession().setAttribute(gsdm+tqms+"jymxsqList", jymxsqList);
                         }
                         if(jyzfmxList!=null){
-                            request.getSession().setAttribute(gsdm+tqm+"jyzfmxList",jyzfmxList);
+                            request.getSession().setAttribute(gsdm+tqms+"jyzfmxList",jyzfmxList);
                         }
-                        request.getSession().setAttribute(gsdm+"tqm",tqm);
+                        request.getSession().setAttribute(gsdm+"tqm",tqms);
                         result.put("num","5");
-                        result.put("tqm",tqm);
+                        result.put("tqm",tqms);
                         result.put("gsdm",gsdm);
-                        String orderNo = tqm;
+                        String orderNo = tqms;
                         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
                         String price = jyxxsqList.get(0).getJshj().toString();
@@ -812,7 +809,7 @@ public class MbController extends BaseController {
                     else{
                         //不用获取数据，数据为空
                         result.put("num","1");
-                        result.put("tqm",tqm);
+                        result.put("tqm",tqms);
                         result.put("gsdm",gsdm);
                     }
                 }
