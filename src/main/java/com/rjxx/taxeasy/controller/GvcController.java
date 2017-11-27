@@ -8,6 +8,8 @@ import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.IMEIGenUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
@@ -174,6 +176,7 @@ public class GvcController extends BaseController {
     public Map<String,Object> tqyz(String tqm,String price,String gsdm,String code) {
         String sessionCode = (String) session.getAttribute("rand");
         String opendid = (String) session.getAttribute("openid");
+        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
         Map<String, Object> result = new HashMap<String, Object>();
         try {
             String tqms = tqm.toUpperCase();
@@ -243,25 +246,50 @@ public class GvcController extends BaseController {
                 }else {
                     Map resultMap = new HashMap();
                     //调用接口获取数据--首先存入微信发票信息
-                    if(WeixinUtils.isWeiXinBrowser(request)){
-                        logger.info("光唯尚----微信扫描存入微信发票信息------");
-                        WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqms);
-                        if(null==wxFpxxByTqm){
+                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                    //第一次扫描
+                    if(null==wxFpxxByTqm){
+                        if(WeixinUtils.isWeiXinBrowser(request)){
                             WxFpxx wxFpxx = new WxFpxx();
-                            wxFpxx.setTqm(tqms);
+                            wxFpxx.setTqm(tqm);
                             wxFpxx.setGsdm(gsdm);
-                            wxFpxx.setOrderNo(tqms);
+                            wxFpxx.setOrderNo(tqm);
                             wxFpxx.setQ("");
                             wxFpxx.setWxtype("1");
+                            wxFpxx.setLrsj(new Date());
                             wxFpxx.setOpenId((String) session.getAttribute("openid"));
                             wxfpxxJpaDao.save(wxFpxx);
-                        }else {
-                            wxFpxxByTqm.setTqm(tqms);
+                        }else if(AlipayUtils.isAlipayBrowser(request)){
+                            WxFpxx wxFpxx = new WxFpxx();
+                            wxFpxx.setTqm(tqm);
+                            wxFpxx.setGsdm(gsdm);
+                            wxFpxx.setOrderNo(tqm);
+                            wxFpxx.setQ("");
+                            wxFpxx.setLrsj(new Date());
+                            wxFpxx.setUserid(userId);
+                            wxfpxxJpaDao.save(wxFpxx);
+                        }
+                    }else {
+                        if(WeixinUtils.isWeiXinBrowser(request)){
+                            wxFpxxByTqm.setTqm(tqm);
                             wxFpxxByTqm.setGsdm(gsdm);
-                            wxFpxxByTqm.setOrderNo(tqms);
+                            wxFpxxByTqm.setOrderNo(tqm);
                             wxFpxxByTqm.setQ("");
                             wxFpxxByTqm.setWxtype("1");
                             wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
+                            wxFpxxByTqm.setXgsj(new Date());
+                            if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
+                                String notNullCode= wxFpxxByTqm.getCode();
+                                wxFpxxByTqm.setCode(notNullCode);
+                            }
+                            wxfpxxJpaDao.save(wxFpxxByTqm);
+                        }else if(AlipayUtils.isAlipayBrowser(request)){
+                            wxFpxxByTqm.setTqm(tqm);
+                            wxFpxxByTqm.setGsdm(gsdm);
+                            wxFpxxByTqm.setOrderNo(tqm);
+                            wxFpxxByTqm.setQ("");
+                            wxFpxxByTqm.setUserid(userId);
+                            wxFpxxByTqm.setXgsj(new Date());
                             if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
                                 String notNullCode= wxFpxxByTqm.getCode();
                                 wxFpxxByTqm.setCode(notNullCode);
