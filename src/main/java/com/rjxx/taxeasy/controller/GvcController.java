@@ -246,7 +246,13 @@ public class GvcController extends BaseController {
                 }else {
                     Map resultMap = new HashMap();
                     //调用接口获取数据--首先存入微信发票信息
-                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
+                    boolean b = wechatFpxxService.InFapxx(tqm, gsdm, tqm, "", "1", opendid, userId, "", request);
+                    if(!b){
+                        result.put("num","12");
+                        result.put("msg","保存信息失败，请重试！");
+                        return result;
+                    }
+                    /*WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                     //第一次扫描
                     if(null==wxFpxxByTqm){
                         if(WeixinUtils.isWeiXinBrowser(request)){
@@ -296,7 +302,7 @@ public class GvcController extends BaseController {
                             }
                             wxfpxxJpaDao.save(wxFpxxByTqm);
                         }
-                    }
+                    }*/
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(zb1.getCsz().equals("是")){
                         Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
