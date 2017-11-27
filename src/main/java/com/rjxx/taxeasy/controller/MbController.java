@@ -969,7 +969,7 @@ public class MbController extends BaseController {
             jyxxsq.setOpenid(openid);
             jyxxsq.setSjly("4");//数据来源--微信
         }else {
-            jyxxsq.setSjly("1");//数据来源 --接口
+            jyxxsq.setSjly("6");//数据来源 --其他浏览器
         }
         jyxxsq.setGfsh(nsrsbh.trim());
         jyxxsq.setGfdz(dz.trim());

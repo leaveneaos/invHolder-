@@ -970,12 +970,12 @@ public class SqjController extends BaseController {
             String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
             if(AlipayUtils.isAlipayBrowser(request)){
                 jyxxsq.setOpenid(userId);
-                jyxxsq.setSjly("5");//数据来源
+                jyxxsq.setSjly("5");
             }else if(WeixinUtils.isWeiXinBrowser(request)){
                 jyxxsq.setOpenid(openid);
-                jyxxsq.setSjly("4");//数据来源
+                jyxxsq.setSjly("4");
             }else {
-                jyxxsq.setSjly("1");//数据来源接口
+                jyxxsq.setSjly("6");//其他浏览器
             }
             jyxxsq.setLrsj(new Date());
             jyxxsq.setXgsj(new Date());
