@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -282,7 +283,13 @@ public class CommonController extends BaseController {
             }
             result.put("kplsList", kplsList);
             //保存微信发票信息
-            if(WeixinUtils.isWeiXinBrowser(request)){
+            boolean b = wechatFpxxService.InFapxx(orderNo, gsdm, orderNo, "", "2", (String) session.getAttribute("openid"),
+                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), kplsList.get(0).getKplsh().toString(), request);
+            if(!b){
+                result.put("msg","保存发票信息失败，请重试！");
+                return result;
+            }
+            /*if(WeixinUtils.isWeiXinBrowser(request)){
                 WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                 if(null==wxFpxxByTqm){
                     WxFpxx wxFpxx = new WxFpxx();
@@ -306,7 +313,7 @@ public class CommonController extends BaseController {
                     }
                     wxfpxxJpaDao.save(wxFpxxByTqm);
                 }
-            }
+            }*/
             if(kplsList.get(0).getGsdm().equals("gvc")){
                 request.getSession().setAttribute("gsdm",kplsList.get(0).getGsdm());
             }

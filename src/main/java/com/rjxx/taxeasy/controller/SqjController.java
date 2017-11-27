@@ -24,6 +24,7 @@ import com.rjxx.utils.StringUtils;
 import com.rjxx.utils.XmlUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -97,6 +98,9 @@ public class SqjController extends BaseController {
     private SpvoService spvoService;
     @Autowired
     private GsxxJpaDao gsxxJpaDao;
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
+
     //public static final String APP_ID = "wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";// 获取access
@@ -329,8 +333,14 @@ public class SqjController extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
-                //表示已经开过票
-                if (WeixinUtils.isWeiXinBrowser(request)) {
+                boolean b = wechatFpxxService.InFapxx(orderNo, gsxx.getGsdm(), orderNo, state, "2", openid,
+                        (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), list.get(0).getKplsh().toString(), request);
+                if(!b){
+                    request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
+                /*if (WeixinUtils.isWeiXinBrowser(request)) {
                     WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                     if (null == wxFpxxByTqm) {
                         WxFpxx wFpxx = new WxFpxx();
@@ -356,7 +366,7 @@ public class SqjController extends BaseController {
                         }
                         wxfpxxJpaDao.save(wxFpxxByTqm);
                     }
-                }
+                }*/
                 request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
                 response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
                 return;
@@ -367,7 +377,14 @@ public class SqjController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());
                 return;
             } else {
-                if (WeixinUtils.isWeiXinBrowser(request)) {
+                boolean b = wechatFpxxService.InFapxx(orderNo, gsxx.getGsdm(), orderNo, state, "1", openid,
+                        (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+                if(!b){
+                    request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
+                /*if (WeixinUtils.isWeiXinBrowser(request)) {
                     logger.info("微信扫描------");
                     WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                     //第一次扫描
@@ -402,7 +419,7 @@ public class SqjController extends BaseController {
                             e.printStackTrace();
                         }
                     }
-                }
+                }*/
                 if (null != skp.getPid()) {
                     Pp pp = ppService.findOne(skp.getPid());
                     if (null != pp.getPpurl()) {

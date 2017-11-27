@@ -263,8 +263,13 @@ public class MbController extends BaseController {
                         String llqxx = request.getHeader("User-Agent");
                         tqjl.setLlqxx(llqxx);
                         tqjlService.save(tqjl);
-                        //表示已经开过票 --领取发票类型
-                        if(WeixinUtils.isWeiXinBrowser(request)){
+                        boolean bb = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, q, "2", opendid, userId, list.get(0).getKplsh().toString(), request);
+                        if(!bb){
+                            request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return;
+                        }
+                        /*if(WeixinUtils.isWeiXinBrowser(request)){
                             WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                             if(null==wxFpxxByTqm){
                                 WxFpxx wFpxx = new WxFpxx();
@@ -300,7 +305,7 @@ public class MbController extends BaseController {
                                     return ;
                                 }
                             }
-                        }
+                        }*/
                         //如果是多张的话，只能领取第一张
                         String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
                         if (AlipayUtils.isAlipayBrowser(request)) {
@@ -355,7 +360,14 @@ public class MbController extends BaseController {
                         request.getSession().setAttribute("tqm", tqm);
                         result.put("num", "5");
                         logger.info("订单编号"+tqm+"金额"+jyxxsq.getJshj()+"日期"+sdf.format(jyxxsq.getDdrq()));
-                        if(WeixinUtils.isWeiXinBrowser(request)){
+                        boolean b1 = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, q, "1", opendid, userId, "", request);
+                        if(!b1){
+                            logger.info("保存发票信息失败-------");
+                            request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return;
+                        }
+                        /*if(WeixinUtils.isWeiXinBrowser(request)){
                             WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                             //第一次扫描
                             if(null==wxFpxxByTqm){
@@ -392,7 +404,7 @@ public class MbController extends BaseController {
                                     return ;
                                 }
                             }
-                        }
+                        }*/
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
                                       +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
                         return;
@@ -628,8 +640,13 @@ public class MbController extends BaseController {
                     String llqxx = request.getHeader("User-Agent");
                     tqjl.setLlqxx(llqxx);
                     tqjlService.save(tqjl);
-                    //表示已经开过票 --领取发票类型
-                    if(WeixinUtils.isWeiXinBrowser(request)){
+                    boolean b = wechatFpxxService.InFapxx(tqm, gsdm, tqm, "", "2", opendid,
+                            (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID),
+                            list.get(0).getKplsh().toString(), request);
+                    if(!b){
+                        logger.info("保存发票信息失败-----");
+                    }
+                    /*if(WeixinUtils.isWeiXinBrowser(request)){
                         WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                         if(null==wxFpxxByTqm){
                             WxFpxx wFpxx = new WxFpxx();
@@ -665,12 +682,20 @@ public class MbController extends BaseController {
                                 return null;
                             }
                         }
-                    }
+                    }*/
                 }
                 else if(null != jyls && null !=jyls.getDjh()){
                     result.put("num","6");
                 }else {
-                    if(WeixinUtils.isWeiXinBrowser(request)){
+
+                    boolean b = wechatFpxxService.InFapxx(tqm, gsdm, tqm, "", "1", opendid,
+                            (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+                    if(!b){
+                        result.put("num","12");
+                        result.put("msg","保存发票信息失败，请重试！");
+                        return result;
+                    }
+                    /*if(WeixinUtils.isWeiXinBrowser(request)){
                         logger.info("微信扫描------");
                         WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                         //第一次扫描
@@ -705,15 +730,11 @@ public class MbController extends BaseController {
                                 e.printStackTrace();
                             }
                         }
-                    }
+                    }*/
 
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
-                        //需要调用接口获取开票信息,并跳转发票提取页面
-                        logger.info("start+++++++++++调用接口获取开票如：绿地优鲜");
-                        //全家调用接口 解析xml
                         if(gsdm.equals("ldyx")){
-                            logger.info("绿地优鲜拉取数据---------------------");
                             //第一次请求url获取token 验证
                             resultMap=getDataService.getldyxFirData(tqm,gsdm);
                             String accessToken = (String) resultMap.get("accessToken");
@@ -770,7 +791,7 @@ public class MbController extends BaseController {
                                 access_token = wxToken.getAccessToken();
                                 ticket= wxToken.getTicket();
                             }
-                                String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                            String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
                                 if(null==spappid ||"".equals(spappid)){
                                     //获取授权失败
                                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");

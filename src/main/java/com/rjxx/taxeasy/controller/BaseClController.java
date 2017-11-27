@@ -14,6 +14,7 @@ import com.rjxx.utils.*;
 import com.rjxx.utils.StringUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -87,6 +88,9 @@ public class BaseClController extends BaseController {
     private GsxxService gsxxService;
     @Autowired
     private FpgzService fpgzService;
+
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
 
     //正式
     //public static final String APP_ID ="wx9abc729e2b4637ee";
@@ -240,8 +244,13 @@ public class BaseClController extends BaseController {
                     String llqxx = request.getHeader("User-Agent");
                     tqjl.setLlqxx(llqxx);
                     tqjlService.save(tqjl);
-                    //表示已经开过票
-                    if(WeixinUtils.isWeiXinBrowser(request)){
+                    boolean b = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, state, "2", opendid, userId, list.get(0).getKplsh().toString(), request);
+                    if(!b){
+                        request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+                    /*if(WeixinUtils.isWeiXinBrowser(request)){
                         WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                         if(null==wxFpxxByTqm){
                             WxFpxx wFpxx = new WxFpxx();
@@ -281,7 +290,7 @@ public class BaseClController extends BaseController {
                             }
                         }
 
-                    }
+                    }*/
                     String orderNo= tqm;
                     String je = list.get(0).getJshj().toString();
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -341,7 +350,13 @@ public class BaseClController extends BaseController {
 //                        logger.info("-----------当销方是上海的时候放入---------"+xfsh);
 //                    }
                     result.put("num", "5");
-                    if(WeixinUtils.isWeiXinBrowser(request)){
+                    boolean b = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, state, "1", opendid, userId, "", request);
+                    if(!b){
+                        request.getSession().setAttribute("msg", "保存发票信息失败，请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+                    /*if(WeixinUtils.isWeiXinBrowser(request)){
                         WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
                         logger.info("当数据没有开过票    只保存微信扫码  信息------------------");
                         //第一次扫描
@@ -379,7 +394,7 @@ public class BaseClController extends BaseController {
                                 return ;
                             }
                         }
-                    }
+                    }*/
                     Map fpgzMap = new HashMap();
                     fpgzMap.put("gsdm", gsxx.getGsdm());
                     Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);

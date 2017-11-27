@@ -12,6 +12,7 @@ import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,8 @@ public class ScanController extends BaseController {
     private BarcodeService barcodeService;
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
+    @Autowired
+    private wechatFpxxServiceImpl wechateFpxxService;
 
     /**
      * 确认扫码中传递的信息
@@ -54,7 +57,12 @@ public class ScanController extends BaseController {
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String tqm=jsonObject.getString("tqm");
             session.setAttribute("tqm",tqm);
-            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+            boolean b = wechateFpxxService.InFapxx(tqm, gsdm, tqm, q, "1", openid,
+                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+            if(!b){
+                return ResultUtil.error("保存发票信息失败，请重试！");
+            }
+            /*WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
             if(WeixinUtils.isWeiXinBrowser(request)){
                 logger.info("----微信扫码保存交易信息----");
                 if(null==wxFpxxByTqm){
@@ -88,8 +96,7 @@ public class ScanController extends BaseController {
                         return ResultUtil.error("交易信息保存失败");
                     }
                 }
-            }
-
+            }*/
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
             return ResultUtil.error("二维码信息获取失败");
@@ -190,7 +197,14 @@ public class ScanController extends BaseController {
                         String orderTime = status.get(0).split("[+]")[2];
                         String kplsh = status.get(0).split("[+]")[3];
                         session.setAttribute("serialorder", status.get(0).split("[+]")[4]);
-                        if(WeixinUtils.isWeiXinBrowser(request)){
+                        boolean b = wechateFpxxService.InFapxx(ppdm + orderNo, gsdm, orderNo, q, "2", openid,
+                                (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+                        if(!b){
+                            request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return;
+                        }
+                        /*if(WeixinUtils.isWeiXinBrowser(request)){
                             WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                             if(null == wxFpxxByTqm){
                                 logger.info("已经开过票的存入微信发票详情--");
@@ -230,8 +244,7 @@ public class ScanController extends BaseController {
                                     return ;
                                 }
                             }
-
-                        }
+                        }*/
                         String serialOrder = status.get(0).split("[+]")[4];
                         logger.info("跳转的url--"+request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                         //有pdf对应的url

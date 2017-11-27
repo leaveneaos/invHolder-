@@ -5,10 +5,12 @@ import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -51,6 +53,9 @@ public class Hdsc2Controller extends BaseController {
 
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
+
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
 
     public static final String APP_ID = "wx9abc729e2b4637ee";
 
@@ -298,8 +303,11 @@ public class Hdsc2Controller extends BaseController {
                 String llqxx = request.getHeader("User-Agent");
                 tqjl.setLlqxx(llqxx);
                 tqjlService.save(tqjl);
-                //表示已经开过票 --领取发票类型
-                if(WeixinUtils.isWeiXinBrowser(request)){
+                boolean b = wechatFpxxService.InFapxx(khh, gsdm, khh, "", "2", openid, (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID),
+                        list.get(0).getKplsh().toString(), request);
+                if(b){
+                    logger.info("保存发票信息成功------");
+                /*if(WeixinUtils.isWeiXinBrowser(request)){
                     WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(khh);
                     if(null==wxFpxxByTqm){
                         WxFpxx wFpxx = new WxFpxx();
@@ -325,12 +333,13 @@ public class Hdsc2Controller extends BaseController {
                         }
                         wxfpxxJpaDao.save(wxFpxxByTqm);
                     }
-                }
+                }*/
                     String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
                     if (AlipayUtils.isAlipayBrowser(request)) {
                         redirectUrl += "&isAlipay=true";
                     }
                     response.sendRedirect(redirectUrl);
+                }
                     return null;
             } else {
                     response.sendRedirect(request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis());
