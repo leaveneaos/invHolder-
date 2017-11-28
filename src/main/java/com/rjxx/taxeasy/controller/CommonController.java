@@ -282,8 +282,14 @@ public class CommonController extends BaseController {
                 result.put("orderNo",orderNo);
             }
             result.put("kplsList", kplsList);
+            String tqm="";
+            if(jylsxx.getGsdm().equals("ssd")||jylsxx.equals("cmsc")||jylsxx.equals("hdsc")){
+                tqm=jylsxx.getKhh();
+            }else {
+                tqm=jylsxx.getTqm();
+            }
             //保存微信发票信息
-            boolean b = wechatFpxxService.InFapxx(jylsxx.getTqm(), gsdm, orderNo, "", "2", (String) session.getAttribute("openid"),
+            boolean b = wechatFpxxService.InFapxx(tqm, gsdm, orderNo, "", "2", (String) session.getAttribute("openid"),
                     (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), kplsList.get(0).getKplsh().toString(), request);
             if(!b){
                 result.put("msg","保存发票信息失败，请重试！");
