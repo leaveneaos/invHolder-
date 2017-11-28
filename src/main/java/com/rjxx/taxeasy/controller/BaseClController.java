@@ -290,7 +290,7 @@ public class BaseClController extends BaseController {
                     } else {
                         request.getSession().setAttribute("temp", "");
                     }
-                    if (jyxxsqList != null) {
+                    if (jyxxsqList.size()>0) {
                         Jyxxsq jyxxsq = jyxxsqList.get(0);
                         request.getSession().setAttribute("price", jyxxsq.getJshj());
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
