@@ -282,10 +282,10 @@ public class BaseClController extends BaseController {
                     request.getSession().setAttribute("resultMap", resultMap);
                     request.getSession().setAttribute("jymxsqList", jymxsqList);
                     request.getSession().setAttribute("tqm", tqm);
-                    String title="";
                     if(error!=null){
                         logger.info("---------错误信息------------"+error);
                         response.sendRedirect(request.getContextPath()+"/QR/error.html?t="+System.currentTimeMillis()+"="+error);
+                        logger.info("---错误跳转页面======="+request.getContextPath()+"/QR/error.html?t="+System.currentTimeMillis()+"="+error);
                         return;
                     }else{
                         request.getSession().setAttribute("error", "");
