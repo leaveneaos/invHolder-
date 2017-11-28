@@ -95,7 +95,7 @@
 				function(data) {
 					if (data.num == 2) {
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-                            window.open("mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date().getTime());
+                            window.location.href("mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date().getTime());
                         }else{
                             window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date().getTime();
                         }

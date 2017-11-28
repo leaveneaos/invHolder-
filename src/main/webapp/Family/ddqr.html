@@ -94,14 +94,14 @@
                 data:{},
                 dataType:"json",
                 success: function (data) {
-                    if(null!=data.error&&""!=data.error){
+                    /*if(null!=data.error&&""!=data.error){
                         redirect(data.error);
                         $("#sure").attr("disabled","disabled");
                     }
                     if(null!=data.temp&&""!=data.temp){
                         redirect(data.temp);
                         $("#sure").attr("disabled","disabled");
-                    }
+                    }*/
                     if(data.status!=null && data.status=="2"){
                         //$('#orderNo').html(data.orderNo);
                         //$('#order').html(data.order);

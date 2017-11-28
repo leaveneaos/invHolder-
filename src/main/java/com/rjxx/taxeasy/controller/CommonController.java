@@ -283,37 +283,12 @@ public class CommonController extends BaseController {
             }
             result.put("kplsList", kplsList);
             //保存微信发票信息
-            boolean b = wechatFpxxService.InFapxx(orderNo, gsdm, orderNo, "", "2", (String) session.getAttribute("openid"),
+            boolean b = wechatFpxxService.InFapxx(jyls.getTqm(), gsdm, orderNo, "", "2", (String) session.getAttribute("openid"),
                     (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), kplsList.get(0).getKplsh().toString(), request);
             if(!b){
                 result.put("msg","保存发票信息失败，请重试！");
                 return result;
             }
-            /*if(WeixinUtils.isWeiXinBrowser(request)){
-                WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-                if(null==wxFpxxByTqm){
-                    WxFpxx wxFpxx = new WxFpxx();
-                    wxFpxx.setTqm(orderNo);
-                    wxFpxx.setGsdm(gsdm);
-                    wxFpxx.setOrderNo(orderNo);
-                    wxFpxx.setWxtype("2");
-                    wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                    wxFpxx.setKplsh(kplsList.get(0).getKplsh().toString());
-                    wxfpxxJpaDao.save(wxFpxx);
-                }else {
-                    wxFpxxByTqm.setTqm(orderNo);
-                    wxFpxxByTqm.setGsdm(gsdm);
-                    wxFpxxByTqm.setOrderNo(orderNo);
-                    wxFpxxByTqm.setWxtype("2");
-                    wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
-                    wxFpxxByTqm.setKplsh(kplsList.get(0).getKplsh().toString());
-                    if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                        String notNullCode= wxFpxxByTqm.getCode();
-                        wxFpxxByTqm.setCode(notNullCode);
-                    }
-                    wxfpxxJpaDao.save(wxFpxxByTqm);
-                }
-            }*/
             if(kplsList.get(0).getGsdm().equals("gvc")){
                 request.getSession().setAttribute("gsdm",kplsList.get(0).getGsdm());
             }
