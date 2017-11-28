@@ -277,7 +277,8 @@ public class BaseClController extends BaseController {
                     String error = (String) resultMap.get("error");
                     if (error != null) {
                         logger.info("---------错误信息111111222222------------" + error);
-                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + error);
+                        request.getSession().setAttribute("msg", error);
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return;
                     } else {
                         request.getSession().setAttribute("error", "");
@@ -285,7 +286,8 @@ public class BaseClController extends BaseController {
                     String temp = (String) resultMap.get("tmp");
                     if (!"".equals(temp)) {
                         logger.info("---------校验信息11111------------" + temp);
-                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + temp);
+                        request.getSession().setAttribute("msg", temp);
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return;
                     } else {
                         request.getSession().setAttribute("temp", "");

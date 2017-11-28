@@ -269,43 +269,6 @@ public class MbController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }
-                        /*if(WeixinUtils.isWeiXinBrowser(request)){
-                            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-                            if(null==wxFpxxByTqm){
-                                WxFpxx wFpxx = new WxFpxx();
-                                wFpxx.setTqm(tqm);
-                                wFpxx.setGsdm(gsxx.getGsdm());
-                                wFpxx.setOrderNo(tqm);
-                                wFpxx.setQ(q);
-                                wFpxx.setWxtype("2");
-                                wFpxx.setOpenId(opendid);
-                                wFpxx.setKplsh(list.get(0).getKplsh().toString());
-                                try {
-                                    wxfpxxJpaDao.save(wFpxx);
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                    return ;
-                                }
-                            }else {
-                                wxFpxxByTqm.setTqm(tqm);
-                                wxFpxxByTqm.setGsdm(gsxx.getGsdm());
-                                wxFpxxByTqm.setQ(q);
-                                wxFpxxByTqm.setOpenId(opendid);
-                                wxFpxxByTqm.setOrderNo(tqm);
-                                wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
-                                wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
-                                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                    String notNullCode= wxFpxxByTqm.getCode();
-                                    wxFpxxByTqm.setCode(notNullCode);
-                                }
-                                try {
-                                    wxfpxxJpaDao.save(wxFpxxByTqm);
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                    return ;
-                                }
-                            }
-                        }*/
                         //如果是多张的话，只能领取第一张
                         String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
                         if (AlipayUtils.isAlipayBrowser(request)) {
@@ -346,7 +309,8 @@ public class MbController extends BaseController {
                         String msg = (String) resultMap.get("msg");
                         if(null!= msg && !"".equals(resultMap.get("msg"))){
                             logger.info("---------校验信息------------"+msg);
-                            request.getSession().setAttribute("msg", msg);response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            request.getSession().setAttribute("msg", msg);
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }else {
                             request.getSession().setAttribute("msg", "");
@@ -367,44 +331,6 @@ public class MbController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }
-                        /*if(WeixinUtils.isWeiXinBrowser(request)){
-                            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-                            //第一次扫描
-                            if(null==wxFpxxByTqm){
-                                WxFpxx wxFpxx = new WxFpxx();
-                                wxFpxx.setTqm(tqm);
-                                wxFpxx.setGsdm(gsxx.getGsdm());
-                                wxFpxx.setOrderNo(tqm);
-                                wxFpxx.setQ(q);
-                                wxFpxx.setWxtype("1");
-                                //微信
-                                wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                                try {
-                                    wxfpxxJpaDao.save(wxFpxx);
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                    return ;
-                                }
-                            }else {
-                                wxFpxxByTqm.setTqm(tqm);
-                                wxFpxxByTqm.setGsdm(gsxx.getGsdm());
-                                wxFpxxByTqm.setOrderNo(tqm);
-                                wxFpxxByTqm.setQ(q);
-                                wxFpxxByTqm.setWxtype("1");
-                                //微信
-                                wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
-                                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                    String notNullCode= wxFpxxByTqm.getCode();
-                                    wxFpxxByTqm.setCode(notNullCode);
-                                }
-                                try {
-                                    wxfpxxJpaDao.save(wxFpxxByTqm);
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                    return ;
-                                }
-                            }
-                        }*/
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
                                       +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
                         return;
@@ -643,43 +569,6 @@ public class MbController extends BaseController {
                     if(!b){
                         logger.info("保存发票信息失败-----");
                     }
-                    /*if(WeixinUtils.isWeiXinBrowser(request)){
-                        WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-                        if(null==wxFpxxByTqm){
-                            WxFpxx wFpxx = new WxFpxx();
-                            wFpxx.setTqm(tqm);
-                            wFpxx.setGsdm(gsdm);
-                            wFpxx.setOrderNo(tqm);
-                            wFpxx.setQ("");
-                            wFpxx.setWxtype("2");
-                            wFpxx.setOpenId(opendid);
-                            wFpxx.setKplsh(list.get(0).getKplsh().toString());
-                            try {
-                                wxfpxxJpaDao.save(wFpxx);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                                return null;
-                            }
-                        }else {
-                            wxFpxxByTqm.setTqm(tqm);
-                            wxFpxxByTqm.setGsdm(gsdm);
-                            wxFpxxByTqm.setQ("");
-                            wxFpxxByTqm.setOpenId(opendid);
-                            wxFpxxByTqm.setOrderNo(tqm);
-                            wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
-                            wxFpxxByTqm.setKplsh(list.get(0).getKplsh().toString());
-                            if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                String notNullCode= wxFpxxByTqm.getCode();
-                                wxFpxxByTqm.setCode(notNullCode);
-                            }
-                            try {
-                                wxfpxxJpaDao.save(wxFpxxByTqm);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                                return null;
-                            }
-                        }
-                    }*/
                 }
                 else if(null != jyls && null !=jyls.getDjh()){
                     result.put("num","6");
@@ -692,43 +581,6 @@ public class MbController extends BaseController {
                         result.put("msg","保存发票信息失败，请重试！");
                         return result;
                     }
-                    /*if(WeixinUtils.isWeiXinBrowser(request)){
-                        logger.info("微信扫描------");
-                        WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-                        //第一次扫描
-                        if(null==wxFpxxByTqm){
-                            WxFpxx wxFpxx = new WxFpxx();
-                            wxFpxx.setTqm(tqm);
-                            wxFpxx.setGsdm(gsdm);
-                            wxFpxx.setOrderNo(tqm);
-                            wxFpxx.setQ("");
-                            wxFpxx.setWxtype("1");
-                            //微信
-                            wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                            try {
-                                wxfpxxJpaDao.save(wxFpxx);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }else {
-                            wxFpxxByTqm.setTqm(tqm);
-                            wxFpxxByTqm.setGsdm(gsdm);
-                            wxFpxxByTqm.setOrderNo(tqm);
-                            wxFpxxByTqm.setQ("");
-                            wxFpxxByTqm.setWxtype("1");
-                            wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
-                            if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                String notNullCode= wxFpxxByTqm.getCode();
-                                wxFpxxByTqm.setCode(notNullCode);
-                            }
-                            try {
-                                wxfpxxJpaDao.save(wxFpxxByTqm);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }*/
-
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
                         if(gsdm.equals("ldyx")){
