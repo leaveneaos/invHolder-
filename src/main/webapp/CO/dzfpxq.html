@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>电子发票</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<!--标准mui.css-->
+	<link rel="stylesheet" href="css/mui.min.css">
+	<!--App自定义的css-->
+	<link rel="stylesheet" type="text/css" href="css/app.css" />
+	<style>
+		.mui-card .mui-control-content {
+			padding: 10px;
+		}
+		.mui-control-content {
+			min-height: 400px;
+			height: auto !important;
+			height: 400px;
+		}
+
+		.mui-table-view .mui-media-object {
+			height: 62px;
+			line-height: 62px;
+			max-width: 72px;
+		}
+		.data-dtc {
+			font-size: 14.0px;
+			border-radius: 5px;
+			border-width: 1px;
+			background-color: white;
+			pointer-events: auto;
+			margin: 10px;
+			padding: 10px;
+		}
+		.omit {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		.data-dtc li.fl {
+			width: 28%;
+			color: #7B7F87;
+			margin-left: -6%;
+		}
+		.fl{
+			float: left;
+		}
+		body{
+			background-color: #4AA6E6;
+		}
+		.data-dtc ul {
+			font-size: 14px;
+			line-height: 30px;
+			margin: 0 auto;
+			box-sizing: border-box;
+			text-indent: 10px;
+		}
+		.data-dtc li {
+			height: 30px;
+			font-size: 14px;
+			line-height: 30px;
+			margin: 0 auto;
+			box-sizing: border-box;
+			text-indent: 10px;
+		}
+		.oss{
+			cursor: pointer;
+			float: right;
+			font-size: 16px;
+			margin-right: 5%;
+			margin-top: -6%;
+		}
+		.more{
+			float: right;
+			margin-right: 2%;
+		}
+		.main{
+			margin: 15px auto 30px;
+			width: 92%;
+		}
+		.content{
+			background-color: #fff;
+			border-radius: 10px;
+		}
+		.middle{
+			padding: 5%;
+		}
+		footer{
+			background-color: transparent;
+			border: none;
+			padding: 0 20px;
+		}
+	</style>
+</head>
+<body>
+	<header>
+	</header>
+	<input id="hide"  type="hidden">
+	<section class="main">
+		<div class="content">
+		<div class="middle">
+			<div style="text-align: center;">增值税电子普通发票</div>
+			<div class="fpxq">
+			</div>
+		</div>
+		<div id="th">
+		</div>
+		<!--<div class="data-dtc">
+				<ul>
+					<li class="fl">开票日期</li>
+					<li class="fr omit" id="xfmc">1111</li>
+				</ul>
+				<ul>
+					<li class="fl">发票代码</li>
+					<li class="fr omit" id="gfmc">11</li>
+				</ul>
+				<ul>
+					<li class="fl">发票号码</li>
+					<li class="fr omit" id="fpje">111</li>
+					<a class="oss"   onclick=""> > </a>
+				</ul>
+
+				<ul class="kprq">
+					<li class="fl">购方名称</li>
+					<li class="fr omit" id="kprq">111</li>
+				</ul>
+				<ul>
+					<li class="fl">价税合计</li>
+					<li class="fr omit" id="fpdm">111</li>
+				</ul>
+		</div>-->
+		<div class="more"><a class="pp" style="display: none">更多</a><a class="ps" style="display: none">收起</a></div>
+		</div>
+	</section>
+	
+	<footer>
+		<p class="company fl" style="color:  #4C4C4C;">上海容津信息技术有限公司</p>
+		<p class="help fr"><a href="bangzhu.html">遇到问题?</a></p>
+	</footer>
+
+	<script src="js/mui.min.js"></script>
+	<script src="js/fpj.js" type="text/javascript"></script>
+	<script src="js/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		$(function(){
+            $.post(
+                "tijiao/tjsession",
+                {},
+                function(data) {
+                    var  gsdm = data.gsdm;
+                    var  khh=data.khh;
+                    var items = data.kplsList;
+                    var html='';
+                    $('#hide').val(gsdm);
+                    for(var i = 0; i < items.length; i++){
+                        if(i>3){
+                            $('.pp').css('display','block');
+                            $('.ps').css('display','none');
+                        }
+                        html+='<div class="data-dtc"><ul><li class="fl" >开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="fpdm">'+items[i].fpdm+'</li></ul><ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fphm+'</li><a class="oss" id="tz" href="mbxfp.html?gsdm='+items[i].gsdm+'&&tqm='+items[i].tqm+'&&time='+new Date()+'"> 查看> </a></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul><ul><li class="fl">价税合计</li><li class="fr omit" id="jshj">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul></div>';
+                    }
+                    //在页面显示数据
+                    $("#th").html(html);
+                    $("#th div:gt(3)").each(function(){
+                        $(this).hide();
+                    })
+                }
+            )
+		})
+        function RetainedDecimalPlaces(num) {
+            num = parseFloat(num).toFixed(2);
+            var source = String(num).split(".");
+            source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+            return source.join(".");
+        };
+        $(".pp").click(function () {
+            $('.data-dtc').css('display',"");
+            $('.ps').css('display',"");
+            $('.pp').css('display','none');
+        })
+        $(".ps").click(function () {
+            $("#th div:gt(3)").each(function(){
+                $(this).hide();
+            })
+            $('.pp').css('display',"");
+            $('.ps').css('display','none');
+        })
+	</script>
+</body>
+</html>
