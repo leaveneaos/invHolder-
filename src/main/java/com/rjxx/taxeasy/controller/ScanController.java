@@ -4,14 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
-import com.rjxx.taxeasy.domains.WxFpxx;
 import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
-import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,41 +60,6 @@ public class ScanController extends BaseController {
             if(!b){
                 return ResultUtil.error("保存发票信息失败，请重试！");
             }
-            /*WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-            if(WeixinUtils.isWeiXinBrowser(request)){
-                logger.info("----微信扫码保存交易信息----");
-                if(null==wxFpxxByTqm){
-                    WxFpxx wxFpxx = new WxFpxx();
-                    wxFpxx.setTqm(tqm);
-                    wxFpxx.setGsdm(gsdm);
-                    wxFpxx.setQ(q);
-                    wxFpxx.setOpenId(openid);
-                    wxFpxx.setOrderNo(orderNo);
-                    wxFpxx.setWxtype("1");//1:申请开票2：领取发票
-                    try {
-                        wxfpxxJpaDao.save(wxFpxx);
-                    }catch (Exception e){
-                        return ResultUtil.error("交易信息保存失败");
-                    }
-                }else {
-                    wxFpxxByTqm.setTqm(tqm);
-                    wxFpxxByTqm.setGsdm(gsdm);
-                    wxFpxxByTqm.setQ(q);
-                    wxFpxxByTqm.setOpenId(openid);
-                    wxFpxxByTqm.setOrderNo(orderNo);
-                    wxFpxxByTqm.setWxtype("1");//1:申请开票2：领取发票
-                    if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                        String notNullCode= wxFpxxByTqm.getCode();
-                        wxFpxxByTqm.setCode(notNullCode);
-                    }
-                    try {
-                        wxfpxxJpaDao.save(wxFpxxByTqm);
-                    }catch (Exception e){
-                        logger.info("交易信息保存失败");
-                        return ResultUtil.error("交易信息保存失败");
-                    }
-                }
-            }*/
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
             return ResultUtil.error("二维码信息获取失败");
@@ -153,9 +116,6 @@ public class ScanController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
-//        int index = state.indexOf("$");
-//        String gsdm = state.substring(0, index);
-//        String q = state.substring(index+1, state.length());
         String gsdm = session.getAttribute("gsdm").toString();
         String q = session.getAttribute("q").toString();
         logger.info("存入session时候的gsdm"+gsdm);
@@ -204,47 +164,6 @@ public class ScanController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }
-                        /*if(WeixinUtils.isWeiXinBrowser(request)){
-                            WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-                            if(null == wxFpxxByTqm){
-                                logger.info("已经开过票的存入微信发票详情--");
-                                WxFpxx Wxfpxx = new WxFpxx();
-                                Wxfpxx.setTqm(ppdm+orderNo);
-                                Wxfpxx.setGsdm(gsdm);
-                                Wxfpxx.setQ(q);
-                                Wxfpxx.setOpenId(openid);
-                                Wxfpxx.setOrderNo(orderNo);
-                                Wxfpxx.setWxtype("2");
-                                Wxfpxx.setKplsh(kplsh);
-                                logger.info("已完成开票之后，微信扫码直接归入卡包--信息"+Wxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
-                                        q+
-                                        "------订单编号"+Wxfpxx.getOrderNo()+"------发票类型"+Wxfpxx.getWxtype());
-                                try {
-                                    wxfpxxJpaDao.save(Wxfpxx);
-                                }catch (Exception e){
-                                    logger.info("交易信息保存失败");
-                                    return ;
-                                }
-                            }else {
-                                wxFpxxByTqm.setTqm(ppdm+orderNo);
-                                wxFpxxByTqm.setGsdm(gsdm);
-                                wxFpxxByTqm.setQ(q);
-                                wxFpxxByTqm.setOpenId(openid);
-                                wxFpxxByTqm.setOrderNo(orderNo);
-                                wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
-                                wxFpxxByTqm.setKplsh(kplsh);
-                                if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                    String notNullCode= wxFpxxByTqm.getCode();
-                                    wxFpxxByTqm.setCode(notNullCode);
-                                }
-                                try {
-                                    wxfpxxJpaDao.save(wxFpxxByTqm);
-                                }catch (Exception e){
-                                    logger.info("交易信息保存失败");
-                                    return ;
-                                }
-                            }
-                        }*/
                         String serialOrder = status.get(0).split("[+]")[4];
                         logger.info("跳转的url--"+request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                         //有pdf对应的url
@@ -252,78 +171,6 @@ public class ScanController extends BaseController {
                         //        + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
                         response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                     }
-//                    switch (status) {
-//                        case "可开具":
-//                            if (StringUtils.isNotBlank(ppdm)) {
-//                                //有品牌代码对应的url
-//                                response.sendRedirect(request.getContextPath() + ppurl + "?t="+ System.currentTimeMillis()+ "=" +ppdm );
-//                            } else {
-//                                //无品牌对应的url
-//                                response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis()+"=no");
-//                            }
-//                            break;
-//                        case "开具中":
-//                            //开具中对应的url
-//                            response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
-//                            break;
-//                        default://已经开过票的
-//                            if(status.indexOf("pdf")!=-1){
-//                                String pdf = status.split("[+]")[0];
-//                                String je = status.split("[+]")[1];
-//                                String orderTime = status.split("[+]")[2];
-//                                String kplsh = status.split("[+]")[3];
-//                                String img = pdf.replace("pdf", "jpg");
-//                                if(WeixinUtils.isWeiXinBrowser(request)){
-//                                    WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(orderNo);
-//                                    if(null == wxFpxxByTqm){
-//                                        logger.info("已经开过票的存入微信发票详情--");
-//                                        WxFpxx Wxfpxx = new WxFpxx();
-//                                        Wxfpxx.setTqm(ppdm+orderNo);
-//                                        Wxfpxx.setGsdm(gsdm);
-//                                        Wxfpxx.setQ(q);
-//                                        Wxfpxx.setOpenId(openid);
-//                                        Wxfpxx.setOrderNo(orderNo);
-//                                        Wxfpxx.setWxtype("2");
-//                                        Wxfpxx.setKplsh(kplsh);
-//                                        logger.info("已完成开票之后，微信扫码直接归入卡包--信息"+Wxfpxx.getTqm()+"----公司代码"+gsdm+"----q值"+
-//                                                q+
-//                                                "------订单编号"+Wxfpxx.getOrderNo()+"------发票类型"+Wxfpxx.getWxtype());
-//                                        try {
-//                                            wxfpxxJpaDao.save(Wxfpxx);
-//                                        }catch (Exception e){
-//                                            logger.info("交易信息保存失败");
-//                                            return ;
-//                                        }
-//                                    }else {
-//                                        wxFpxxByTqm.setTqm(ppdm+orderNo);
-//                                        wxFpxxByTqm.setGsdm(gsdm);
-//                                        wxFpxxByTqm.setQ(q);
-//                                        wxFpxxByTqm.setOpenId(openid);
-//                                        wxFpxxByTqm.setOrderNo(orderNo);
-//                                        wxFpxxByTqm.setWxtype("2");//1:申请开票2：领取发票
-//                                        wxFpxxByTqm.setKplsh(kplsh);
-//                                        if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-//                                            String notNullCode= wxFpxxByTqm.getCode();
-//                                            wxFpxxByTqm.setCode(notNullCode);
-//                                        }
-//                                        try {
-//                                            wxfpxxJpaDao.save(wxFpxxByTqm);
-//                                        }catch (Exception e){
-//                                            logger.info("交易信息保存失败");
-//                                            return ;
-//                                        }
-//                                    }
-//
-//                                }
-//                                logger.info("跳转的url--"+"/QR/scan.html?t=" + System.currentTimeMillis()
-//                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
-//                                //有pdf对应的url
-//                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
-//                                        + "=" + img + "=" + orderNo + "=" +je + "=" + orderTime);
-//                            }else{
-//                                //无pdf对应的url
-//                                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_ERROR");
-//                            }
                 }else{
                     //获取pdf状态码失败的url
                     response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_STATE_ERROR");

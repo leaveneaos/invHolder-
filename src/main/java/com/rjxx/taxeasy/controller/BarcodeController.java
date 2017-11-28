@@ -52,6 +52,7 @@ public class BarcodeController extends BaseController {
                 }
         }
 
+        //非微信浏览器
         Map result = barcodeService.sm(gsdm, q);
         try {
             if (result != null) {
@@ -88,34 +89,6 @@ public class BarcodeController extends BaseController {
                         //response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+sb.toString());
                         response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                     }
-//                    switch (status) {
-//                        case "可开具":
-//                            if (StringUtils.isNotBlank(ppdm)) {
-//                                //有品牌代码对应的url
-//                                response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
-//                            } else {
-//                                //无品牌对应的url
-//                                response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=no");
-//                            }
-//                            break;
-//                        case "开具中":
-//                            //开具中对应的url
-//                            response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
-//                            break;
-//                        default:
-//                            if (status.indexOf("pdf") != -1) {
-//                                logger.info(status);
-//                                String pdf = status.split("[+]")[0];
-//                                //String je = status.split("[+]")[1];
-//                               // String orderTime = status.split("[+]")[2];
-//                                //String kplsh = status.split("[+]")[3];
-//                                String img = pdf.replace("pdf", "jpg");
-//                                response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+img);
-//                            } else {
-//                                //无pdf对应的url
-//                                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_ERROR");
-//                            }
-//                    }
                 } else {
                     //获取pdf状态码失败的url
                     response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_STATE_ERROR");
