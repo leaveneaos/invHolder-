@@ -275,54 +275,50 @@ public class BaseClController extends BaseController {
                     List<Jyxxsq> jyxxsqList = (List) resultMap.get("jyxxsqList");
                     List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
                     String error = (String) resultMap.get("error");
-                    Jyxxsq jyxxsq = jyxxsqList.get(0);
-                    request.getSession().setAttribute("price", jyxxsq.getJshj());
-                    SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMddHHmmss");
-                    request.getSession().setAttribute("orderTime",sdf.format(jyxxsq.getDdrq()));
-                    request.getSession().setAttribute("resultMap", resultMap);
-                    request.getSession().setAttribute("jymxsqList", jymxsqList);
-                    request.getSession().setAttribute("tqm", tqm);
-                    if(error!=null){
-                        logger.info("---------错误信息------------"+error);
-                        response.sendRedirect(request.getContextPath()+"/QR/error.html?t="+System.currentTimeMillis()+"="+error);
-                        logger.info("---错误跳转页面======="+request.getContextPath()+"/QR/error.html?t="+System.currentTimeMillis()+"="+error);
+                    if (error != null) {
+                        logger.info("---------错误信息111111222222------------" + error);
+                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + error);
                         return;
-                    }else{
+                    } else {
                         request.getSession().setAttribute("error", "");
                     }
                     String temp = (String) resultMap.get("tmp");
                     if (!"".equals(temp)) {
-                        logger.info("---------校验信息------------"+temp);
-                        response.sendRedirect(request.getContextPath()+"/QR/error.html?t="+System.currentTimeMillis()+"="+temp);
+                        logger.info("---------校验信息11111------------" + temp);
+                        response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + temp);
                         return;
-                    }else{
+                    } else {
                         request.getSession().setAttribute("temp", "");
                     }
-//                    String xfsh = jyxxsq.getXfsh();
-//                    if(null!=xfsh && "9131000071785090X1".equals(xfsh)){
-//                        request.getSession().setAttribute("xf",xfsh);
-//                        logger.info("-----------当销方是上海的时候放入---------"+xfsh);
-//                    }
-                    result.put("num", "5");
-                    boolean b = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, state, "1", opendid, userId, "", request);
-                    if(!b){
-                        request.getSession().setAttribute("msg", "保存发票信息失败，请重试!");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    if (jyxxsqList != null) {
+                        Jyxxsq jyxxsq = jyxxsqList.get(0);
+                        request.getSession().setAttribute("price", jyxxsq.getJshj());
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                        request.getSession().setAttribute("orderTime", sdf.format(jyxxsq.getDdrq()));
+                        request.getSession().setAttribute("resultMap", resultMap);
+                        request.getSession().setAttribute("jymxsqList", jymxsqList);
+                        request.getSession().setAttribute("tqm", tqm);
+                        result.put("num", "5");
+                        boolean b = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, state, "1", opendid, userId, "", request);
+                        if (!b) {
+                            request.getSession().setAttribute("msg", "保存发票信息失败，请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return;
+                        }
+                        Map fpgzMap = new HashMap();
+                        fpgzMap.put("gsdm", gsxx.getGsdm());
+                        Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);
+                        //跳转地址
+                        String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
+                                + "=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() + "=" + sdf.format(jyxxsq.getDdrq()) + "=" + tqm;
+                        logger.info("重定向url=====" + redirectUrl);
+                        //支付宝 和 分票 不拉授权页
+                        if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size() > fpgz.getDzphs()) {
+                            redirectUrl += "&isAlipay=true";
+                        }
+                        response.sendRedirect(redirectUrl);
                         return;
                     }
-                    Map fpgzMap = new HashMap();
-                    fpgzMap.put("gsdm", gsxx.getGsdm());
-                    Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);
-                    //跳转地址
-                    String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                            +"=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()) +"="+tqm;
-                    logger.info("重定向url====="+redirectUrl);
-                    //支付宝 和 分票 不拉授权页
-                    if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size()> fpgz.getDzphs()) {
-                        redirectUrl += "&isAlipay=true";
-                    }
-                    response.sendRedirect(redirectUrl);
-                    return;
                 }
             }
         } catch (Exception e) {
