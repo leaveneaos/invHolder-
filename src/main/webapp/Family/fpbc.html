@@ -111,11 +111,13 @@
         // 确定
         $('#sure').on('click',function () {
         	showMask();
-			$.post(
+            $("#sure").attr("disabled", true);
+            $.post(
 			    "../fm/savels",
 				{},
 				function (data) {
 			        if(data.msg == 1) {
+                        $("#sure").attr("disabled", false);
                         window.location.href = "witting.html?time=" + new Date();
                     }else{
                     	//hideMask();
