@@ -55,7 +55,7 @@ public class ScanController extends BaseController {
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String tqm=jsonObject.getString("tqm");
             session.setAttribute("tqm",tqm);
-            boolean b = wechateFpxxService.InFapxx(tqm, gsdm, tqm, q, "1", openid,
+            boolean b = wechateFpxxService.InFapxx(tqm, gsdm, orderNo, q, "1", openid,
                     (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
             if(!b){
                 return ResultUtil.error("保存发票信息失败，请重试！");

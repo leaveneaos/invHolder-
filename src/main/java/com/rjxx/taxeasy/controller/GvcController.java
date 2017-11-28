@@ -246,63 +246,12 @@ public class GvcController extends BaseController {
                 }else {
                     Map resultMap = new HashMap();
                     //调用接口获取数据--首先存入微信发票信息
-                    boolean b = wechatFpxxService.InFapxx(tqm, gsdm, tqm, "", "1", opendid, userId, "", request);
+                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, "", "1", opendid, userId, "", request);
                     if(!b){
                         result.put("num","12");
                         result.put("msg","保存信息失败，请重试！");
                         return result;
                     }
-                    /*WxFpxx wxFpxxByTqm = wxfpxxJpaDao.selsetByOrderNo(tqm);
-                    //第一次扫描
-                    if(null==wxFpxxByTqm){
-                        if(WeixinUtils.isWeiXinBrowser(request)){
-                            WxFpxx wxFpxx = new WxFpxx();
-                            wxFpxx.setTqm(tqm);
-                            wxFpxx.setGsdm(gsdm);
-                            wxFpxx.setOrderNo(tqm);
-                            wxFpxx.setQ("");
-                            wxFpxx.setWxtype("1");
-                            wxFpxx.setLrsj(new Date());
-                            wxFpxx.setOpenId((String) session.getAttribute("openid"));
-                            wxfpxxJpaDao.save(wxFpxx);
-                        }else if(AlipayUtils.isAlipayBrowser(request)){
-                            WxFpxx wxFpxx = new WxFpxx();
-                            wxFpxx.setTqm(tqm);
-                            wxFpxx.setGsdm(gsdm);
-                            wxFpxx.setOrderNo(tqm);
-                            wxFpxx.setQ("");
-                            wxFpxx.setLrsj(new Date());
-                            wxFpxx.setUserid(userId);
-                            wxfpxxJpaDao.save(wxFpxx);
-                        }
-                    }else {
-                        if(WeixinUtils.isWeiXinBrowser(request)){
-                            wxFpxxByTqm.setTqm(tqm);
-                            wxFpxxByTqm.setGsdm(gsdm);
-                            wxFpxxByTqm.setOrderNo(tqm);
-                            wxFpxxByTqm.setQ("");
-                            wxFpxxByTqm.setWxtype("1");
-                            wxFpxxByTqm.setOpenId((String) session.getAttribute("openid"));
-                            wxFpxxByTqm.setXgsj(new Date());
-                            if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                String notNullCode= wxFpxxByTqm.getCode();
-                                wxFpxxByTqm.setCode(notNullCode);
-                            }
-                            wxfpxxJpaDao.save(wxFpxxByTqm);
-                        }else if(AlipayUtils.isAlipayBrowser(request)){
-                            wxFpxxByTqm.setTqm(tqm);
-                            wxFpxxByTqm.setGsdm(gsdm);
-                            wxFpxxByTqm.setOrderNo(tqm);
-                            wxFpxxByTqm.setQ("");
-                            wxFpxxByTqm.setUserid(userId);
-                            wxFpxxByTqm.setXgsj(new Date());
-                            if(wxFpxxByTqm.getCode()!=null||!"".equals(wxFpxxByTqm.getCode())){
-                                String notNullCode= wxFpxxByTqm.getCode();
-                                wxFpxxByTqm.setCode(notNullCode);
-                            }
-                            wxfpxxJpaDao.save(wxFpxxByTqm);
-                        }
-                    }*/
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(zb1.getCsz().equals("是")){
                         Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
