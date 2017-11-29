@@ -8,75 +8,69 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv="Cache" content="no-cache">
-	<link rel="stylesheet" type="text/css" href="css/common.css">
-	<link rel="stylesheet" type="text/css" href="css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="../Family/css/common.css">
+	<link rel="stylesheet" type="text/css" href="../Family/css/fpxq.css">
 
 	<!-- 标准mui.css -->
-	<link rel="stylesheet" href="css/mui.min.css">
+	<link rel="stylesheet" href="../css/mui.min.css">
 	<!-- App自定义的css -->
-	<link rel="stylesheet" type="text/css" href="css/app.css" />
+	<link rel="stylesheet" type="text/css" href="../css/app.css" />
 	<style type="text/css">
 		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
 			border: none;
 			border: 0;
 		}
-		.mui-col-xs-4 {
-			width: 33.33333333%;
+		.btoTip{
+			font-size: 13px;
+			white-space: nowrap;
+			float: left;
 		}
-		.mui-grid-view.mui-grid-9 {
-			border-left: 0;
+		.topName{
+			text-align: center;
 		}
 	</style>
 </head>
 <body>
-<header class="mui-bar mui-bar-nav">
-	<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="cursor:pointer" onclick="history.go(-2)"></a>
-	<h1 class="mui-title">发票提取</h1>
+<header>
 </header>
 
-<div class="mui-content mui-scroll-wrapper" id="offCanvasContentScroll">
-	<section>
-		<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: #5C96F7;">
-			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-				<a id="you">
-					<span class="mui-icon iconfont icon-youxiang"></span>
-					<div class="mui-media-body" style="color: #fff;">邮箱</div>
-				</a>
-			</li>
-			 <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-				<a id="fpj" style="display: none">
-					<span class="mui-icon iconfont icon-fapiaoguanli1"></span>
-					<div class="mui-media-body" style="color: #fff;">微信</div>
-				</a>
-			</li>
-			<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-				<a id="zfb" style="display: none">
-					<span class="mui-icon iconfont icon-jikediancanicon23"></span>
-					<div class="mui-media-body" style="color: #fff;">支付宝</div>
-				</a>
-			</li>
-		</ul>
+	<section class="main">
+		<div class="topName">
+			泰易电子发票
+		</div>
+		<div class="middle" id="parentIndustryUL">
+		</div>
+		<div class=" btoTip">
+			<a href="../youxiang1.html" class="yx">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#icon-youxiang1"></use>
+				</svg>
+				<span>邮箱</span>
+			</a>
+			<a href="javascript:void(0);" class="wx" style="display: none">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#icon-weixin"></use>
+				</svg>
+				<span>微信</span>
+			</a>
+			<a href="javascript:void(0);" class="zfb" style="display: none">
+				<svg class="icon" aria-hidden="true">
+					<use xlink:href="#icon-zhifubao"></use>
+				</svg>
+				<span>支付宝</span>
+			</a>
+		</div>
 	</section>
-	<input id="gsdm" name="gsdm" type="hidden"/>
-	<input id="tqm" name="tqm" type="hidden"/>
-	<section id=parentIndustryUL>
-
-	</section>
-
 	<footer>
-		<p class="company">上海容津信息技术有限公司</p>
-		<p class="help"><a href="bangzhu.html">遇到问题?</a></p>
+		<p class="company fl">泰易开票通</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
-</div>
-
-<script src="js/mui.min.js"></script>
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/wxkb.js"></script>
-<script src="js/fpj.js" type="text/javascript"></script>
+<script src="../js/mui.min.js"></script>
+<script src="../js/iconfont.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/wxkb.js"></script>
+<script src="../js/fpj.js" type="text/javascript"></script>
 <script type="text/javascript">
-    var serialorder;
-    var gsdms = location.href.split('?')[1].split('&')[0].split('=')[1];
-    var tqms = location.href.split('?')[1].split('&&')[1].split('=')[1];
     var ua = navigator.userAgent.toLowerCase();
     var isWeixin = ua.indexOf('micromessenger') != -1;
     var isAlipay = ua.indexOf('alipay') != -1;
@@ -92,40 +86,40 @@
     price = null;
     orderTime = null;
     storeNo = null;
+    function redirect(errorMsg){
+        var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+        window.location.assign(encodeURI(myurl));
+    }
     $(function() {
-        $('#gsdm').val(gsdms);
-        $('#tqm').val(tqms);
-        var gsdm = $('#gsdm').val();
-        var tqm = $('#tqm').val();
+        var s = location.href.split('?')[1].split('&')[0].split('=')[1];
         $.post(
-            "fpsession",
+            "../tq/dzxfpxx",
             {
-                "tqm" : tqm,
-                "gsdm":  gsdm
+                "djh" : s
 			},
             function(data) {
-                    serialorder = data.serialorder;
-                    var pdfdzs = data.pdfdzs;
+                	if(data.msg!=null&&data.msg=="0"){
+                        redirect("没有找到发票信息，请重试！");
+					}
 					orderNo = data.orderNo;
 					price = data.price;
 					orderTime = data.kprq;
-                    if (serialorder != null && serialorder != "") {
-                      var  pdfdz = pdfdzs.split(",");
-                        $.each(
-                            pdfdz,
-                            function(n, value) {
-                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-                            }
-                        );
+                    if (data.kpls != null && data.kpls != "") {
+                      //var  pdfdz = pdfdzs.split(",");
+                      //  $.each(
+                      //      pdfdz,
+                       //     function(n, value) {
+                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + data.pdfdz + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+                        //    }
+                        //);
                     } else {
-                        window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                        redirect("没有找到发票信息，请重试！");
                     }
-
             }
         );
 
         $('#you').click(function() {
-             window.location.href = "mbyouxiang.html?gsdm="+gsdm+"&&tqm="+tqm+"&&_t=" + new Date().getTime();
+             window.location.href = "../youxiang1.html?&&_t=" + new Date().getTime();
         });
         //支付宝归入发票管家
         if(isAlipay){
@@ -137,15 +131,16 @@
         if(isWeixin){
             $('#fpj').click(function() {
                 if(null == orderNo|| null == price || null == orderTime){
-                    window.location.href = "smtq/demo.html?time=" + new Date().getTime();
+                    window.location.href = "../smtq/demo.html?time=" + new Date().getTime();
                 }
-                window.location = "common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
+                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
             });
 		}
     })
+
 </script>
-<script src="js/mui.min.js"></script>
-<script src="js/mui.zoom.js"></script>
+<script src="../js/mui.min.js"></script>
+<script src="../js/mui.zoom.js"></script>
 
 <script>
     mui.init();

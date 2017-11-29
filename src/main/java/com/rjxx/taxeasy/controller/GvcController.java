@@ -292,7 +292,7 @@ public class GvcController extends BaseController {
                                 skpmap.put("gsdm", "gvc");
                                 skpmap.put("kpddm", storeno);
                                 Skp skpdata = skpService.findOneByParams(skpmap);
-                                result.put("msg",skpdata.getKpdmc()+"为联营店，不提供发票，请联系商场开票！");
+                                result.put("msg","此订单不在电子发票的有效开票期内，请联系店铺开具发票！");
                             }
                             return result;
                         }
@@ -337,7 +337,6 @@ public class GvcController extends BaseController {
                             String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
                             result.put("num","20");
                             result.put("redirectUrl",redirectUrl);
-                            logger.info("------光唯尚微信跳转--------"+ JSON.toJSONString(result));
                             return result;
                         } catch (Exception e) {
                             e.printStackTrace();
