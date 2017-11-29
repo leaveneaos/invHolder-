@@ -86,8 +86,6 @@ public class BaseClController extends BaseController {
     private WxfpxxJpaDao wxfpxxJpaDao;
     @Autowired
     private GsxxService gsxxService;
-    @Autowired
-    private FpgzService fpgzService;
 
     @Autowired
     private wechatFpxxServiceImpl wechatFpxxService;
@@ -307,15 +305,17 @@ public class BaseClController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }
-                        Map fpgzMap = new HashMap();
+                        /*Map fpgzMap = new HashMap();
                         fpgzMap.put("gsdm", gsxx.getGsdm());
-                        Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);
+                        Fpgz fpgz = fpgzService.findOneByParams(fpgzMap);*/
+                        //修改获取电子票分票行数
+                        Cszb csz = cszbService.getSpbmbbh( gsxx.getGsdm(), null,null, "dzphs");
+                        Integer fphs = Integer.valueOf(csz.getCsz());
                         //跳转地址
                         String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
                                 + "=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() + "=" + sdf.format(jyxxsq.getDdrq()) + "=" + tqm;
-                        logger.info("重定向url=====" + redirectUrl);
                         //支付宝 和 分票 不拉授权页
-                        if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size() > fpgz.getDzphs()) {
+                        if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size() >fphs) {
                             redirectUrl += "&isAlipay=true";
                         }
                         response.sendRedirect(redirectUrl);
