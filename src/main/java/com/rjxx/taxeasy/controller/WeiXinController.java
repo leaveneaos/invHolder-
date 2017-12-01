@@ -143,7 +143,7 @@ public class WeiXinController extends BaseController {
                     String gsdm = wxFpxx.getGsdm();
                     String q = wxFpxx.getQ();
                     String tqm = wxFpxx.getTqm();
-                   /* WeixinTask weixinTask = new WeixinTask();
+                    WeixinTask weixinTask = new WeixinTask();
                     weixinTask.setWxFpxx(wxFpxx);
                     weixinTask.setResultMap(resultMap);
                     weixinTask.setAccess_token(access_token);
@@ -159,11 +159,11 @@ public class WeiXinController extends BaseController {
                     weixinTask.setKpspmxService(kpspmxService);
                     weixinTask.setPdf_file_url(pdf_file_url);
                     weixinTask.setBarcodeService(barcodeService);
-                    weixinTask.run();
-                    logger.info("----线程号--------"+weixinTask.getId());
+                    Thread thread = new Thread(weixinTask);
+                    thread.start();
                     logger.info("----------回调的结束时间"+new Date());
-                    return "";*/
-                   if(null!=wxFpxx.getWxtype() && "1".equals(wxFpxx.getWxtype())){
+                    return "";
+                   /*if(null!=wxFpxx.getWxtype() && "1".equals(wxFpxx.getWxtype())){
                         logger.info("进入申请开票类型------------开始开票");
                             if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm) || "ldyx".equals(gsdm)||"gvc".equals(gsdm))) {
                                     Map parms = new HashMap();
@@ -273,7 +273,7 @@ public class WeiXinController extends BaseController {
                                     return "";
                                 }
                             }
-                        }
+                        }*/
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
                     String re = "订单"+FailOrderId+"的发票开具异常,请联系商家！";

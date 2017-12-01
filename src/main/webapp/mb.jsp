@@ -105,7 +105,7 @@
                 $("#logo").attr("src", "images/" + gsdm + ".png");
                 if(gsdm=="ubm"){
                     $("#tqm").attr("placeholder", "点击此输入条形码");
-
+                    $("#Button1").attr("disabled","disabled");
                 }else {
                     $("#tqm").attr("placeholder", "点击此输入发票提取码");
                     $("#date").css("display","none");
