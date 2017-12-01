@@ -87,6 +87,11 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
+                if("0.0".equals(price)){
+                    request.getSession().setAttribute("msg", "该订单可开票金额为0");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
                 if(null==wxFpxx){
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
