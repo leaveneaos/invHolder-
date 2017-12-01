@@ -1,7 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
 import com.rjxx.taxeasy.comm.BaseController;
-import com.rjxx.taxeasy.dao.QccJpaDao;
 import com.rjxx.utils.yjapi.QCCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,18 +23,11 @@ public class QCCController extends BaseController{
     @Autowired
     private QCCUtils qccUtils;
 
-    @Autowired
-    private QccJpaDao qccJpaDao;
-
     @RequestMapping(value = "/getNames", method = RequestMethod.GET)
     public String getNames(@RequestParam("name")String name) {
         logger.info("输入的参数为："+name);
-        return qccUtils.getQccSearch(name);
-    }
-
-    @RequestMapping(value = "/getMsg",method = RequestMethod.GET)
-    public String getMsg(@RequestParam("name")String name){
-        logger.info("输入的参数为："+name);
-        return qccJpaDao.findNsrsbhByGsmc(name);
+        String result =qccUtils.getQccSearch(name);
+        logger.info("输出为："+result);
+        return result;
     }
 }

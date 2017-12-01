@@ -116,6 +116,15 @@ public class ScanController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
+
+        if(session.getAttribute("gsdm")==null|| session.getAttribute("q")==null){
+            try {
+                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_WECHAT_AUTHORIZED_FAILED");
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         String gsdm = session.getAttribute("gsdm").toString();
         String q = session.getAttribute("q").toString();
         logger.info("存入session时候的gsdm"+gsdm);
@@ -137,13 +146,16 @@ public class ScanController extends BaseController {
                         if (StringUtils.isNotBlank(ppdm)) {
                             //有品牌代码对应的url
                             response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
+                            return;
                         } else {
                             //无品牌对应的url
                             response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=no");
+                            return;
                         }
                     }else if(status.contains("开具中")){
                         //开具中对应的url
                         response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+                        return;
                     }else {
                         StringBuilder sb = new StringBuilder();
                         for(String str:status){
@@ -170,20 +182,24 @@ public class ScanController extends BaseController {
                         //response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
                         //        + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
                         response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                        return;
                     }
                 }else{
                     //获取pdf状态码失败的url
                     response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=GET_PDF_STATE_ERROR");
+                    return;
                 }
             } else {
                 //验签失败url
                 response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=QRCODE_VALIDATION_FAILED");
+                return;
             }
         } catch (IOException e) {
             e.printStackTrace();
             try {
                 //重定向报错url
                 response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=REDIRECT_ERROR");
+                return;
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
