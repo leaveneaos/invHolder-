@@ -19,6 +19,8 @@ public class WeixinTask implements Runnable{
 
     private static Logger logger = LoggerFactory.getLogger(WeixinUtils.class);
 
+    private Thread id;
+
     private WxFpxx wxFpxx;
 
     private Map resultMap;
@@ -286,5 +288,13 @@ public class WeixinTask implements Runnable{
 
     public void setBarcodeService(BarcodeService barcodeService) {
         this.barcodeService = barcodeService;
+    }
+
+    public Thread getId() {
+        return id;
+    }
+
+    public void setId(Thread id) {
+        this.id = id;
     }
 }

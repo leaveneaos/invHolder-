@@ -101,6 +101,7 @@ public class WeiXinController extends BaseController {
      */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
+        logger.info("进入回调开始时间"+new Date());
         Map<String, String> requestMap = null;
         try {
             requestMap = parseXml(request);
@@ -142,7 +143,7 @@ public class WeiXinController extends BaseController {
                     String gsdm = wxFpxx.getGsdm();
                     String q = wxFpxx.getQ();
                     String tqm = wxFpxx.getTqm();
-                    WeixinTask weixinTask = new WeixinTask();
+                   /* WeixinTask weixinTask = new WeixinTask();
                     weixinTask.setWxFpxx(wxFpxx);
                     weixinTask.setResultMap(resultMap);
                     weixinTask.setAccess_token(access_token);
@@ -159,8 +160,10 @@ public class WeiXinController extends BaseController {
                     weixinTask.setPdf_file_url(pdf_file_url);
                     weixinTask.setBarcodeService(barcodeService);
                     weixinTask.run();
-                    return "";
-                   /* if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
+                    logger.info("----线程号--------"+weixinTask.getId());
+                    logger.info("----------回调的结束时间"+new Date());
+                    return "";*/
+                   if(null!=wxFpxx.getWxtype() && "1".equals(wxFpxx.getWxtype())){
                         logger.info("进入申请开票类型------------开始开票");
                             if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm) || "ldyx".equals(gsdm)||"gvc".equals(gsdm))) {
                                     Map parms = new HashMap();
@@ -233,7 +236,7 @@ public class WeiXinController extends BaseController {
                                     String re = "发票开具异常,请联系商家！";
                                     weixinUtils.jujuekp(FailOrderId,re,access_token);
                                 }
-                        }else if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())) {
+                        }else if(null!=wxFpxx.getWxtype() && "2".equals(wxFpxx.getWxtype())) {
                             logger.info("进入领取发票类型------------直接插入卡包");
                             WxFpxx wxFpxxIncard = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
                             if (null == wxFpxxIncard) {
@@ -270,7 +273,7 @@ public class WeiXinController extends BaseController {
                                     return "";
                                 }
                             }
-                        }*/
+                        }
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
                     String re = "订单"+FailOrderId+"的发票开具异常,请联系商家！";
