@@ -12,6 +12,7 @@ import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.wechat.task.WeixinTask;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
@@ -109,7 +110,6 @@ public class WeiXinController extends BaseController {
                 String SuccOrderId = requestMap.get("SuccOrderId");//微信回传成功的order_id
                 String FailOrderId = requestMap.get("FailOrderId");//失败的order_id
                 String openid = requestMap.get("FromUserName");    //opendid
-                logger.info("拿到的opedid是---------"+openid);
                 String createTime = requestMap.get("CreateTime");
                 logger.info("排重前"+createTime+openid);
                 //判断排重
@@ -127,38 +127,41 @@ public class WeiXinController extends BaseController {
                 }
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     logger.info("拿到微信回传的订单编号为"+SuccOrderId);
-                    //原始订单 ----- 开票平台的订单
-                    //String orderno_old="";
-                    //拒绝之后的订单 --- 传给微信的订单---weixinorderno
-                    //String orderno_new="";
-                    //int i = SuccOrderId.indexOf("-");
-                    //if(i<0){
-                    //    logger.info("没有-，表示没有拒绝过开票");
-                    //    orderno_old=SuccOrderId;
-                    //    orderno_new=SuccOrderId;
-                    //}else {
-                    //    logger.info("表示拒绝过开票");
-                    //    orderno_new = SuccOrderId;
-                    //    String[] split = SuccOrderId.split("-");
-                    //    orderno_old = split[0];
-                    //}
-                    WxFpxx oneByOrderNo = wxfpxxJpaDao.selectByWeiXinOrderNo(SuccOrderId);
-                    if(null==oneByOrderNo){
+                    WxFpxx wxFpxx = wxfpxxJpaDao.selectByWeiXinOrderNo(SuccOrderId);
+                    if(null==wxFpxx){
                         String re = "发票开具失败，请重试！";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                        return "";
                     }
-                    String gsdm = oneByOrderNo.getGsdm();
-                    String q = oneByOrderNo.getQ();
-                    String tqm = oneByOrderNo.getTqm();
-
-                    if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
+                    Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
+                    if(null==resultMap){
+                        String re = "发票开具失败，请重试！";
+                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                        return "";
+                    }
+                    String gsdm = wxFpxx.getGsdm();
+                    String q = wxFpxx.getQ();
+                    String tqm = wxFpxx.getTqm();
+                    WeixinTask weixinTask = new WeixinTask();
+                    weixinTask.setWxFpxx(wxFpxx);
+                    weixinTask.setResultMap(resultMap);
+                    weixinTask.setAccess_token(access_token);
+                    weixinTask.setGsxxService(gsxxService);
+                    weixinTask.setSuccOrderId(SuccOrderId);
+                    weixinTask.setOpenid(openid);
+                    weixinTask.setGetDataService(getDataService);
+                    weixinTask.setCszbService(cszbService);
+                    weixinTask.setWeixinUtils(weixinUtils);
+                    weixinTask.setFailOrderId(FailOrderId);
+                    weixinTask.setWxfpxxJpaDao(wxfpxxJpaDao);
+                    weixinTask.setKplsService(kplsService);
+                    weixinTask.setKpspmxService(kpspmxService);
+                    weixinTask.setPdf_file_url(pdf_file_url);
+                    weixinTask.setBarcodeService(barcodeService);
+                    weixinTask.run();
+                    return "";
+                   /* if(null!=oneByOrderNo.getWxtype() && "1".equals(oneByOrderNo.getWxtype())){
                         logger.info("进入申请开票类型------------开始开票");
-                        Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
-                        if(null==resultMap){
-                            String re = "发票开具失败，请重试！";
-                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                            return "";
-                        }else {
                             if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm) || "ldyx".equals(gsdm)||"gvc".equals(gsdm))) {
                                     Map parms = new HashMap();
                                     parms.put("gsdm", gsdm);
@@ -230,9 +233,7 @@ public class WeiXinController extends BaseController {
                                     String re = "发票开具异常,请联系商家！";
                                     weixinUtils.jujuekp(FailOrderId,re,access_token);
                                 }
-                            }
-                        }
-                        if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())) {
+                        }else if(null!=oneByOrderNo.getWxtype() && "2".equals(oneByOrderNo.getWxtype())) {
                             logger.info("进入领取发票类型------------直接插入卡包");
                             WxFpxx wxFpxxIncard = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
                             if (null == wxFpxxIncard) {
@@ -269,11 +270,12 @@ public class WeiXinController extends BaseController {
                                     return "";
                                 }
                             }
-                        }
+                        }*/
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
                     String re = "订单"+FailOrderId+"的发票开具异常,请联系商家！";
                     weixinUtils.jujuekp(FailOrderId,re,access_token);
+                    return "";
                 }
             }
         } catch (Exception e) {
@@ -298,7 +300,6 @@ public class WeiXinController extends BaseController {
         Document document = reader.read(inputStream);
         String requestXml = document.asXML();
         String subXml = requestXml.split(">")[0] + ">";
-
         requestXml = requestXml.substring(subXml.length());
         // 得到xml根元素
         Element root = document.getRootElement();
