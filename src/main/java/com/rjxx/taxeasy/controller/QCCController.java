@@ -28,6 +28,15 @@ public class QCCController extends BaseController{
 
     @RequestMapping(value = "/getNames", method = RequestMethod.GET)
     public String getNames(@RequestParam("name")String name) {
+        logger.info("转码前："+name);
+        byte[] b= new byte[0];//用tomcat的格式（iso-8859-1）方式去读。
+        try {
+            b = name.getBytes("ISO-8859-1");
+            String str=new String(b,"utf-8");
+            logger.info("转成utf8:",str);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String encodeName = null;
         try {
             encodeName = URLDecoder.decode(name, "UTF-8");
