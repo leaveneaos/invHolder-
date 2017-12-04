@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 /**
  * Created by wangyahui on 2017/11/27 0027.
  * 企查查API
@@ -25,8 +28,15 @@ public class QCCController extends BaseController{
 
     @RequestMapping(value = "/getNames", method = RequestMethod.GET)
     public String getNames(@RequestParam("name")String name) {
-        logger.info("输入的参数为："+name);
-        String result =qccUtils.getQccSearch(name);
+        String encodeName = null;
+        try {
+            encodeName = URLDecoder.decode(name, "UTF-8");
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        logger.info("输入的参数为："+encodeName);
+        String result =qccUtils.getQccSearch(encodeName);
         logger.info("输出为："+result);
         return result;
     }
