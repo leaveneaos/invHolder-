@@ -104,7 +104,7 @@
         <form class="mui-input-group">
             <div class="mui-input-row">
                 <label>购方名称</label>
-                <input type="text" id="gfmc" class="mui-input-clear" placeholder="填写准确的抬头名称">
+                <input type="text" id="gfmc" class="mui-input-clear" placeholder="填写准确的抬头名称" onkeyup="query()">
             </div>
             <div class="mui-input-row">
                 <label>购方税号</label>
@@ -154,8 +154,26 @@
 <button type="button" class="mui-btn mui-btn-primary mui-btn-block" onclick="fn()">一键开票</button>
 
 <script src="../js/jquery.min.js"></script>
+<script src="../js/jquery-ui.js"></script>
 <script src="../js/mui.min.js"></script>
+<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+<link rel="stylesheet" href="../css/jquery-ui.css">
 <script type="text/javascript">
+    // 模糊查询
+    function query(){
+        var param = "../companyInfo/getNames?name="+$("#gfmc").val();
+        $("#gfmc").autocomplete({
+            minLength: 1,
+            source:param,
+            select: function( event, ui ) {
+                var txt = ui.item.label;
+                var index = txt.indexOf("|");
+                var taxNo = txt.substring(index + 1, txt.length);
+                $("#gfsh").val(taxNo);
+            }
+        });
+    }
+
     // 模态框
     function showMask(){    
         $("#mask").css("height",$(document).height());     
