@@ -23,7 +23,7 @@ public class QCCController extends BaseController{
     @Autowired
     private QCCUtils qccUtils;
 
-    @RequestMapping(value = "/getNames", method = RequestMethod.GET)
+    @RequestMapping(value = "/getNames", method = RequestMethod.POST)
     public String getNames(@RequestParam("name")String name) {
         logger.info("输入的参数为："+name);
         String result =qccUtils.getQccSearch(name);
