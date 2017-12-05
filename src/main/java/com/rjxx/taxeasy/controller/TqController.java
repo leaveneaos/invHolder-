@@ -118,6 +118,7 @@ public class TqController extends BaseController{
             result.put("gsdm",kplsList.get(i).getGsdm());
             result.put("serialorder",kplsList.get(i).getSerialorder());
             request.getSession().setAttribute("serialorder",kplsList.get(i).getSerialorder());
+            result.put("orderTime",kplsList.get(i).getKprq2());
             String tqm="";
             /*if(kplsList.get(i).getTqm()!=null && !kplsList.get(i).getTqm().equals("")){
                 tqm=kplsList.get(i).getTqm();
