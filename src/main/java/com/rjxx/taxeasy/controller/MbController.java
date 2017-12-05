@@ -270,7 +270,7 @@ public class MbController extends BaseController {
                             return;
                         }
                         //如果是多张的话，只能领取第一张
-                        String redirectUrl = request.getContextPath() + "/smtq/" + "xfp.html?_t=" + System.currentTimeMillis();
+                        String redirectUrl = request.getContextPath() + "/CO/" + "dzfpxq.html?_t=" + System.currentTimeMillis();
                         if (AlipayUtils.isAlipayBrowser(request)) {
                             redirectUrl += "&isAlipay=true";
                         }
