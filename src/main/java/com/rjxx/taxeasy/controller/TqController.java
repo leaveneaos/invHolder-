@@ -106,7 +106,7 @@ public class TqController extends BaseController{
             String openid = (String) session.getAttribute("openid");
             List<Fpcxvo> kplsList = (List) request.getSession().getAttribute("kplsList");
             if(i>kplsList.size()){
-                result.put("msg","0");
+                result.put("msg","2");
                 return result;
             }
             String pdfdz = kplsList.get(i).getPdfurl().replace(".pdf",".jpg");
@@ -119,11 +119,20 @@ public class TqController extends BaseController{
             result.put("serialorder",kplsList.get(i).getSerialorder());
             request.getSession().setAttribute("serialorder",kplsList.get(i).getSerialorder());
             String tqm="";
-            if(kplsList.get(i).getTqm()!=null && !kplsList.get(i).getTqm().equals("")){
+            /*if(kplsList.get(i).getTqm()!=null && !kplsList.get(i).getTqm().equals("")){
                 tqm=kplsList.get(i).getTqm();
             }else if(kplsList.get(i).getKhh()!=null && !kplsList.get(i).getKhh().equals("")){
                 tqm=kplsList.get(i).getKhh();
+            }*/
+            if(null!=request.getSession().getAttribute("tqm")){
+                tqm=request.getSession().getAttribute("tqm").toString();
+            }else if(null !=request.getSession().getAttribute("khh")){
+                tqm=request.getSession().getAttribute("khh").toString();
+            }else {
+                result.put("msg","2");
+                return result;
             }
+            result.put("orderNo",tqm);
             boolean b = wechatFpxxService.InFapxx(tqm, kplsList.get(i).getGsdm(), tqm,
                     "", "2", openid, "", kplsList.get(i).getKplsh().toString(), request);
             if(!b){

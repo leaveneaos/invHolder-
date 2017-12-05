@@ -94,33 +94,35 @@
                 "i" : i
 			},
             function(data) {
-                	if(data.msg!=null&&data.msg=="0"){
-                        redirect("没有找到发票信息，请重试！");
-					}else if(data.msg!=null&&data.msg=="1"){
-                        redirect("微信插卡失败，请稍后再试！");
-					}
-
-                var pdfdzs = data.pdfdzs;
+					if (data.msg != null && data.msg == "0") {
+						redirect("没有找到发票信息，请重试！");
+					} else if (data.msg != null && data.msg == "1") {
+						redirect("微信插卡失败，请稍后再试！");
+					} else if (data.msg != null && data.msg == "2") {
+						redirect("会话已过期，请重试！");
+					} else {
+					var pdfdzs = data.pdfdzs;
 					orderNo = data.orderNo;
 					price = data.price;
 					orderTime = data.kprq;
-				var	serialorder = data.serialorder;
+					var serialorder = data.serialorder;
 
-                if (serialorder != null && serialorder != "") {
-                    var  pdfdz = pdfdzs.split(",");
-                    $.each(
-                        pdfdz,
-                        function(n, value) {
-                            $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-                        }
-                    );
-                } else {
-                        redirect("没有找到发票信息，请重试！");
-                    }
+					if (serialorder != null && serialorder != "") {
+						var pdfdz = pdfdzs.split(",");
+						$.each(
+							pdfdz,
+							function (n, value) {
+								$("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+							}
+						);
+					} else {
+						redirect("没有找到发票信息，请重试！");
+					}
+				}
             }
         );
 
-        $('#you').click(function() {
+        $('.yx').click(function() {
              window.location.href = "../youxiang1.html?&&_t=" + new Date().getTime();
         });
         //支付宝归入发票管家
