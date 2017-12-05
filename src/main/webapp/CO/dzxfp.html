@@ -71,12 +71,12 @@
     var isWeixin = ua.indexOf('micromessenger') != -1;
     var isAlipay = ua.indexOf('alipay') != -1;
     if(isWeixin){
-        $("#fpj").css('display',"");
-        $("#zfb").css('display','none');
+        $(".wx").css('display',"");
+        $(".zfb").css('display','none');
     }
     if(isAlipay){
-        $("#fpj").css('display','none');
-        $("#zfb").css('display',"");
+        $(".wx").css('display','none');
+        $(".zfb").css('display',"");
     }
     orderNo = null;
     price = null;
@@ -125,13 +125,13 @@
         });
         //支付宝归入发票管家
         if(isAlipay){
-            $("#zfb").click(function () {
+            $(".zfb").click(function () {
                 window.location = "../syncAlipay?_t=" + (new Date()).getTime();
             });
 		}
 		//微信归入卡包
         if(isWeixin){
-            $('#fpj').click(function() {
+            $('.wx').click(function() {
                 if(null == orderNo|| null == price || null == orderTime){
                     window.location.href = "../smtq/demo.html?time=" + new Date().getTime();
                 }
