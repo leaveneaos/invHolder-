@@ -471,6 +471,8 @@ public class MbController extends BaseController {
                                 if("00".equals(fpztdm)&& org.apache.commons.lang.StringUtils.isNotBlank(pdfurl)&& org.apache.commons.lang.StringUtils.isNotBlank(fphm)){
                                     result.put("url",pdfurl);
                                     result.put("num","16");
+                                    request.getSession().setAttribute("tqm",tqms);
+                                    request.getSession().setAttribute("gsdm","ubm");
                                     return result;
                                 }else {
                                     result.put("num","15");
@@ -549,6 +551,8 @@ public class MbController extends BaseController {
                     result.put("num","2");
                     result.put("tqm",tqms);
                     result.put("gsdm",gsdm);
+                    request.getSession().setAttribute("tqm",tqms);
+                    request.getSession().setAttribute("gsdm",gsdm);
                     Tqjl tqjl = new Tqjl();
                     tqjl.setDjh((String.valueOf(list.get(0).getDjh())));
                     tqjl.setJlly("1");
@@ -1038,7 +1042,7 @@ public class MbController extends BaseController {
         params.put("yx", yx);
 
         boolean flag = false;
-        List<Kpls> kplsList = kplsService.findAll(params);
+        List<Kpls> kplsList = kplsService.findBySerialorder(params);
         params.put("djh",kplsList.get(0).getDjh());
         Jyls jyls = jylsService.findOne(params);
         List<String> pdfUrlList = new ArrayList<>();

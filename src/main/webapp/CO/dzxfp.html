@@ -16,10 +16,6 @@
 	<!-- App自定义的css -->
 	<link rel="stylesheet" type="text/css" href="../css/app.css" />
 	<style type="text/css">
-		.mui-grid-view.mui-grid-9 .mui-table-view-cell {
-			border: none;
-			border: 0;
-		}
 		.btoTip{
 			font-size: 13px;
 			white-space: nowrap;
@@ -37,8 +33,6 @@
 	<section class="main">
 		<div class="topName">
 			泰易电子发票
-		</div>
-		<div class="middle" id="parentIndustryUL">
 		</div>
 		<div class=" btoTip">
 			<a href="../youxiang1.html" class="yx">
@@ -59,6 +53,8 @@
 				</svg>
 				<span>支付宝</span>
 			</a>
+		</div>
+		<div class="middle" id="parentIndustryUL">
 		</div>
 	</section>
 	<footer>
@@ -91,28 +87,34 @@
         window.location.assign(encodeURI(myurl));
     }
     $(function() {
-        var s = location.href.split('?')[1].split('&')[0].split('=')[1];
+        var i = location.href.split('?')[1].split('&')[0].split('=')[1];
         $.post(
             "../tq/dzxfpxx",
             {
-                "djh" : s
+                "i" : i
 			},
             function(data) {
                 	if(data.msg!=null&&data.msg=="0"){
                         redirect("没有找到发票信息，请重试！");
+					}else if(data.msg!=null&&data.msg=="1"){
+                        redirect("微信插卡失败，请稍后再试！");
 					}
+
+                var pdfdzs = data.pdfdzs;
 					orderNo = data.orderNo;
 					price = data.price;
 					orderTime = data.kprq;
-                    if (data.kpls != null && data.kpls != "") {
-                      //var  pdfdz = pdfdzs.split(",");
-                      //  $.each(
-                      //      pdfdz,
-                       //     function(n, value) {
-                                $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + data.pdfdz + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
-                        //    }
-                        //);
-                    } else {
+				var	serialorder = data.serialorder;
+
+                if (serialorder != null && serialorder != "") {
+                    var  pdfdz = pdfdzs.split(",");
+                    $.each(
+                        pdfdz,
+                        function(n, value) {
+                            $("#parentIndustryUL").append("<div style='width: 100%;float: left;'><img src='" + value + "' data-preview-src='' data-preview-group='1' style='width: 100%;'/></div>");
+                        }
+                    );
+                } else {
                         redirect("没有找到发票信息，请重试！");
                     }
             }

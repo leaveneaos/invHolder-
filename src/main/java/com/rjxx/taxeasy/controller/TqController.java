@@ -1,8 +1,22 @@
 package com.rjxx.taxeasy.controller;
+import com.alibaba.fastjson.JSON;
+import com.rjxx.taxeasy.bizcomm.utils.InvoiceQueryUtil;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.domains.Jyls;
+import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.service.JylsService;
+import com.rjxx.taxeasy.service.KplsService;
+import com.rjxx.taxeasy.vo.Fpcxvo;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -12,6 +26,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/tq")
 public class TqController extends BaseController{
+
+
+    @Autowired
+    private InvoiceQueryUtil invoiceQueryUtil;
+    @Autowired
+    private KplsService kplsService;
+    @Autowired
+    private JylsService jylsService;
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
 
     @RequestMapping
     @ResponseBody
@@ -27,5 +51,86 @@ public class TqController extends BaseController{
             response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
             return;
         }
+    }
+
+
+    /**
+     * 获取发票信息
+     * @return
+     */
+    @RequestMapping(value = "/fpxx")
+    @ResponseBody
+    public Map tjsession() {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if(null!=request.getSession().getAttribute("khh")){
+            String khh= request.getSession().getAttribute("khh").toString();
+            String gsdm= request.getSession().getAttribute("gsdm").toString();
+            List<Fpcxvo> invoiceListByKhh = invoiceQueryUtil.getInvoiceListByKhh(gsdm,khh);
+            if(invoiceListByKhh.size()==0){
+                result.put("msg","0");
+                return result;
+            }
+            result.put("khh", request.getSession().getAttribute("khh"));
+            result.put("kplsList",invoiceListByKhh);
+            request.getSession().setAttribute("kplsList",invoiceListByKhh);
+        }else if(null!=request.getSession().getAttribute("tqm")){
+            String tqm = request.getSession().getAttribute("tqm").toString();
+            String gsdm= request.getSession().getAttribute("gsdm").toString();
+            List<Fpcxvo> invoiceListBytqm = invoiceQueryUtil.getInvoiceListBytqm(gsdm, tqm);
+            if(invoiceListBytqm.size()==0){
+                result.put("msg","0");
+                return result;
+            }
+            result.put("kplsList",invoiceListBytqm);
+            result.put("tqm", request.getSession().getAttribute("tqm"));
+            request.getSession().setAttribute("kplsList",invoiceListBytqm);
+        }else {
+            result.put("msg","0");
+        }
+        return result;
+    }
+
+    /**
+     * 获取发票信息PDF
+     * @param i
+     * @return
+     */
+    @RequestMapping(value = "/dzxfpxx")
+    @ResponseBody
+    public Map dzxfpxx(Integer i){
+        Map<String, Object> result = new HashMap<String, Object>();
+        if(i == null){
+            result.put("msg","0");
+            return result;
+        }else {
+            String openid = (String) session.getAttribute("openid");
+            List<Fpcxvo> kplsList = (List) request.getSession().getAttribute("kplsList");
+            if(i>kplsList.size()){
+                result.put("msg","0");
+                return result;
+            }
+            String pdfdz = kplsList.get(i).getPdfurl().replace(".pdf",".jpg");
+            result.put("pdfdzs",pdfdz);
+            result.put("kpls",kplsList);
+            //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            result.put("kprq",kplsList.get(i).getKprq());
+            result.put("price",kplsList.get(i).getJshj());
+            result.put("gsdm",kplsList.get(i).getGsdm());
+            result.put("serialorder",kplsList.get(i).getSerialorder());
+            request.getSession().setAttribute("serialorder",kplsList.get(i).getSerialorder());
+            String tqm="";
+            if(kplsList.get(i).getTqm()!=null && !kplsList.get(i).getTqm().equals("")){
+                tqm=kplsList.get(i).getTqm();
+            }else if(kplsList.get(i).getKhh()!=null && !kplsList.get(i).getKhh().equals("")){
+                tqm=kplsList.get(i).getKhh();
+            }
+            boolean b = wechatFpxxService.InFapxx(tqm, kplsList.get(i).getGsdm(), tqm,
+                    "", "2", openid, "", kplsList.get(i).getKplsh().toString(), request);
+            if(!b){
+                result.put("msg","1");
+                return result;
+            }
+        }
+        return result;
     }
 }

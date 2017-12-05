@@ -95,9 +95,11 @@
 				function(data) {
 					if (data.num == 2) {
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-                            window.location.href("mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date().getTime());
+//                            window.location.href="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date().getTime();
+                            window.location.href="CO/dzfpxq.html?time=" + new Date().getTime();
                         }else{
-                            window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date().getTime();
+//                            window.location.href ="mbxfp.html?gsdm="+data.gsdm+"&&tqm="+khh+"&&time=" + new Date().getTime();
+                            window.location.href="CO/dzfpxq.html?time=" + new Date().getTime();
                         }
 					} else if (data.num == 6) {
                         firm = "您提取的申请已提交,我们正在处理,请稍等!";

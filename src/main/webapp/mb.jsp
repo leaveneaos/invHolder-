@@ -29,10 +29,10 @@
 			text-decoration:none;
 			color:#000000;
 		}
-		#date{
+		/*#date{
 			text-decoration:none;
 			color:#000000;
-		}
+		}*/
 	</style>
 </head>
 <body id="index" onload="load()">
@@ -44,7 +44,7 @@
 	
 	<section class="data-tip">
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您对<a id="us">我们</a>
-		的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。<a id="date">请在11月30日之前申请电子发票</a>
+		的支持,自2017年8月1日起我们将提供"增值税电子普通发票",电子发票与纸质发票具有同等法律效力,请输入收款收据上提供的发票提取码,及时获得电子发票。<%--<a id="date">请在11月30日之前申请电子发票</a>--%>
 	</section>
 
 	<section>
@@ -105,10 +105,10 @@
                 $("#logo").attr("src", "images/" + gsdm + ".png");
                 if(gsdm=="ubm"){
                     $("#tqm").attr("placeholder", "点击此输入条形码");
-                    $("#Button1").attr("disabled","disabled");
+//                    $("#Button1").attr("disabled","disabled");
                 }else {
                     $("#tqm").attr("placeholder", "点击此输入发票提取码");
-                    $("#date").css("display","none");
+//                    $("#date").css("display","none");
 				}
 			}
             $.post(
@@ -171,9 +171,11 @@
                         loadimage();
 					}else if (data.num == 2) {
                         if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) ){
-                                window.location.href= "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date().getTime();
+                            window.location.href="CO/dzfpxq.html?time=" + new Date().getTime();
+//                            window.location.href= "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date().getTime();
                         }else{
-                                window.location.href = "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date().getTime();
+                            window.location.href="CO/dzfpxq.html?time=" + new Date().getTime();
+//                            window.location.href= "mbxfp.html?gsdm="+data.gsdm+"&&tqm="+tqm+"&&time=" + new Date().getTime();
 						}
 					}else if (data.num == 4) {
                         loadimage();
@@ -211,8 +213,9 @@
                         $('#cwts').css('opacity','0');
                         loadimage();
                     }else if(data.num==16){
-                        myurl=data.url;
-                        window.location.assign(encodeURI(myurl));
+                        //myurl=data.url;
+                        //window.location.assign(encodeURI(myurl));
+                        window.location.href="CO/dzfpxq.html?time=" + new Date().getTime();
 					}else if(data.num==20){
                         redirectUrl = data.redirectUrl;
                         window.location.assign(redirectUrl);
