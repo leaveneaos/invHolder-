@@ -194,14 +194,6 @@ public class SsdController extends BaseController{
     @ResponseBody
     public Map xfp(String khh, String gsdm,String month) {
         Map result=new HashMap();
-        try {
-            if(null==khh||null==gsdm||month==null){
-                response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=您的会话已过期，请重新扫码");
-                return null;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         String openid = (String) session.getAttribute("openid");
         Map map = new HashMap<>();
         map.put("khh", khh);

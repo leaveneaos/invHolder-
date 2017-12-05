@@ -173,7 +173,7 @@ public class TijiaoController extends BaseController {
             result.put("session","outoftime");
             return result;
         }
-        List<Kpls> kplsList = kplsService.findAll(params);
+        List<Kpls> kplsList = kplsService.findBySerialorder(params);
         params.put("djh",kplsList.get(0).getDjh());
         Jyls jyls = jylsService.findOne(params);
         List<String> pdfUrlList = new ArrayList<>();
@@ -211,7 +211,7 @@ public class TijiaoController extends BaseController {
 
         boolean flag = false;
         Jyls jyls = jylsService.findOne(params);
-        List<Kpls> kplsList = kplsService.findAll(params);
+        List<Kpls> kplsList = kplsService.findBySerialorder(params);
         List<String> pdfUrlList = new ArrayList<>();
         for (Kpls kpls : kplsList) {
             pdfUrlList.add(kpls.getPdfurl());
