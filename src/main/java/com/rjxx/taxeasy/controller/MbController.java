@@ -444,12 +444,12 @@ public class MbController extends BaseController {
         String opendid = (String) session.getAttribute("openid");
         String tqms =tqm.trim();
         Map<String, Object> result = new HashMap<String, Object>();
-        if(tqm==null || code==null||gsdm==null){
+        if(tqm==null){
             result.put("num","4");
             return result;
         }
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            if("ubm".equals(gsdm)){
+            if("ubm".equals(gsdm)||"fj".equals(gsdm)){
                 try{
                     Map<String, Object> params = new HashMap<>();
                     params.put("tqm",tqms);
@@ -472,7 +472,7 @@ public class MbController extends BaseController {
                                     result.put("url",pdfurl);
                                     result.put("num","16");
                                     request.getSession().setAttribute("tqm",tqms);
-                                    request.getSession().setAttribute("gsdm","ubm");
+                                    request.getSession().setAttribute("gsdm",gsdm);
                                     return result;
                                 }else {
                                     result.put("num","15");
@@ -1183,6 +1183,29 @@ public class MbController extends BaseController {
             param.put("gfyhzh",gfyhzh);
             param.put("email",email);
             param.put("sffsyj","1");
+            String openid = String.valueOf(request.getSession().getAttribute("openid"));
+            String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
+            if(AlipayUtils.isAlipayBrowser(request)){
+                param.put("sjly","5");
+                param.put("openid",userId);
+                //jyxxsq.setOpenid(userId);
+                //jyxxsq.setSjly("5");//数据来源--支付宝
+            }else if(WeixinUtils.isWeiXinBrowser(request)){
+                param.put("sjly","5");
+                param.put("openid",openid);
+                //jyxxsq.setOpenid(openid);
+                //jyxxsq.setSjly("4");//数据来源--微信
+            }else {
+                param.put("sjly","6");
+                //jyxxsq.setSjly("6");//数据来源 --其他浏览器
+            }
+            if(null!=gfsh.trim()&&!"".equals(gfsh.trim())){
+                //jyxxsq.setGflx("1");
+                param.put("gflx","1");
+            }else {
+                //jyxxsq.setGflx("0");
+                param.put("gflx","0");
+            }
             jyxxsqService.updateGfxx(param);
             //交易信息
             Map paramss = new HashMap();
