@@ -156,17 +156,49 @@ public class BaseClController extends BaseController {
             String type = request.getSession().getAttribute("type").toString();
             if(type!=null&&type.equals("test")){
                 logger.info("全家测试盘test开票----");
+                String opendid = (String) session.getAttribute("openid");
+                String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
+                if(!WeixinUtils.isWeiXinBrowser(request)){
+                    request.getSession().setAttribute("msg", "请用微信扫码开票!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
                 String mdh="family_test";
                 String orderNo="RJ"+System.currentTimeMillis();
                 String price="10.0";
                 String tqm=orderNo;
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
                 String orderTime = sdf.format(new Date());
-                String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                        + "=" + mdh + "=" + orderNo + "=" + price + "=" + orderTime + "=" + tqm;
-                logger.info("---测试跳转地址"+redirectUrl);
-                response.sendRedirect(redirectUrl);
-                return;
+                Map map = new HashMap<>();
+                map.put("tqm", tqm);
+                map.put("gsdm", gsxx.getGsdm());
+                Jyls jyls = jylsService.findOne(map);
+                List<Kpls> list = jylsService.findByTqm(map);
+                if(list.size() > 0){
+                    boolean b = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, "", "2", opendid, userId, list.get(0).getKplsh().toString(), request);
+                    if(!b){
+                        request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+                    response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+                    return;
+                }else if (null != jyls && null != jyls.getDjh()) {
+                    response.sendRedirect(request.getContextPath() + "/Family/witting.html?_t=" + System.currentTimeMillis());
+                    return;
+                }else {
+                    boolean b = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, "", "1", opendid, userId, "", request);
+                    if (!b) {
+                        request.getSession().setAttribute("msg", "保存发票信息失败，请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return;
+                    }
+                    String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
+                            + "=" + mdh + "=" + orderNo + "=" + price + "=" + orderTime + "=" + tqm;
+                    logger.info("---测试跳转地址"+redirectUrl);
+                    response.sendRedirect(redirectUrl);
+                    return;
+                }
             }
             if (null==state) {
                 response.sendRedirect(request.getContextPath() + "/Family/qj.html?_t=" + System.currentTimeMillis());
