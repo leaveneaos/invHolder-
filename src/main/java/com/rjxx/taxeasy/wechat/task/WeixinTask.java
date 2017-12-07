@@ -413,8 +413,8 @@ public class WeixinTask implements Runnable{
         jymxsq2.setYkjje(0.0);
         jymxsq2.setYxbz("1");
         jymxsqList.add(jymxsq2);
-        Jyzfmx jyzfmx = new Jyzfmx();
-        jyzfmxList.add(jyzfmx);
+        //Jyzfmx jyzfmx = new Jyzfmx();
+        //jyzfmxList.add(jyzfmx);
         resultSjMap.put("jyxxsqList",jyxxsqList);
         resultSjMap.put("jymxsqList",jymxsqList);
         resultSjMap.put("jyzfmxList",jyzfmxList);
