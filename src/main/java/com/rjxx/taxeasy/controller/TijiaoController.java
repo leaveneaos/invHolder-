@@ -246,7 +246,7 @@ public class TijiaoController extends BaseController {
      * @return
      * @throws Exception
      */
-    private static String getAFMailContent(String ddh, List<String> pdfUrlList, String gsdm) throws Exception {
+   /* private static String getAFMailContent(String ddh, List<String> pdfUrlList, String gsdm) throws Exception {
         StringBuffer sb = new StringBuffer();
         // sb.append(null2Wz(iurb.get("BUYER_NAME")));
         sb.append(" 先生/小姐您好：<br/>");
@@ -265,12 +265,12 @@ public class TijiaoController extends BaseController {
         Date d = new Date();
         sb.append(1900 + d.getYear()).append("年").append(d.getMonth() + 1).append("月").append(d.getDate()).append("日");
         return sb.toString();
-    }
+    }*/
 
     // 判空
-    private static Object null2Wz(Object s) {
+    /*private static Object null2Wz(Object s) {
         return s == null || "".equals(s) ? "未知" : s;
-    }
+    }*/
 
     /**
      * 发送邮件

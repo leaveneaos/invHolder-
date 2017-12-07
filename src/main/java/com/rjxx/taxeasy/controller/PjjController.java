@@ -3,6 +3,7 @@ package com.rjxx.taxeasy.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.comm.mybatis.Pagination;
 import com.rjxx.taxeasy.bizcomm.utils.DataOperte;
+import com.rjxx.taxeasy.bizcomm.utils.SendEmailNewService;
 import com.rjxx.taxeasy.bizcomm.utils.SendalEmail;
 import com.rjxx.taxeasy.bizcomm.utils.WxUtil;
 import com.rjxx.taxeasy.comm.BaseController;
@@ -84,6 +85,9 @@ public class PjjController extends BaseController {
 
     @Autowired
     private WxUtil wxUtil;
+
+    @Autowired
+    private SendEmailNewService sendEmailNewService;
 
     @Value("${emailHost}")
     private String emailHost;
@@ -522,9 +526,9 @@ public class PjjController extends BaseController {
     /**
      * 保存邮寄信息
      *
-     * @param chk1
-     * @param chk2
-     * @param texterea
+     * @param
+     * @param
+     * @param
      * @return
      */
     @RequestMapping(value = "/saveYjxx")
@@ -567,9 +571,9 @@ public class PjjController extends BaseController {
     /**
      * 保存自提信息
      *
-     * @param chk1
-     * @param chk2
-     * @param texterea
+     * @param
+     * @param
+     * @param
      * @return
      */
     @RequestMapping(value = "/saveZtxx")
@@ -638,9 +642,9 @@ public class PjjController extends BaseController {
     /**
      * 获取可自提的开票点
      *
-     * @param chk1
-     * @param chk2
-     * @param texterea
+     * @param
+     * @param
+     * @param
      * @return
      */
     @RequestMapping(value = "/getKpd")
@@ -713,7 +717,7 @@ public class PjjController extends BaseController {
     /**
      * 添加到发票夹
      *
-     * @param unionid
+     * @param
      * @return
      */
     @RequestMapping(value = "/saveFpj")
@@ -1095,7 +1099,7 @@ public class PjjController extends BaseController {
     /**
      * 获取微信用户信息
      *
-     * @param apiurl
+     * @param
      * @param openid
      * @param access_token
      * @return
@@ -1151,7 +1155,7 @@ public class PjjController extends BaseController {
      * @return
      * @throws Exception
      */
-    private static String getAFMailContent(String ddh, List<String> pdfUrlList, String xfmc) throws Exception {
+    /*private static String getAFMailContent(String ddh, List<String> pdfUrlList, String xfmc) throws Exception {
         StringBuffer sb = new StringBuffer();
         // sb.append(null2Wz(iurb.get("BUYER_NAME")));
         sb.append(" 先生/小姐您好：<br/>");
@@ -1171,12 +1175,12 @@ public class PjjController extends BaseController {
         Date d = new Date();
         sb.append(1900 + d.getYear()).append("年").append(d.getMonth() + 1).append("月").append(d.getDate()).append("日");
         return sb.toString();
-    }
+    }*/
 
     // 判空
-    private static Object null2Wz(Object s) {
+    /*private static Object null2Wz(Object s) {
         return s == null || "".equals(s) ? "未知" : s;
-    }
+    }*/
 
     /**
      * 发送邮件
@@ -1188,7 +1192,8 @@ public class PjjController extends BaseController {
      * @throws Exception
      */
     public void sendMail(String ddh, String email, List<String> pdfUrlList, String xfmc, String djh, String gsdm) throws Exception {
-        se.sendEmail(djh, gsdm, email, "发票夹", djh, getAFMailContent(ddh, pdfUrlList, xfmc), "电子发票");
+        //se.sendEmail(djh, gsdm, email, "发票夹", djh, getAFMailContent(ddh, pdfUrlList, xfmc), "电子发票");
+        se.sendEmail(djh, gsdm, email, "发票夹", djh, sendEmailNewService.getNewMailContent(ddh,pdfUrlList,xfmc,gsdm), "电子发票");
 
         Thread.sleep(5000);
     }

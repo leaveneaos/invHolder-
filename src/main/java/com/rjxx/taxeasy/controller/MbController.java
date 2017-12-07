@@ -115,6 +115,9 @@ public class MbController extends BaseController {
     @Autowired
     private wechatFpxxServiceImpl wechatFpxxService;
 
+    @Autowired
+    private SendEmailNewService sendEmailNewService;
+
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
     public static final String GET_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token";
@@ -1079,7 +1082,8 @@ public class MbController extends BaseController {
      * @throws Exception
      */
     public void sendMail(String ddh, String email, List<String> pdfUrlList, String xfmc, String djh, String gsdm) throws Exception {
-        se.sendEmail(djh, gsdm, email, "发票提取", djh, getAFMailContent(ddh, pdfUrlList, xfmc), "电子发票");
+        //se.sendEmail(djh, gsdm, email, "发票提取", djh, getAFMailContent(ddh, pdfUrlList, xfmc), "电子发票");
+        se.sendEmail(djh, gsdm, email, "发票提取", djh, sendEmailNewService.getNewMailContent(ddh,pdfUrlList,xfmc,gsdm), "电子发票");
         // TODO 这里需要根据邮件摸板内容进行调整。
 
         // XXX 先生/小姐您好：
@@ -1123,7 +1127,7 @@ public class MbController extends BaseController {
      * @return
      * @throws Exception
      */
-    private static String getAFMailContent(String ddh, List<String> pdfUrlList, String gsdm) throws Exception {
+   /* private static String getAFMailContent(String ddh, List<String> pdfUrlList, String gsdm) throws Exception {
         StringBuffer sb = new StringBuffer();
         // sb.append(null2Wz(iurb.get("BUYER_NAME")));
         sb.append(" 先生/小姐您好：<br/>");
@@ -1142,7 +1146,7 @@ public class MbController extends BaseController {
         Date d = new Date();
         sb.append(1900 + d.getYear()).append("年").append(d.getMonth() + 1).append("月").append(d.getDate()).append("日");
         return sb.toString();
-    }
+    }*/
 
     /**
      * 提取开票
@@ -1243,8 +1247,8 @@ public class MbController extends BaseController {
 
 
     // 判空
-    private static Object null2Wz(Object s) {
+   /* private static Object null2Wz(Object s) {
         return s == null || "".equals(s) ? "未知" : s;
-    }
+    }*/
 
 }
