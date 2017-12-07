@@ -153,6 +153,21 @@ public class BaseClController extends BaseController {
             /**
              * 如果q参数为空则跳转到发票提取页面
              */
+            String type = request.getSession().getAttribute("type").toString();
+            if(type!=null&&type.equals("test")){
+                logger.info("全家测试盘test开票----");
+                String mdh="family_test";
+                String orderNo="RJ"+System.currentTimeMillis();
+                String price="10.0";
+                String tqm=orderNo;
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String orderTime = sdf.format(new Date());
+                String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
+                        + "=" + mdh + "=" + orderNo + "=" + price + "=" + orderTime + "=" + tqm;
+                logger.info("---测试跳转地址"+redirectUrl);
+                response.sendRedirect(redirectUrl);
+                return;
+            }
             if (null==state) {
                 response.sendRedirect(request.getContextPath() + "/Family/qj.html?_t=" + System.currentTimeMillis());
                 return;
