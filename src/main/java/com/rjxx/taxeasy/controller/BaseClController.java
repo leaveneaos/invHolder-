@@ -105,10 +105,13 @@ public class BaseClController extends BaseController {
     @ResponseBody
     public void index() throws Exception{
         String str = request.getParameter("q");
+        String type = request.getParameter("t");
         logger.info("参数q的值为"+str);
+        logger.info("参数q的值为"+type);
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","Family");
         request.getSession().setAttribute("gsdm","Family");
+        request.getSession().setAttribute("type",type);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
             gsxx.setWxappid(WeiXinConstants.APP_ID);
@@ -412,19 +415,25 @@ public class BaseClController extends BaseController {
         String sessionCode = (String) session.getAttribute("rand");
         String opendid = (String) session.getAttribute("openid");
         String gsdm = (String) session.getAttribute("gsdm");
+        String type = (String) session.getAttribute("type");
         Map<String, Object> result = new HashMap<String, Object>();
-        if(tqm==null || code ==null){
+        if(tqm==null){
             result.put("num","3");
             return result;
         }
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
+            if(type!=null){
+                tqm = type+tqm+IMEIGenUtils.genCode(tqm);
+                logger.info("type=001--------的提取码"+tqm);
+            }else {
+                if(!tqm.equals((tqm.substring(0,tqm.length()-1))+IMEIGenUtils.genCode(tqm.substring(0,tqm.length()-1)))){
+                    result.put("num","3");
+                    return result;
+                }
+            }
             Map map = new HashMap<>();
             map.put("tqm", tqm);
             map.put("gsdm", gsdm);
-            if(!tqm.equals((tqm.substring(0,tqm.length()-1))+IMEIGenUtils.genCode(tqm.substring(0,tqm.length()-1)))){
-                result.put("num","3");
-                return result;
-            }
             Jyls jyls = jylsService.findOne(map);
             List<Kpls> list = jylsService.findByTqm(map);
             if (list.size() > 0) {/*代表申请已完成开票,跳转最终开票页面*/

@@ -2,11 +2,11 @@ package com.rjxx.taxeasy.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjxx.taxeasy.bizcomm.utils.SendEmailNewService;
 import com.rjxx.taxeasy.bizcomm.utils.SendalEmail;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
-import com.rjxx.utils.MailUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -43,10 +43,10 @@ public class TijiaoController extends BaseController {
     private KplsService kplsService;
     @Autowired
     private SpfyxService spfyxService;
-	
 	@Autowired
 	private SendalEmail se;
-	
+	@Autowired
+    private SendEmailNewService sendEmailNewService;
     @Value("${emailHost}")
     private String emailHost;
     @Value("${emailUserName}")
@@ -282,7 +282,9 @@ public class TijiaoController extends BaseController {
      * @throws Exception
      */
     public void sendMail(String ddh, String email, List<String> pdfUrlList, String xfmc, String djh, String gsdm) throws Exception {
-    	 se.sendEmail(djh, gsdm, email, "发票提取", djh, getAFMailContent(ddh, pdfUrlList, xfmc), "电子发票");
+
+    	  //se.sendEmail(djh, gsdm, email, "发票提取", djh, getAFMailContent(ddh, pdfUrlList, xfmc), "电子发票");
+    	  se.sendEmail(djh, gsdm, email, "发票提取", djh, sendEmailNewService.getNewMailContent(ddh,pdfUrlList,xfmc,gsdm), "电子发票");
         // TODO 这里需要根据邮件摸板内容进行调整。
 
         // XXX 先生/小姐您好：
