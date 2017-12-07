@@ -139,6 +139,7 @@ public class ScanController extends BaseController {
                 String orderNo = result.get("orderNo").toString();
                 logger.warn("存入session时候orderNo="+orderNo);
                 session.setAttribute("orderNo", orderNo);
+                session.setAttribute("tqm", ppdm+orderNo);
                 List<String> status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 logger.info("status=",status);
                 if(status!=null&&status.size()>0){
@@ -177,11 +178,12 @@ public class ScanController extends BaseController {
                             return;
                         }
                         String serialOrder = status.get(0).split("[+]")[4];
-                        logger.info("跳转的url--"+request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                        //logger.info("跳转的url--"+request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
                         //有pdf对应的url
                         //response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis()
                         //        + "=" + sb.toString() + "=" + orderNo + "=" +je + "=" + orderTime);
-                        response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                        //response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
                         return;
                     }
                 }else{

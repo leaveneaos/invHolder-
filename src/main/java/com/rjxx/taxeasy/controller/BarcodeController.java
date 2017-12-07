@@ -36,10 +36,12 @@ public class BarcodeController extends BaseController {
     @RequestMapping("/{gsdm}")
     public void sm(@PathVariable(value = "gsdm") String gsdm, @RequestParam String q) {
         String ua = request.getHeader("user-agent").toLowerCase();
+        String type = request.getParameter("t");
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             session.setAttribute("gsdm", gsdm);
             session.setAttribute("q", q);
+            session.setAttribute("type", type);
             String url = HtmlUtils.getBasePath(request);
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "scan/getOpenid&" + "response_type=code&scope=snsapi_base&state=" +"state"
@@ -62,6 +64,7 @@ public class BarcodeController extends BaseController {
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
                 session.setAttribute("orderNo", orderNo);
+                session.setAttribute("tqm", ppdm+orderNo);
                 List<String> status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 if (status != null) {
                     if(status.contains("可开具")){
@@ -90,7 +93,8 @@ public class BarcodeController extends BaseController {
                         String serialOrder = status.get(0).split("[+]")[4];
                         session.setAttribute("serialorder", serialOrder);
                         //response.sendRedirect(request.getContextPath() + "/QR/scan.html?t=" + System.currentTimeMillis() + "="+sb.toString());
-                        response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                        //response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+                        response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
                         return;
                     }
                 } else {
