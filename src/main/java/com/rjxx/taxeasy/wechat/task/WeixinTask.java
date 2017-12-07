@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.wechat.task;
 
+import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
@@ -8,9 +9,7 @@ import com.rjxx.utils.weixin.WeixinUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-12-01.
@@ -51,6 +50,10 @@ public class WeixinTask implements Runnable{
 
     private BarcodeService barcodeService;
 
+    private XfService xfService;
+
+    private SkpService skpService;
+
     @Override
     public void run() {
         String gsdm = wxFpxx.getGsdm();
@@ -65,7 +68,12 @@ public class WeixinTask implements Runnable{
                 Map resultSjMap = new HashMap();
                 if("Family".equals(gsdm)){
                     logger.info("进入全家开票处理---------");
-                    resultSjMap = getDataService.getData(tqm, "Family");
+                    if(tqm.indexOf("RJ")<0){
+                        resultSjMap = getDataService.getData(tqm, "Family");
+                    }else {
+                        resultSjMap = sj(tqm);
+                        logger.info("进入测试开票----写死的封装的数据"+ JSON.toJSONString(resultSjMap));
+                    }
                 }else if("bqw".equals(gsdm)){
                     logger.info("波奇网开票-------");
                     Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
@@ -296,5 +304,121 @@ public class WeixinTask implements Runnable{
 
     public void setId(Thread id) {
         this.id = id;
+    }
+
+    public XfService getXfService() {
+        return xfService;
+    }
+
+    public void setXfService(XfService xfService) {
+        this.xfService = xfService;
+    }
+
+    public SkpService getSkpService() {
+        return skpService;
+    }
+
+    public void setSkpService(SkpService skpService) {
+        this.skpService = skpService;
+    }
+
+    private Map sj (String str){
+        Map resultSjMap = new HashMap();
+        List<Jyxxsq> jyxxsqList = new ArrayList();
+        List<Jymxsq> jymxsqList = new ArrayList();
+        List<Jyzfmx> jyzfmxList = new ArrayList<Jyzfmx>();
+        Xf x = new Xf();
+        x.setGsdm("Family");
+        x.setXfsh("500102010003643");
+        Xf xf = xfService.findOneByParams(x);
+        Map params=new HashMap();
+        params.put("xfid",687);
+        Skp skp=skpService.findOneByParams(params);
+        Jyxxsq jyxxsq= new Jyxxsq();
+        jyxxsq.setBz("交易小票号:10672360;商品折扣金额:0.00;支付折扣:0.00;店名:永新汇店");
+        jyxxsq.setClztdm("00");
+        jyxxsq.setDdh(str);
+        jyxxsq.setDdrq(new Date());
+        jyxxsq.setFpczlxdm("11");
+        jyxxsq.setFpzldm("12");
+        jyxxsq.setGsdm("Family");
+        jyxxsq.setHsbz("1");
+        jyxxsq.setJshj(19.9);
+        jyxxsq.setJylsh(str);
+        jyxxsq.setKpddm("family_test");
+        jyxxsq.setKpr(xf.getKpr());
+        jyxxsq.setLrry(95);
+        jyxxsq.setLrsj(new Date());
+        jyxxsq.setQjzk(0.0);
+        jyxxsq.setSjly("4");
+        jyxxsq.setSkr(xf.getSkr());
+        jyxxsq.setTqm(str);
+        jyxxsq.setXfdh(xf.getXfdh());
+        jyxxsq.setXfdz(xf.getXfdz());
+        jyxxsq.setXfid(xf.getId());
+        jyxxsq.setXfmc(xf.getXfmc());
+        jyxxsq.setXfsh("500102010003643");
+        jyxxsq.setXfyh(xf.getXfyh());
+        jyxxsq.setXfyhzh(xf.getXfyhzh());
+        jyxxsq.setFhr(xf.getFhr());
+        jyxxsq.setYkpjshj(0.0);
+        jyxxsq.setYxbz("1");
+        jyxxsq.setZsfs("0");
+        jyxxsqList.add(jyxxsq);
+
+        Jymxsq jymxsq1= new Jymxsq();
+        jymxsq1.setDdh(str);
+        jymxsq1.setFphxz("0");
+        jymxsq1.setGsdm("Family");
+        jymxsq1.setHsbz("1");
+        jymxsq1.setJshj(9.9);
+        jymxsq1.setKce(0.0);
+        jymxsq1.setKkjje(9.9);
+        jymxsq1.setLrry(95);
+        jymxsq1.setLrsj(new Date());
+        jymxsq1.setSpdj(9.9);
+        jymxsq1.setSpdm("1030203030000000000");
+        jymxsq1.setSpdw("");
+        jymxsq1.setSpje(9.9);
+        jymxsq1.setSpmc("综合寿司组合");
+        jymxsq1.setSpmxxh(1);
+        jymxsq1.setSps(1.0);
+        jymxsq1.setSpsl(0.17);
+        jymxsq1.setSpzxbm("20023409");
+        jymxsq1.setYhzcbs("0");
+        jymxsq1.setYkjje(0.0);
+        jymxsq1.setYxbz("1");
+        jymxsqList.add(jymxsq1);
+
+        Jymxsq jymxsq2= new Jymxsq();
+        jymxsq2.setDdh(str);
+        jymxsq2.setFphxz("0");
+        jymxsq2.setGsdm("Family");
+        jymxsq2.setHsbz("1");
+        jymxsq2.setJshj(10.0);
+        jymxsq2.setKce(0.0);
+        jymxsq2.setKkjje(10.0);
+        jymxsq2.setLrry(95);
+        jymxsq2.setLrsj(new Date());
+        jymxsq2.setSpdj(10.0);
+        jymxsq2.setSpdm("1030203030000000000");
+        jymxsq2.setSpdw("");
+        jymxsq2.setSpje(10.0);
+        jymxsq2.setSpmc("奥尔良手枪腿");
+        jymxsq2.setSpmxxh(2);
+        jymxsq2.setSps(1.0);
+        jymxsq2.setSpsl(0.17);
+        jymxsq2.setSpzxbm("20473235");
+        jymxsq2.setYhzcbs("0");
+        jymxsq2.setYkjje(0.0);
+        jymxsq2.setYxbz("1");
+        jymxsqList.add(jymxsq2);
+        Jyzfmx jyzfmx = new Jyzfmx();
+        jyzfmxList.add(jyzfmx);
+        resultSjMap.put("jyxxsqList",jyxxsqList);
+        resultSjMap.put("jymxsqList",jymxsqList);
+        resultSjMap.put("jyzfmxList",jyzfmxList);
+
+        return  resultSjMap;
     }
 }

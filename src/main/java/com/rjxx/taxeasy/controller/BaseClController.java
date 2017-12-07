@@ -165,7 +165,7 @@ public class BaseClController extends BaseController {
                 }
                 String mdh="family_test";
                 String orderNo="RJ"+System.currentTimeMillis();
-                String price="10.0";
+                String price="19.9";
                 String tqm=orderNo;
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
                 String orderTime = sdf.format(new Date());

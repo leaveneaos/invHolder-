@@ -68,6 +68,12 @@ public class WeiXinController extends BaseController {
     @Autowired
     private JyxxService jyxxService;
 
+    @Autowired
+    private XfService xfService;
+
+    @Autowired
+    private SkpService skpService;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${rjxx.pdf_file_url:}")
@@ -159,6 +165,8 @@ public class WeiXinController extends BaseController {
                     weixinTask.setKpspmxService(kpspmxService);
                     weixinTask.setPdf_file_url(pdf_file_url);
                     weixinTask.setBarcodeService(barcodeService);
+                    weixinTask.setXfService(xfService);
+                    weixinTask.setSkpService(skpService);
                     Thread thread = new Thread(weixinTask);
                     thread.start();
                     logger.info("----------回调的结束时间"+new Date());
