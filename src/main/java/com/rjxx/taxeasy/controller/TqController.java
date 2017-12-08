@@ -62,7 +62,8 @@ public class TqController extends BaseController{
     @ResponseBody
     public Map tjsession() {
         Map<String, Object> result = new HashMap<String, Object>();
-        if(null!=request.getSession().getAttribute("khh")){
+        if(null!=request.getSession().getAttribute("khh")&&(request.getSession().getAttribute("gsdm").equals("cmsc")
+          || request.getSession().getAttribute("gsdm").equals("hdsc")||request.getSession().getAttribute("gsdm").equals("shssts"))){
             String khh= request.getSession().getAttribute("khh").toString();
             String gsdm= request.getSession().getAttribute("gsdm").toString();
             List<Fpcxvo> invoiceListByKhh = invoiceQueryUtil.getInvoiceListByKhh(gsdm,khh);
@@ -122,19 +123,22 @@ public class TqController extends BaseController{
             request.getSession().setAttribute("serialorder",kplsList.get(i).getSerialorder());
             result.put("orderTime",kplsList.get(i).getKprq2());
             String tqm="";
-            /*if(kplsList.get(i).getTqm()!=null && !kplsList.get(i).getTqm().equals("")){
+            if(kplsList.get(i).getTqm()!=null && !kplsList.get(i).getTqm().equals("")){
                 tqm=kplsList.get(i).getTqm();
             }else if(kplsList.get(i).getKhh()!=null && !kplsList.get(i).getKhh().equals("")){
                 tqm=kplsList.get(i).getKhh();
-            }*/
-            if(null!=request.getSession().getAttribute("tqm")){
+            }else {
+                result.put("msg","2");
+                return result;
+            }
+            /*if(null!=request.getSession().getAttribute("tqm")){
                 tqm=request.getSession().getAttribute("tqm").toString();
             }else if(null !=request.getSession().getAttribute("khh")){
                 tqm=request.getSession().getAttribute("khh").toString();
             }else {
                 result.put("msg","2");
                 return result;
-            }
+            }*/
             String orderNo="";
             if(request.getSession().getAttribute("gsdm").equals("dicos")
                     ||request.getSession().getAttribute("gsdm").equals("chamate")){
