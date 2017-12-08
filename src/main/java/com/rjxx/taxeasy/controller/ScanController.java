@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
+import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -124,6 +125,10 @@ public class ScanController extends BaseController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+        String type = request.getSession().getAttribute("type").toString();
+        if(type!=null&&type.equals("test")){
+            logger.info("进入测试盘开票----");
         }
         String gsdm = session.getAttribute("gsdm").toString();
         String q = session.getAttribute("q").toString();
