@@ -133,8 +133,15 @@ public class TqController extends BaseController{
                 result.put("msg","2");
                 return result;
             }
-            result.put("orderNo",tqm);
-            boolean b = wechatFpxxService.InFapxx(tqm, kplsList.get(i).getGsdm(), tqm,
+            String orderNo="";
+            if(request.getSession().getAttribute("gsdm").equals("dicos")
+                    ||request.getSession().getAttribute("gsdm").equals("chamate")){
+                orderNo = request.getSession().getAttribute("orderNo").toString();
+            }else {
+                orderNo=tqm;
+            }
+            result.put("orderNo",orderNo);
+            boolean b = wechatFpxxService.InFapxx(tqm, kplsList.get(i).getGsdm(), orderNo,
                     "", "2", openid, "", kplsList.get(i).getKplsh().toString(), request);
             if(!b){
                 result.put("msg","1");
