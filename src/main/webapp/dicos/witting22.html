@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<title>正在开具</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<style type="text/css">
+		.content {
+			padding: 50px 0px 30px;
+			box-sizing: border-box;
+			font-size: 14px;
+		}
+		.content .kjz1 {
+			text-align: center;
+		}
+		.content .kjz2 {
+			text-align: center;
+		}
+		.content .kj {
+			width: 40%;
+		}
+		.content li{
+			text-align: left;
+			margin-left: 10%;
+			width: 85%;
+			font-weight: 400;
+		}
+		.content p{
+			font-size: 16px;
+			font-weight: 600;
+		}
+	</style>
+</head>
+<body>
+	<header style="text-align: center">
+		<img src="../dicos/logo/ycyz.png" style="width: 55%;margin-top: 3%;">
+	</header>
+	<section class="main" style="margin: 2px auto 30px;">
+		<div class="shadow1"></div>
+		<div class="shadow2"></div>
+		<div class="content">
+			<div class="kjz1">
+				<img class="kj" src='../images/kj.png'>
+				<p>发票开具中.....</p>
+				<li>开具时间受网络限制,请耐心等待</li>
+			</div>
+			<div class="ewm" style="margin-top: 3%;">
+				<img class="fl"  style="width: 100%;margin: 0 auto;" src="logo/ycyz_advert.png">
+			</div>
+			<div class="ewm" style="">
+				<img class="fl"  style="width: 50%" src="logo/ycyz_hy.png">
+				<img class="fl"  style="width: 50%" src="logo/ycyz_djq.png">
+			</div>
+		</div>
+
+	</section>
+	<footer>
+		<p class="company fl">泰易电子发票云服务平台</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+	</footer>
+	<script src="../js/jquery.min.js"></script>
+
+	<script type="text/javascript">
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+		function guanbi() {
+            window.close();
+            if(isWeixin){
+                WeixinJSBridge.call('closeWindow');
+            }if(isAlipay){
+                AlipayJSBridge.call('closeWebview');
+            }if(isUCBrowser){
+
+			}if(isSafari){
+
+			}
+        }
+//        $(function () {
+//            $.post(
+//                "../fm/qrxxsession",
+//                {},
+//                function (data) {
+//                    //alert(data.xfsh);
+//                    if(null!=data.xfsh && ""!=data.xfsh){
+//                        $(".kjz2").css('display','block');
+//                        $(".kjz1").css('display','none');
+//                    }
+//                }
+//            )
+//        })
+	</script>
+</body>
+</html>

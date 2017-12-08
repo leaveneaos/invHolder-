@@ -113,9 +113,17 @@ public class WeixinTask implements Runnable{
             }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm))) {
                 logger.info("一茶一坐开票---德克士---------");
                 try {
-                    barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"), (String) resultMap.get("tax_no"),
-                            (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
-                            (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
+                    logger.info("进入全家开票处理---------");
+                    if(tqm.indexOf("RJ")<0){
+                        barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"), (String) resultMap.get("tax_no"),
+                                (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
+                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
+                    }else {
+                        barcodeService.chamateYX(gsdm,(String) resultMap.get("title"), (String) resultMap.get("tax_no"),
+                                (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
+                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), openid, "4",access_token,SuccOrderId);
+                    }
+
                 } catch (Exception e) {
                     String re = "发票开具失败，请重试！";
                     weixinUtils.jujuekp(SuccOrderId, re, access_token);

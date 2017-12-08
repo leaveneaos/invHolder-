@@ -89,16 +89,16 @@
         var isAlipay = ua.indexOf('alipay') != -1;
 
         if(isWeixin){
-            $(".wdpq").css('display','block');
+            $(".wdpq").css('display',"");
             $(".fpgj").css('display','none');
-            $("#wechat").css('display','block');
+            $("#wechat").css('display',"");
             $("#alipay").css('display','none');
 		}
 		if(isAlipay){
-            $(".wdpq").css('display','none');
+            $(".wdpq").css('display',"");
             $(".fpgj").css('display','block');
             $("#wechat").css('display','none');
-            $("#alipay").css('display','block');
+            $("#alipay").css('display',"");
 		}
 
 	</script>
