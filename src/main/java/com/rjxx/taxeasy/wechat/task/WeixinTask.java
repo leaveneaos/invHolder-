@@ -337,7 +337,7 @@ public class WeixinTask implements Runnable{
         List<Jyzfmx> jyzfmxList = new ArrayList<Jyzfmx>();
         Xf x = new Xf();
         x.setGsdm("Family");
-        x.setXfsh("500102010003643");
+        x.setXfsh("500102010003697");
         Xf xf = xfService.findOneByParams(x);
         Map params=new HashMap();
         params.put("xfid",687);
@@ -365,7 +365,7 @@ public class WeixinTask implements Runnable{
         jyxxsq.setXfdz(xf.getXfdz());
         jyxxsq.setXfid(xf.getId());
         jyxxsq.setXfmc(xf.getXfmc());
-        jyxxsq.setXfsh("500102010003643");
+        jyxxsq.setXfsh("500102010003697");
         jyxxsq.setXfyh(xf.getXfyh());
         jyxxsq.setXfyhzh(xf.getXfyhzh());
         jyxxsq.setFhr(xf.getFhr());
