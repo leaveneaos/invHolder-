@@ -10,6 +10,7 @@ import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.HttpClientUtil;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +60,9 @@ public class ScanController extends BaseController {
             orderNo="RJ"+System.currentTimeMillis();
             String tqm="ycyz"+orderNo;
             result.put("orderNo",orderNo );
-            result.put("orderTime", "20171128120203");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String orderTime = sdf.format(new Date());
+            result.put("orderTime", orderTime);
             result.put("storeNo", "chamate_test");
             result.put("price", "10.0");
             result.put("spsl", "0.06");
@@ -147,6 +152,10 @@ public class ScanController extends BaseController {
         }
         if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
             try {
+                if(!WeixinUtils.isWeiXinBrowser(request)){
+                    response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=请用支付宝扫码");
+                    return;
+                }
                 logger.info("进入测试盘开票----");
                 String redirectUrl = request.getContextPath() + "/dicos/ddqr.html?_t=" + System.currentTimeMillis()
                         + "=ycyz";
