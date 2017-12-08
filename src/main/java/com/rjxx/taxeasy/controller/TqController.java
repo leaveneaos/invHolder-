@@ -66,6 +66,7 @@ public class TqController extends BaseController{
             String khh= request.getSession().getAttribute("khh").toString();
             String gsdm= request.getSession().getAttribute("gsdm").toString();
             List<Fpcxvo> invoiceListByKhh = invoiceQueryUtil.getInvoiceListByKhh(gsdm,khh);
+            logger.info("获取到的khh"+khh+"和公司代码"+gsdm);
             if(invoiceListByKhh.size()==0){
                 result.put("msg","0");
                 return result;
