@@ -5,6 +5,7 @@ import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.service.BarcodeService;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,8 @@ public class BarcodeController extends BaseController {
 
     @Autowired
     private WxfpxxJpaDao wxfpxxJpaDao;
+    @Autowired
+    private wechatFpxxServiceImpl wechateFpxxService;
     /**
      * 扫码请求,如果验签成功,进入扫码信息确认页面
      *
@@ -37,10 +40,13 @@ public class BarcodeController extends BaseController {
     public void sm(@PathVariable(value = "gsdm") String gsdm, @RequestParam String q) {
         String ua = request.getHeader("user-agent").toLowerCase();
         String type = request.getParameter("t");
+        session.setAttribute("q", q);
+        session.setAttribute("gsdm", gsdm);
+        session.setAttribute("type", type);
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
-            session.setAttribute("gsdm", gsdm);
-            session.setAttribute("q", q);
+            //session.setAttribute("gsdm", gsdm);
+            //session.setAttribute("q", q);
             if(type!=null){
                 session.setAttribute("type", type);
             }
@@ -55,13 +61,24 @@ public class BarcodeController extends BaseController {
                     e.printStackTrace();
                 }
         }
-
+        if(type!=null&&type.equals("test")){
+            try {
+                logger.info("进入测试盘开票----");
+                String redirectUrl = request.getContextPath() + "/dicos/ddqr.html?_t=" + System.currentTimeMillis()
+                        + "=ycyz";
+                logger.info("---测试跳转地址"+redirectUrl);
+                response.sendRedirect(redirectUrl);
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         //非微信浏览器
         Map result = barcodeService.sm(gsdm, q);
         try {
             if (result != null) {
-                session.setAttribute("gsdm", gsdm);
-                session.setAttribute("q", q);
+                //session.setAttribute("gsdm", gsdm);
+                //session.setAttribute("q", q);
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();

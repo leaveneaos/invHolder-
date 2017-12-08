@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,24 @@ public class ScanController extends BaseController {
         logger.warn("存入数据库时候orderNo="+orderNo);
         if (gsdm == null || q == null ) {
             return ResultUtil.error("session过期,请重新扫码");
+        }
+        if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
+            Map result = new HashMap();
+            orderNo="RJ"+System.currentTimeMillis();
+            String tqm="ycyz"+orderNo;
+            result.put("orderNo",orderNo );
+            result.put("orderTime", "20171128120203");
+            result.put("storeNo", "chamate_test");
+            result.put("price", "10.0");
+            result.put("spsl", "0.06");
+            result.put("spmc", "餐饮服务");
+            result.put("kpdmc", "一茶一坐店");
+            boolean b = wechateFpxxService.InFapxx(tqm, gsdm, orderNo,q, "1", openid,
+                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+            if(!b){
+                return ResultUtil.error("保存发票信息失败，请重试！");
+            }
+            return ResultUtil.success(JSONObject.toJSONString(result));
         }
         String jsonData = barcodeService.getSpxx(gsdm, q);
         if (jsonData != null) {
@@ -127,7 +146,16 @@ public class ScanController extends BaseController {
             }
         }
         if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
-            logger.info("进入测试盘开票----");
+            try {
+                logger.info("进入测试盘开票----");
+                String redirectUrl = request.getContextPath() + "/dicos/ddqr.html?_t=" + System.currentTimeMillis()
+                        + "=ycyz";
+                logger.info("---测试跳转地址"+redirectUrl);
+                response.sendRedirect(redirectUrl);
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         String gsdm = session.getAttribute("gsdm").toString();
         String q = session.getAttribute("q").toString();
