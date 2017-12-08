@@ -141,11 +141,12 @@ public class ScanController extends BaseController {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
                 String orderNo = result.get("orderNo").toString();
-                logger.warn("存入session时候orderNo="+orderNo);
                 session.setAttribute("orderNo", orderNo);
                 session.setAttribute("tqm", ppdm+orderNo);
                 List<String> status = barcodeService.checkStatus(ppdm+orderNo, gsdm);
                 logger.info("status=",status);
+                logger.warn("存入session时候orderNo="+orderNo);
+                logger.warn("存入session时候tqm="+ppdm+orderNo);
                 if(status!=null&&status.size()>0){
                     if(status.contains("可开具")){
                         if (StringUtils.isNotBlank(ppdm)) {
