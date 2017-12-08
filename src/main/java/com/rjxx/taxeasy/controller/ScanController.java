@@ -126,8 +126,7 @@ public class ScanController extends BaseController {
                 e.printStackTrace();
             }
         }
-        String type = request.getSession().getAttribute("type").toString();
-        if(type!=null&&type.equals("test")){
+        if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
             logger.info("进入测试盘开票----");
         }
         String gsdm = session.getAttribute("gsdm").toString();

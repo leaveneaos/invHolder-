@@ -41,7 +41,9 @@ public class BarcodeController extends BaseController {
         if (ua.indexOf("micromessenger") > 0) {
             session.setAttribute("gsdm", gsdm);
             session.setAttribute("q", q);
-            session.setAttribute("type", type);
+            if(type!=null){
+                session.setAttribute("type", type);
+            }
             String url = HtmlUtils.getBasePath(request);
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "scan/getOpenid&" + "response_type=code&scope=snsapi_base&state=" +"state"

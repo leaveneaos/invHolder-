@@ -111,7 +111,9 @@ public class BaseClController extends BaseController {
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","Family");
         request.getSession().setAttribute("gsdm","Family");
-        request.getSession().setAttribute("type",type);
+        if(null!=type){
+            request.getSession().setAttribute("type",type);
+        }
         Gsxx gsxx = gsxxservice.findOneByParams(params);
         if(gsxx.getWxappid() == null || gsxx.getWxsecret() == null){
             gsxx.setWxappid(WeiXinConstants.APP_ID);
@@ -153,8 +155,7 @@ public class BaseClController extends BaseController {
             /**
              * 如果q参数为空则跳转到发票提取页面
              */
-            String type = request.getSession().getAttribute("type").toString();
-            if(type!=null&&type.equals("test")){
+            if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
                 logger.info("全家测试盘test开票----");
                 String opendid = (String) session.getAttribute("openid");
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
