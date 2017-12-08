@@ -139,7 +139,7 @@ public class WeixinTask implements Runnable{
             }
         }else if(null!=wxFpxx.getWxtype() && "2".equals(wxFpxx.getWxtype())) {
             logger.info("进入领取发票类型---2------------直接插入卡包");
-            WxFpxx wxFpxxIncard = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
+            WxFpxx wxFpxxIncard = wxfpxxJpaDao.selectByWeiXinOrderNo(SuccOrderId);
             if (null == wxFpxxIncard) {
                 String re = "插入卡包失败！";
                 weixinUtils.jujuekp(SuccOrderId, re, access_token);
