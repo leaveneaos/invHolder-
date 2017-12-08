@@ -140,8 +140,8 @@ public class TqController extends BaseController{
                 return result;
             }*/
             String orderNo="";
-            if(request.getSession().getAttribute("gsdm").equals("dicos")
-                    ||request.getSession().getAttribute("gsdm").equals("chamate")){
+            if(request.getSession().getAttribute("orderNo")!=null&&(request.getSession().getAttribute("gsdm").equals("dicos")
+                    ||request.getSession().getAttribute("gsdm").equals("chamate"))){
                 orderNo = request.getSession().getAttribute("orderNo").toString();
             }else {
                 orderNo=tqm;
