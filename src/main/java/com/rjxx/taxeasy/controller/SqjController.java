@@ -112,6 +112,7 @@ public class SqjController extends BaseController {
     public void index() throws Exception {
         String str = request.getParameter("q");
         request.getSession().setAttribute("q",str);
+        logger.info("食其家参数q为----"+str);
         Map<String, Object> params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
