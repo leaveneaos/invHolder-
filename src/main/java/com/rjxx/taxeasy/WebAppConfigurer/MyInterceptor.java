@@ -38,15 +38,15 @@ public class MyInterceptor implements HandlerInterceptor {
                     String g = request.getParameter("g");
                     String t = request.getParameter("t");
 
-                    if(q!= null && g!= null ){
+                    if(q!= null && g!= null && t==null ){
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?g="+g+"&q="+q);
-                    }else if(q!= null){
+                    }else if(q!= null && (g==null &&t==null)){
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?q="+q);
-                    }else if(g != null ){
+                    }else if(g != null && (q==null && t==null)){
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?g="+g);
-                    }else if(t != null){
+                    }else if(t != null && (q==null && g==null)){
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?t="+t);
-                    }else if(t!= null && q!=null){
+                    }else if(t!= null && q!=null && g==null){
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?t="+t+"&q="+q);
                     }
                     logger.info("-----初始化支付宝授权----end------");

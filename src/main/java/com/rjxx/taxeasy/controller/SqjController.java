@@ -112,7 +112,6 @@ public class SqjController extends BaseController {
     public void index() throws Exception {
         String str = request.getParameter("q");
         request.getSession().setAttribute("q",str);
-        logger.info("食其家参数q为----"+str);
         Map<String, Object> params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
@@ -184,6 +183,7 @@ public class SqjController extends BaseController {
             // 关闭连接 ,释放资源
             client.getConnectionManager().shutdown();
         }
+        logger.info("state的值是--"+state);
         if (state.equals("sqj")) {
             response.sendRedirect(request.getContextPath() + "/smtq/sqj.html?_t=" + System.currentTimeMillis());
             return;
