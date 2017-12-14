@@ -67,6 +67,9 @@ public class BarcodeServiceImpl implements BarcodeService {
     @Autowired
     private  WeixinUtils weixinUtils;
 
+    @Autowired
+    private GsxxService gsxxService;
+
     @Override
     public Map sm(String gsdm, String q) {
         try {
@@ -182,6 +185,12 @@ public class BarcodeServiceImpl implements BarcodeService {
                 result.put("spsl", spsl.toString());
                 result.put("spmc", spmc.toString());
                 result.put("kpdmc", skp.getKpdmc());
+                Map map= new HashMap();
+                map.put("gsdm",gsdm);
+                Gsxx gsxx = gsxxService.findOneByGsdm(map);
+                if(gsxx.getXgsdm()!=null && !"".equals(gsxx.getXgsdm())){
+                    result.put("xgsdm", gsxx.getXgsdm());
+                }
                 Integer pid=skp.getPid();
                 if(pid==null){
                     result.put("tqm", orderNo);

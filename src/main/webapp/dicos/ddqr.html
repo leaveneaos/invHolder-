@@ -108,9 +108,13 @@
                             lastPrice = price;
                         }
 
-                        orderNo = data.orderNo;
                         orderTime = data.orderTime;
                         storeNo = data.storeNo;
+                        if(data.xgsdm!=null&&data.xgsdm!=""){
+                            orderNo = data.xgsdm+"-"+data.orderNo;
+						}else {
+                            orderNo = data.orderNo;
+						}
                         $('#orderNo').html(data.orderNo);
                         $('#orderTime').html(data.orderTime);
                         $('#storeNo').html(data.kpdmc+"("+data.storeNo+")");
