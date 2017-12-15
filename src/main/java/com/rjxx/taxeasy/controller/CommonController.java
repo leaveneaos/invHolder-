@@ -68,8 +68,6 @@ public class CommonController extends BaseController {
         String redirectUrl ="";
         Map resultMap = new HashMap();
         if(weixinUtils.isWeiXinBrowser(request)){
-            logger.info("微信浏览器--------------");
-            logger.info("截取前--"+price);
             try {
                 logger.info("------orderNo---------"+orderNo);
                 if(null==orderNo || "".equals(orderNo)){
@@ -222,7 +220,6 @@ public class CommonController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return ;
         }
-        logger.info("拿到解码code----------"+code);
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByCode(code);
         if(null!=wxFpxx){
             Map jyxxsqMap = new HashMap();
@@ -260,7 +257,6 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-            logger.info("收到请求-----"+serialOrder);
             Map map2 = new HashMap();
             map2.put("serialorder",serialOrder);
             List<Kpls> kplsList = kplsService.findAll(map2);
@@ -314,9 +310,6 @@ public class CommonController extends BaseController {
     @ResponseBody
     private String syncWeiXin(String orderNo, String price, String orderTime){
         String redirectUrl="";
-        logger.info("取到的数据orderNo----"+orderNo);
-        logger.info("数据金额price----"+price);
-        logger.info("取到的数据orderTime----"+orderTime);
         try {
             //判断是否是微信浏览
             if (!weixinUtils.isWeiXinBrowser(request)) {

@@ -275,6 +275,7 @@ public class SqjController extends BaseController {
                 xgsdm=gsxx.getXgsdm();
             }
             request.getSession().setAttribute("xgsdm",xgsdm);
+            request.getSession().setAttribute("gsdm","sqj");
             String ddh = (String) request.getSession().getAttribute("orderNo");
             String openid = (String) session.getAttribute("openid");
             Map map = new HashMap<>();
