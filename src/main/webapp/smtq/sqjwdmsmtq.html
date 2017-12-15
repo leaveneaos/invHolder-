@@ -47,6 +47,9 @@
             orderTime = data.orderTime;
             price= data.price;
             storeNo = data.sn;
+            if(data.xgsdm!=null && data.xgsdm!=""){
+                orderNo = data.xgsdm+"-"+data.orderNo;
+            }
 		})
         function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);

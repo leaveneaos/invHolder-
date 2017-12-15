@@ -347,7 +347,8 @@ public class SqjController extends BaseController {
                     return;
                 }
                 request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
-                response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+                //response.sendRedirect(request.getContextPath() + "/fp.html?_t=" + System.currentTimeMillis());
+                response.sendRedirect(request.getContextPath() + "/CO/" + "dzfpxq.html?_t=" + System.currentTimeMillis());
                 return;
             } else if (null != jyls && null != jyls.getDjh()) {
                 response.sendRedirect(request.getContextPath() + "/smtq/smtq3.html?_t=" + System.currentTimeMillis());

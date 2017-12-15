@@ -95,15 +95,14 @@
         if(orderTime==null){
             redirect("数据异常，不能提交！请联系商家");
         }
-        alert(orderNo);
-        /*if(isAlipay){
+        if(isAlipay){
             window.location.href = "../dzfp_sqj/smtq2";
         }else if(isWeixin) {
             window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
                 "&storeNo=" + storeNo + "&price=" + price;
         }else {
             window.location.href = "../dzfp_sqj/smtq2";
-        }*/
+        }
     }
 </script>
 <div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
