@@ -362,9 +362,10 @@ public class BaseClController extends BaseController {
                         //修改获取电子票分票行数
                         Cszb csz = cszbService.getSpbmbbh( gsxx.getGsdm(), null,null, "dzphs");
                         Integer fphs = Integer.valueOf(csz.getCsz());
+                        String xgsdm = null;
                         //跳转地址
                         String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                                + "=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() + "=" + sdf.format(jyxxsq.getDdrq()) + "=" + tqm;
+                                + "=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() + "=" + sdf.format(jyxxsq.getDdrq()) + "=" + tqm+"="+xgsdm;
                         //支付宝 和 分票 不拉授权页
                         if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size() >fphs) {
                             redirectUrl += "&isAlipay=true";

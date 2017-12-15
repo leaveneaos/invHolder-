@@ -80,12 +80,16 @@
             price = getval.split("=")[4];
             orderTime = getval.split("=")[5];
             tqm = getval.split("=")[6];
+            xgsdm = getval.split("=")[7];
 			$('#orderNo').html(storeNo);
 			$('#order').html(orderNo);
 			$('#orderTime').html(formatDate(orderTime));
 			$('#price').html(RetainedDecimalPlaces(price)+"元");
-			$('#tqmhidden').html(tqm);
 			pricese = price;
+			if(xgsdm!=null && xgsdm!=""){
+			    tqm=xgsdm+"-"+tqm
+			}
+            $('#tqmhidden').html(tqm);
             $.ajax({
                 method : 'post',
                 url:"../fm/qrxxsession",

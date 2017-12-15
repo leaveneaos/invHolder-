@@ -334,8 +334,12 @@ public class MbController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }
+                        String xgsdm=null;
+                        if(gsxx.getXgsdm()!=null && !"".equals(gsxx.getXgsdm())){
+                            xgsdm=gsxx.getXgsdm();
+                        }
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
-                                      +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq()));
+                                      +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq())+"="+xgsdm);
                         return;
                     }
                 }else {
