@@ -71,6 +71,9 @@
             orderTime = data.orderTime;
             price= data.price;
             storeNo = data.sn;
+            if(data.xgsdm!=null && data.xgsdm!=""){
+                orderNo = data.xgsdm+"-"+data.orderNo;
+            }
         })
         function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);
@@ -92,14 +95,15 @@
         if(orderTime==null){
             redirect("数据异常，不能提交！请联系商家");
         }
-        if(isAlipay){
+        alert(orderNo);
+        /*if(isAlipay){
             window.location.href = "../dzfp_sqj/smtq2";
         }else if(isWeixin) {
             window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
                 "&storeNo=" + storeNo + "&price=" + price;
         }else {
             window.location.href = "../dzfp_sqj/smtq2";
-        }
+        }*/
     }
 </script>
 <div style="max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
