@@ -304,9 +304,13 @@ public class BaseClController extends BaseController {
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String orderTime = sdf.format(list.get(0).getKprq());
                     logger.info("跳转发票详情页面---"+orderNo+"+"+je+"+"+orderTime);
+                    String xgsdm="";
+                    if(gsxx.getXgsdm()!=null&& !gsxx.getXgsdm().equals("")){
+                        xgsdm=gsxx.getXgsdm();
+                    }
                     //如果是多张发票的话，只能领取第一张。
                     response.sendRedirect(request.getContextPath() + "/Family/fpxq.html?_t="
-                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime);
+                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime+"="+xgsdm);
                     return;
                 } else if (null != jyls && null != jyls.getDjh()) {
                     /**
@@ -362,7 +366,10 @@ public class BaseClController extends BaseController {
                         //修改获取电子票分票行数
                         Cszb csz = cszbService.getSpbmbbh( gsxx.getGsdm(), null,null, "dzphs");
                         Integer fphs = Integer.valueOf(csz.getCsz());
-                        String xgsdm = null;
+                        String xgsdm = "";
+                        if(gsxx.getXgsdm()!=null&&!gsxx.getXgsdm().equals("")){
+                            xgsdm=gsxx.getXgsdm();
+                        }
                         //跳转地址
                         String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
                                 + "=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() + "=" + sdf.format(jyxxsq.getDdrq()) + "=" + tqm+"="+xgsdm;

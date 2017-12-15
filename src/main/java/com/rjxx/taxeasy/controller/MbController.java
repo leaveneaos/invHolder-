@@ -334,7 +334,7 @@ public class MbController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }
-                        String xgsdm=null;
+                        String xgsdm="";
                         if(gsxx.getXgsdm()!=null && !"".equals(gsxx.getXgsdm())){
                             xgsdm=gsxx.getXgsdm();
                         }

@@ -190,7 +190,8 @@
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
-            if(isAlipay){
+            alert(orderNo);
+            /*if(isAlipay){
                 var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
                 window.location.assign(encodeURI(myurl));
             }else if(isWeixin){
@@ -198,7 +199,7 @@
                     "&storeNo=" + storeNo + "&price=" + lastPrice;
             }else{
                 redirect("请用微信或支付宝扫码");
-            }
+            }*/
         }
     </script>
 </body>

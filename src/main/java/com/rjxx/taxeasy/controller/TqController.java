@@ -2,8 +2,10 @@ package com.rjxx.taxeasy.controller;
 import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.bizcomm.utils.InvoiceQueryUtil;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.domains.Gsxx;
 import com.rjxx.taxeasy.domains.Jyls;
 import com.rjxx.taxeasy.domains.Kpls;
+import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.vo.Fpcxvo;
@@ -36,6 +38,8 @@ public class TqController extends BaseController{
     private JylsService jylsService;
     @Autowired
     private wechatFpxxServiceImpl wechatFpxxService;
+    @Autowired
+    private GsxxService gsxxService;
 
     @RequestMapping
     @ResponseBody
@@ -146,13 +150,19 @@ public class TqController extends BaseController{
             }else {
                 orderNo=tqm;
             }
-            result.put("orderNo",orderNo);
             boolean b = wechatFpxxService.InFapxx(tqm, kplsList.get(i).getGsdm(), orderNo,
                     "", "2", openid, "", kplsList.get(i).getKplsh().toString(), request);
             if(!b){
                 result.put("msg","1");
                 return result;
             }
+            Map map= new HashMap();
+            map.put("gsdm",kplsList.get(i).getGsdm());
+            Gsxx gsxx = gsxxService.findOneByGsdm(map);
+            if(gsxx.getXgsdm()!=null && !"".equals(gsxx.getXgsdm())){
+                orderNo = gsxx.getXgsdm()+"-"+orderNo;
+            }
+            result.put("orderNo",orderNo);
         }
         return result;
     }

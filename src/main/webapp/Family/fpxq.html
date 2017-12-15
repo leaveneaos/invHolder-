@@ -100,6 +100,7 @@
             var orderNo = getval.split("=")[2];
             var je = getval.split("=")[3];
             var orderTime = getval.split("=")[4];
+			xgsdm = getval.split("=")[5];
             $('#orderNo').val(orderNo);
             $('#je').val(je);
             $('#orderTime').val(orderTime);
@@ -127,7 +128,10 @@
              var orderNo = $('#orderNo').val();
              var je = $('#je').val();
              var orderTime = $('#orderTime').val();
-             window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
+             if(xgsdm!=null&&xgsdm!=""){
+                 var orderNo = xgsdm+"-"+$('#orderNo').val();
+			 }
+             //window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+je+"&orderTime="+orderTime;
          });
         function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);
