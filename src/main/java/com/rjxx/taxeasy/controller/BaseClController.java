@@ -107,7 +107,6 @@ public class BaseClController extends BaseController {
         String str = request.getParameter("q");
         String type = request.getParameter("t");
         logger.info("参数q的值为"+str);
-        logger.info("参数q的值为"+type);
         Map<String,Object> params = new HashMap<>();
         params.put("gsdm","Family");
         request.getSession().setAttribute("gsdm","Family");
@@ -207,8 +206,6 @@ public class BaseClController extends BaseController {
             }else {
                 byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(state);
                 String csc = new String(bytes);
-                logger.info("---------参数值-----"+csc+"---------");
-
                 String[] cssz = csc.split("&");
                 String tqm = cssz[0].substring(cssz[0].lastIndexOf("=") + 1);
                 String sign = cssz[1].substring(cssz[1].lastIndexOf("=") + 1);
@@ -303,14 +300,13 @@ public class BaseClController extends BaseController {
                     String je = list.get(0).getJshj().toString();
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String orderTime = sdf.format(list.get(0).getKprq());
-                    logger.info("跳转发票详情页面---"+orderNo+"+"+je+"+"+orderTime);
-                    String xgsdm="";
+                    /*String xgsdm="";
                     if(gsxx.getXgsdm()!=null&& !gsxx.getXgsdm().equals("")){
                         xgsdm=gsxx.getXgsdm();
-                    }
+                    }*/
                     //如果是多张发票的话，只能领取第一张。
                     response.sendRedirect(request.getContextPath() + "/Family/fpxq.html?_t="
-                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime+"="+xgsdm);
+                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime/*+"="+xgsdm*/);
                     return;
                 } else if (null != jyls && null != jyls.getDjh()) {
                     /**
@@ -366,13 +362,13 @@ public class BaseClController extends BaseController {
                         //修改获取电子票分票行数
                         Cszb csz = cszbService.getSpbmbbh( gsxx.getGsdm(), null,null, "dzphs");
                         Integer fphs = Integer.valueOf(csz.getCsz());
-                        String xgsdm = "";
+                        /*String xgsdm = "";
                         if(gsxx.getXgsdm()!=null&&!gsxx.getXgsdm().equals("")){
                             xgsdm=gsxx.getXgsdm();
-                        }
+                        }*/
                         //跳转地址
                         String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
-                                + "=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() + "=" + sdf.format(jyxxsq.getDdrq()) + "=" + tqm+"="+xgsdm;
+                                + "=" + mdh + "=" + jylsh + "=" + jyxxsq.getJshj() + "=" + sdf.format(jyxxsq.getDdrq()) + "=" + tqm+"="+gsxx.getGsdm();
                         //支付宝 和 分票 不拉授权页
                         if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size() >fphs) {
                             redirectUrl += "&isAlipay=true";
@@ -797,7 +793,6 @@ public class BaseClController extends BaseController {
         if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("temp"))){
             result.put("status","2");
         }
-        logger.info("------------------------------"+ JSON.toJSONString(result));
         return  result;
     }
 }
