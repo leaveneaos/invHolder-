@@ -72,25 +72,25 @@ public class TqController extends BaseController{
             String gsdm= request.getSession().getAttribute("gsdm").toString();
             List<Fpcxvo> invoiceListByKhh = invoiceQueryUtil.getInvoiceListByKhh(gsdm,khh);
             logger.info("获取到的khh"+khh+"和公司代码"+gsdm);
+            request.getSession().setAttribute("kplsList",invoiceListByKhh);
             if(invoiceListByKhh.size()==0){
                 result.put("msg","0");
                 return result;
             }
             result.put("khh", request.getSession().getAttribute("khh"));
             result.put("kplsList",invoiceListByKhh);
-            request.getSession().setAttribute("kplsList",invoiceListByKhh);
         }else if(null!=request.getSession().getAttribute("tqm")){
             String tqm = request.getSession().getAttribute("tqm").toString();
             String gsdm= request.getSession().getAttribute("gsdm").toString();
             logger.info("获取到的tqm"+tqm+"和公司代码"+gsdm);
             List<Fpcxvo> invoiceListBytqm = invoiceQueryUtil.getInvoiceListBytqm(gsdm, tqm);
+            request.getSession().setAttribute("kplsList",invoiceListBytqm);
             if(invoiceListBytqm.size()==0){
                 result.put("msg","0");
                 return result;
             }
             result.put("kplsList",invoiceListBytqm);
             result.put("tqm", request.getSession().getAttribute("tqm"));
-            request.getSession().setAttribute("kplsList",invoiceListBytqm);
         }else {
             result.put("msg","0");
         }
@@ -112,6 +112,10 @@ public class TqController extends BaseController{
         }else {
             String openid = (String) session.getAttribute("openid");
             List<Fpcxvo> kplsList = (List) request.getSession().getAttribute("kplsList");
+            if(request.getSession().getAttribute("kplsList")==null){
+                result.put("msg","0");
+                return result;
+            }
             if(i>kplsList.size()){
                 result.put("msg","2");
                 return result;

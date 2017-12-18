@@ -788,6 +788,8 @@ public class SqjController extends BaseController {
                         result.put("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
                         request.getSession().setAttribute("pdfdzs", pdfdzs.substring(0, pdfdzs.length() - 1));
                     }
+                    request.getSession().setAttribute("gsdm", "sqj");
+                    request.getSession().setAttribute("tqm", tqm);
                     result.put("num", "2");
                     Tqjl tqjl = new Tqjl();
                     tqjl.setDjh(String.valueOf(list.get(0).getDjh()));
@@ -803,7 +805,7 @@ public class SqjController extends BaseController {
                     String llqxx = request.getHeader("User-Agent");
                     tqjl.setLlqxx(llqxx);
                     tqjlService.save(tqjl);
-                    request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
+//                    request.getSession().setAttribute("serialorder", list.get(0).getSerialorder());
                 } else if (null != jyls && null != jyls.getDjh()) {
                     result.put("num", "6");
                 }  else if (null == jyxx) {
