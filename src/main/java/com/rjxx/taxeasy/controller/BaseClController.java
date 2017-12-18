@@ -306,7 +306,7 @@ public class BaseClController extends BaseController {
                     }*/
                     //如果是多张发票的话，只能领取第一张。
                     response.sendRedirect(request.getContextPath() + "/Family/fpxq.html?_t="
-                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime/*+"="+xgsdm*/);
+                            + System.currentTimeMillis()+ "=" + orderNo + "=" + je + "=" + orderTime+"="+gsxx.getGsdm());
                     return;
                 } else if (null != jyls && null != jyls.getDjh()) {
                     /**
