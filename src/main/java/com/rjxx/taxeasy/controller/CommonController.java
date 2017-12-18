@@ -64,7 +64,7 @@ public class CommonController extends BaseController {
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
     @ResponseBody
-    public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price){
+    public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price,String gsdm){
         String redirectUrl ="";
         Map resultMap = new HashMap();
         if(weixinUtils.isWeiXinBrowser(request)){
@@ -90,7 +90,7 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
-                WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+                WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
                 if(null==wxFpxx){
                     request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -126,9 +126,9 @@ public class CommonController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return null;
                         }
-                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
                         logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
-                        String gsdm = wxFpxx.getGsdm();
+//                        String gsdm = wxFpxx.getGsdm();
                         //可开具 跳转微信授权链接
                         redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){
@@ -308,7 +308,7 @@ public class CommonController extends BaseController {
 
     @RequestMapping(value = "/syncWeiXin")
     @ResponseBody
-    private String syncWeiXin(String orderNo, String price, String orderTime){
+    private String syncWeiXin(String orderNo, String price, String orderTime,String gsdm){
         String redirectUrl="";
         try {
             //判断是否是微信浏览
@@ -332,7 +332,7 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-            WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo);
+            WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
             if(wxFpxx==null){
                 request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -356,7 +356,7 @@ public class CommonController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
-                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
                 logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
                 //可开具 跳转微信授权链接
                 redirectUrl = weixinUtils.getTiaoURL(wxFpxx.getGsdm(),weixinOrderNo,price,orderTime, "","2",access_token,ticket,spappid);

@@ -107,7 +107,6 @@ public class WeiXinController extends BaseController {
      */
     @RequestMapping(value = WeiXinConstants.AFTER_WEIXIN_REDIRECT_URL,method = RequestMethod.POST)
     public String postWeiXin() throws Exception {
-        logger.info("进入回调开始时间"+new Date());
         Map<String, String> requestMap = null;
         try {
             requestMap = parseXml(request);
@@ -169,7 +168,6 @@ public class WeiXinController extends BaseController {
                     weixinTask.setSkpService(skpService);
                     Thread thread = new Thread(weixinTask);
                     thread.start();
-                    logger.info("----------回调的结束时间"+new Date());
                     return "";
                    /*if(null!=wxFpxx.getWxtype() && "1".equals(wxFpxx.getWxtype())){
                         logger.info("进入申请开票类型------------开始开票");

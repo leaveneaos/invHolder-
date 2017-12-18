@@ -156,13 +156,14 @@ public class TqController extends BaseController{
                 result.put("msg","1");
                 return result;
             }
-            Map map= new HashMap();
+            /*Map map= new HashMap();
             map.put("gsdm",kplsList.get(i).getGsdm());
             Gsxx gsxx = gsxxService.findOneByGsdm(map);
             if(gsxx.getXgsdm()!=null && !"".equals(gsxx.getXgsdm())){
                 orderNo = gsxx.getXgsdm()+"-"+orderNo;
-            }
+            }*/
             result.put("orderNo",orderNo);
+            result.put("gsdm",kplsList.get(i).getGsdm());
         }
         return result;
     }

@@ -59,16 +59,11 @@
             orderNo = getval.split("=")[3];
             price = getval.split("=")[4];
             orderTime = getval.split("=")[5];
-            xgsdm = getval.split("=")[6];
 			$('#order').html(orderNo);
 			$('#orderTime').html(formatDate(orderTime));
 			$('#price').html(RetainedDecimalPlaces(price)+"元");
 			$('#tqmhidden').html(orderNo);
 			$("#logo").attr("src", "images/" + gsmc + ".png");
-			if(xgsdm!=null && xgsdm!=""){
-			    orderNo=xgsdm+"-"+orderNo;
-			}
-                alert(orderNo);
             $.post(
                 "qrxxsession",
                 {},
@@ -119,10 +114,9 @@
                     redirect("获取商品信息有误,请重新扫码或联系商户！")
 				}else {
                 window.location = "common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + price;
+                    "&storeNo=" + storeNo + "&price=" + price +"&gsdm"+gsmc;
                 }
-            }
-            else {
+            }else {
                 window.location.href = "mbfptt.html?gsdm="+ gsmc +"&&tqm="+ tqm +"&&time=" + new Date();
 			}
         }

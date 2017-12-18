@@ -297,7 +297,6 @@ public class GvcController extends BaseController {
                             return result;
                         }
                     }
-                    logger.info("+++++++++++++++++当前时间"+nowdate);
                     logger.info("+++++++++++++++++输入金额"+price);
                     DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
                     logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
@@ -328,7 +327,7 @@ public class GvcController extends BaseController {
                                 result.put("msg","出现未知异常，请重试！");
                                 return result;
                             }
-                            String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                            String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
                             if(weixinOrderNo==null){
                                 result.put("num","12");
                                 result.put("msg","出现未知异常，请重试！");
@@ -341,6 +340,10 @@ public class GvcController extends BaseController {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }else {
+                        result.put("num","12");
+                        result.put("msg","请使用微信浏览器进行此操作！");
+                        return result;
                     }
                 }
             }else {

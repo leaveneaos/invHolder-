@@ -105,6 +105,7 @@
 					orderNo = data.orderNo;
 					price = data.price;
 					orderTime = data.orderTime;
+					gsmc = data.gsdm;
 					var serialorder = data.serialorder;
 
 					if (serialorder != null && serialorder != "") {
@@ -137,7 +138,7 @@
                 if(null == orderNo|| null == price || null == orderTime){
                     window.location.href = "../smtq/demo.html?time=" + new Date().getTime();
                 }
-                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
+                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime+"&gsdm"+gsmc;
             });
 		}
     })

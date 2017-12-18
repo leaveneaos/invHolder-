@@ -334,12 +334,12 @@ public class MbController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
                         }
-                        String xgsdm="";
+                        /*String xgsdm="";
                         if(gsxx.getXgsdm()!=null && !"".equals(gsxx.getXgsdm())){
                             xgsdm=gsxx.getXgsdm();
-                        }
+                        }*/
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
-                                      +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq())+"="+xgsdm);
+                                      +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq())/*+"="+xgsdm*/);
                         return;
                     }
                 }else {
@@ -358,7 +358,6 @@ public class MbController extends BaseController {
     @RequestMapping(value = "/bqwgetWx")
     @ResponseBody
     public void bqwgetWx(String state,String code) throws IOException{
-        logger.info("——波奇网————————获取微信参数"+state);
         Map params = new HashMap<>();
         params.put("gsdm","bqw");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
@@ -396,7 +395,6 @@ public class MbController extends BaseController {
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state,String code) throws IOException{
-        logger.info("——————————————————获取微信参数"+state);
         Map params = new HashMap<>();
         params.put("gsdm",state);
         Gsxx gsxx = gsxxservice.findOneByParams(params);
@@ -611,7 +609,6 @@ public class MbController extends BaseController {
                                 return result;
                             }
                         }else if("bqw".equals(gsdm)){
-                            logger.info("波奇网拉取数据--------------");
                             Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
                             resultMap = getDataService.getDataForBqw(tqms, gsdm,csz.getCsz());
                         }
@@ -658,11 +655,10 @@ public class MbController extends BaseController {
                                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                                     return null;
                                 }
-                                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo);
+                                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
                                 String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
                                 result.put("num","20");
                                 result.put("redirectUrl",redirectUrl);
-                                logger.info("------绿地跳转--------"+ JSON.toJSONString(result));
                                 return result;
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -881,10 +877,7 @@ public class MbController extends BaseController {
         Gsxx gsxx = gsxxservice.findOneByGsdm(gsMap);
         try {
             String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqList, jyzfmxList);
-            logger.info("secretKey------" + gsxx.getSecretKey());
-            logger.info("appKey------" + gsxx.getAppKey());
             String resultxml = HttpUtils.HttpUrlPost(xml, gsxx.getAppKey(), gsxx.getSecretKey());
-            logger.info("-------返回值---------" + resultxml);
             Document document = DocumentHelper.parseText(resultxml);
             Element root = document.getRootElement();
             List<Element> childElements = root.elements();
@@ -1020,7 +1013,6 @@ public class MbController extends BaseController {
         if("".equals(request.getSession().getAttribute("error"))&&"".equals(request.getSession().getAttribute("msg"))){
             result.put("num","2");
         }
-        logger.info("----------------"+JSON.toJSONString(result));
         return  result;
     }
 
