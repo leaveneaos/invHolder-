@@ -504,6 +504,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                         String reason="发票开具失败，请重试！";
                         String str=  weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
                         logger.info("拒绝开票状态"+str);
+                        return "-2";
                     }
                     Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
                     //Document document = DocumentHelper.parseText(resultxml);
