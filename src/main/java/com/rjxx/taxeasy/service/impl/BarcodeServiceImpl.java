@@ -505,21 +505,27 @@ public class BarcodeServiceImpl implements BarcodeService {
                         String str=  weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
                         logger.info("拒绝开票状态"+str);
                     }
-                    Document document = DocumentHelper.parseText(resultxml);
-                    Element root = document.getRootElement();
-                    List<Element> childElements = root.elements();
-                    Map xmlMap = new HashMap();
-                    for (Element child : childElements) {
-                        xmlMap.put(child.getName(),child.getText());
-                    }
-                    String returncode=(String)xmlMap.get("ReturnCode");
-                    String ReturnMessage=(String)xmlMap.get("ReturnMessage");
-                    if(returncode.equals("9999")){
+                    Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
+                    //Document document = DocumentHelper.parseText(resultxml);
+                    String returnMsg=resultMap.get("ReturnMessage").toString();
+                    String returnCode=resultMap.get("ReturnCode").toString();
+                    Map map2 = new HashMap();
+                    map2.put("returnMsg", returnMsg);
+                    map2.put("returnCode", returnCode);
+                    //Element root = document.getRootElement();
+                    //List<Element> childElements = root.elements();
+                   // Map xmlMap = new HashMap();
+                   // for (Element child : childElements) {
+                   //     xmlMap.put(child.getName(),child.getText());
+                  //  }
+                    //String returncode=(String)xmlMap.get("ReturnCode");
+                    //String ReturnMessage=(String)xmlMap.get("ReturnMessage");
+                    if(returnCode.equals("9999")){
                        //返回错误 拒绝开票
-                        String reason="错误信息为"+ReturnMessage;
+                        String reason="错误信息为"+returnMsg;
                         if(null!=sjly && "4".equals(sjly)){
                             String str=  weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
-                            logger.info("进入拒绝开票-----"+ReturnMessage+"拒绝开票状态"+str);
+                            logger.info("进入拒绝开票-----"+returnMsg+"拒绝开票状态"+str);
                         }
                         return "-2";
                     }
