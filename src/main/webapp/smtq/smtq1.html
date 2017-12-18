@@ -71,9 +71,10 @@
             orderTime = data.orderTime;
             price= data.price;
             storeNo = data.sn;
-            if(data.xgsdm!=null && data.xgsdm!=""){
+            gsmc = data.gsdm;
+            /*if(data.xgsdm!=null && data.xgsdm!=""){
                 orderNo = data.xgsdm+"-"+data.orderNo;
-            }
+            }*/
         })
         function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);
@@ -98,8 +99,9 @@
         if(isAlipay){
             window.location.href = "../dzfp_sqj/smtq2";
         }else if(isWeixin) {
+            alert(orderNo+"-"+gsmc);
             window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                "&storeNo=" + storeNo + "&price=" + price;
+                "&storeNo=" + storeNo + "&price=" + price+"&gsdm="+gsmc;
         }else {
             window.location.href = "../dzfp_sqj/smtq2";
         }

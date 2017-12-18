@@ -270,11 +270,11 @@ public class SqjController extends BaseController {
             request.getSession().setAttribute("tqm", orderNo);
             request.getSession().setAttribute("je", price);
             request.getSession().setAttribute("sn", sn);
-            String xgsdm="";
+            /*String xgsdm="";
             if(gsxx.getXgsdm()!=null && !gsxx.getXgsdm().equals("")){
                 xgsdm=gsxx.getXgsdm();
-            }
-            request.getSession().setAttribute("xgsdm",xgsdm);
+            }*/
+//            request.getSession().setAttribute("xgsdm",xgsdm);
             request.getSession().setAttribute("gsdm","sqj");
             String ddh = (String) request.getSession().getAttribute("orderNo");
             String openid = (String) session.getAttribute("openid");
@@ -433,7 +433,8 @@ public class SqjController extends BaseController {
             result.put("orderTime", request.getSession().getAttribute("orderTime"));
             result.put("price", request.getSession().getAttribute("price"));
             result.put("sn", request.getSession().getAttribute("sn"));
-            result.put("xgsdm", request.getSession().getAttribute("xgsdm"));
+//            result.put("xgsdm", request.getSession().getAttribute("xgsdm"));
+            result.put("gsdm", request.getSession().getAttribute("gsdm"));
             String llqxx = request.getHeader("User-Agent");
             if (llqxx.contains("MicroMessenger")) {
                 result.put("isWx", true);

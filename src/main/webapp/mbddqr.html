@@ -114,7 +114,7 @@
                     redirect("获取商品信息有误,请重新扫码或联系商户！")
 				}else {
                 window.location = "common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + price +"&gsdm"+gsmc;
+                    "&storeNo=" + storeNo + "&price=" + price +"&gsdm="+gsmc;
                 }
             }else {
                 window.location.href = "mbfptt.html?gsdm="+ gsmc +"&&tqm="+ tqm +"&&time=" + new Date();

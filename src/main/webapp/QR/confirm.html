@@ -196,7 +196,7 @@
                 window.location.assign(encodeURI(myurl));
             }else if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + lastPrice+"&gsdm"+gsmc;
+                    "&storeNo=" + storeNo + "&price=" + lastPrice+"&gsdm="+gsmc;
             }else{
                 redirect("请用微信或支付宝扫码");
             }

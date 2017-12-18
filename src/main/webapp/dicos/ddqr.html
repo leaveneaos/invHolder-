@@ -110,11 +110,13 @@
 
                         orderTime = data.orderTime;
                         storeNo = data.storeNo;
-                        if(data.xgsdm!=null&&data.xgsdm!=""){
+                        gsmc = data.gsmc;
+                        orderNo = data.orderNo;
+                        /*if(data.xgsdm!=null&&data.xgsdm!=""){
                             orderNo = data.xgsdm+"-"+data.orderNo;
 						}else {
                             orderNo = data.orderNo;
-						}
+						}*/
                         $('#orderNo').html(data.orderNo);
                         $('#orderTime').html(data.orderTime);
                         $('#storeNo').html(data.kpdmc+"("+data.storeNo+")");
@@ -145,8 +147,9 @@
                 if(null==orderNo || orderTime==null|| lastPrice == null){
                     redirect("传入数据有误,请重新扫描！");
 				}
+//				alert(orderNo+"-"+gsmc);
                 window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-                    "&storeNo=" + storeNo + "&price=" + lastPrice;
+                    "&storeNo=" + storeNo + "&price=" + lastPrice+"&gsdm="+gsmc;
             }else{
                 redirect("请用使用微信或支付宝扫码！");
             }
