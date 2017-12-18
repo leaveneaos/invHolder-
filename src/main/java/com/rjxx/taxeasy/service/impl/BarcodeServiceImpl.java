@@ -500,7 +500,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                     String xml= GetXmlUtil.getFpkjXml(jyxxsq,jymxsqList,jyzfmxList);
                     String resultxml= HttpUtils.HttpUrlPost(xml,AppId,key);
                     logger.info("-------返回值---------"+resultxml);
-                    if(null==resultxml){
+                    if(null==resultxml||resultxml.equals("")){
                         String reason="发票开具失败，请重试！";
                         String str=  weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
                         logger.info("拒绝开票状态"+str);
