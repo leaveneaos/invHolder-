@@ -403,8 +403,8 @@ public class CommonController extends BaseController {
                     BigDecimal newbig = big.multiply(new BigDecimal(100));
                     Double doumoney = new Double(newbig.toString());
                     Map map = new HashMap();
-                    map.put("money",doumoney);
                     map.put("order_id",orderNo1);
+                    map.put("money",doumoney);
                     logger.info("订单号"+orderNo1);
                     logger.info("金额"+doumoney);
                     list.add(map);

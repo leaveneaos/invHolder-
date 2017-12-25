@@ -14,6 +14,7 @@ import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.wechat.task.WeixinTask;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
+import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.StringUtils;
@@ -74,6 +75,9 @@ public class WeiXinController extends BaseController {
     @Autowired
     private SkpService skpService;
 
+    @Autowired
+    private WechatBatchCard wechatBatchCard;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${rjxx.pdf_file_url:}")
@@ -130,6 +134,34 @@ public class WeiXinController extends BaseController {
                     access_token = (String)weixinUtils.hqtk().get("access_token");
                 }else {
                     access_token = wxToken.getAccessToken();
+                }
+                if(requestMap.get("BatchInsert")!=null && requestMap.get("BatchInsert").equals(1)){
+                    logger.info("一次授权批量插卡处理");
+                    String authid = requestMap.get("SuccOrderId");
+                    String spappid = weixinUtils.getSpappid(access_token);
+                    WxFpxx wxFpxx = wxfpxxJpaDao.selectByAuthId(authid);
+                    if(wxFpxx == null){
+                        //拒绝开票
+                        String re ="批量插卡失败";
+                        wechatBatchCard.batchRefuseKp(authid, re, access_token, spappid);
+                    }
+                    WeixinTask weixinTask = new WeixinTask();
+                    weixinTask.setWxFpxx(wxFpxx);
+                    weixinTask.setAccess_token(access_token);
+                    weixinTask.setAuthid(authid);
+                    weixinTask.setOpenid(openid);
+                    weixinTask.setWeixinUtils(weixinUtils);
+                    weixinTask.setFailOrderId(FailOrderId);
+                    weixinTask.setWxfpxxJpaDao(wxfpxxJpaDao);
+                    weixinTask.setKplsService(kplsService);
+                    weixinTask.setKpspmxService(kpspmxService);
+                    weixinTask.setPdf_file_url(pdf_file_url);
+                    weixinTask.setWechatBatchCard(wechatBatchCard);
+                    weixinTask.setXfService(xfService);
+                    weixinTask.setSkpService(skpService);
+                    Thread thread = new Thread(weixinTask);
+                    thread.start();
+                    return "";
                 }
                 if(null!=SuccOrderId &&!SuccOrderId.equals("")){
                     logger.info("拿到微信回传的订单编号为"+SuccOrderId);

@@ -5,6 +5,7 @@ import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,10 @@ public class WeixinTask implements Runnable{
     private XfService xfService;
 
     private SkpService skpService;
+
+    private String authid;
+
+    private WechatBatchCard wechatBatchCard;
 
     @Override
     public void run() {
@@ -146,7 +151,31 @@ public class WeixinTask implements Runnable{
                 weixinUtils.jujuekp(FailOrderId,re,access_token);
             }
         }else if(null!=wxFpxx.getWxtype() && "2".equals(wxFpxx.getWxtype())) {
-            logger.info("进入领取发票类型---2------------直接插入卡包");
+            if(authid!=null && !authid.equals("")){
+                logger.info("领取发票类型---2--批量插卡");
+                String spappid = weixinUtils.getSpappid(access_token);
+                WxFpxx wxFpxxByAuthid = wxfpxxJpaDao.selectByAuthId(authid);
+                if(wxFpxxByAuthid==null){
+                    String re = "插入卡包失败！";
+                    wechatBatchCard.batchRefuseKp(authid,re,access_token,spappid);
+                }
+                if(wxFpxxByAuthid.getKplsh()!=null && wxFpxxByAuthid.getKplsh().indexOf(",")>=0){
+                    logger.info("多个开票流水号");
+                    String[] splitKplsh = wxFpxxByAuthid.getKplsh().split(",");
+                    for(int i = 0 ; i< splitKplsh.length;i++){
+                        Map map = new HashMap();
+                        map.put("gsdm" , wxFpxxByAuthid.getGsdm());
+                        map.put("kplsh",splitKplsh[i]);
+                        Kpls kpls = kplsService.findOneByParams(map);
+                        Map params2 = new HashMap();
+                        params2.put("kplsh", splitKplsh[i]);
+                        List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
+                    }
+
+                    //wechatBatchCard.batchDZFPInCard(authid,)
+                }
+            }
+            logger.info("领取发票类型---2--------直接插入卡包-单张");
             WxFpxx wxFpxxIncard = wxfpxxJpaDao.selectByWeiXinOrderNo(SuccOrderId);
             if (null == wxFpxxIncard) {
                 String re = "插入卡包失败！";
@@ -328,6 +357,22 @@ public class WeixinTask implements Runnable{
 
     public void setSkpService(SkpService skpService) {
         this.skpService = skpService;
+    }
+
+    public String getAuthid() {
+        return authid;
+    }
+
+    public void setAuthid(String authid) {
+        this.authid = authid;
+    }
+
+    public WechatBatchCard getWechatBatchCard() {
+        return wechatBatchCard;
+    }
+
+    public void setWechatBatchCard(WechatBatchCard wechatBatchCard) {
+        this.wechatBatchCard = wechatBatchCard;
     }
 
     private Map sj (String str){
