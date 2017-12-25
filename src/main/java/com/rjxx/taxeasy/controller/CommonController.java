@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -398,9 +399,14 @@ public class CommonController extends BaseController {
                 for(int i=0;i<length1;i++){
                     String orderNo1 = orderNos[i];
                     String price1 = prices[i];
+                    BigDecimal big = new BigDecimal(price1);
+                    BigDecimal newbig = big.multiply(new BigDecimal(100));
+                    Double doumoney = new Double(newbig.toString());
                     Map map = new HashMap();
-                    map.put("money",price1);
+                    map.put("money",doumoney);
                     map.put("order_id",orderNo1);
+                    logger.info("订单号"+orderNo1);
+                    logger.info("金额"+doumoney);
                     list.add(map);
                 }
                logger.info(JSON.toJSONString(list));
