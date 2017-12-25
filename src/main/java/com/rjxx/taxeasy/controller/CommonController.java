@@ -431,6 +431,7 @@ public class CommonController extends BaseController {
                 wxFpxx1.setOrderNo(orderNo);
                 wxFpxx1.setGsdm(wxFpxx.getGsdm());
                 wxFpxx1.setAuthid(auth_id);
+                wxFpxx1.setId(wxFpxx.getId());
                 wxfpxxJpaDao.save(wxFpxx1);
                 //成功跳转
                 response.sendRedirect(redicetURL);
