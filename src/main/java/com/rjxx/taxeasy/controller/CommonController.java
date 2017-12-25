@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,9 @@ public class CommonController extends BaseController {
 
     @Autowired
     private JylsService jylsService;
+
+    @Autowired
+    private WechatBatchCard wechatBatchCard;
 
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
@@ -312,11 +317,11 @@ public class CommonController extends BaseController {
         String redirectUrl="";
         try {
             //判断是否是微信浏览
-            if (!weixinUtils.isWeiXinBrowser(request)) {
+           /* if (!weixinUtils.isWeiXinBrowser(request)) {
                 request.getSession().setAttribute("msg", "请使用微信进行该操作");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
-            }
+            }*/
             if(null == orderNo || "".equals(orderNo)){
                 request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -332,49 +337,100 @@ public class CommonController extends BaseController {
                 response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                 return null;
             }
-            WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
-            if(wxFpxx==null){
-                request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                return null;
-            }
-            if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
-                String access_token ="";
-                String ticket = "";
-                WxToken wxToken = wxTokenJpaDao.findByFlag("01");
-                if(wxToken==null){
-                    access_token= (String) weixinUtils.hqtk().get("access_token");
-                    ticket = weixinUtils.getTicket(access_token);
-                }else {
-                    access_token = wxToken.getAccessToken();
-                    ticket= wxToken.getTicket();
-                }
-                String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
-                if(null==spappid || "".equals(spappid)){
-                    //获取授权失败
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+            if(orderNo.indexOf(",")<0){
+                logger.info("单个订单");
+                WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
+                if(wxFpxx==null){
+                    request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
-                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
-                logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
-                //可开具 跳转微信授权链接
-                redirectUrl = weixinUtils.getTiaoURL(wxFpxx.getGsdm(),weixinOrderNo,price,orderTime, "","2",access_token,ticket,spappid);
-                if(null==redirectUrl||redirectUrl.equals("")){
-                    //获取授权失败
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                    return null;
+                if(null!=wxFpxx.getKplsh()&&!"".equals(wxFpxx.getKplsh())){
+                    String access_token ="";
+                    String ticket = "";
+                    WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                    if(wxToken==null){
+                        access_token= (String) weixinUtils.hqtk().get("access_token");
+                        ticket = weixinUtils.getTicket(access_token);
+                    }else {
+                        access_token = wxToken.getAccessToken();
+                        ticket= wxToken.getTicket();
+                    }
+                    String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                    if(null==spappid || "".equals(spappid)){
+                        //获取授权失败
+                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
+                    }
+                    String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
+                    logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
+                    //可开具 跳转微信授权链接
+                    redirectUrl = weixinUtils.getTiaoURL(wxFpxx.getGsdm(),weixinOrderNo,price,orderTime, "","2",access_token,ticket,spappid);
+                    if(null==redirectUrl||redirectUrl.equals("")){
+                        //获取授权失败
+                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
+                    }else {
+                        //成功跳转
+                        response.sendRedirect(redirectUrl);
+                        return null;
+                    }
                 }else {
-                    //成功跳转
-                    response.sendRedirect(redirectUrl);
+                    request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return null;
                 }
             }else {
-                request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                logger.info("多个订单，一次授权插多张卡----------");
+                List list = new ArrayList();
+                String[] orderNos = orderNo.split(",");
+                String[] prices = price.split(",");
+                int length1 = orderNos.length;
+                int length2 = prices.length;
+                if(length1 != length2){
+                    //获取授权失败
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                for(int i=0;i<length1;i++){
+                    String orderNo1 = orderNos[i];
+                    String price1 = prices[i];
+                    Map map = new HashMap();
+                    map.put("money",price1);
+                    map.put("order_id",orderNo1);
+                    list.add(map);
+                }
+               logger.info(JSON.toJSONString(list));
+                WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
+                if(wxFpxx==null || (wxFpxx.getKplsh() == null || wxFpxx.getKplsh().equals(""))){
+                    request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                String spappid = weixinUtils.getSpappid(wxToken.getAccessToken());//获取平台开票信息
+                Map wxurl = wechatBatchCard.getWXURL(wxFpxx.getGsdm(), list, orderTime,
+                        "", "2", wxToken.getAccessToken(), wxToken.getTicket(), spappid);
+                if(wxurl==null){
+                    request.getSession().setAttribute("msg", "获取开票数据失败，请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                String redicetURL=wxurl.get("auth_url").toString();
+                String auth_id = wxurl.get("auth_id").toString();
+                WxFpxx wxFpxx1 = new WxFpxx();
+                wxFpxx1.setOrderNo(orderNo);
+                wxFpxx1.setGsdm(wxFpxx.getGsdm());
+                wxFpxx1.setAuthid(auth_id);
+                wxfpxxJpaDao.save(wxFpxx1);
+                //成功跳转
+                response.sendRedirect(redicetURL);
                 return null;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

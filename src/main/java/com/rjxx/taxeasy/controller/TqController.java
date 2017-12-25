@@ -123,9 +123,9 @@ public class TqController extends BaseController{
             String pdfdz = kplsList.get(i).getPdfurl().replace(".pdf",".jpg");
             result.put("pdfdzs",pdfdz);
             result.put("kpls",kplsList);
-            //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+//            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             result.put("kprq",kplsList.get(i).getKprq());
-            result.put("price",kplsList.get(i).getJshj());
+            result.put("price",kplsList.get(i).getPrice());
             result.put("gsdm",kplsList.get(i).getGsdm());
             result.put("serialorder",kplsList.get(i).getSerialorder());
             request.getSession().setAttribute("serialorder",kplsList.get(i).getSerialorder());
@@ -139,33 +139,41 @@ public class TqController extends BaseController{
                 result.put("msg","2");
                 return result;
             }
-            /*if(null!=request.getSession().getAttribute("tqm")){
-                tqm=request.getSession().getAttribute("tqm").toString();
-            }else if(null !=request.getSession().getAttribute("khh")){
-                tqm=request.getSession().getAttribute("khh").toString();
-            }else {
-                result.put("msg","2");
-                return result;
-            }*/
             String orderNo="";
-            if(request.getSession().getAttribute("orderNo")!=null&&(request.getSession().getAttribute("gsdm").equals("dicos")
-                    ||request.getSession().getAttribute("gsdm").equals("chamate"))){
-                orderNo = request.getSession().getAttribute("orderNo").toString();
-            }else {
-                orderNo=tqm;
+           //德克士、一茶一坐     订单号(提取码 = 品牌+订单号)
+           if(request.getSession().getAttribute("gsdm").equals("dicos")
+                    ||request.getSession().getAttribute("gsdm").equals("chamate")){
+                if(null==request.getSession().getAttribute("orderNo")){
+                    result.put("msg","2");
+                    return result;
+                }
+                if(kplsList.get(i).getKplsh2().indexOf(",")<0){
+                    orderNo = request.getSession().getAttribute("orderNo").toString();
+                }else {
+                    orderNo = kplsList.get(i).getOrderNo();
+                }
+            }
+            //上师大、崇明水厂、瀚达水厂   客户号
+            else if(kplsList.get(i).getGsdm().equals("shssts") ||
+                    kplsList.get(i).getGsdm().equals("cmsc") ||
+                    kplsList.get(i).getGsdm().equals("hdsc")){
+                orderNo = kplsList.get(i).getOrderNo();
+                logger.info(JSON.toJSONString(kplsList.get(i)));
+            }
+            // 其他  提取码
+            else {
+                if(kplsList.get(i).getKplsh2().indexOf(",")<0){
+                    orderNo=tqm;
+                }else {
+                    orderNo = kplsList.get(i).getOrderNo();
+                }
             }
             boolean b = wechatFpxxService.InFapxx(tqm, kplsList.get(i).getGsdm(), orderNo,
-                    "", "2", openid, "", kplsList.get(i).getKplsh().toString(), request);
+                    "", "2", openid, "", kplsList.get(i).getKplsh2(), request);
             if(!b){
                 result.put("msg","1");
                 return result;
             }
-            /*Map map= new HashMap();
-            map.put("gsdm",kplsList.get(i).getGsdm());
-            Gsxx gsxx = gsxxService.findOneByGsdm(map);
-            if(gsxx.getXgsdm()!=null && !"".equals(gsxx.getXgsdm())){
-                orderNo = gsxx.getXgsdm()+"-"+orderNo;
-            }*/
             result.put("orderNo",orderNo);
             result.put("gsdm",kplsList.get(i).getGsdm());
         }
