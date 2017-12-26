@@ -20,10 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-08-16.
@@ -427,12 +424,10 @@ public class CommonController extends BaseController {
                 }
                 String redicetURL=wxurl.get("auth_url").toString();
                 String auth_id = wxurl.get("auth_id").toString();
-                WxFpxx wxFpxx1 = new WxFpxx();
-                wxFpxx1.setOrderNo(orderNo);
-                wxFpxx1.setGsdm(wxFpxx.getGsdm());
-                wxFpxx1.setAuthid(auth_id);
-                wxFpxx1.setId(wxFpxx.getId());
-                wxfpxxJpaDao.save(wxFpxx1);
+                wxFpxx.setAuthid(auth_id);
+                wxFpxx.setXgsj(new Date());
+                wxFpxx.setWeixinOderno(orderNo);
+                wxfpxxJpaDao.save(wxFpxx);
                 //成功跳转
                 response.sendRedirect(redicetURL);
                 return null;

@@ -2,7 +2,9 @@ package com.rjxx.taxeasy.wechat.task;
 
 import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
+import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.utils.weixin.WechatBatchCard;
@@ -58,6 +60,10 @@ public class WeixinTask implements Runnable{
     private String authid;
 
     private WechatBatchCard wechatBatchCard;
+
+    private PpJpaDao ppJpaDao;
+
+    private XfJpaDao xfJpaDao;
 
     @Override
     public void run() {
@@ -162,17 +168,45 @@ public class WeixinTask implements Runnable{
                 if(wxFpxxByAuthid.getKplsh()!=null && wxFpxxByAuthid.getKplsh().indexOf(",")>=0){
                     logger.info("多个开票流水号");
                     String[] splitKplsh = wxFpxxByAuthid.getKplsh().split(",");
-                    for(int i = 0 ; i< splitKplsh.length;i++){
-                        Map map = new HashMap();
-                        map.put("gsdm" , wxFpxxByAuthid.getGsdm());
-                        map.put("kplsh",splitKplsh[i]);
-                        Kpls kpls = kplsService.findOneByParams(map);
-                        Map params2 = new HashMap();
-                        params2.put("kplsh", splitKplsh[i]);
-                        List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
+                    List<Kpls> kplsList = new ArrayList();
+                    String card_id ="";
+                    try {
+                        for(int i = 0 ; i< splitKplsh.length;i++){
+                            Map map = new HashMap();
+                            map.put("gsdm" , wxFpxxByAuthid.getGsdm());
+                            map.put("kplsh",splitKplsh[i]);
+                            Kpls kpls = kplsService.findOneByParams(map);
+                           kplsList.add(kpls);
+                            if (null == kpls.getSkpid()) {
+                                logger.info("税控盘id为空！");
+                                return ;
+                            }
+                            Map skpMap = new HashMap();
+                            skpMap.put("kpdid", kpls.getSkpid());
+                            Skp skp = skpService.findOneByParams(skpMap);
+                            if (null == skp.getPid()) {
+                                logger.info("pid 为空----");
+                                return ;
+                            }
+                            Pp pp = ppJpaDao.findOneById(skp.getPid());
+                            Xf xf = xfJpaDao.findOneById(skp.getXfid());
+                           if(xf.getWechatCardId()==null){
+                               logger.info("模板card_id 没有");
+                               card_id = weixinUtils.creatMb(pp.getPpmc(), kpls.getXfmc(), pp.getWechatLogoUrl(),access_token);
+                               xf.setWechatCardId(card_id);
+                               xfJpaDao.save(xf);
+                               //防止生成卡包模板和插卡时间间隔过短
+                               //Thread.sleep(300000);
+                           }
+                           card_id=xf.getWechatCardId();
+                        }
+                        wechatBatchCard.batchDZFPInCard(authid,card_id,pdf_file_url,kplsList,access_token);
+                    } catch (Exception e) {
+                        String re = "插入卡包失败！";
+                        wechatBatchCard.batchRefuseKp(authid,re,access_token,spappid);
+                        e.printStackTrace();
                     }
-
-                    //wechatBatchCard.batchDZFPInCard(authid,)
+                    return;
                 }
             }
             logger.info("领取发票类型---2--------直接插入卡包-单张");
@@ -373,6 +407,22 @@ public class WeixinTask implements Runnable{
 
     public void setWechatBatchCard(WechatBatchCard wechatBatchCard) {
         this.wechatBatchCard = wechatBatchCard;
+    }
+
+    public PpJpaDao getPpJpaDao() {
+        return ppJpaDao;
+    }
+
+    public void setPpJpaDao(PpJpaDao ppJpaDao) {
+        this.ppJpaDao = ppJpaDao;
+    }
+
+    public XfJpaDao getXfJpaDao() {
+        return xfJpaDao;
+    }
+
+    public void setXfJpaDao(XfJpaDao xfJpaDao) {
+        this.xfJpaDao = xfJpaDao;
     }
 
     private Map sj (String str){

@@ -8,8 +8,10 @@ import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
+import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.wechat.task.WeixinTask;
@@ -78,6 +80,12 @@ public class WeiXinController extends BaseController {
     @Autowired
     private WechatBatchCard wechatBatchCard;
 
+    @Autowired
+    private PpJpaDao ppJpaDao;
+
+    @Autowired
+    private XfJpaDao xfJpaDao;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${rjxx.pdf_file_url:}")
@@ -145,11 +153,14 @@ public class WeiXinController extends BaseController {
                         String re ="批量插卡失败";
                         wechatBatchCard.batchRefuseKp(authid, re, access_token, spappid);
                     }
+                    //主动查询授权状态
+                    //Map resultMap =  wechatBatchCard.batchZDCXstatus(authid,access_token,spappid);
                     WeixinTask weixinTask = new WeixinTask();
                     weixinTask.setWxFpxx(wxFpxx);
                     weixinTask.setAccess_token(access_token);
                     weixinTask.setAuthid(authid);
                     weixinTask.setOpenid(openid);
+                    //weixinTask.setResultMap(resultMap);
                     weixinTask.setWeixinUtils(weixinUtils);
                     weixinTask.setFailOrderId(FailOrderId);
                     weixinTask.setWxfpxxJpaDao(wxfpxxJpaDao);
@@ -157,8 +168,9 @@ public class WeiXinController extends BaseController {
                     weixinTask.setKpspmxService(kpspmxService);
                     weixinTask.setPdf_file_url(pdf_file_url);
                     weixinTask.setWechatBatchCard(wechatBatchCard);
-                    weixinTask.setXfService(xfService);
                     weixinTask.setSkpService(skpService);
+                    weixinTask.setPpJpaDao(ppJpaDao);
+                    weixinTask.setXfJpaDao(xfJpaDao);
                     Thread thread = new Thread(weixinTask);
                     thread.start();
                     return "";
