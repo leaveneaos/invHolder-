@@ -749,8 +749,21 @@ public class SqjController extends BaseController {
                         result.put("num", "11");
                         return result;
                     }
-                    Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
-                    request.getSession().setAttribute("slv", cszb.getCsz());
+                    //Cszb cszb = cszbService.getSpbmbbh(skp.getGsdm(), skp.getXfid(), skp.getId(), "spsl");
+                    Cszb cszb = cszbService.getSpbmbbh("sqj", skp.getXfid(), skp.getId(), "dyspbmb");
+                    Map mapoo = new HashMap();
+                    mapoo.put("gsdm", "sqj");
+                    if (cszb.getCsz() != null) {
+                        mapoo.put("spdm", cszb.getCsz());
+                    }
+                    Spvo spvo = spvoService.findOneSpvo(mapoo);
+                    if(spvo == null){
+                        //提取码不正确
+                        result.put("num", "11");
+                        return result;
+                    }
+                    logger.info("获取新的商品税率"+spvo.getSl());
+                    request.getSession().setAttribute("slv", spvo.getSl());
                 } else {
                     //提取码不正确
                     result.put("num", "11");
