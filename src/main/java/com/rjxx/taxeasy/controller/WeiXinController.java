@@ -184,7 +184,8 @@ public class WeiXinController extends BaseController {
                         return "";
                     }
                     Map resultMap =  weixinUtils.zdcxstatus(SuccOrderId,access_token);
-                    if(null==resultMap&&wxFpxx.getWxtype().equals("1")){
+                    //if(null==resultMap&&wxFpxx.getWxtype().equals("1")){
+                    if(null!=resultMap&&resultMap.get("msg").equals("72038")){
                         String re = "发票开具失败，请重试！";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
                         return "";
