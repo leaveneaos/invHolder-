@@ -152,15 +152,22 @@ public class WeiXinController extends BaseController {
                         //拒绝开票
                         String re ="批量插卡失败";
                         wechatBatchCard.batchRefuseKp(authid, re, access_token, spappid);
+                        return  "";
                     }
                     //主动查询授权状态
-                    //Map resultMap =  wechatBatchCard.batchZDCXstatus(authid,access_token,spappid);
+                    Map resultMap =  wechatBatchCard.batchZDCXstatus(authid,access_token,spappid);
+                    if(resultMap !=null && resultMap.get("msg").equals("72038")){
+                        //没有授权
+                        String re ="批量插卡失败";
+                        wechatBatchCard.batchRefuseKp(authid, re, access_token, spappid);
+                        return  "";
+                    }
                     WeixinTask weixinTask = new WeixinTask();
                     weixinTask.setWxFpxx(wxFpxx);
                     weixinTask.setAccess_token(access_token);
                     weixinTask.setAuthid(authid);
                     weixinTask.setOpenid(openid);
-                    //weixinTask.setResultMap(resultMap);
+                    weixinTask.setResultMap(resultMap);
                     weixinTask.setWeixinUtils(weixinUtils);
                     weixinTask.setFailOrderId(FailOrderId);
                     weixinTask.setWxfpxxJpaDao(wxfpxxJpaDao);
