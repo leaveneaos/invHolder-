@@ -143,7 +143,9 @@ public class WeiXinController extends BaseController {
                 }else {
                     access_token = wxToken.getAccessToken();
                 }
-                if(requestMap.get("BatchInsert")!=null && requestMap.get("BatchInsert").equals(1)){
+                String BatchInsert = requestMap.get("BatchInsert");
+                logger.info("批量插卡类型BatchInsert为"+BatchInsert);
+                if(BatchInsert!=null && BatchInsert.equals("1")){
                     logger.info("一次授权批量插卡处理");
                     String authid = requestMap.get("SuccOrderId");
                     String spappid = weixinUtils.getSpappid(access_token);
