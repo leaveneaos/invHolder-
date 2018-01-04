@@ -190,7 +190,7 @@ public class WeixinTask implements Runnable{
                             }
                             Pp pp = ppJpaDao.findOneById(skp.getPid());
                             Xf xf = xfJpaDao.findOneById(skp.getXfid());
-                           if(xf.getWechatCardId()==null){
+                           if(xf.getWechatCardId()==null  ||xf.getWechatCardId().equals("")){
                                logger.info("模板card_id 没有");
                                card_id = weixinUtils.creatMb(pp.getPpmc(), kpls.getXfmc(), pp.getWechatLogoUrl(),access_token);
                                xf.setWechatCardId(card_id);
@@ -200,6 +200,7 @@ public class WeixinTask implements Runnable{
                            }
                            card_id=xf.getWechatCardId();
                         }
+                        logger.info("传入的card_id"+card_id);
                         wechatBatchCard.batchDZFPInCard(authid,card_id,pdf_file_url,kplsList,access_token);
                     } catch (Exception e) {
                         String re = "插入卡包失败！";
