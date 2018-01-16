@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.net.URLEncoder;
 
 /**
  * Created by Administrator on 2018-01-16.
@@ -28,7 +29,12 @@ public class WjtzController extends BaseController {
     @RequestMapping
     public void index(String pdf) throws Exception{
         logger.info("----"+pdf);
+        pdf= URLEncoder.encode(pdf,"utf-8");
+        logger.info("----"+pdf);
         String pdfname []=pdf.split("/");
+        logger.info("----"+pdfname[2]);
+        logger.info("----"+pdfname[3]);
+        logger.info("----"+pdfname[4]);
         File file =new File(pdf_file_path + pdfname[2] + "/"+ pdfname[3] +"/"+ pdfname[4]);
         if(file.exists()) {
             logger.info("PDF文件存在");
