@@ -19,7 +19,7 @@ public class WjtzController extends BaseController {
         logger.info("----"+a);
         logger.info("----"+b);
         logger.info("----"+c);
-        File file =new File("/usr/local/e-invoice-file/" + a + "/"+ b +"/"+ c +".pdf");
+        File file =new File("/usr/local/e-invoice-file/e-invoice-file/" + a + "/"+ b +"/"+ c +".pdf");
         if(file.exists()) {
             logger.info("存在");
             response.sendRedirect("http://test.datarj.com/now/"+a+"/"+b+"/"+c+".pdf");
