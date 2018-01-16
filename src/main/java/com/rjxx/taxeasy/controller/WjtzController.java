@@ -25,18 +25,18 @@ public class WjtzController extends BaseController {
     private String pdf_file_history_path;
 
 
-    @RequestMapping(value = "/{xfsh}/{date}/{filepath}")
-    public void index(@PathVariable String xfsh,@PathVariable String date,@PathVariable String filepathName) throws Exception{
-        //logger.info("----"+a);
-        //logger.info("----"+b);
-        //logger.info("----"+c);
-        File file =new File(pdf_file_path + xfsh + "/"+ date +"/"+ filepathName +".pdf");
+    @RequestMapping(value = "/{a}/{b}/{c}")
+    public void index(@PathVariable String a,@PathVariable String b,@PathVariable String c) throws Exception{
+        logger.info("----"+a);
+        logger.info("----"+b);
+        logger.info("----"+c);
+        File file =new File(pdf_file_path + a + "/"+ b +"/"+ c +".pdf");
         if(file.exists()) {
             logger.info("PDF文件存在");
-            response.sendRedirect(pdf_file_now_path +xfsh+"/"+date+"/"+filepathName+".pdf");
+            response.sendRedirect(pdf_file_now_path +a+"/"+b+"/"+c+".pdf");
         }else {
             logger.info("PDF文件不存在");
-            response.sendRedirect(pdf_file_history_path+xfsh+"/"+date+"/"+filepathName+".pdf");
+            response.sendRedirect(pdf_file_history_path+a+"/"+b+"/"+c+".pdf");
         }
 
     }
