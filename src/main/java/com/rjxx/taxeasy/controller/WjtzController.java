@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 /**
@@ -29,7 +31,7 @@ public class WjtzController extends BaseController {
     @RequestMapping
     public void index(String pdf) throws Exception{
         logger.info("----"+pdf);
-        pdf= URLEncoder.encode(pdf,"utf-8");
+        pdf= URLDecoder.decode(pdf,"utf-8");
         logger.info("----"+pdf);
         String pdfname []=pdf.split("/");
         logger.info("----"+pdfname[2]);
@@ -43,5 +45,16 @@ public class WjtzController extends BaseController {
             logger.info("PDF文件不存在");
             response.sendRedirect(pdf_file_history_path+pdfname[2]+"/"+pdfname[3]+"/"+pdfname[4]);
         }
+    }
+
+    public static void main(String[] args) {
+        String s="%E4%B8%AD%E8%88%AA%E7%9B%B4%E5%8D%87%E6%9C%BA%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%94%E2%80%94JY20180116182340769%E2%80%94%E2%80%942290.pdf";
+        try {
+            s= URLDecoder.decode(s,"utf-8");
+            System.out.println(s);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
     }
 }
