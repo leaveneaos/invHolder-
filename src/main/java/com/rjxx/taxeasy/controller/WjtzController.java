@@ -30,7 +30,7 @@ public class WjtzController extends BaseController {
 
     @RequestMapping
     public void index() throws Exception{
-        String pdf=request.getParameter("pdf");
+        String pdf = new String(request.getParameter("pdf").getBytes("iso8859-1"),"UTF-8");
         logger.info("----"+pdf);
         pdf= URLDecoder.decode(pdf,"utf-8");
         logger.info("----"+pdf);
@@ -50,9 +50,11 @@ public class WjtzController extends BaseController {
 
     public static void main(String[] args) {
         String s="%E4%B8%AD%E8%88%AA%E7%9B%B4%E5%8D%87%E6%9C%BA%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%94%E2%80%94JY20180116182340769%E2%80%94%E2%80%942290.pdf";
+        String a="ä¸æµ·é¢å¤´èå¤§æ°æ®æå¡æéå¬å¸";
         try {
             s= URLDecoder.decode(s,"utf-8");
-            System.out.println(s);
+            String name = new String(a.getBytes("iso-8859-1"),"utf-8");
+            System.out.println(name);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
