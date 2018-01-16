@@ -38,13 +38,13 @@ public class WjtzController extends BaseController {
         logger.info("----"+pdfname[2]);
         logger.info("----"+pdfname[3]);
         logger.info("----"+pdfname[4]);
-        File file =new File(pdf_file_path + pdfname[2] + "/"+ pdfname[3] +"/"+ pdfname[4]);
+        File file =new File(pdf_file_path + URLEncoder.encode(pdfname[2],"utf-8") + "/"+ URLEncoder.encode(pdfname[3],"utf-8") +"/"+ URLEncoder.encode(pdfname[4],"utf-8"));
         if(file.exists()) {
             logger.info("PDF文件存在");
-            response.sendRedirect(pdf_file_now_path +pdfname[2]+"/"+pdfname[3]+"/"+pdfname[4]);
+            response.sendRedirect(pdf_file_now_path +URLEncoder.encode(pdfname[2],"utf-8")+"/"+URLEncoder.encode(pdfname[3],"utf-8")+"/"+URLEncoder.encode(pdfname[4],"utf-8"));
         }else {
             logger.info("PDF文件不存在");
-            response.sendRedirect(pdf_file_history_path+pdfname[2]+"/"+pdfname[3]+"/"+pdfname[4]);
+            response.sendRedirect(pdf_file_history_path+URLEncoder.encode(pdfname[2],"utf-8")+"/"+URLEncoder.encode(pdfname[3],"utf-8")+"/"+URLEncoder.encode(pdfname[4],"utf-8"));
         }
     }
 
