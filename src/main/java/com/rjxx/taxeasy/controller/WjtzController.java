@@ -29,7 +29,8 @@ public class WjtzController extends BaseController {
 
 
     @RequestMapping
-    public void index(String pdf) throws Exception{
+    public void index() throws Exception{
+        String pdf=request.getParameter("pdf");
         logger.info("----"+pdf);
         pdf= URLDecoder.decode(pdf,"utf-8");
         logger.info("----"+pdf);
