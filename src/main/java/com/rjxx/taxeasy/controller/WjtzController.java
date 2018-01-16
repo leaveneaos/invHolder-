@@ -29,13 +29,13 @@ public class WjtzController extends BaseController {
     public void index(String pdf) throws Exception{
         logger.info("----"+pdf);
         String pdfname []=pdf.split("/");
-        File file =new File(pdf_file_path + pdfname[2] + "/"+ pdfname[3] +"/"+ pdfname[4] +".pdf");
+        File file =new File(pdf_file_path + pdfname[2] + "/"+ pdfname[3] +"/"+ pdfname[4]);
         if(file.exists()) {
             logger.info("PDF文件存在");
-            response.sendRedirect(pdf_file_now_path +pdfname[2]+"/"+pdfname[3]+"/"+pdfname[4]+".pdf");
+            response.sendRedirect(pdf_file_now_path +pdfname[2]+"/"+pdfname[3]+"/"+pdfname[4]);
         }else {
             logger.info("PDF文件不存在");
-            response.sendRedirect(pdf_file_history_path+pdfname[2]+"/"+pdfname[3]+"/"+pdfname[4]+".pdf");
+            response.sendRedirect(pdf_file_history_path+pdfname[2]+"/"+pdfname[3]+"/"+pdfname[4]);
         }
     }
 }
