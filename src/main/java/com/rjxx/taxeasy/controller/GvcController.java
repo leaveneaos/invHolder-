@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -297,10 +298,14 @@ public class GvcController extends BaseController {
                             return result;
                         }
                     }
-                    logger.info("+++++++++++++++++输入金额"+price);
-                    DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
-                    logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
-                    if(!price.equals(decimalFormat.format(resultMap.get("zkjine")))){
+                    //DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
+                    //logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
+                    BigDecimal bigPrice = new BigDecimal(price);
+                    logger.info("+++++++++++++++++输入金额"+bigPrice);
+                    BigDecimal bigResult = new BigDecimal(resultMap.get("zkjine").toString());
+                    logger.info("_____________返回金额"+bigResult);
+                    int i = bigPrice.compareTo(bigResult);
+                    if(i == 0){
                         result.put("num","12");
                         result.put("msg","金额输入错误，请输入销售票据上的“订单总计”金额！");
                         return result;
