@@ -195,8 +195,13 @@ public class GvcController extends BaseController {
                         Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
                         maps = getDataService.getDataForGvc(tqms, gsdm, csz.getCsz());
                     }
-                    DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
-                    if(!price.equals(decimalFormat.format(maps.get("zkjine")))){
+                    //DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
+                    BigDecimal bigPrice = new BigDecimal(price);
+                    logger.info("输入金额1"+bigPrice);
+                    BigDecimal bigResult = new BigDecimal(maps.get("zkjine").toString());
+                    logger.info("返回金额2"+bigResult);
+                    int i = bigPrice.compareTo(bigResult);
+                    if(i != 0){
                         result.put("num","12");
                         result.put("msg","金额输入错误，请输入销售票据上的“订单总计”金额！");
                         return result;
@@ -301,11 +306,11 @@ public class GvcController extends BaseController {
                     //DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
                     //logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
                     BigDecimal bigPrice = new BigDecimal(price);
-                    logger.info("+++++++++++++++++输入金额"+bigPrice);
+                    logger.info("输入金额3"+bigPrice);
                     BigDecimal bigResult = new BigDecimal(resultMap.get("zkjine").toString());
-                    logger.info("_____________返回金额"+bigResult);
+                    logger.info("返回金额4"+bigResult);
                     int i = bigPrice.compareTo(bigResult);
-                    if(i == 0){
+                    if(i != 0){
                         result.put("num","12");
                         result.put("msg","金额输入错误，请输入销售票据上的“订单总计”金额！");
                         return result;
