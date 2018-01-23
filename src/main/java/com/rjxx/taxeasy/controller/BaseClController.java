@@ -373,6 +373,9 @@ public class BaseClController extends BaseController {
                         if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size() >fphs) {
                             redirectUrl += "&isAlipay=true";
                         }
+                        logger.info("跳转地址"+redirectUrl);
+                        logger.info("明细"+jymxsqList.size());
+                        logger.info("发票行数"+fphs);
                         response.sendRedirect(redirectUrl);
                         return;
                     }
