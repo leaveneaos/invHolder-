@@ -373,9 +373,6 @@ public class BaseClController extends BaseController {
                         if (AlipayUtils.isAlipayBrowser(request) || jymxsqList.size() >fphs) {
                             redirectUrl += "&isAlipay=true";
                         }
-                        logger.info("跳转地址"+redirectUrl);
-                        logger.info("明细"+jymxsqList.size());
-                        logger.info("发票行数"+fphs);
                         response.sendRedirect(redirectUrl);
                         return;
                     }
@@ -643,12 +640,14 @@ public class BaseClController extends BaseController {
         if (StringUtils.isNotBlank(jyxxsq.getGfemail())) {
             jyxxsq.setSffsyj("1");
         }
+        Cszb csz = cszbService.getSpbmbbh( jyxxsq.getGsdm(), null,null, "dzphs");
+        Integer fphs = Integer.valueOf(csz.getCsz());
         jyxxsq.setTqm(tqm);
         String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);//支付宝userid
         if(AlipayUtils.isAlipayBrowser(request)){
             jyxxsq.setOpenid(userId);
             jyxxsq.setSjly("5");
-        }else if(WeixinUtils.isWeiXinBrowser(request)){
+        }else if(WeixinUtils.isWeiXinBrowser(request)&&jymxsqList.size() < fphs){
             jyxxsq.setOpenid(openid);
             jyxxsq.setSjly("4");
         }else{

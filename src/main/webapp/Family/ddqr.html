@@ -185,10 +185,8 @@
             //var isUCBrowser = ua.indexOf('UCBrowser') != -1;
 				var urlinfo = window.location.href; //获取当前页面的url
             if(isAlipay || urlinfo.indexOf("isAlipay=true") != -1){
-                alert(1);
                 window.location.href = "../Family/ddmx.html?time=" + new Date();
             }else {
-                alert(2);
                 window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + pricese+"&gsdm="+gsmc;
             }
