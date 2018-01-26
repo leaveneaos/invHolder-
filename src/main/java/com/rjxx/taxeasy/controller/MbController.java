@@ -454,7 +454,7 @@ public class MbController extends BaseController {
             return result;
         }
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            if("ubm".equals(gsdm)||"fj".equals(gsdm)){
+            if("ubm".equals(gsdm)||"fj".equals(gsdm)||"zgz".equals(gsdm)){
                 try{
                     Map<String, Object> params = new HashMap<>();
                     params.put("tqm",tqms);
