@@ -1218,12 +1218,12 @@ public class MbController extends BaseController {
                 jyxxsqList.add(jyxxsq);
                 Cszb cszb2 = cszbService.getSpbmbbh(gsdm, null, null, "kpfs");
                 String kpfs=cszb2.getCsz();
-                logger.info("正官庄开票方式"+kpfs);
-                if(kpfs.equals("03")){
-                    resultList = (List) fpclservice.zjkp(jyxxsqList, "03");//服务器
-                }else{
-                    resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
-                }
+                //logger.info("开票方式"+kpfs);
+                //if(kpfs.equals("03")){
+                    resultList = (List) fpclservice.zjkp(jyxxsqList, kpfs);//服务器
+                //}else{
+                    //resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
+                //}
                 result = responseUtil.lpResponse(null);
                 System.out.println(result);
                 Map resultXmlMap=XmlUtil.xml2Map(result);
