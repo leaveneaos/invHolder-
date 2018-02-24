@@ -288,7 +288,7 @@ public class GvcController extends BaseController {
                     if(!kpqssj.equals("") && !kpjssj.equals("")){
                         Date endDate = df.parse(kpjssj);
                         Date startDate = df.parse(kpqssj);
-                        if(nowDate.getTime()<endDate.getTime() && nowDate.getTime()>startDate.getTime()){
+                        if(nowDate.getTime()>endDate.getTime() && nowDate.getTime()<startDate.getTime()){
                             logger.info("-----------------系统时间小于开票起始时间"+kpqssj);
                             result.put("num","22");
                             result.put("endDate",kpjssj);
