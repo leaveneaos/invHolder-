@@ -197,9 +197,9 @@ public class GvcController extends BaseController {
                     }
                     //DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
                     BigDecimal bigPrice = new BigDecimal(price);
-                    logger.info("输入金额1"+bigPrice);
+                    //logger.info("输入金额1"+bigPrice);
                     BigDecimal bigResult = new BigDecimal(maps.get("zkjine").toString());
-                    logger.info("返回金额2"+bigResult);
+                    //logger.info("返回金额2"+bigResult);
                     int i = bigPrice.compareTo(bigResult);
                     if(i != 0){
                         result.put("num","12");
@@ -275,9 +275,9 @@ public class GvcController extends BaseController {
                     String storeno = (String) resultMap.get("storeno");
                     String kpqssj = (String) resultMap.get("kpqssj");
                     String kpjssj = (String) resultMap.get("kpjssj");
-                    logger.info("--------当前时间-------"+nowdate);
-                    logger.info("------开票起始时间------"+kpqssj);
-                    logger.info("------开票结束时间------"+kpjssj);
+                    //logger.info("--------当前时间-------"+nowdate);
+                    //logger.info("------开票起始时间------"+kpqssj);
+                    //logger.info("------开票结束时间------"+kpjssj);
                     DateFormat df = new SimpleDateFormat("HH:mm:ss");
                     Date nowDate = df.parse(nowdate);
                     if(nowdate.equals("")){
@@ -289,7 +289,7 @@ public class GvcController extends BaseController {
                         Date endDate = df.parse(kpjssj);
                         Date startDate = df.parse(kpqssj);
                         if(nowDate.getTime()>endDate.getTime() && nowDate.getTime()<startDate.getTime()){
-                            logger.info("-----------------系统时间小于开票起始时间"+kpqssj);
+                            //logger.info("-----------------系统时间小于开票起始时间"+kpqssj);
                             result.put("num","22");
                             result.put("endDate",kpjssj);
                             result.put("startDate",kpqssj);
@@ -306,9 +306,9 @@ public class GvcController extends BaseController {
                     //DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
                     //logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
                     BigDecimal bigPrice = new BigDecimal(price);
-                    logger.info("输入金额3"+bigPrice);
+                    //logger.info("输入金额3"+bigPrice);
                     BigDecimal bigResult = new BigDecimal(resultMap.get("zkjine").toString());
-                    logger.info("返回金额4"+bigResult);
+                    //logger.info("返回金额4"+bigResult);
                     int i = bigPrice.compareTo(bigResult);
                     if(i != 0){
                         result.put("num","12");

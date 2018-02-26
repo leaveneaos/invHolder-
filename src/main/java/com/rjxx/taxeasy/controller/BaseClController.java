@@ -230,7 +230,16 @@ public class BaseClController extends BaseController {
                     return;
                 }
                 String mdh = tqm.substring(4, 10);//门店号
-                String jylsh = tqm.substring(12, 20);//交易流水号
+                String jylsh ="";
+                if(tqm.length()==21){
+                    jylsh = tqm.substring(12, 20);//交易流水号
+                }else if(tqm.length() == 23){
+                    jylsh = tqm.substring(14,22);
+                }else {
+                    request.getSession().setAttribute("msg", "订单号有误，请联系商家!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
                 request.getSession().setAttribute("orderNo", mdh);
                 request.getSession().setAttribute("order", jylsh);
                 request.getSession().setAttribute("tqm", tqm);
