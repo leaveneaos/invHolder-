@@ -154,7 +154,7 @@ public class WeixinTask implements Runnable{
             }else {
                 logger.info("------没有该公司的开票处理，---------公司为"+gsdm);
                 String re = "发票开具异常,请联系商家！";
-                weixinUtils.jujuekp(FailOrderId,re,access_token);
+                weixinUtils.jujuekp(SuccOrderId,re,access_token);
             }
         }else if(null!=wxFpxx.getWxtype() && "2".equals(wxFpxx.getWxtype())) {
             if(authid!=null && !authid.equals("")){
