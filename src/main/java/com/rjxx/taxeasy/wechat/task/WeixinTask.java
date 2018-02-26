@@ -121,7 +121,7 @@ public class WeixinTask implements Runnable{
                     e.printStackTrace();
                 }
                 return ;
-            }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm))) {
+            }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm)||"beautyfarm".equals(gsdm))) {
                 logger.info("一茶一坐开票---德克士---------");
                 try {
                     logger.info("进入全家开票处理---------");
