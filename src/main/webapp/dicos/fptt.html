@@ -95,6 +95,9 @@
             ppdm = getval.split("=")[2];
 
             if(pp!="no"){
+                if(pp=="beautyfarm"){
+                    $("header").css("background-color", "white");
+                }
                 $("#logo").attr("src", "logo/" + pp + ".png");
                 $("#advert").attr("src", "logo/" + pp + "_advert.png");
             }
