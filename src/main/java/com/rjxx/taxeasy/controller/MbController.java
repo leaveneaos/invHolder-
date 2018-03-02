@@ -502,6 +502,16 @@ public class MbController extends BaseController {
                     result.put("spmc",spmc);
                     result.put("spje",spje);
                     result.put("spsl",spsl);
+                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfcrkb");
+                    if(zb1!=null&&zb1.equals("是")){
+                        boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, null, "1", opendid,
+                                (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+                        if(!b){
+                            result.put("num","12");
+                            result.put("msg","保存发票信息失败，请重试！");
+                            return result;
+                        }
+                    }
                     return result;
                 }catch (NullPointerException e){
                     result.put("num","14");
