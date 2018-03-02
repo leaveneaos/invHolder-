@@ -496,7 +496,7 @@ public class MbController extends BaseController {
                     String spje=jymxsq.getSpje().toString();
                     String spsl=jymxsq.getSpsl().toString();
                     //查询交易信息
-                    result.put("num","13");
+                    //result.put("num","13");
                     result.put("gsdm",gsdm);
                     result.put("tqm",tqms);
                     result.put("spmc",spmc);
@@ -533,7 +533,6 @@ public class MbController extends BaseController {
                             e.printStackTrace();
                         }
                     }
-                    return result;
                 }catch (NullPointerException e){
                     result.put("num","14");
                     return result;
