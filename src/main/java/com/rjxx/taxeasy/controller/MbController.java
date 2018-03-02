@@ -511,6 +511,27 @@ public class MbController extends BaseController {
                             result.put("msg","保存发票信息失败，请重试！");
                             return result;
                         }
+                        try {
+                            WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                            String access_token = wxToken.getAccessToken();
+                            String ticket= wxToken.getTicket();
+                            String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                            if(null==spappid ||"".equals(spappid)){
+                                //获取授权失败
+                                request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                                return null;
+                            }
+                            String weixinOrderNo = wechatFpxxService.getweixinOrderNo(tqms,gsdm);
+                            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String orderTime = sdf.format(jyxxsq.getDdrq());
+                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,spje,orderTime, "","1",access_token,ticket,spappid);
+                            result.put("num","20");
+                            result.put("redirectUrl",redirectUrl);
+                            return result;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     return result;
                 }catch (NullPointerException e){
