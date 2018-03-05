@@ -502,37 +502,37 @@ public class MbController extends BaseController {
                     result.put("spmc",spmc);
                     result.put("spje",spje);
                     result.put("spsl",spsl);
-                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfcrkb");
-                    if(zb1!=null&&zb1.getCsz().equals("是")){
-                        boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, null, "1", opendid,
+//                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfcrkb");
+//                    if(zb1!=null&&zb1.getCsz().equals("是")){
+                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, null, "1", opendid,
                                 (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
-                        if(!b){
-                            result.put("num","12");
-                            result.put("msg","保存发票信息失败，请重试！");
-                            return result;
-                        }
-                        try {
-                            WxToken wxToken = wxTokenJpaDao.findByFlag("01");
-                            String access_token = wxToken.getAccessToken();
-                            String ticket= wxToken.getTicket();
-                            String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
-                            if(null==spappid ||"".equals(spappid)){
-                                //获取授权失败
-                                request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                                return null;
-                            }
-                            String weixinOrderNo = wechatFpxxService.getweixinOrderNo(tqms,gsdm);
-                            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String orderTime = sdf.format(jyxxsq.getDdrq());
-                            String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,spje,orderTime, "","1",access_token,ticket,spappid);
-                            result.put("num","20");
-                            result.put("redirectUrl",redirectUrl);
-                            return result;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    if(!b){
+                        result.put("num","12");
+                        result.put("msg","保存发票信息失败，请重试！");
+                        return result;
                     }
+                    try {
+                        WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                        String access_token = wxToken.getAccessToken();
+                        String ticket= wxToken.getTicket();
+                        String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                        if(null==spappid ||"".equals(spappid)){
+                            //获取授权失败
+                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return null;
+                        }
+                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(tqms,gsdm);
+                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String orderTime = sdf.format(jyxxsq.getDdrq());
+                        String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,spje,orderTime, "","1",access_token,ticket,spappid);
+                        result.put("num","20");
+                        result.put("redirectUrl",redirectUrl);
+                        return result;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+//                    }
                 }catch (NullPointerException e){
                     result.put("num","14");
                     return result;
@@ -671,13 +671,8 @@ public class MbController extends BaseController {
                             String ticket = "";
                             try {
                             WxToken wxToken = wxTokenJpaDao.findByFlag("01");
-                            if(wxToken==null){
-                                access_token= (String) weixinUtils.hqtk().get("access_token");
-                                ticket = weixinUtils.getTicket(access_token);
-                            }else {
-                                access_token = wxToken.getAccessToken();
-                                ticket= wxToken.getTicket();
-                            }
+                            access_token = wxToken.getAccessToken();
+                            ticket= wxToken.getTicket();
                             String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
                                 if(null==spappid ||"".equals(spappid)){
                                     //获取授权失败
@@ -694,12 +689,12 @@ public class MbController extends BaseController {
                                 e.printStackTrace();
                             }
                         }
-                    }
-                    else{
+                    }else{
                         //不用获取数据，数据为空
                         result.put("num","1");
                         result.put("tqm",tqms);
                         result.put("gsdm",gsdm);
+                        return result;
                     }
                 }
             }
@@ -1146,33 +1141,6 @@ public class MbController extends BaseController {
         Thread.sleep(5000);
     }
 
-    /**
-     * A发送邮件的内容
-     *
-     * @param ddh 订单号
-     * @return
-     * @throws Exception
-     */
-   /* private static String getAFMailContent(String ddh, List<String> pdfUrlList, String gsdm) throws Exception {
-        StringBuffer sb = new StringBuffer();
-        // sb.append(null2Wz(iurb.get("BUYER_NAME")));
-        sb.append(" 先生/小姐您好：<br/>");
-        sb.append("<br/>");
-        sb.append("您的订单号码： ");
-        sb.append(ddh).append("的电子发票已开具成功，电子发票下载地址：<br>");
-        for (String pdfUrl : pdfUrlList) {
-            sb.append("<a href='" + pdfUrl + "'>" + null2Wz(pdfUrl) + "</a><br>");
-        }
-        sb.append("请及时下载您的发票。<br><br>");
-        sb.append("提示:苹果浏览器无法显示发票章,只能下载pdf显示<br>");
-        sb.append("<br/><br/>");
-        sb.append(gsdm);
-        sb.append("<br/>");
-        sb.append("<br/>");
-        Date d = new Date();
-        sb.append(1900 + d.getYear()).append("年").append(d.getMonth() + 1).append("月").append(d.getDate()).append("日");
-        return sb.toString();
-    }*/
 
     /**
      * 提取开票
@@ -1218,22 +1186,15 @@ public class MbController extends BaseController {
             if(AlipayUtils.isAlipayBrowser(request)){
                 param.put("sjly","5");
                 param.put("openid",userId);
-                //jyxxsq.setOpenid(userId);
-                //jyxxsq.setSjly("5");//数据来源--支付宝
             }else if(WeixinUtils.isWeiXinBrowser(request)){
-                param.put("sjly","5");
+                param.put("sjly","4");
                 param.put("openid",openid);
-                //jyxxsq.setOpenid(openid);
-                //jyxxsq.setSjly("4");//数据来源--微信
             }else {
                 param.put("sjly","6");
-                //jyxxsq.setSjly("6");//数据来源 --其他浏览器
             }
             if(null!=gfsh.trim()&&!"".equals(gfsh.trim())){
-                //jyxxsq.setGflx("1");
                 param.put("gflx","1");
             }else {
-                //jyxxsq.setGflx("0");
                 param.put("gflx","0");
             }
             jyxxsqService.updateGfxx(param);

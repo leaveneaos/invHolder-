@@ -1,7 +1,5 @@
 package com.rjxx.taxeasy.service;
 
-import com.rjxx.taxeasy.domains.Jyxx;
-import com.rjxx.taxeasy.domains.Jyxxsq;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +12,7 @@ public interface BarcodeService {
                        String gfsh,String email,String gfyh,
                        String gfyhzh,String gfdz,String gfdh,String tqm,
                        String openid,String sjly,String access_token,String weixinOrderNo);
+
     String chamateYX(String gsdm,String gfmc,
                        String gfsh,String email,String gfyh,
                        String gfyhzh,String gfdz,String gfdh,
@@ -53,4 +52,8 @@ public interface BarcodeService {
                       String gfyhzh, String gfdz, String gfdh, String tqm,
                       String openid, String sjly , String access_token, String weixinOrderNo);
 
+    String existInvioce(String gsdm,String gfmc,
+                         String gfsh,String email,String gfyh,
+                         String gfyhzh,String gfdz,String gfdh,String tqm,
+                         String openid,String sjly ,String access_token,String AppId,String key,String weixinOrderNo);
 }

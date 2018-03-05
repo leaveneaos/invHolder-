@@ -1,6 +1,7 @@
 package com.rjxx.taxeasy.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.rjxx.taxeasy.bizcomm.utils.FpclService;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
 import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
@@ -8,6 +9,7 @@ import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.NumberUtil;
+import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
 import com.rjxx.utils.RJCheckUtil;
@@ -68,7 +70,13 @@ public class BarcodeServiceImpl implements BarcodeService {
     private  WeixinUtils weixinUtils;
 
     @Autowired
-    private GsxxService gsxxService;
+    private JyxxsqService jyxxsqService;
+
+    @Autowired
+    private FpclService fpclService;
+
+    @Autowired
+    private ResponseUtil responseUtil;
 
     @Override
     public Map sm(String gsdm, String q) {
@@ -566,24 +574,71 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     }
 
-    /**
-     * 食其家开票方法
-     * @param q
-     * @param gsdm
-     * @param gfmc
-     * @param gfsh
-     * @param email
-     * @param gfyh
-     * @param gfyhzh
-     * @param gfdz
-     * @param gfdh
-     * @param tqm
-     * @param openid
-     * @param sjly
-     * @param access_token
-     * @param weixinOrderNo
-     * @return
-     */
+    @Override
+    public String existInvioce(String gsdm,String gfmc,
+                               String gfsh,String email,String gfyh,
+                               String gfyhzh,String gfdz,String gfdh,String tqm,
+                               String openid,String sjly ,String access_token,String AppId,String key,String weixinOrderNo){
+        String result ="";
+        //交易信息
+        Map paramss = new HashMap();
+        paramss.put("tqm",tqm);
+        paramss.put("gsdm",gsdm);
+        Jyxxsq jyxxsq=jyxxsqService.findOneByParams(paramss);
+        if(jyxxsq==null){
+            String reason="交易数据未上传，发票开具失败!";
+            weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
+            return null;
+        }
+        List<Jyxxsq> jyxxsqList=new ArrayList<>();
+        Map param= new HashMap();
+        param.put("tqm",tqm);
+        param.put("gsdm",gsdm);
+        param.put("gfmc",gfmc);
+        param.put("gfsh",gfsh);
+        param.put("gfdz",gfdz);
+        param.put("gfdh",gfdh);
+        param.put("gfyh",gfyh);
+        param.put("gfyhzh",gfyhzh);
+        param.put("email",email);
+        param.put("sffsyj","1");
+        param.put("openid",openid);
+        param.put("sjly","4");
+        if(null!=gfsh.trim()&&!"".equals(gfsh.trim())){
+            param.put("gflx","1");
+        }else {
+            param.put("gflx","0");
+        }
+        jyxxsqService.updateGfxx(param);
+        jyxxsqList.add(jyxxsq);
+        List resultList = new ArrayList();
+        try {
+            Cszb cszb2 = cszbService.getSpbmbbh(gsdm, null, null, "kpfs");
+            String kpfs=cszb2.getCsz();
+            //logger.info("开票方式"+kpfs);
+            //if(kpfs.equals("03")){
+            resultList = (List) fpclService.zjkp(jyxxsqList, kpfs);//服务器
+            //}else{
+            //resultList = (List) fpclservice.zjkp(jyxxsqList, "01");//录屏
+            //}
+            result = responseUtil.lpResponse(null);
+            System.out.println(result);
+            Map resultXmlMap=XmlUtil.xml2Map(result);
+            String ReturnCode=resultXmlMap.get("ReturnCode").toString();
+            String ReturnMessage=resultXmlMap.get("ReturnMessage").toString();
+            if(ReturnCode.equals("9999")){
+                String reason="开具失败错误信息："+ReturnMessage;
+                weixinUtils.jujuekp(weixinOrderNo,reason,access_token);
+                return null;
+            }
+            result = "success";
+            return result;
+        }catch (Exception e){
+            e.printStackTrace();
+            return  null;
+        }
+    }
+    //食其家
     @Override
     public String sqjInvioce(String q,String gsdm,  String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh,String tqm,
