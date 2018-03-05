@@ -79,12 +79,12 @@ public class WeixinTask implements Runnable{
                 Map resultSjMap = new HashMap();
                 if("Family".equals(gsdm)){
                     logger.info("进入全家开票处理---------");
-                    if(tqm.indexOf("RJ")<0){
+//                    if(tqm.indexOf("RJ")<0){
                         resultSjMap = getDataService.getData(tqm, "Family");
-                    }else {
-                        resultSjMap = sj(tqm);
-                        logger.info("进入测试开票----写死的封装的数据"+ JSON.toJSONString(resultSjMap));
-                    }
+//                    }else {
+//                        resultSjMap = sj(tqm);
+//                        logger.info("进入测试开票----写死的封装的数据"+ JSON.toJSONString(resultSjMap));
+//                    }
                 }else if("bqw".equals(gsdm)){
                     logger.info("波奇网开票-------");
                     Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
@@ -125,15 +125,15 @@ public class WeixinTask implements Runnable{
                 logger.info("一茶一坐开票---德克士---------");
                 try {
                     logger.info("进入全家开票处理---------");
-                    if(tqm.indexOf("RJ")<0){
+//                    if(tqm.indexOf("RJ")<0){
                         barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"), (String) resultMap.get("tax_no"),
                                 (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
                                 (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
-                    }else {
-                        barcodeService.chamateYX(gsdm,(String) resultMap.get("title"), (String) resultMap.get("tax_no"),
-                                (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
-                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), openid, "4",access_token,SuccOrderId);
-                    }
+//                    }else {
+//                        barcodeService.chamateYX(gsdm,(String) resultMap.get("title"), (String) resultMap.get("tax_no"),
+//                                (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
+//                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), openid, "4",access_token,SuccOrderId);
+//                    }
 
                 } catch (Exception e) {
                     String re = "发票开具失败，请重试！";
