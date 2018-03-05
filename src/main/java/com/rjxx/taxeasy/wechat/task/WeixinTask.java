@@ -73,7 +73,7 @@ public class WeixinTask implements Runnable{
         if(null!=wxFpxx.getWxtype() && "1".equals(wxFpxx.getWxtype())){
             logger.info("进入申请开票类型------1------------开始开票");
             Cszb cs = cszbService.getSpbmbbh(gsdm, null,null, "smhqsjfs");
-            if(cs!=null&&cs.getCsz().equals("01")){
+            if(cs!=null && cs.getCsz()!=null && cs.getCsz().equals("01")){
                 logger.info("扫码获取数据方式01-----根据q---一茶一坐、德克士、美丽田园");
                 //扫码 根据q封装数据 makeInvoice
                  //if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm)||"beautyfarm".equals(gsdm))) {
@@ -94,7 +94,7 @@ public class WeixinTask implements Runnable{
                         }
                         return ;
                 // }
-            }else if(cs !=null && cs.getCsz().equals("02")){
+            }else if(cs !=null &&cs.getCsz()!=null&& cs.getCsz().equals("02")){
                 logger.info("扫码获取数据方式02---全家、食其家、波奇、绿地、光唯尚 等");
                 //扫码获取data 封装数据 map    pullInvioce()
                 //if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm) || "ldyx".equals(gsdm)||"gvc".equals(gsdm))) {
