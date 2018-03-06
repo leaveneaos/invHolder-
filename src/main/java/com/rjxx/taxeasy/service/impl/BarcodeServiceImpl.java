@@ -604,7 +604,7 @@ public class BarcodeServiceImpl implements BarcodeService {
         param.put("sffsyj","1");
         param.put("openid",openid);
         param.put("sjly","4");
-        if(null!=gfsh.trim()&&!"".equals(gfsh.trim())){
+        if(null!=gfsh&&!"".equals(gfsh)){
             param.put("gflx","1");
         }else {
             param.put("gflx","0");

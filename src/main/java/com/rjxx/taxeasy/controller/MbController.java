@@ -878,7 +878,7 @@ public class MbController extends BaseController {
         jyxxsq.setGfdh(dh.trim());
         jyxxsq.setGfyh(khh.trim());
         jyxxsq.setGfyhzh(yhzh.trim());
-        if(null!=nsrsbh.trim()&&!"".equals(nsrsbh.trim())){
+        if(null!=nsrsbh&&!"".equals(nsrsbh)){
             jyxxsq.setGflx("1");
         }else {
             jyxxsq.setGflx("0");
@@ -1192,7 +1192,7 @@ public class MbController extends BaseController {
             }else {
                 param.put("sjly","6");
             }
-            if(null!=gfsh.trim()&&!"".equals(gfsh.trim())){
+            if(null!=gfsh&&!"".equals(gfsh)){
                 param.put("gflx","1");
             }else {
                 param.put("gflx","0");
