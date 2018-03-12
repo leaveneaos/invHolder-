@@ -326,8 +326,8 @@ public class MbController extends BaseController {
                         request.getSession().setAttribute("jymxsqList", jymxsqList);
                         request.getSession().setAttribute("tqm", tqm);
                         result.put("num", "5");
-                        logger.info("订单编号"+tqm+"金额"+jyxxsq.getJshj()+"日期"+sdf.format(jyxxsq.getDdrq()));
-                        boolean b1 = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, q, "1", opendid, userId, "", request);
+                        logger.info("订单编号"+jyxxsq.getDdh()+"金额"+jyxxsq.getJshj()+"日期"+sdf.format(jyxxsq.getDdrq()));
+                        boolean b1 = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), jyxxsq.getDdh(), q, "1", opendid, userId, "", request);
                         if(!b1){
                             logger.info("保存发票信息失败-------");
                             request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
@@ -602,7 +602,7 @@ public class MbController extends BaseController {
                     String llqxx = request.getHeader("User-Agent");
                     tqjl.setLlqxx(llqxx);
                     tqjlService.save(tqjl);
-                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, "", "2", opendid,
+                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, jyls.getDdh(), "", "2", opendid,
                             (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID),
                             list.get(0).getKplsh().toString(), request);
                     if(!b){
@@ -613,13 +613,7 @@ public class MbController extends BaseController {
                     result.put("num","6");
                 }else {
 
-                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, "", "1", opendid,
-                            (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
-                    if(!b){
-                        result.put("num","12");
-                        result.put("msg","保存发票信息失败，请重试！");
-                        return result;
-                    }
+
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
                         if(gsdm.equals("ldyx")){
@@ -645,9 +639,26 @@ public class MbController extends BaseController {
                         List<Jyxxsq> jyxxsqList=(List)resultMap.get("jyxxsqList");
                         List<Jymxsq> jymxsqList=(List)resultMap.get("jymxsqList");
                         List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
-                        if(null!=jyxxsqList){
-                            Jyxxsq jyxxsq=jyxxsqList.get(0);
-                            request.getSession().setAttribute(gsdm+tqms+"je",jyxxsq.getJshj());
+
+                        if(null==jyxxsqList && jyxxsqList.isEmpty()){
+                            result.put("num","12");
+                            result.put("msg","数据获取失败！");
+                            return result;
+                        }
+                        if(null==jymxsqList && jymxsqList.isEmpty()){
+                            result.put("num","12");
+                            result.put("msg","数据获取失败！");
+                            return result;
+                        }
+                        Jyxxsq jyxxsq=jyxxsqList.get(0);
+                        request.getSession().setAttribute(gsdm+tqms+"je",jyxxsq.getJshj());
+                        //保存微信发票信息
+                        boolean b = wechatFpxxService.InFapxx(tqms, gsdm, jyxxsq.getDdh(), "", "1", opendid,
+                                (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+                        if(!b){
+                            result.put("num","12");
+                            result.put("msg","保存发票信息失败，请重试！");
+                            return result;
                         }
                         if(resultMap!=null){
                             request.getSession().setAttribute(gsdm+tqms+"resultMap",resultMap);
@@ -662,7 +673,7 @@ public class MbController extends BaseController {
                         result.put("num","5");
                         result.put("tqm",tqms);
                         result.put("gsdm",gsdm);
-                        String orderNo = tqms;
+                        String orderNo = jyxxsq.getDdh();
                         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
                         String price = jyxxsqList.get(0).getJshj().toString();
