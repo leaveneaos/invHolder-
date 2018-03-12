@@ -251,13 +251,6 @@ public class GvcController extends BaseController {
                     result.put("num","3");
                 }else {
                     Map resultMap = new HashMap();
-                    //调用接口获取数据--首先存入微信发票信息
-                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, "", "1", opendid, userId, "", request);
-                    if(!b){
-                        result.put("num","12");
-                        result.put("msg","保存信息失败，请重试！");
-                        return result;
-                    }
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(zb1.getCsz().equals("是")){
                         Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
@@ -275,9 +268,19 @@ public class GvcController extends BaseController {
                     String storeno = (String) resultMap.get("storeno");
                     String kpqssj = (String) resultMap.get("kpqssj");
                     String kpjssj = (String) resultMap.get("kpjssj");
-                    //logger.info("--------当前时间-------"+nowdate);
-                    //logger.info("------开票起始时间------"+kpqssj);
-                    //logger.info("------开票结束时间------"+kpjssj);
+                    if(jyxxsqList==null && jyxxsqList.isEmpty()){
+                        result.put("num","12");
+                        result.put("msg","获取数据失败，请联系商家！");
+                        return result;
+                    }
+                    String orderNo = jyxxsqList.get(0).getDdh();
+                    //调用接口获取数据--首先存入微信发票信息
+                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, orderNo, "", "1", opendid, userId, "", request);
+                    if(!b){
+                        result.put("num","12");
+                        result.put("msg","保存信息失败，请重试！");
+                        return result;
+                    }
                     DateFormat df = new SimpleDateFormat("HH:mm:ss");
                     Date nowDate = df.parse(nowdate);
                     if(nowdate.equals("")){
@@ -289,7 +292,6 @@ public class GvcController extends BaseController {
                         Date endDate = df.parse(kpjssj);
                         Date startDate = df.parse(kpqssj);
                         if(nowDate.getTime()>endDate.getTime() && nowDate.getTime()<startDate.getTime()){
-                            //logger.info("-----------------系统时间小于开票起始时间"+kpqssj);
                             result.put("num","22");
                             result.put("endDate",kpjssj);
                             result.put("startDate",kpqssj);
@@ -306,16 +308,13 @@ public class GvcController extends BaseController {
                     //DecimalFormat decimalFormat = new DecimalFormat("###################.###########");
                     //logger.info("_____________返回金额"+decimalFormat.format(resultMap.get("zkjine")));
                     BigDecimal bigPrice = new BigDecimal(price);
-                    //logger.info("输入金额3"+bigPrice);
                     BigDecimal bigResult = new BigDecimal(resultMap.get("zkjine").toString());
-                    //logger.info("返回金额4"+bigResult);
                     int i = bigPrice.compareTo(bigResult);
                     if(i != 0){
                         result.put("num","12");
                         result.put("msg","金额输入错误，请输入销售票据上的“订单总计”金额！");
                         return result;
                     }
-                    String orderNo = tqms;
                     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     String orderTime = sdf.format(jyxxsqList.get(0).getDdrq());
                     if(WeixinUtils.isWeiXinBrowser(request)){
@@ -323,14 +322,8 @@ public class GvcController extends BaseController {
                         String ticket = "";
                         try {
                             WxToken wxToken = wxTokenJpaDao.findByFlag("01");
-                            if(wxToken==null){
-                                result.put("num","12");
-                                result.put("msg","出现未知异常，请重试！");
-                                return result;
-                            }else {
-                                access_token = wxToken.getAccessToken();
-                                ticket= wxToken.getTicket();
-                            }
+                            access_token = wxToken.getAccessToken();
+                            ticket= wxToken.getTicket();
                             String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
                             if(null==spappid ||"".equals(spappid)){
                                 result.put("num","12");
