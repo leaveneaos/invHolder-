@@ -339,7 +339,7 @@ public class MbController extends BaseController {
                             xgsdm=gsxx.getXgsdm();
                         }*/
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
-                                      +"=" + gsxx.getGsdm() + "=" + tqm + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq())/*+"="+xgsdm*/);
+                                      +"=" + gsxx.getGsdm() + "=" + jyxxsq.getDdh() + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq())/*+"="+xgsdm*/);
                         return;
                     }
                 }else {
@@ -489,22 +489,19 @@ public class MbController extends BaseController {
                     Jyxxsq jyxxsq= jyxxsqService.findOneByParams(params);
                     Integer sqlsh= jyxxsq.getSqlsh();
                     Map paramss=new HashMap();
-                    //paramss.put("gsdm","ubm");
                     paramss.put("sqlsh",sqlsh);
                     Jymxsq jymxsq=jymxsqService.findOneByParams(paramss);
                     String spmc=jymxsq.getSpmc();
                     String spje=jymxsq.getSpje().toString();
                     String spsl=jymxsq.getSpsl().toString();
                     //查询交易信息
-                    //result.put("num","13");
+                    result.put("num","13");
                     result.put("gsdm",gsdm);
                     result.put("tqm",tqms);
                     result.put("spmc",spmc);
                     result.put("spje",spje);
                     result.put("spsl",spsl);
-//                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfcrkb");
-//                    if(zb1!=null&&zb1.getCsz().equals("是")){
-                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, jyxxsq.getDdh(), null, "1", opendid,
+                  /*boolean b = wechatFpxxService.InFapxx(tqms, gsdm, jyxxsq.getDdh(), null, "1", opendid,
                                 (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
                     if(!b){
                         result.put("num","12");
@@ -531,8 +528,7 @@ public class MbController extends BaseController {
                         return result;
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
-//                    }
+                    }*/
                 }catch (NullPointerException e){
                     result.put("num","14");
                     return result;
@@ -612,8 +608,6 @@ public class MbController extends BaseController {
                 else if(null != jyls && null !=jyls.getDjh()){
                     result.put("num","6");
                 }else {
-
-
                     Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfdyjkhqkp");
                     if(list.size()== 0 && null!=zb1.getCsz()&& zb1.getCsz().equals("是")){
                         if(gsdm.equals("ldyx")){
@@ -641,11 +635,6 @@ public class MbController extends BaseController {
                         List<Jyzfmx> jyzfmxList = (List) resultMap.get("jyzfmxList");
 
                         if(null==jyxxsqList && jyxxsqList.isEmpty()){
-                            result.put("num","12");
-                            result.put("msg","数据获取失败！");
-                            return result;
-                        }
-                        if(null==jymxsqList && jymxsqList.isEmpty()){
                             result.put("num","12");
                             result.put("msg","数据获取失败！");
                             return result;
