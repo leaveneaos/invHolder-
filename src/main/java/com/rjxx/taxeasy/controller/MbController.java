@@ -504,7 +504,7 @@ public class MbController extends BaseController {
                     result.put("spsl",spsl);
 //                    Cszb zb1 = cszbService.getSpbmbbh(gsdm, null,null, "sfcrkb");
 //                    if(zb1!=null&&zb1.getCsz().equals("是")){
-                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, tqms, null, "1", opendid,
+                    boolean b = wechatFpxxService.InFapxx(tqms, gsdm, jyxxsq.getDdh(), null, "1", opendid,
                                 (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
                     if(!b){
                         result.put("num","12");
@@ -522,7 +522,7 @@ public class MbController extends BaseController {
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return null;
                         }
-                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(tqms,gsdm);
+                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(jyxxsq.getDdh(),gsdm);
                         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         String orderTime = sdf.format(jyxxsq.getDdrq());
                         String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,spje,orderTime, "","1",access_token,ticket,spappid);
