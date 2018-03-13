@@ -129,7 +129,7 @@
                 </div>    
                 <div class="mui-input-row">
                     <label><font color="red">*</font>购方名称</label>
-                    <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
+                    <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称" onkeyup="query()">
                     <select id="getFptt" oninput="changeFptt(this.value)">
                        <!-- <option value="getFptt"> -->
                     </select>
@@ -464,6 +464,35 @@
            } else {
               $('.isCheck').html('');
            }
+        }
+        //模糊查询
+        function query(){
+            $("#fptt").autocomplete({
+                autoFocus:true,
+                minLength: 2,
+                source:function(request,response){
+                    $.post(
+                        "companyInfo/list",
+                        {
+                            "name": $("#fptt").val()
+                        },function (obj) {
+                            response(eval("("+obj+")"));
+                        });
+                },
+                select: function( event, ui ) {
+                    var name = ui.item.value;
+                    $.ajax({
+                        url : "companyInfo/single",
+                        type:"post",
+                        data : {
+                            "name" : name
+                        },
+                        success : function(obj) {
+                            $("#nsrsbh").val(obj);
+                        }
+                    });
+                }
+            });
         }
     </script>
 </body>

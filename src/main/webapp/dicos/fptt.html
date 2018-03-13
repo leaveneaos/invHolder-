@@ -31,7 +31,7 @@
 					<form class="" action="" method="">
 						<div class="entry">
 							<span style="color: red;">*</span><label>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
-							<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称(必填)">
+							<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称(必填)" onkeyup="query()">
 							<select id="getFptt" oninput="changeFptt(this.value)">
 							</select>
 						</div>
@@ -341,6 +341,36 @@
                     }
                 });
             }
+        }
+
+        //模糊查询
+        function query(){
+            $("#fptt").autocomplete({
+                autoFocus:true,
+                minLength: 2,
+                source:function(request,response){
+                    $.post(
+                        "companyInfo/list",
+                        {
+                            "name": $("#fptt").val()
+                        },function (obj) {
+                            response(eval("("+obj+")"));
+                        });
+                },
+                select: function( event, ui ) {
+                    var name = ui.item.value;
+                    $.ajax({
+                        url : "companyInfo/single",
+                        type:"post",
+                        data : {
+                            "name" : name
+                        },
+                        success : function(obj) {
+                            $("#nsrsbh").val(obj);
+                        }
+                    });
+                }
+            });
         }
 	</script>
 </body>

@@ -191,14 +191,22 @@
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
-            if(isAlipay){
-                var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
-                window.location.assign(encodeURI(myurl));
-            }else if(isWeixin){
+//            if(isAlipay){
+//                var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
+//                window.location.assign(encodeURI(myurl));
+//            }else if(isWeixin){
+//                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+//                    "&storeNo=" + storeNo + "&price=" + lastPrice+"&gsdm="+gsmc;
+//            }else{
+//                redirect("请用微信或支付宝扫码");
+//            }
+
+            if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + lastPrice+"&gsdm="+gsmc;
             }else{
-                redirect("请用微信或支付宝扫码");
+                var myurl = "../QR/input.html?param="+new Date()+"="+lastSpsl+"="+lastSpmc+"="+price;
+                window.location.assign(encodeURI(myurl));
             }
         }
     </script>
