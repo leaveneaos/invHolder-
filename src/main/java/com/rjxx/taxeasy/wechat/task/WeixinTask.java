@@ -121,10 +121,8 @@ public class WeixinTask implements Runnable{
                     e.printStackTrace();
                 }
                 return ;
-            }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm)||"beautyfarm".equals(gsdm))) {
-                logger.info("一茶一坐开票---德克士---------");
+            }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm)||"beautyfarm".equals(gsdm)||"phtons".equals(gsdm))) {
                 try {
-                    logger.info("进入全家开票处理---------");
 //                    if(tqm.indexOf("RJ")<0){
                     barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"), (String) resultMap.get("tax_no"),
                             (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
