@@ -385,7 +385,7 @@ public class WeiXinController extends BaseController {
      */
     private static final int MESSAGE_CACHE_SIZE = 1000;
     private static List<String> cacheList = new ArrayList<>(MESSAGE_CACHE_SIZE);
-    public boolean paichong(String createTime, String fromUserName) {
+    public synchronized boolean paichong(String createTime, String fromUserName) {
         String flag = createTime + fromUserName;
         if (cacheList.contains(flag)) {
             logger.info("cacheList里已存在"+flag);
