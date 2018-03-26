@@ -49,6 +49,11 @@ public class AdapterController extends BaseController {
     @Autowired
     private wechatFpxxServiceImpl wechateFpxxService;
 
+    private static final String TYPE_ONE_CALLBACKURL = "";
+    private static final String TYPE_TWO_CALLBACKURL = "adapter/getOpenid";
+    private static final String TYPE_THREE_CALLBACKURL = "";
+
+
 
     @RequestMapping(value = "/{gsdm}", method = RequestMethod.GET)
     public void get(@PathVariable String gsdm, @RequestParam String q) {
@@ -84,7 +89,7 @@ public class AdapterController extends BaseController {
                 }
                 session.setAttribute("q", q);
                 session.setAttribute("gsdm", gsdm);
-                String grant = isWechat(ua);
+                String grant = isWechat(ua,TYPE_TWO_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grant != null) {
                     try {
@@ -224,12 +229,12 @@ public class AdapterController extends BaseController {
         }
     }
 
-    private String isWechat(String ua) {
+    private String isWechat(String ua,String callbackurl) {
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                    + url + "adapter/getOpenid&" + "response_type=code&scope=snsapi_base&state=" + "state"
+                    + url + callbackurl+"&" + "response_type=code&scope=snsapi_base&state=" + "state"
                     + "#wechat_redirect";
             return ul;
         } else {
