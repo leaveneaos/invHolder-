@@ -1,0 +1,177 @@
+html,body {
+	margin: 0 auto;
+	padding: 0;
+	overflow: hidden;
+	overflow-y: auto;
+	max-width: 800px;
+}
+ul,ol,h1,h2,h3,h4,h5,h6 {
+	margin: 0;
+	padding: 0;
+}
+header img{
+	width: 100%;
+}
+body {
+	background-color: #efc78d;
+}
+ul, ol, li, a{
+	list-style: none;
+}
+a {
+	text-decoration:none
+}
+footer {
+	position: fixed;
+	padding: 0px 20px;
+	width: 100%;
+	bottom: 0;
+    box-sizing: border-box;
+    max-width: 800px;
+}
+button,input {
+	border: none;
+	outline:none;
+}
+button {
+	width: 80%;
+	height: 36px;
+	line-height: 36px;  /*解决在IE下文字显示不出问题*/
+	background-color: #22c774;
+	list-style-type: none; 
+	color: #fff;
+	border-radius: 18px;
+}
+.fl {
+	float: left;
+}
+.fr	{
+	float: right;
+}
+.shadow1 {
+	width: 92%;
+	background-color: #fff;
+	height: 8px;
+	margin: 0 auto;
+	opacity: 0.6;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.shadow2 {
+	width: 95%;
+	background-color: #fff;
+	height: 10px;
+	margin: 0 auto;
+	opacity: 0.8;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.main {
+	margin: 15px auto 30px;
+	width: 85%;
+}
+.content {
+	background-color: #fff;
+	border-radius: 10px;
+}
+.top {
+	text-align: center;
+	height: 40px;
+	line-height: 50px;
+	background-color: #F7F8FA;
+	font-size: 13px;
+	color: #ccc;
+	border-bottom: 1px solid #ececec;
+	margin-top: -8px;
+}
+.one,.two,.three,.four {
+	color: #4BB4F7;
+}
+.middle {
+	width: 100%;
+	/*margin-top: 55px;*/
+}
+.bottom {
+	width: 100%;
+	height: 80px;
+	line-height: 40px;
+	text-align: center;
+}
+
+.company {
+	color: #4C4C4C;
+}
+.help a {
+	color: #4C4C4C;
+}
+/*二维码*/
+.ewm {
+	width: 85%;
+	height: 75px;
+	margin: 0 auto 10px;
+	background-color: #F1F8FE;
+	padding: 5px;
+	box-sizing: border-box;
+}
+.ewm img {
+	width: 65px;
+	height: 65px;
+}
+.ewm span {
+	width: 70%;
+	font-size: 14px;
+	padding-top: 10px;
+	color: #343434;
+}
+/*模态框*/
+.mask {      
+	height: 100%; 
+    position: absolute; 
+    top: 0px; 
+    left: 0px;  
+    filter: alpha(opacity=60); 
+    background-color: #777;     
+    z-index: 1002;      
+    opacity:0.8; 
+    -moz-opacity:0.8;     
+} 
+#loading,.loadingImg {
+    z-index:10001;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+} 
+#loading {
+	width: 70%;
+}
+.loadingImg {
+	top: -50%;
+	width: 40%;
+}   
+.state,.wait{
+	color: #fff;
+	text-align: center;
+}
+.state {
+	font-size: 16px;
+	padding: 15px 0;
+}
+.wait {
+	font-size: 14px;
+}
+/*单行溢出*/
+.omit {
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.logo{
+	max-height: 55px;
+	max-width: 70%;
+	margin-left: 15%;
+}
+.advertimg{
+	max-height: 100%;
+	max-width: 100%;
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>信息确认</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/ddqr.css">
+</head>
+<body>
+<header>
+    <img id="logo" class="logo" src="logo/dicos.png"/>
+</header>
+<section class="main">
+    <div class="content">
+        <div class="middle" style="height: 480px;">
+            <div class="advertimg">
+                <img src="logo/dicos_advert.png" id="advert" class="advertimg">
+            </div>
+            <div class="top">
+                <span class="one">信息确认</span><span class="one">&gt;</span>
+                <span>发票抬头</span><span>&gt;</span>
+                <span>提交发票</span>
+            </div>
+            <ul>
+                <li class="fl">订单编号 :</li>
+                <li class="fr omit" id="orderNo"></li>
+            </ul>
+            <ul>
+                <li class="fl">门店编号 :</li>
+                <li class="fr omit" id="storeNo"></li>
+            </ul>
+            <ul>
+                <li class="fl">交易时间 :</li>
+                <li class="fr omit" id="orderTime"></li>
+            </ul>
+            <ul>
+                <li class="fl">订单金额 :</li>
+                <li class="fr omit" id="price"></li>
+            </ul>
+            <div class="bottom">
+                <button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
+            </div>
+        </div>
+    </div>
+    <div class="shadow2"></div>
+    <div class="shadow1"></div>
+</section>
+<footer>
+    <p class="company fl">泰易电子发票云服务平台</p>
+    <p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+</footer>
+
+<script src="../js/jquery.min.js"></script>
+<script type="text/javascript">
+    function redirect(errorMsg) {
+        var myurl = "../QR/error.html?msg=" + new Date + "=" + errorMsg;
+        window.location.assign(encodeURI(myurl));
+    }
+
+    $(function () {
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var thisURL = document.URL;
+        var getval = thisURL.split('?')[1];
+        ppdm = getval.split("=")[2];
+        headcolor = getval.split("=")[3];
+        bodycolor = getval.split("=")[4];
+        if (headcolor != "no" && bodycolor!="no") {
+            $("body").css("background-color", bodycolor);
+            $("header").css("background-color", headcolor);
+        }
+        $("#logo").attr("src", "logo/" + ppdm + ".png");
+        $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
+        if (isWeixin) {
+            $(".top").css('display', 'none');
+        } else {
+            $(".top").css('display', "");
+        }
+        $.post(
+            "../adapter/scanConfirm",
+            {},
+            function (obj) {
+                if (obj.code == "1") {
+                    var data = eval("(" + obj.data + ")");
+                    //价格，多个则显示带逗号的多个，一个则显示一个
+                    price = data.price;
+                    //最后价格，如果是多个价格则算总和，如果只有一个只算一个
+                    lastPrice = null;
+                    lastSpsl = data.spsl;
+                    lastSpmc = data.spmc;
+
+                    if (price.indexOf(",") != -1 && lastSpsl.indexOf(",") != -1 && lastSpmc.indexOf(",") != -1) {
+                        var pricesize = price.length - (price.replace(/,/g, "").length);
+                        var spslsize = lastSpsl.length - (lastSpsl.replace(/,/g, "").length);
+                        var spmcsize = lastSpmc.length - (lastSpmc.replace(/,/g, "").length);
+                        //如果传过来的数据个数匹配
+                        if (pricesize == spslsize && pricesize == spmcsize) {
+                            for (var i = 0; i < pricesize + 1; i++) {
+                                lastPrice += parseFloat(price.split(",")[i]);
+                            }
+                        } else {
+                            redirect("传入数据有误,confirm.line[155]");
+                        }
+                    } else {
+                        //如果传过来的数据，有的是多个有的是一个
+                        if (lastSpsl.indexOf(",") != -1 || lastSpmc.indexOf(",") != -1 || price.indexOf(",") != -1) {
+                            redirect("传入数据有误,confirm.line[160]");
+                        }
+                        lastPrice = price;
+                    }
+
+                    orderTime = data.orderTime;
+                    storeNo = data.storeNo;
+                    gsmc = data.gsmc;
+                    orderNo = data.orderNo;
+                    $('#orderNo').html(data.orderNo);
+                    $('#orderTime').html(data.orderTime);
+                    $('#storeNo').html(data.kpdmc);
+                    $('#price').html(RetainedDecimalPlaces(lastPrice) + "元");
+                } else {
+                    redirect(obj.msg)
+                }
+            }
+        )
+    })
+
+    function RetainedDecimalPlaces(num) {
+        num = parseFloat(num).toFixed(2);
+        var source = String(num).split(".");
+        source[0] = source[0].replace(new RegExp('(\\d)(?=(\\d{3})+$)', 'ig'), "$1,");
+        return source.join(".");
+    };
+
+    function sure() {
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        if (isWeixin) {
+            if (null == orderNo || orderTime == null || lastPrice == null) {
+                redirect("传入数据有误,请重新扫描！");
+            }
+//				alert(orderNo+"-"+gsmc);
+            window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                "&storeNo=" + storeNo + "&price=" + lastPrice + "&gsdm=" + gsmc;
+        } else {
+            if (ppdm == null) {
+                redirect("跳转出现错误，请重新扫描！");
+            }
+            var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor;
+            window.location.assign(encodeURI(myurl));
+        }
+    }
+</script>
+</body>
+</html>
