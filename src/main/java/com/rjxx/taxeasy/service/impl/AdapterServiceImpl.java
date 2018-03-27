@@ -59,7 +59,7 @@ public class AdapterServiceImpl implements AdapterService {
         String on = jsonData.getString("on");
         String sn = jsonData.getString("sn");
         //如果门店号为空则认为是该公司下只有一个税号一个门店号
-        if (!StringUtil.isNotBlankList(sn)) {
+        if (StringUtil.isBlankList(sn)) {
             try {
                 Xf xf = xfJpaDao.findOneByGsdm(gsdm);
                 Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
@@ -150,7 +150,7 @@ public class AdapterServiceImpl implements AdapterService {
         String storeNo = jsonData.getString("sn");
         String spdm = jsonData.getString("sp");
         //如果门店号为空则认为是该公司下只有一个税号一个门店号
-        if (!StringUtil.isNotBlankList(storeNo)) {
+        if (StringUtil.isBlankList(storeNo)) {
             try {
                 Xf xf = xfJpaDao.findOneByGsdm(gsdm);
                 Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());

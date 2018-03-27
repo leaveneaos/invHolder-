@@ -79,12 +79,12 @@ public class AdapterController extends BaseController {
         }
         switch (type) {
             case "1":
-                if (StringUtil.isNotBlankList(on, ot, pr)) {
+                if (!StringUtil.isNotBlankList(on, ot, pr)) {
                     errorRedirect("TYPE_ONE_REQUIRED_PARAMETER_MISSING");
                 }
                 break;
             case "2":
-                if (StringUtil.isNotBlankList(on, ot, pr)) {
+                if (!StringUtil.isNotBlankList(on, ot, pr)) {
                     errorRedirect("TYPE_TWO_REQUIRED_PARAMETER_MISSING");
                 }
                 session.setAttribute("q", q);
@@ -105,6 +105,9 @@ public class AdapterController extends BaseController {
                 }
                 break;
             case "3":
+                if (StringUtil.isBlankList(on,tq)) {
+                    errorRedirect("TYPE_THREE_REQUIRED_PARAMETER_MISSING");
+                }
                 break;
             default:
                 errorRedirect("UNKNOWN_TYPE");
