@@ -34,7 +34,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/adapter")
+@RequestMapping("/kptService")
 public class AdapterController extends BaseController {
     @Autowired
     private GsxxJpaDao gsxxJpaDao;

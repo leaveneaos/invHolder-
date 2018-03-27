@@ -79,7 +79,7 @@
             $(".top").css('display', "");
         }
         $.post(
-            "../adapter/scanConfirm",
+            "../kptService/scanConfirm",
             {},
             function (obj) {
                 if (obj.code == "1") {
