@@ -2,6 +2,7 @@ package com.rjxx.taxeasy.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rjxx.taxeasy.config.RabbitmqUtils;
 import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.*;
@@ -13,6 +14,7 @@ import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.StringUtil;
+import com.rjxx.utils.weixin.HttpClientUtil;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.yjapi.Result;
 import org.apache.commons.lang.StringUtils;
@@ -50,6 +52,8 @@ public class AdapterServiceImpl implements AdapterService {
     private WeixinUtils weixinUtils;
     @Autowired
     private JkpzService jkpzService;
+    @Autowired
+    private RabbitmqUtils rabbitmqUtils;
 
     @Override
     public Map getGrandMsg(String gsdm, String q) {
@@ -58,6 +62,47 @@ public class AdapterServiceImpl implements AdapterService {
         JSONObject jsonData = JSON.parseObject(data);
         String on = jsonData.getString("on");
         String sn = jsonData.getString("sn");
+        //如果门店号为空则认为是该公司下只有一个税号一个门店号
+        if (StringUtil.isBlankList(sn)) {
+            try {
+                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                sn = skp.getKpddm();
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        try {
+            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
+            Integer pid = skp.getPid();
+            String ppdm = "";
+            String ppurl = "";
+            String ppheadcolor = "no";
+            String ppbodycolor = "no";
+            if (pid != null) {
+                Pp pp = ppJpaDao.findOneById(pid);
+                ppdm = pp.getPpdm();
+                ppurl = pp.getPpurl();
+                if (StringUtil.isNotBlankList(pp.getPpheadcolor(), pp.getPpbodycolor())) {
+                    ppheadcolor = pp.getPpheadcolor();
+                    ppbodycolor = pp.getPpbodycolor();
+                }
+            }
+            Map result = new HashMap();
+            result.put("ppdm", ppdm);
+            result.put("ppurl", ppurl);
+            result.put("orderNo", on);
+            result.put("headcolor", ppheadcolor);
+            result.put("bodycolor", ppbodycolor);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Map getGrandMsg(String gsdm, String on, String sn) {
         //如果门店号为空则认为是该公司下只有一个税号一个门店号
         if (StringUtil.isBlankList(sn)) {
             try {
@@ -242,181 +287,64 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
-//    @Override
-//    public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
-//                              String gfyh, String gfyhzh, String gfdz, String gfdh, String tqm, String openid, String sjly, String access_token, String weixinOrderNo) {
-//        Map decode = RJCheckUtil.decodeForAll(q);
-//        String data = (String) decode.get("A0");
-//        JSONObject jsonData = JSON.parseObject(data);
-//        String orderNo = jsonData.getString("on");
-//        String orderTime = jsonData.getString("ot");
-//        String price = jsonData.getString("pr");
-//        String storeNo = jsonData.getString("sn");
-//        String spdm = jsonData.getString("sp");
-//        if (StringUtil.isNotBlankList(orderNo, orderTime, price, storeNo, gfmc)) {
-//            try {
-//                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo, gsdm);
-//                Integer xfid = skp.getXfid(); //销方id
-//                Xf xf = xfJpaDao.findOneById(xfid);
-//                Integer kpdid = skp.getId();//税控盘id(开票点id)
-//                Jyxxsq jyxxsq = new Jyxxsq();
-//                jyxxsq.setJshj(0d);
-//                jyxxsq.setDdh(orderNo);
-//                jyxxsq.setGsdm(gsdm);
-//                jyxxsq.setKpddm(storeNo);
-//                jyxxsq.setXfmc(xf.getXfmc());
-//                jyxxsq.setKpr(skp.getKpr());
-//                jyxxsq.setFhr(skp.getFhr());
-//                jyxxsq.setSkr(skp.getSkr());
-//                jyxxsq.setXfid(xfid);
-//                jyxxsq.setXfsh(xf.getXfsh());
-//                jyxxsq.setXfyhzh(skp.getYhzh());
-//                jyxxsq.setXfyh(skp.getKhyh());
-//                jyxxsq.setXfdh(skp.getLxdh());//销方电话
-//                jyxxsq.setXfdz(skp.getLxdz());//销方地址
-//                jyxxsq.setXflxr(xf.getXflxr());//销方联系人
-//                jyxxsq.setXfyb(xf.getXfyb());//销方邮编
-//                jyxxsq.setGfmc(gfmc);
-//                jyxxsq.setGfsh(gfsh);
-//                if (null != gfsh && !"".equals(gfsh)) {
-//                    jyxxsq.setGflx("1");
-//                } else {
-//                    jyxxsq.setGflx("0");
-//                }
-//                jyxxsq.setGfemail(email);
-//                jyxxsq.setGfdz(gfdz);
-//                jyxxsq.setGfdh(gfdh);
-//                jyxxsq.setGfyhzh(gfyhzh);
-//                jyxxsq.setGfyh(gfyh);
-//                jyxxsq.setJylsh(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + NumberUtil.getRandomLetter());
-//                jyxxsq.setFpzldm("12");
-//                jyxxsq.setFpczlxdm("11");
-//                jyxxsq.setSffsyj("1");
-//                jyxxsq.setZsfs("0");
-//                jyxxsq.setHsbz("1");
-//                jyxxsq.setSjly(sjly);
-//                jyxxsq.setOpenid(openid);
-//                jyxxsq.setLrsj(new Date());
-//                jyxxsq.setXgsj(new Date());
-//                jyxxsq.setDdrq(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
-//                if (tqm == null) {
-//                    Integer pid = skp.getPid();
-//                    if (pid == null) {
-//                        logger.info("pid is null");
-//                        return "0";
-//                    } else {
-//                        Pp pp = ppJpaDao.findOneById(pid);
-//                        jyxxsq.setTqm(pp.getPpdm() + orderNo);
-//                    }
-//                } else {
-//                    jyxxsq.setTqm(tqm);
-//                }
-//
-//
-//                List<Jymxsq> jymxsqList = new ArrayList<>();
-//                if (price.indexOf(",") != -1 && spdm.indexOf(",") != -1) {
-////                    BigDecimal jyxxsqPrice = new BigDecimal("0");
-//                    Integer priceSize = RJCheckUtil.getSize(price, ",");
-//                    Integer spdmSize = RJCheckUtil.getSize(spdm, ",");
-//                    if (priceSize != spdmSize) {
-//                        return "-1";
-//                    }
-//                    String[] priceArray = price.split(",");
-//                    String[] spdmArray = spdm.split(",");
-//                    for (int i = 0; i < priceSize + 1; i++) {
-//                        jyxxsq.setJshj(jyxxsq.getJshj() + Double.valueOf(priceArray[i]));
-////                        jyxxsqPrice.add(new BigDecimal(priceArray[i]));
-//                        Jymxsq jymxsq = new Jymxsq();
-//                        jymxsq.setSpdm(spdmArray[i]);
-//                        jymxsq.setJshj(Double.valueOf(priceArray[i]));
-//                        jymxsqList.add(jymxsq);
-//                    }
-////                    jyxxsq.setJshj(jyxxsqPrice.doubleValue());
-//                } else {
-//                    jyxxsq.setJshj(Double.valueOf(price));
-//                    Jymxsq jymxsq = new Jymxsq();
-//                    jymxsq.setSpdm(spdm);
-//                    jymxsq.setJshj(Double.valueOf(price));
-//                    jymxsqList.add(jymxsq);
-//                }
-//                for (Jymxsq jymxsq : jymxsqList) {
-//                    Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "dyspbmb");
-//                    Map map = new HashMap();
-//                    map.put("gsdm", gsdm);
-//                    if (cszb.getCsz() != null) {
-//                        map.put("spdm", cszb.getCsz());
-//                    } else {
-//                        //如果没有参数，则表明是传商品代码,此时交易明细申请中税收分类编码暂时放商品编码
-//                        if (StringUtils.isNotBlank(jymxsq.getSpdm())) {
-//                            map.put("spdm", jymxsq.getSpdm());
-//                        } else {
-//                            return "-1";
-//                        }
-//                    }
-//                    Spvo spvo = spvoService.findOneSpvo(map);
-//                    jymxsq.setSpdm(spvo.getSpbm());
-//                    jymxsq.setYhzcmc(spvo.getYhzcmc());
-//                    jymxsq.setYhzcbs(spvo.getYhzcbs());
-//                    jymxsq.setLslbz(spvo.getLslbz());
-//                    jymxsq.setFphxz("0");
-//                    jymxsq.setSpmc(spvo.getSpmc());
-//                    jymxsq.setLrsj(new Date());
-//                    jymxsq.setXgsj(new Date());
-//                    jymxsq.setSpsl(spvo.getSl());
-//                    jymxsq.setSpje(jymxsq.getJshj());
-//                }
-//                List<Jymxsq> jymxsqs = TaxUtil.separatePrice(jymxsqList);
-//
-//                List<Jyzfmx> jyzfmxList = new ArrayList<>();
-//
-//                String xml = GetXmlUtil.getFpkjXml(jyxxsq, jymxsqs, jyzfmxList);
-//                Gsxx oneByGsdm = gsxxJpaDao.findOneByGsdm(gsdm);
-//                String appid = oneByGsdm.getAppKey();
-//                String key = oneByGsdm.getSecretKey();
-//                String resultxml = HttpUtils.HttpUrlPost(xml, appid, key);
-//                String json = "";
-//                try {
-//                    Map<String, Object> resultMap = XmlUtil.xml2Map(resultxml);
-//                    String returnMsg = resultMap.get("ReturnMessage").toString();
-//                    String returnCode = resultMap.get("ReturnCode").toString();
-//                    Map map2 = new HashMap();
-//                    map2.put("returnMsg", returnMsg);
-//                    map2.put("returnCode", returnCode);
-//                    map2.put("serialorder", jyxxsq.getJylsh() + jyxxsq.getDdh());
-//                    json = JSONObject.toJSONString(map2);
-//                    if (null != returnCode && "9999".equals(returnCode)) {
-//                        logger.info("进入拒绝开票-----错误原因为" + returnMsg);
-//                        String reason = returnMsg;
-//                        if (null != sjly && "4".equals(sjly)) {
-//                            logger.info("进行拒绝开票的weixinOrderN+++++" + weixinOrderNo);
-//                            String str = weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
-//                        }
-//                        return "-1";
-//                    }
-//
-//                } catch (Exception e) {
-//                    String serialorder = resultxml;
-//                    Kpls oneBySerialorder = kplsJpaDao.findOneBySerialorder(serialorder);
-//                    String fphm = oneBySerialorder.getFphm();
-//                    String fpdm = oneBySerialorder.getFpdm();
-//                    if (fphm == null || fpdm == null) {
-//                        return "-1";
-//                    }
-//                    Map map3 = new HashMap();
-//                    map3.put("fphm", fphm);
-//                    map3.put("fpdm", fpdm);
-//                    map3.put("serialorder", jyxxsq.getJylsh() + jyxxsq.getDdh());
-//                    json = JSONObject.toJSONString(map3);
-//                }
-//                return json;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                return "-1";
-//            }
-//        } else {
-//            return "0";
-//        }
-//    }
+    @Override
+    public String getSpxx(String gsdm, String on, String sn, String tq) {
+        try {
+            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
+            Xf xf = xfJpaDao.findOneById(skp.getXfid());
+            AdapterPost post = getApiMsg(gsdm, xf.getId(), skp.getId(), tq);
+            if (post == null) {
+                return "1";
+            }
+            String orderNo = on;
+            String orderTime = new SimpleDateFormat("yyyyMMddHHmmss").format(post.getData().getOrder().getOrderDate());
+            StringBuilder price = new StringBuilder();
+            StringBuilder spsl = new StringBuilder();
+            StringBuilder spmc = new StringBuilder();
+
+            List<AdapterDataOrderDetails> orderDetails = post.getData().getOrder().getOrderDetails();
+            for (int i = 0; i < orderDetails.size(); i++) {
+                String amount = orderDetails.get(i).getAmount().toString();
+                String taxRate = orderDetails.get(i).getTaxRate().toString();
+                String productName = orderDetails.get(i).getProductName();
+                if (!StringUtil.isNotBlankList(amount, taxRate, productName)) {
+                    return null;
+                }
+                if (i == 0) {
+                    price.append(amount);
+                    spsl.append(taxRate);
+                    spmc.append(productName);
+                } else {
+                    price.append("," + amount);
+                    spsl.append("," + taxRate);
+                    spmc.append("," + productName);
+                }
+            }
+            Map result = new HashMap();
+            result.put("orderNo", on);
+            result.put("orderTime", orderTime);
+            result.put("storeNo", sn);
+            result.put("price", price);
+            result.put("spsl", spsl);
+            result.put("spmc", spmc);
+            result.put("kpdmc", skp.getKpdmc());
+            result.put("gsmc", gsdm);
+            Integer pid = skp.getPid();
+            if (pid == null) {
+                logger.info("pid is null");
+                return null;
+            } else {
+                Pp pp = ppJpaDao.findOneById(pid);
+                result.put("tqm", pp.getPpdm() + orderNo);
+            }
+            logger.info("getSpxx结果===" + JSONObject.toJSONString(result));
+            return JSONObject.toJSONString(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
@@ -453,7 +381,7 @@ public class AdapterServiceImpl implements AdapterService {
                 adapterData.setOpenid(openid);
                 adapterData.setSeller(seller);
                 adapterData.setOrder(order);
-                adapterData.setSerialNumber(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + NumberUtil.getRandomLetter());
+                adapterData.setSerialNumber("JY" + System.currentTimeMillis() + NumberUtil.getRandomLetter());
 
 
                 order.setOrderNo(orderNo);
@@ -499,7 +427,7 @@ public class AdapterServiceImpl implements AdapterService {
                     String reason = result.getMsg();
                     if (null != sjly && "4".equals(sjly)) {
                         logger.info("进行拒绝开票的weixinOrderN+++++" + weixinOrderNo);
-                        String str = weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
+                        weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
                     }
                     return "-1";
                 }
@@ -515,6 +443,77 @@ public class AdapterServiceImpl implements AdapterService {
             }
         } else {
             return "0";
+        }
+    }
+
+    @Override
+    public String makeInvoice(String gsdm, String on, String sn, String tq, String gfmc, String gfsh, String email, String gfyh, String gfyhzh, String gfdz, String gfdh, String tqm, String openid, String sjly, String access_token, String weixinOrderNo) {
+        if (StringUtil.isNotBlankList(on, sn, tq, gfmc)) {
+            try {
+                Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
+                Xf xf = xfJpaDao.findOneById(skp.getXfid());
+                AdapterPost post = getApiMsg(gsdm, xf.getId(), skp.getId(), tq);
+                AdapterData data = new AdapterData();
+                AdapterDataOrder order = new AdapterDataOrder();
+                AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
+
+                post.setData(data);
+
+                data.setSerialNumber("JY" + System.currentTimeMillis() + NumberUtil.getRandomLetter());
+                data.setDatasource(sjly);
+                data.setOpenid(openid);
+                data.setOrder(order);
+
+                order.setBuyer(buyer);
+
+                buyer.setEmail(email);
+                buyer.setTelephoneNo(gfdh);
+                buyer.setName(gfmc);
+                buyer.setBankAcc(gfyhzh);
+                buyer.setBank(gfyh);
+                buyer.setAddress(gfdz);
+
+                String json = "";
+                Result result = jkpzService.jkpzInvoice(JSON.toJSONString(post));
+                if (null != result.getCode() && "9999".equals(result.getCode())) {
+                    logger.info("进入拒绝开票-----错误原因为" + result.getMsg());
+                    String reason = result.getMsg();
+                    if (null != sjly && "4".equals(sjly)) {
+                        logger.info("进行拒绝开票的weixinOrderN+++++" + weixinOrderNo);
+                        weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
+                    }
+                    return "-1";
+                }
+
+                Map map = new HashMap();
+                map.put("returnMsg", result.getMsg());
+                map.put("returnCode", result.getCode());
+                map.put("serialorder", data.getSerialNumber() + order.getOrderNo());
+                json = JSON.toJSONString(map);
+                return json;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "-1";
+            }
+        } else {
+            return "0";
+        }
+    }
+
+    public AdapterPost getApiMsg(String gsdm, Integer xfid, Integer kpdid, String tq) {
+        Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "apiUrl");
+        String url = cszb.getCsz();
+        Map param = new HashMap();
+        param.put("key", tq);
+        String result = HttpClientUtil.doGet(url, param);
+        JSONObject jsonObject = JSON.parseObject(result);
+        String returnCode = jsonObject.getString("returnCode");
+        if ("0000".equals(returnCode)) {
+            JSONObject data = jsonObject.getJSONObject("data");
+            AdapterPost adapterPost = JSON.parseObject(JSON.toJSONString(data), AdapterPost.class);
+            return adapterPost;
+        } else {
+            return null;
         }
     }
 }

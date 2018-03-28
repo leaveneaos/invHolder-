@@ -7,6 +7,8 @@ import com.rjxx.taxeasy.dao.GsxxJpaDao;
 import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.Gsxx;
+import com.rjxx.taxeasy.domains.Skp;
+import com.rjxx.taxeasy.domains.Xf;
 import com.rjxx.taxeasy.service.AdapterService;
 import com.rjxx.taxeasy.service.jkpz.JkpzService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
@@ -108,6 +110,38 @@ public class AdapterController extends BaseController {
                 if (StringUtil.isBlankList(on,tq)) {
                     errorRedirect("TYPE_THREE_REQUIRED_PARAMETER_MISSING");
                 }
+                String orderNo="";
+                String extractCode="";
+                String storeNo ="";
+                if(StringUtil.isNotBlankList(on)){
+                    orderNo = on;
+                }else{
+                    orderNo = tq;
+                }
+
+                if(StringUtil.isNotBlankList(tq)){
+                    extractCode = tq;
+                }else{
+                    extractCode = on;
+                }
+
+                if(StringUtil.isNotBlankList(sn)){
+                    storeNo = sn;
+                }else{
+                    try {
+                        Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                        Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                        storeNo = skp.getKpddm();
+                    }catch (Exception e){
+                        errorRedirect("TYPE_THREE_SN_PARAMETER_MISSING");
+                    }
+                }
+                session.setAttribute("gsdm", gsdm);
+                session.setAttribute("on", orderNo);
+                session.setAttribute("sn", storeNo);
+                session.setAttribute("tq", extractCode);
+                Map result = adapterService.getGrandMsg(gsdm, orderNo,storeNo);
+                deal(result,gsdm);
                 break;
             default:
                 errorRedirect("UNKNOWN_TYPE");
@@ -139,10 +173,21 @@ public class AdapterController extends BaseController {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
         String openid = (String) session.getAttribute("openid");
-        if (!StringUtil.isNotBlankList(gsdm, q)) {
+        String on = (String) session.getAttribute("on");
+        String sn = (String) session.getAttribute("sn");
+        String tq = (String) session.getAttribute("tq");
+        if (!StringUtil.isNotBlankList(gsdm)) {
             return ResultUtil.error("session过期,请重新扫码");
         }
-        String jsonData = adapterService.getSpxx(gsdm, q);
+        String jsonData;
+        if(StringUtil.isNotBlankList(q)){
+            jsonData = adapterService.getSpxx(gsdm, q);
+        }else{
+            if(!StringUtil.isNotBlankList(on,sn,tq)){
+                return ResultUtil.error("交易信息获取失败");
+            }
+            jsonData = adapterService.getSpxx(gsdm, on, sn, tq);
+        }
         if (jsonData != null) {
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String tqm = jsonObject.getString("tqm");
@@ -154,6 +199,9 @@ public class AdapterController extends BaseController {
             }
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
+            if("1".equals(jsonData)){
+                return ResultUtil.error("交易数据上传中");
+            }
             return ResultUtil.error("二维码信息获取失败");
         }
     }
@@ -163,12 +211,19 @@ public class AdapterController extends BaseController {
                          String gfdz, String gfdh, String gfyhzh, String gfyh, String tqm) {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
-        if (gsdm == null || q == null) {
+        String on = (String) session.getAttribute("on");
+        String sn = (String) session.getAttribute("sn");
+        String tq = (String) session.getAttribute("tq");
+        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
+        if (gsdm == null) {
             return ResultUtil.error("redirect");
         }
-        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
-
-        String status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
+        String status;
+        if(StringUtil.isNotBlankList(q)) {
+            status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
+        }else {
+            status = adapterService.makeInvoice(gsdm,on,sn,tq,gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
+        }
         //开票
         if ("-1".equals(status)) {
             return ResultUtil.error("开具失败");
