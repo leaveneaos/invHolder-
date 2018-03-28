@@ -53,7 +53,7 @@ public class AdapterController extends BaseController {
 
     private static final String TYPE_ONE_CALLBACKURL = "";
     private static final String TYPE_TWO_CALLBACKURL = "adapter/getOpenid";
-    private static final String TYPE_THREE_CALLBACKURL = "";
+    private static final String TYPE_THREE_CALLBACKURL = "adapter/getOpenid";
 
 
 
@@ -140,8 +140,20 @@ public class AdapterController extends BaseController {
                 session.setAttribute("on", orderNo);
                 session.setAttribute("sn", storeNo);
                 session.setAttribute("tq", extractCode);
-                Map result = adapterService.getGrandMsg(gsdm, orderNo,storeNo);
-                deal(result,gsdm);
+                String grantThree = isWechat(ua,TYPE_THREE_CALLBACKURL);
+                //如果是微信浏览器，则拉取授权
+                if (grantThree != null) {
+                    try {
+                        response.sendRedirect(grantThree);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        errorRedirect("REDIRECT_ERROR");
+                    }
+                    return;
+                } else {
+                    Map result = adapterService.getGrandMsg(gsdm, orderNo,storeNo);
+                    deal(result, gsdm);
+                }
                 break;
             default:
                 errorRedirect("UNKNOWN_TYPE");
@@ -159,12 +171,19 @@ public class AdapterController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
-        if (session.getAttribute("gsdm") == null || session.getAttribute("q") == null) {
+        if (session.getAttribute("gsdm") == null) {
             errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
         }
         String gsdm = session.getAttribute("gsdm").toString();
         String q = session.getAttribute("q").toString();
-        Map result = adapterService.getGrandMsg(gsdm, q);
+        String on = (String) session.getAttribute("on");
+        String sn = (String) session.getAttribute("sn");
+        Map result;
+        if(StringUtil.isNotBlankList(q)){
+            result = adapterService.getGrandMsg(gsdm, q);
+        }else{
+            result = adapterService.getGrandMsg(gsdm, on,sn);
+        }
         deal(result, gsdm);
     }
 
