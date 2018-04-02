@@ -9,8 +9,8 @@ import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.Gsxx;
 import com.rjxx.taxeasy.domains.Skp;
 import com.rjxx.taxeasy.domains.Xf;
+import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
 import com.rjxx.taxeasy.service.AdapterService;
-import com.rjxx.taxeasy.service.jkpz.JkpzService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
@@ -41,8 +41,6 @@ public class AdapterController extends BaseController {
     @Autowired
     private GsxxJpaDao gsxxJpaDao;
     @Autowired
-    private JkpzService jkpzService;
-    @Autowired
     private AdapterService adapterService;
     @Autowired
     private XfJpaDao xfJpaDao;
@@ -50,11 +48,14 @@ public class AdapterController extends BaseController {
     private SkpJpaDao skpJpaDao;
     @Autowired
     private wechatFpxxServiceImpl wechateFpxxService;
+    @Autowired
+    private CommonController commonController;
+    @Autowired
+    private wechatFpxxServiceImpl wechatFpxxService;
 
-    private static final String TYPE_ONE_CALLBACKURL = "";
-    private static final String TYPE_TWO_CALLBACKURL = "adapter/getOpenid";
-    private static final String TYPE_THREE_CALLBACKURL = "adapter/getOpenid";
-
+    private static final String TYPE_ONE_CALLBACKURL = "kptService/getOpenidForOne";
+    private static final String TYPE_TWO_CALLBACKURL = "kptService/getOpenid";
+    private static final String TYPE_THREE_CALLBACKURL = "kptService/getOpenid";
 
 
     @RequestMapping(value = "/{gsdm}", method = RequestMethod.GET)
@@ -84,6 +85,39 @@ public class AdapterController extends BaseController {
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
                     errorRedirect("TYPE_ONE_REQUIRED_PARAMETER_MISSING");
                 }
+                String storeNoOne = "";
+                if (StringUtil.isNotBlankList(sn)) {
+                    storeNoOne = sn;
+                } else {
+                    try {
+                        Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                        Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                        storeNoOne = skp.getKpddm();
+                    } catch (Exception e) {
+                        errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
+                    }
+                }
+                session.setAttribute("gsdm", gsdm);
+                session.setAttribute("q", q);
+                session.setAttribute("sn", storeNoOne);
+                String grantOne = isWechat(ua, TYPE_ONE_CALLBACKURL);
+                try {
+                    if (grantOne != null) {
+                        response.sendRedirect(grantOne);
+                        return;
+                    } else {
+                        response.sendRedirect(
+                                request.getContextPath() + "/qrcode/input.html?" +
+                                        "t=" + System.currentTimeMillis() +
+                                        "=" + on +
+                                        "=" + ot +
+                                        "=" + pr);
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    errorRedirect("REDIRECT_ERROR");
+                }
                 break;
             case "2":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
@@ -91,7 +125,7 @@ public class AdapterController extends BaseController {
                 }
                 session.setAttribute("q", q);
                 session.setAttribute("gsdm", gsdm);
-                String grant = isWechat(ua,TYPE_TWO_CALLBACKURL);
+                String grant = isWechat(ua, TYPE_TWO_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grant != null) {
                     try {
@@ -107,32 +141,32 @@ public class AdapterController extends BaseController {
                 }
                 break;
             case "3":
-                if (StringUtil.isBlankList(on,tq)) {
+                if (StringUtil.isBlankList(on, tq)) {
                     errorRedirect("TYPE_THREE_REQUIRED_PARAMETER_MISSING");
                 }
-                String orderNo="";
-                String extractCode="";
-                String storeNo ="";
-                if(StringUtil.isNotBlankList(on)){
+                String orderNo = "";
+                String extractCode = "";
+                String storeNo = "";
+                if (StringUtil.isNotBlankList(on)) {
                     orderNo = on;
-                }else{
+                } else {
                     orderNo = tq;
                 }
 
-                if(StringUtil.isNotBlankList(tq)){
+                if (StringUtil.isNotBlankList(tq)) {
                     extractCode = tq;
-                }else{
+                } else {
                     extractCode = on;
                 }
 
-                if(StringUtil.isNotBlankList(sn)){
+                if (StringUtil.isNotBlankList(sn)) {
                     storeNo = sn;
-                }else{
+                } else {
                     try {
                         Xf xf = xfJpaDao.findOneByGsdm(gsdm);
                         Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
                         storeNo = skp.getKpddm();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         errorRedirect("TYPE_THREE_SN_PARAMETER_MISSING");
                     }
                 }
@@ -140,7 +174,7 @@ public class AdapterController extends BaseController {
                 session.setAttribute("on", orderNo);
                 session.setAttribute("sn", storeNo);
                 session.setAttribute("tq", extractCode);
-                String grantThree = isWechat(ua,TYPE_THREE_CALLBACKURL);
+                String grantThree = isWechat(ua, TYPE_THREE_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grantThree != null) {
                     try {
@@ -151,7 +185,7 @@ public class AdapterController extends BaseController {
                     }
                     return;
                 } else {
-                    Map result = adapterService.getGrandMsg(gsdm, orderNo,storeNo);
+                    Map result = adapterService.getGrandMsg(gsdm, orderNo, storeNo);
                     deal(result, gsdm);
                 }
                 break;
@@ -179,12 +213,41 @@ public class AdapterController extends BaseController {
         String on = (String) session.getAttribute("on");
         String sn = (String) session.getAttribute("sn");
         Map result;
-        if(StringUtil.isNotBlankList(q)){
+        if (StringUtil.isNotBlankList(q)) {
             result = adapterService.getGrandMsg(gsdm, q);
-        }else{
-            result = adapterService.getGrandMsg(gsdm, on,sn);
+        } else {
+            result = adapterService.getGrandMsg(gsdm, on, sn);
         }
         deal(result, gsdm);
+    }
+
+    @RequestMapping("/getOpenidForOne")
+    public void getOpenidForOne(String state, String code) {
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
+        String resultJson = HttpClientUtil.doGet(turl);
+        JSONObject resultObject = JSONObject.parseObject(resultJson);
+        String openid = resultObject.getString("openid");
+        if (openid != null) {
+            session.setAttribute("openid", openid);
+        }
+        if (session.getAttribute("gsdm") == null) {
+            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
+        }
+        String gsdm = (String) session.getAttribute("gsdm");
+        String q = (String) session.getAttribute("q");
+        String sn = (String) session.getAttribute("sn");
+        Map map = RJCheckUtil.decodeForAll(q);
+        String data = (String) map.get("A0");
+        JSONObject jsonData = JSON.parseObject(data);
+        String on = jsonData.getString("on");
+        String ot = jsonData.getString("ot");
+        String pr = jsonData.getString("pr");
+        boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request);
+        if (!b) {
+            errorRedirect("保存发票信息失败，请重试！");
+        }
+        commonController.isWeiXin(sn, on, ot, pr, gsdm);
     }
 
     @RequestMapping("/scanConfirm")
@@ -199,10 +262,10 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("session过期,请重新扫码");
         }
         String jsonData;
-        if(StringUtil.isNotBlankList(q)){
+        if (StringUtil.isNotBlankList(q)) {
             jsonData = adapterService.getSpxx(gsdm, q);
-        }else{
-            if(!StringUtil.isNotBlankList(on,sn,tq)){
+        } else {
+            if (!StringUtil.isNotBlankList(on, sn, tq)) {
                 return ResultUtil.error("交易信息获取失败");
             }
             jsonData = adapterService.getSpxx(gsdm, on, sn, tq);
@@ -218,7 +281,7 @@ public class AdapterController extends BaseController {
             }
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
-            if("1".equals(jsonData)){
+            if ("1".equals(jsonData)) {
                 return ResultUtil.error("交易数据上传中");
             }
             return ResultUtil.error("二维码信息获取失败");
@@ -238,10 +301,10 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("redirect");
         }
         String status;
-        if(StringUtil.isNotBlankList(q)) {
+        if (StringUtil.isNotBlankList(q)) {
             status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
-        }else {
-            status = adapterService.makeInvoice(gsdm,on,sn,tq,gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
+        } else {
+            status = adapterService.makeInvoice(gsdm, on, sn, tq, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
         }
         //开票
         if ("-1".equals(status)) {
@@ -254,6 +317,27 @@ public class AdapterController extends BaseController {
             return ResultUtil.success(status);
         }
     }
+
+    @RequestMapping(value = "/input", method = RequestMethod.GET)
+    public Result input(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
+                        String gfdz, String gfdh, String gfyhzh, String gfyh) {
+        String gsdm = (String) session.getAttribute("gsdm");
+        String sn = (String) session.getAttribute("sn");
+        AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
+        buyer.setName(gfmc);
+        buyer.setIdentifier(gfsh);
+        buyer.setEmail(email);
+        buyer.setAddress(gfdz);
+        buyer.setTelephoneNo(gfdh);
+        buyer.setBankAcc(gfyhzh);
+        buyer.setBank(gfyh);
+        boolean b = adapterService.sendBuyer(gsdm, sn, buyer);
+        if (!b) {
+            return ResultUtil.error("发送失败");
+        }
+        return ResultUtil.success();
+    }
+
 
     private void deal(Map result, String gsdm) {
         try {
@@ -306,12 +390,12 @@ public class AdapterController extends BaseController {
         }
     }
 
-    private String isWechat(String ua,String callbackurl) {
+    private String isWechat(String ua, String callbackurl) {
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
             String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
-                    + url + callbackurl+"&" + "response_type=code&scope=snsapi_base&state=" + "state"
+                    + url + callbackurl + "&" + "response_type=code&scope=snsapi_base&state=" + "state"
                     + "#wechat_redirect";
             return ul;
         } else {

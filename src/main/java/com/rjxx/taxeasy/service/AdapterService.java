@@ -1,5 +1,7 @@
 package com.rjxx.taxeasy.service;
 
+import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
+
 import java.util.List;
 import java.util.Map;
 
@@ -21,4 +23,6 @@ public interface AdapterService {
                        String gfyh, String gfyhzh, String gfdz, String gfdh, String tqm, String openid, String sjly, String access_token, String weixinOrderNo);
     String makeInvoice(String gsdm,  String on,String sn,String tq,String gfmc, String gfsh, String email,
                        String gfyh, String gfyhzh, String gfdz, String gfdh, String tqm, String openid, String sjly, String access_token, String weixinOrderNo);
+
+    boolean sendBuyer(String gsdm,String sn,AdapterDataOrderBuyer buyer);
 }

@@ -9,6 +9,7 @@ import com.rjxx.taxeasy.dto.*;
 import com.rjxx.taxeasy.service.AdapterService;
 import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.SpvoService;
+import com.rjxx.taxeasy.service.TransferExtractDataService;
 import com.rjxx.taxeasy.service.jkpz.JkpzService;
 import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.vo.Spvo;
@@ -23,8 +24,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangyahui on 2018/3/13 0013
@@ -54,6 +59,8 @@ public class AdapterServiceImpl implements AdapterService {
     private JkpzService jkpzService;
     @Autowired
     private RabbitmqUtils rabbitmqUtils;
+    @Autowired
+    private TransferExtractDataService transferExtractDataService;
 
     @Override
     public Map getGrandMsg(String gsdm, String q) {
@@ -452,7 +459,7 @@ public class AdapterServiceImpl implements AdapterService {
             try {
                 Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
                 Xf xf = xfJpaDao.findOneById(skp.getXfid());
-                AdapterPost post = getApiMsg(gsdm, xf.getId(), skp.getId(), tq);
+                AdapterPost post = getApiMsg(gsdm,xf.getId(),skp.getId(), tq);
                 AdapterData data = new AdapterData();
                 AdapterDataOrder order = new AdapterDataOrder();
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
@@ -500,20 +507,25 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
-    public AdapterPost getApiMsg(String gsdm, Integer xfid, Integer kpdid, String tq) {
-        Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, kpdid, "apiUrl");
-        String url = cszb.getCsz();
-        Map param = new HashMap();
-        param.put("key", tq);
-        String result = HttpClientUtil.doGet(url, param);
-        JSONObject jsonObject = JSON.parseObject(result);
-        String returnCode = jsonObject.getString("returnCode");
-        if ("0000".equals(returnCode)) {
-            JSONObject data = jsonObject.getJSONObject("data");
-            AdapterPost adapterPost = JSON.parseObject(JSON.toJSONString(data), AdapterPost.class);
-            return adapterPost;
-        } else {
-            return null;
+    @Override
+    public boolean sendBuyer(String gsdm,String sn,AdapterDataOrderBuyer buyer) {
+        Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
+        Cszb cszb = cszbService.getSpbmbbh(gsdm, skp.getXfid(), skp.getId(), "sendBuyerUrl");
+        String result=HttpClientUtil.doPostJson(cszb.getCsz(), JSON.toJSONString(buyer));
+        if("0000".equals(JSON.parseObject(result).getString("returnCode"))){
+            return true;
+        }else{
+            return false;
         }
     }
+
+    private AdapterPost getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq) throws Exception {
+        Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "extractMethod");
+        Class<? extends TransferExtractDataService> clazz = transferExtractDataService.getClass();
+        Method method = clazz.getDeclaredMethod(cszb.getCsz(), String.class);
+        AdapterPost post = (AdapterPost)method.invoke(transferExtractDataService, tq);
+        return post;
+    }
+
+
 }
