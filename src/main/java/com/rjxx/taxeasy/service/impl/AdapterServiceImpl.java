@@ -460,6 +460,9 @@ public class AdapterServiceImpl implements AdapterService {
                 Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
                 Xf xf = xfJpaDao.findOneById(skp.getXfid());
                 AdapterPost post = getApiMsg(gsdm,xf.getId(),skp.getId(), tq);
+                if(post==null){
+                    return "-2";
+                }
                 AdapterData data = new AdapterData();
                 AdapterDataOrder order = new AdapterDataOrder();
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
@@ -509,23 +512,35 @@ public class AdapterServiceImpl implements AdapterService {
 
     @Override
     public boolean sendBuyer(String gsdm,String sn,AdapterDataOrderBuyer buyer) {
-        Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
-        Cszb cszb = cszbService.getSpbmbbh(gsdm, skp.getXfid(), skp.getId(), "sendBuyerUrl");
-        String result=HttpClientUtil.doPostJson(cszb.getCsz(), JSON.toJSONString(buyer));
-        if("0000".equals(JSON.parseObject(result).getString("returnCode"))){
-            return true;
-        }else{
+        try {
+            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
+            Cszb cszb = cszbService.getSpbmbbh(gsdm, skp.getXfid(), skp.getId(), "sendBuyerUrl");
+            String result=HttpClientUtil.doPostJson(cszb.getCsz(), JSON.toJSONString(buyer));
+            if("0000".equals(JSON.parseObject(result).getString("returnCode"))){
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
     }
 
-    private AdapterPost getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq) throws Exception {
-        Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "extractMethod");
-        Class<? extends TransferExtractDataService> clazz = transferExtractDataService.getClass();
-        Method method = clazz.getDeclaredMethod(cszb.getCsz(), String.class);
-        AdapterPost post = (AdapterPost)method.invoke(transferExtractDataService, tq);
-        return post;
+    private AdapterPost getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq){
+        try {
+            Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "extractMethod");
+            if(StringUtil.isNotBlankList(cszb.getCsz())){
+                Class<? extends TransferExtractDataService> clazz = transferExtractDataService.getClass();
+                Method method = clazz.getDeclaredMethod(cszb.getCsz(), String.class);
+                AdapterPost post = (AdapterPost)method.invoke(transferExtractDataService, tq);
+                return post;
+            }else{
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
-
-
 }

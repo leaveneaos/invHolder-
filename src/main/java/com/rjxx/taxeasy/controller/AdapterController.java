@@ -58,8 +58,8 @@ public class AdapterController extends BaseController {
     private static final String TYPE_THREE_CALLBACKURL = "kptService/getOpenid";
 
 
-    @RequestMapping(value = "/{gsdm}", method = RequestMethod.GET)
-    public void get(@PathVariable String gsdm, @RequestParam String q) {
+    @RequestMapping(value = "/{gsdm}/{q}", method = RequestMethod.GET)
+    public void get(@PathVariable String gsdm, @PathVariable String q) {
         String ua = request.getHeader("user-agent").toLowerCase();
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
         Boolean checkResult = RJCheckUtil.checkMD5ForAll(gsxx.getSecretKey(), q);
@@ -311,7 +311,9 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {
             return ResultUtil.error("所需信息为空");
-        } else {
+        } else if("-2".equals(status)){
+            return ResultUtil.error("交易数据上传中");
+        }else {
             JSONObject jsonObject = JSON.parseObject(status);
             session.setAttribute("serialorder", jsonObject.getString("serialorder"));
             return ResultUtil.success(status);
