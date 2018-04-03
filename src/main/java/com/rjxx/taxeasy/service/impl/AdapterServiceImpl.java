@@ -493,6 +493,7 @@ public class AdapterServiceImpl implements AdapterService {
                     String[] spdmArray = spdm.split(",");
                     for (int i = 0; i < priceSize + 1; i++) {
                         AdapterDataOrderDetails detail = new AdapterDataOrderDetails();
+                        detail.setRowType("0");
                         detail.setAmount(Double.valueOf(priceArray[i]));
                         detail.setMxTotalAmount(Double.valueOf(priceArray[i]));
                         detail.setTaxAmount(0d);
@@ -503,6 +504,7 @@ public class AdapterServiceImpl implements AdapterService {
                 } else {
                     AdapterDataOrderDetails detail = new AdapterDataOrderDetails();
                     order.setTotalAmount(Double.valueOf(price));
+                    detail.setRowType("0");
                     detail.setAmount(Double.valueOf(price));
                     detail.setMxTotalAmount(Double.valueOf(price));
                     detail.setTaxAmount(0d);
