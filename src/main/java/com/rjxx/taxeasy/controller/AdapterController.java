@@ -305,7 +305,7 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("redirect");
         }
         String status;
-        if (StringUtil.isNotBlankList(q)) {
+        if (StringUtil.isNotBlankList(q)&&StringUtil.isBlankList(on,sn)) {
             status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
         } else {
             status = adapterService.makeInvoice(gsdm, on, sn, tq, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");

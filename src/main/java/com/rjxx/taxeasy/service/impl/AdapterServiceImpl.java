@@ -61,6 +61,12 @@ public class AdapterServiceImpl implements AdapterService {
     @Autowired
     private KpService kpService;
 
+    /**
+     * GET_TYPE_2获取品牌信息
+     * @param gsdm
+     * @param q
+     * @return
+     */
     @Override
     public Map getGrandMsg(String gsdm, String q) {
         Map map = RJCheckUtil.decodeForAll(q);
@@ -107,6 +113,13 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
+    /**
+     * GET_TYPE_3获取品牌信息
+     * @param gsdm
+     * @param on
+     * @param sn
+     * @return
+     */
     @Override
     public Map getGrandMsg(String gsdm, String on, String sn) {
         //如果门店号为空则认为是该公司下只有一个税号一个门店号
@@ -148,6 +161,12 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
+    /**
+     * 验证这笔订单是否已开具过
+     * @param tqm
+     * @param gsdm
+     * @return
+     */
     @Override
     public List<String> checkStatus(String tqm, String gsdm) {
         try {
@@ -190,6 +209,13 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
+
+    /**
+     * GET_TYPE_2获取展示在确认页面的信息
+     * @param gsdm
+     * @param q
+     * @return
+     */
     @Override
     public String getSpxx(String gsdm, String q) {
         Map decode = RJCheckUtil.decodeForAll(q);
@@ -200,6 +226,9 @@ public class AdapterServiceImpl implements AdapterService {
         String price = jsonData.getString("pr");
         String storeNo = jsonData.getString("sn");
         String spdm = jsonData.getString("sp");
+        if(spdm==null){
+            spdm = "";
+        }
         //如果门店号为空则认为是该公司下只有一个税号一个门店号
         if (StringUtil.isBlankList(storeNo)) {
             try {
@@ -265,14 +294,6 @@ public class AdapterServiceImpl implements AdapterService {
                     }
                 }
                 Map result = new HashMap();
-                result.put("orderNo", orderNo);
-                result.put("orderTime", orderTime);
-                result.put("storeNo", storeNo);
-                result.put("price", price);
-                result.put("spsl", spsl.toString());
-                result.put("spmc", spmc.toString());
-                result.put("kpdmc", skp.getKpdmc());
-                result.put("gsmc", gsdm);
                 Integer pid = skp.getPid();
                 if (pid == null) {
                     logger.info("pid is null");
@@ -281,6 +302,14 @@ public class AdapterServiceImpl implements AdapterService {
                     Pp pp = ppJpaDao.findOneById(pid);
                     result.put("tqm", pp.getPpdm() + orderNo);
                 }
+                result.put("orderNo", orderNo);
+                result.put("orderTime", orderTime);
+                result.put("storeNo", storeNo);
+                result.put("price", price);
+                result.put("spsl", spsl.toString());
+                result.put("spmc", spmc.toString());
+                result.put("kpdmc", skp.getKpdmc());
+                result.put("gsmc", gsdm);
                 logger.info("getSpxx结果===" + JSONObject.toJSONString(result));
                 return JSONObject.toJSONString(result);
             } catch (Exception e) {
@@ -293,6 +322,14 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
+    /**
+     * GET_TYPE_3获取确认页面的展示信息
+     * @param gsdm
+     * @param on
+     * @param sn
+     * @param tq
+     * @return
+     */
     @Override
     public String getSpxx(String gsdm, String on, String sn, String tq) {
         try {
@@ -327,14 +364,6 @@ public class AdapterServiceImpl implements AdapterService {
                 }
             }
             Map result = new HashMap();
-            result.put("orderNo", on);
-            result.put("orderTime", orderTime);
-            result.put("storeNo", sn);
-            result.put("price", price);
-            result.put("spsl", spsl);
-            result.put("spmc", spmc);
-            result.put("kpdmc", skp.getKpdmc());
-            result.put("gsmc", gsdm);
             Integer pid = skp.getPid();
             if (pid == null) {
                 logger.info("pid is null");
@@ -343,6 +372,14 @@ public class AdapterServiceImpl implements AdapterService {
                 Pp pp = ppJpaDao.findOneById(pid);
                 result.put("tqm", pp.getPpdm() + orderNo);
             }
+            result.put("orderNo", on);
+            result.put("orderTime", orderTime);
+            result.put("storeNo", sn);
+            result.put("price", price);
+            result.put("spsl", spsl);
+            result.put("spmc", spmc);
+            result.put("kpdmc", skp.getKpdmc());
+            result.put("gsmc", gsdm);
             logger.info("getSpxx结果===" + JSONObject.toJSONString(result));
             return JSONObject.toJSONString(result);
         } catch (Exception e) {
@@ -352,6 +389,24 @@ public class AdapterServiceImpl implements AdapterService {
     }
 
 
+    /**
+     * GET_TYPE_2开票方法
+     * @param gsdm
+     * @param q
+     * @param gfmc
+     * @param gfsh
+     * @param email
+     * @param gfyh
+     * @param gfyhzh
+     * @param gfdz
+     * @param gfdh
+     * @param tqm
+     * @param openid
+     * @param sjly
+     * @param access_token
+     * @param weixinOrderNo
+     * @return
+     */
     @Override
     public String makeInvoice(String gsdm, String q, String gfmc, String gfsh, String email,
                               String gfyh, String gfyhzh, String gfdz, String gfdh, String tqm, String openid, String sjly, String access_token, String weixinOrderNo) {
@@ -363,6 +418,19 @@ public class AdapterServiceImpl implements AdapterService {
         String price = jsonData.getString("pr");
         String storeNo = jsonData.getString("sn");
         String spdm = jsonData.getString("sp");
+        if(spdm==null){
+            spdm = "";
+        }
+        //如果门店号为空则认为是该公司下只有一个税号一个门店号
+        if (StringUtil.isBlankList(storeNo)) {
+            try {
+                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                storeNo = skp.getKpddm();
+            } catch (Exception e) {
+                return "0";
+            }
+        }
         if (StringUtil.isNotBlankList(orderNo, orderTime, price, storeNo, gfmc)) {
             try {
                 Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
@@ -392,7 +460,18 @@ public class AdapterServiceImpl implements AdapterService {
 
                 order.setOrderNo(orderNo);
                 order.setOrderDetails(details);
-                order.setExtractedCode(tqm);
+                if(StringUtil.isNotBlankList(tqm)){
+                    order.setExtractedCode(tqm);
+                }else{
+                    Integer pid = skp.getPid();
+                    if (pid == null) {
+                        logger.info("pid is null");
+                        return "0";
+                    } else {
+                        Pp pp = ppJpaDao.findOneById(pid);
+                        order.setExtractedCode(pp.getPpdm() + orderNo);
+                    }
+                }
                 order.setBuyer(buyer);
                 order.setPayments(payments);
 
@@ -452,6 +531,27 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
+
+    /**
+     * GET_TYPE_3开票方法
+     * @param gsdm
+     * @param on
+     * @param sn
+     * @param tq
+     * @param gfmc
+     * @param gfsh
+     * @param email
+     * @param gfyh
+     * @param gfyhzh
+     * @param gfdz
+     * @param gfdh
+     * @param tqm
+     * @param openid
+     * @param sjly
+     * @param access_token
+     * @param weixinOrderNo
+     * @return
+     */
     @Override
     public String makeInvoice(String gsdm, String on, String sn, String tq, String gfmc, String gfsh, String email, String gfyh, String gfyhzh, String gfdz, String gfdh, String tqm, String openid, String sjly, String access_token, String weixinOrderNo) {
         if (StringUtil.isNotBlankList(on, sn, tq, gfmc)) {
@@ -471,6 +571,18 @@ public class AdapterServiceImpl implements AdapterService {
                 data.setOpenid(openid);
                 data.setOrder(order);
                 order.setBuyer(buyer);
+                if(StringUtil.isNotBlankList(tqm)){
+                    order.setExtractedCode(tqm);
+                }else{
+                    Integer pid = skp.getPid();
+                    if (pid == null) {
+                        logger.info("pid is null");
+                        return "0";
+                    } else {
+                        Pp pp = ppJpaDao.findOneById(pid);
+                        order.setExtractedCode(pp.getPpdm() + on);
+                    }
+                }
                 buyer.setEmail(email);
                 buyer.setTelephoneNo(gfdh);
                 buyer.setName(gfmc);
@@ -604,6 +716,13 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
+    /**
+     * 发送抬头数据给客户（根据参数获取客户接收抬头信息的接口），适用于GET_TYPE_1
+     * @param gsdm
+     * @param sn
+     * @param buyer
+     * @return
+     */
     @Override
     public boolean sendBuyer(String gsdm,String sn,AdapterDataOrderBuyer buyer) {
         try {
@@ -621,6 +740,14 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
+    /**
+     * 获取抽取数据方法（根据参数值去取方法名），适用于GET_TYPE_3
+     * @param gsdm
+     * @param xfid
+     * @param skpid
+     * @param tq
+     * @return
+     */
     private AdapterPost getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq){
         try {
             Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "extractMethod");
