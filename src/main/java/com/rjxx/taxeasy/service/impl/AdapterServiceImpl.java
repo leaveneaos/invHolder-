@@ -502,7 +502,11 @@ public class AdapterServiceImpl implements AdapterService {
                     AdapterDataOrderDetails detail = new AdapterDataOrderDetails();
                     order.setTotalAmount(Double.valueOf(price));
                     detail.setAmount(Double.valueOf(price));
-                    detail.setVenderOwnCode(spdm);
+                    if("".equals(spdm)){
+                        detail.setVenderOwnCode(null);
+                    }else{
+                        detail.setVenderOwnCode(spdm);
+                    }
                     details.add(detail);
                 }
                 String json = "";
