@@ -85,21 +85,8 @@ public class AdapterController extends BaseController {
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
                     errorRedirect("TYPE_ONE_REQUIRED_PARAMETER_MISSING");
                 }
-                String storeNoOne = "";
-                if (StringUtil.isNotBlankList(sn)) {
-                    storeNoOne = sn;
-                } else {
-                    try {
-                        Xf xf = xfJpaDao.findOneByGsdm(gsdm);
-                        Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
-                        storeNoOne = skp.getKpddm();
-                    } catch (Exception e) {
-                        errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
-                    }
-                }
                 session.setAttribute("gsdm", gsdm);
                 session.setAttribute("q", q);
-                session.setAttribute("sn", storeNoOne);
                 String grantOne = isWechat(ua, TYPE_ONE_CALLBACKURL);
                 try {
                     if (grantOne != null) {
@@ -174,6 +161,8 @@ public class AdapterController extends BaseController {
                 session.setAttribute("on", orderNo);
                 session.setAttribute("sn", storeNo);
                 session.setAttribute("tq", extractCode);
+                //跳转不需要Q，微信发票信息需要
+                session.setAttribute("q", q);
                 String grantThree = isWechat(ua, TYPE_THREE_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grantThree != null) {
@@ -213,7 +202,7 @@ public class AdapterController extends BaseController {
         String on = (String) session.getAttribute("on");
         String sn = (String) session.getAttribute("sn");
         Map result;
-        if (StringUtil.isNotBlankList(q)) {
+        if (StringUtil.isNotBlankList(q)&&StringUtil.isBlankList(on,sn)) {
             result = adapterService.getGrandMsg(gsdm, q);
         } else {
             result = adapterService.getGrandMsg(gsdm, on, sn);
@@ -236,18 +225,30 @@ public class AdapterController extends BaseController {
         }
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
-        String sn = (String) session.getAttribute("sn");
         Map map = RJCheckUtil.decodeForAll(q);
         String data = (String) map.get("A0");
         JSONObject jsonData = JSON.parseObject(data);
         String on = jsonData.getString("on");
         String ot = jsonData.getString("ot");
         String pr = jsonData.getString("pr");
-        boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request);
+        String sn = jsonData.getString("sn");
+        String storeNoOne = "";
+        if (StringUtil.isNotBlankList(sn)) {
+            storeNoOne = sn;
+        } else {
+            try {
+                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                storeNoOne = skp.getKpddm();
+            } catch (Exception e) {
+                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
+            }
+        }
+        boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request,"1");
         if (!b) {
             errorRedirect("保存发票信息失败，请重试！");
         }
-        commonController.isWeiXin(sn, on, ot, pr, gsdm);
+        commonController.isWeiXin(storeNoOne, on, ot, pr, gsdm);
     }
 
     @RequestMapping("/scanConfirm")
@@ -262,20 +263,23 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("session过期,请重新扫码");
         }
         String jsonData;
-        if (StringUtil.isNotBlankList(q)) {
+        String apiType;
+        if (StringUtil.isNotBlankList(q)&&StringUtil.isBlankList(on,sn)) {
             jsonData = adapterService.getSpxx(gsdm, q);
+            apiType = "2";
         } else {
             if (!StringUtil.isNotBlankList(on, sn, tq)) {
                 return ResultUtil.error("交易信息获取失败");
             }
             jsonData = adapterService.getSpxx(gsdm, on, sn, tq);
+            apiType = "3";
         }
         if (jsonData != null) {
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String tqm = jsonObject.getString("tqm");
             String orderNo = jsonObject.getString("orderNo");
             boolean b = wechateFpxxService.InFapxx(tqm, gsdm, orderNo, q, "1", openid,
-                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
+                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request,apiType);
             if (!b) {
                 return ResultUtil.error("保存发票信息失败，请重试！");
             }
@@ -324,7 +328,23 @@ public class AdapterController extends BaseController {
     public Result input(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
                         String gfdz, String gfdh, String gfyhzh, String gfyh) {
         String gsdm = (String) session.getAttribute("gsdm");
-        String sn = (String) session.getAttribute("sn");
+        String q = (String) session.getAttribute("q");
+        Map map = RJCheckUtil.decodeForAll(q);
+        String data = (String) map.get("A0");
+        JSONObject jsonData = JSON.parseObject(data);
+        String sn = jsonData.getString("sn");
+        String storeNoOne = "";
+        if (StringUtil.isNotBlankList(sn)) {
+            storeNoOne = sn;
+        } else {
+            try {
+                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                storeNoOne = skp.getKpddm();
+            } catch (Exception e) {
+                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
+            }
+        }
         AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
         buyer.setName(gfmc);
         buyer.setIdentifier(gfsh);
@@ -333,7 +353,7 @@ public class AdapterController extends BaseController {
         buyer.setTelephoneNo(gfdh);
         buyer.setBankAcc(gfyhzh);
         buyer.setBank(gfyh);
-        boolean b = adapterService.sendBuyer(gsdm, sn, buyer);
+        boolean b = adapterService.sendBuyer(gsdm, storeNoOne, buyer);
         if (!b) {
             return ResultUtil.error("发送失败");
         }

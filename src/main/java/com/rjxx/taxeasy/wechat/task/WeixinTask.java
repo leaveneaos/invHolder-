@@ -1,18 +1,26 @@
 package com.rjxx.taxeasy.wechat.task;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
 import com.rjxx.taxeasy.dao.PpJpaDao;
+import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
+import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.utils.RJCheckUtil;
+import com.rjxx.utils.StringUtil;
 import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017-12-01.
@@ -64,6 +72,10 @@ public class WeixinTask implements Runnable{
     private PpJpaDao ppJpaDao;
 
     private XfJpaDao xfJpaDao;
+
+    private AdapterService adapterService;
+
+    private SkpJpaDao skpJpaDao;
 
     @Override
     public void run() {
@@ -148,6 +160,107 @@ public class WeixinTask implements Runnable{
                     String re = "发票开具失败，请重试！";
                     weixinUtils.jujuekp(SuccOrderId, re, access_token);
                     e.printStackTrace();
+                }
+
+            //新接口
+            }else if(wxFpxx.getApitype()!=null){
+                String apiTpye = wxFpxx.getApitype();
+                String gfyh=(String) resultMap.get("bank_type");
+                String gfyhzh=(String) resultMap.get("bank_no");
+                String gfdh=(String) resultMap.get("phone");
+                String gfdz=(String) resultMap.get("addr");
+                String email=(String) resultMap.get("email");
+                String gfsh=(String) resultMap.get("tax_no");
+                String gfmc=(String) resultMap.get("title");
+                //购方信息获取
+                if("1".equals(apiTpye)){
+                    Map map = RJCheckUtil.decodeForAll(q);
+                    String data = (String) map.get("A0");
+                    JSONObject jsonData = JSON.parseObject(data);
+                    String sn = jsonData.getString("sn");
+                    String storeNoOne = "";
+                    if (StringUtil.isNotBlankList(sn)) {
+                        storeNoOne = sn;
+                    } else {
+                        try {
+                            Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                            Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                            storeNoOne = skp.getKpddm();
+                        } catch (Exception e) {
+                            String re = "解析门店号失败，请重试！";
+                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                            e.printStackTrace();
+                        }
+                    }
+                    AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
+                    buyer.setBank(gfyh);
+                    buyer.setBankAcc(gfyhzh);
+                    buyer.setTelephoneNo(gfdh);
+                    buyer.setAddress(gfdz);
+                    buyer.setEmail(email);
+                    buyer.setIdentifier(gfsh);
+                    buyer.setName(gfmc);
+                    boolean b = adapterService.sendBuyer(gsdm, storeNoOne, buyer);
+                    if(!b){
+                        String re = "抬头发送失败，请重试！";
+                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                    }
+                    //离线开票
+                }else {
+                    String re;
+                    String status="";
+                    if("2".equals(apiTpye)){
+                        status=adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, openid, "4", access_token, SuccOrderId);
+                        //抽数据开票
+                    }else if("3".equals(apiTpye)){
+                        Map map = RJCheckUtil.decodeForAll(q);
+                        String data = (String) map.get("A0");
+                        JSONObject jsonData = JSON.parseObject(data);
+                        String on = jsonData.getString("on");
+                        String sn = jsonData.getString("sn");
+                        String tq = jsonData.getString("tq");
+                        String orderNo = "";
+                        String extractCode = "";
+                        String storeNo = "";
+                        if (StringUtil.isNotBlankList(on)) {
+                            orderNo = on;
+                        } else {
+                            orderNo = tq;
+                        }
+
+                        if (StringUtil.isNotBlankList(tq)) {
+                            extractCode = tq;
+                        } else {
+                            extractCode = on;
+                        }
+
+                        if (StringUtil.isNotBlankList(sn)) {
+                            storeNo = sn;
+                        } else {
+                            try {
+                                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                                storeNo = skp.getKpddm();
+                            } catch (Exception e) {
+                                re = "解析门店号失败，请重试！";
+                                weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                e.printStackTrace();
+                            }
+                        }
+                        status = adapterService.makeInvoice(gsdm, orderNo, storeNo, extractCode, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, openid, "4", access_token, SuccOrderId);
+                    }
+                    if ("-1".equals(status)) {
+                        re="开具失败";
+                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                    } else if ("0".equals(status)) {
+                        re="所需信息为空";
+                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                    } else if("-2".equals(status)){
+                        re="交易数据上传中";
+                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                    }else{
+                        //成功
+                    }
                 }
             }else {
                 logger.info("------没有该公司的开票处理，---------公司为"+gsdm);
@@ -424,103 +537,119 @@ public class WeixinTask implements Runnable{
         this.xfJpaDao = xfJpaDao;
     }
 
-    private Map sj (String str){
-        Map resultSjMap = new HashMap();
-        List<Jyxxsq> jyxxsqList = new ArrayList();
-        List<Jymxsq> jymxsqList = new ArrayList();
-        List<Jyzfmx> jyzfmxList = new ArrayList<Jyzfmx>();
-        Xf x = new Xf();
-        x.setGsdm("Family");
-        x.setXfsh("500102010003697");
-        Xf xf = xfService.findOneByParams(x);
-        Map params=new HashMap();
-        params.put("xfid",687);
-        Skp skp=skpService.findOneByParams(params);
-        Jyxxsq jyxxsq= new Jyxxsq();
-        jyxxsq.setBz("交易小票号:10672360;商品折扣金额:0.00;支付折扣:0.00;店名:永新汇店");
-        jyxxsq.setClztdm("00");
-        jyxxsq.setDdh(str);
-        jyxxsq.setDdrq(new Date());
-        jyxxsq.setFpczlxdm("11");
-        jyxxsq.setFpzldm("12");
-        jyxxsq.setGsdm("Family");
-        jyxxsq.setHsbz("1");
-        jyxxsq.setJshj(19.9);
-        jyxxsq.setJylsh(str);
-        jyxxsq.setKpddm("family_test");
-        jyxxsq.setKpr(xf.getKpr());
-        jyxxsq.setLrry(95);
-        jyxxsq.setLrsj(new Date());
-        jyxxsq.setQjzk(0.0);
-        jyxxsq.setSjly("4");
-        jyxxsq.setSkr(xf.getSkr());
-        jyxxsq.setTqm(str);
-        jyxxsq.setXfdh(xf.getXfdh());
-        jyxxsq.setXfdz(xf.getXfdz());
-        jyxxsq.setXfid(xf.getId());
-        jyxxsq.setXfmc(xf.getXfmc());
-        jyxxsq.setXfsh("500102010003697");
-        jyxxsq.setXfyh(xf.getXfyh());
-        jyxxsq.setXfyhzh(xf.getXfyhzh());
-        jyxxsq.setFhr(xf.getFhr());
-        jyxxsq.setYkpjshj(0.0);
-        jyxxsq.setYxbz("1");
-        jyxxsq.setZsfs("0");
-        jyxxsqList.add(jyxxsq);
-
-        Jymxsq jymxsq1= new Jymxsq();
-        jymxsq1.setDdh(str);
-        jymxsq1.setFphxz("0");
-        jymxsq1.setGsdm("Family");
-        jymxsq1.setHsbz("1");
-        jymxsq1.setJshj(9.9);
-        jymxsq1.setKce(0.0);
-        jymxsq1.setKkjje(9.9);
-        jymxsq1.setLrry(95);
-        jymxsq1.setLrsj(new Date());
-        jymxsq1.setSpdj(9.9);
-        jymxsq1.setSpdm("1030203030000000000");
-        jymxsq1.setSpdw("");
-        jymxsq1.setSpje(9.9);
-        jymxsq1.setSpmc("综合寿司组合");
-        jymxsq1.setSpmxxh(1);
-        jymxsq1.setSps(1.0);
-        jymxsq1.setSpsl(0.17);
-        jymxsq1.setSpzxbm("20023409");
-        jymxsq1.setYhzcbs("0");
-        jymxsq1.setYkjje(0.0);
-        jymxsq1.setYxbz("1");
-        jymxsqList.add(jymxsq1);
-
-        Jymxsq jymxsq2= new Jymxsq();
-        jymxsq2.setDdh(str);
-        jymxsq2.setFphxz("0");
-        jymxsq2.setGsdm("Family");
-        jymxsq2.setHsbz("1");
-        jymxsq2.setJshj(10.0);
-        jymxsq2.setKce(0.0);
-        jymxsq2.setKkjje(10.0);
-        jymxsq2.setLrry(95);
-        jymxsq2.setLrsj(new Date());
-        jymxsq2.setSpdj(10.0);
-        jymxsq2.setSpdm("1030203030000000000");
-        jymxsq2.setSpdw("");
-        jymxsq2.setSpje(10.0);
-        jymxsq2.setSpmc("奥尔良手枪腿");
-        jymxsq2.setSpmxxh(2);
-        jymxsq2.setSps(1.0);
-        jymxsq2.setSpsl(0.17);
-        jymxsq2.setSpzxbm("20473235");
-        jymxsq2.setYhzcbs("0");
-        jymxsq2.setYkjje(0.0);
-        jymxsq2.setYxbz("1");
-        jymxsqList.add(jymxsq2);
-        //Jyzfmx jyzfmx = new Jyzfmx();
-        //jyzfmxList.add(jyzfmx);
-        resultSjMap.put("jyxxsqList",jyxxsqList);
-        resultSjMap.put("jymxsqList",jymxsqList);
-        resultSjMap.put("jyzfmxList",jyzfmxList);
-
-        return  resultSjMap;
+    public AdapterService getAdapterService() {
+        return adapterService;
     }
+
+    public void setAdapterService(AdapterService adapterService) {
+        this.adapterService = adapterService;
+    }
+
+    public SkpJpaDao getSkpJpaDao() {
+        return skpJpaDao;
+    }
+
+    public void setSkpJpaDao(SkpJpaDao skpJpaDao) {
+        this.skpJpaDao = skpJpaDao;
+    }
+
+    //    private Map sj (String str){
+//        Map resultSjMap = new HashMap();
+//        List<Jyxxsq> jyxxsqList = new ArrayList();
+//        List<Jymxsq> jymxsqList = new ArrayList();
+//        List<Jyzfmx> jyzfmxList = new ArrayList<Jyzfmx>();
+//        Xf x = new Xf();
+//        x.setGsdm("Family");
+//        x.setXfsh("500102010003697");
+//        Xf xf = xfService.findOneByParams(x);
+//        Map params=new HashMap();
+//        params.put("xfid",687);
+//        Skp skp=skpService.findOneByParams(params);
+//        Jyxxsq jyxxsq= new Jyxxsq();
+//        jyxxsq.setBz("交易小票号:10672360;商品折扣金额:0.00;支付折扣:0.00;店名:永新汇店");
+//        jyxxsq.setClztdm("00");
+//        jyxxsq.setDdh(str);
+//        jyxxsq.setDdrq(new Date());
+//        jyxxsq.setFpczlxdm("11");
+//        jyxxsq.setFpzldm("12");
+//        jyxxsq.setGsdm("Family");
+//        jyxxsq.setHsbz("1");
+//        jyxxsq.setJshj(19.9);
+//        jyxxsq.setJylsh(str);
+//        jyxxsq.setKpddm("family_test");
+//        jyxxsq.setKpr(xf.getKpr());
+//        jyxxsq.setLrry(95);
+//        jyxxsq.setLrsj(new Date());
+//        jyxxsq.setQjzk(0.0);
+//        jyxxsq.setSjly("4");
+//        jyxxsq.setSkr(xf.getSkr());
+//        jyxxsq.setTqm(str);
+//        jyxxsq.setXfdh(xf.getXfdh());
+//        jyxxsq.setXfdz(xf.getXfdz());
+//        jyxxsq.setXfid(xf.getId());
+//        jyxxsq.setXfmc(xf.getXfmc());
+//        jyxxsq.setXfsh("500102010003697");
+//        jyxxsq.setXfyh(xf.getXfyh());
+//        jyxxsq.setXfyhzh(xf.getXfyhzh());
+//        jyxxsq.setFhr(xf.getFhr());
+//        jyxxsq.setYkpjshj(0.0);
+//        jyxxsq.setYxbz("1");
+//        jyxxsq.setZsfs("0");
+//        jyxxsqList.add(jyxxsq);
+//
+//        Jymxsq jymxsq1= new Jymxsq();
+//        jymxsq1.setDdh(str);
+//        jymxsq1.setFphxz("0");
+//        jymxsq1.setGsdm("Family");
+//        jymxsq1.setHsbz("1");
+//        jymxsq1.setJshj(9.9);
+//        jymxsq1.setKce(0.0);
+//        jymxsq1.setKkjje(9.9);
+//        jymxsq1.setLrry(95);
+//        jymxsq1.setLrsj(new Date());
+//        jymxsq1.setSpdj(9.9);
+//        jymxsq1.setSpdm("1030203030000000000");
+//        jymxsq1.setSpdw("");
+//        jymxsq1.setSpje(9.9);
+//        jymxsq1.setSpmc("综合寿司组合");
+//        jymxsq1.setSpmxxh(1);
+//        jymxsq1.setSps(1.0);
+//        jymxsq1.setSpsl(0.17);
+//        jymxsq1.setSpzxbm("20023409");
+//        jymxsq1.setYhzcbs("0");
+//        jymxsq1.setYkjje(0.0);
+//        jymxsq1.setYxbz("1");
+//        jymxsqList.add(jymxsq1);
+//
+//        Jymxsq jymxsq2= new Jymxsq();
+//        jymxsq2.setDdh(str);
+//        jymxsq2.setFphxz("0");
+//        jymxsq2.setGsdm("Family");
+//        jymxsq2.setHsbz("1");
+//        jymxsq2.setJshj(10.0);
+//        jymxsq2.setKce(0.0);
+//        jymxsq2.setKkjje(10.0);
+//        jymxsq2.setLrry(95);
+//        jymxsq2.setLrsj(new Date());
+//        jymxsq2.setSpdj(10.0);
+//        jymxsq2.setSpdm("1030203030000000000");
+//        jymxsq2.setSpdw("");
+//        jymxsq2.setSpje(10.0);
+//        jymxsq2.setSpmc("奥尔良手枪腿");
+//        jymxsq2.setSpmxxh(2);
+//        jymxsq2.setSps(1.0);
+//        jymxsq2.setSpsl(0.17);
+//        jymxsq2.setSpzxbm("20473235");
+//        jymxsq2.setYhzcbs("0");
+//        jymxsq2.setYkjje(0.0);
+//        jymxsq2.setYxbz("1");
+//        jymxsqList.add(jymxsq2);
+//        //Jyzfmx jyzfmx = new Jyzfmx();
+//        //jyzfmxList.add(jyzfmx);
+//        resultSjMap.put("jyxxsqList",jyxxsqList);
+//        resultSjMap.put("jymxsqList",jymxsqList);
+//        resultSjMap.put("jyzfmxList",jyzfmxList);
+//
+//        return  resultSjMap;
+//    }
 }

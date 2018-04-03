@@ -1,25 +1,16 @@
 package com.rjxx.taxeasy.controller;
 
-import com.alibaba.druid.sql.visitor.functions.Lpad;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
-import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
-import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.comm.SigCheck;
-import com.rjxx.taxeasy.dao.PpJpaDao;
-import com.rjxx.taxeasy.dao.WxTokenJpaDao;
-import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
-import com.rjxx.taxeasy.dao.XfJpaDao;
-import com.rjxx.taxeasy.domains.*;
+import com.rjxx.taxeasy.dao.*;
+import com.rjxx.taxeasy.domains.WxFpxx;
+import com.rjxx.taxeasy.domains.WxToken;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.wechat.task.WeixinTask;
-import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
-import com.rjxx.utils.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -27,12 +18,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017-06-26.
@@ -85,6 +81,12 @@ public class WeiXinController extends BaseController {
 
     @Autowired
     private XfJpaDao xfJpaDao;
+
+    @Autowired
+    private AdapterService adapterService;
+
+    @Autowired
+    private SkpJpaDao skpJpaDao;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -180,6 +182,8 @@ public class WeiXinController extends BaseController {
                     weixinTask.setSkpService(skpService);
                     weixinTask.setPpJpaDao(ppJpaDao);
                     weixinTask.setXfJpaDao(xfJpaDao);
+                    weixinTask.setAdapterService(adapterService);
+                    weixinTask.setSkpJpaDao(skpJpaDao);
                     Thread thread = new Thread(weixinTask);
                     thread.start();
                     return "";

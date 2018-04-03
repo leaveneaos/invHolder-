@@ -2,10 +2,11 @@ package com.rjxx.taxeasy.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.rjxx.taxeasy.config.RabbitmqUtils;
 import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.*;
+import com.rjxx.taxeasy.invoice.DefaultResult;
+import com.rjxx.taxeasy.invoice.KpService;
 import com.rjxx.taxeasy.service.AdapterService;
 import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.SpvoService;
@@ -15,6 +16,7 @@ import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.StringUtil;
+import com.rjxx.utils.XmlJaxbUtils;
 import com.rjxx.utils.weixin.HttpClientUtil;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.yjapi.Result;
@@ -26,10 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by wangyahui on 2018/3/13 0013
@@ -58,9 +57,9 @@ public class AdapterServiceImpl implements AdapterService {
     @Autowired
     private JkpzService jkpzService;
     @Autowired
-    private RabbitmqUtils rabbitmqUtils;
-    @Autowired
     private TransferExtractDataService transferExtractDataService;
+    @Autowired
+    private KpService kpService;
 
     @Override
     public Map getGrandMsg(String gsdm, String q) {
@@ -466,16 +465,12 @@ public class AdapterServiceImpl implements AdapterService {
                 AdapterData data = new AdapterData();
                 AdapterDataOrder order = new AdapterDataOrder();
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
-
                 post.setData(data);
-
                 data.setSerialNumber("JY" + System.currentTimeMillis() + NumberUtil.getRandomLetter());
                 data.setDatasource(sjly);
                 data.setOpenid(openid);
                 data.setOrder(order);
-
                 order.setBuyer(buyer);
-
                 buyer.setEmail(email);
                 buyer.setTelephoneNo(gfdh);
                 buyer.setName(gfmc);
@@ -483,11 +478,111 @@ public class AdapterServiceImpl implements AdapterService {
                 buyer.setBank(gfyh);
                 buyer.setAddress(gfdz);
 
-                String json = "";
-                Result result = jkpzService.jkpzInvoice(JSON.toJSONString(post));
-                if (null != result.getCode() && "9999".equals(result.getCode())) {
-                    logger.info("进入拒绝开票-----错误原因为" + result.getMsg());
-                    String reason = result.getMsg();
+                AdapterData adapterData=post.getData();
+                AdapterDataOrder adapterDataOrder=adapterData.getOrder();
+                AdapterDataSeller adapterDataSeller = adapterData.getSeller();
+                AdapterDataOrderBuyer adapterDataOrderBuyer = adapterDataOrder.getBuyer();
+                List<AdapterDataOrderDetails> adapterDataOrderOrderDetails = adapterDataOrder.getOrderDetails();
+                List<AdapterDataOrderPayments> adapterDataOrderPayments = adapterDataOrder.getPayments();
+
+                List<Jyxxsq> jyxxsqList = new ArrayList<>();
+                List<Jymxsq> jymxsqList = new ArrayList<>();
+                List<Jyzfmx> jyzfmxList = new ArrayList<>();
+
+                Jyxxsq jyxxsq = new Jyxxsq();
+                jyxxsq.setGsdm(gsdm);
+                jyxxsq.setLrsj(new Date());
+                jyxxsq.setXgsj(new Date());
+
+                jyxxsq.setKpddm(post.getClientNo());
+
+                jyxxsq.setJylsh(adapterData.getSerialNumber());
+                jyxxsq.setKpr(adapterData.getDrawer());
+                jyxxsq.setFhr(adapterData.getReviewer());
+                jyxxsq.setSkr(adapterData.getPayee());
+                jyxxsq.setSjly(adapterData.getDatasource());
+                jyxxsq.setOpenid(adapterData.getOpenid());
+                jyxxsq.setFpzldm(adapterData.getInvType());
+
+                jyxxsq.setXfyhzh(adapterDataSeller.getBankAcc());
+                jyxxsq.setXfyh(adapterDataSeller.getBank());
+                jyxxsq.setXfdh(adapterDataSeller.getTelephoneNo());
+                jyxxsq.setXfdz(adapterDataSeller.getAddress());
+                jyxxsq.setXfsh(adapterDataSeller.getIdentifier());
+                jyxxsq.setXfmc(adapterDataSeller.getName());
+
+                jyxxsq.setDdh(adapterDataOrder.getOrderNo());
+                jyxxsq.setSfdyqd(adapterDataOrder.getInvoiceList());
+                jyxxsq.setSfcp(adapterDataOrder.getInvoiceSplit());
+                jyxxsq.setSfdy(adapterDataOrder.getInvoiceSfdy());
+                jyxxsq.setDdrq(adapterDataOrder.getOrderDate());
+                jyxxsq.setZsfs(adapterDataOrder.getChargeTaxWay());
+                jyxxsq.setJshj(adapterDataOrder.getTotalAmount());
+                jyxxsq.setHsbz(adapterDataOrder.getTaxMark());
+                jyxxsq.setBz(adapterDataOrder.getRemark());
+                jyxxsq.setTqm(adapterDataOrder.getExtractedCode());
+
+                jyxxsq.setGfemail(adapterDataOrderBuyer.getEmail());
+                jyxxsq.setGfsh(adapterDataOrderBuyer.getIdentifier());
+                jyxxsq.setGfmc(adapterDataOrderBuyer.getName());
+                jyxxsq.setGfdz(adapterDataOrderBuyer.getAddress());
+                jyxxsq.setGfdh(adapterDataOrderBuyer.getTelephoneNo());
+                jyxxsq.setGfyh(adapterDataOrderBuyer.getBank());
+                jyxxsq.setGfyhzh(adapterDataOrderBuyer.getBankAcc());
+                jyxxsq.setGflx(adapterDataOrderBuyer.getCustomerType());
+                jyxxsq.setSffsyj(adapterDataOrderBuyer.getIsSend());
+                jyxxsq.setGflxr(adapterDataOrderBuyer.getRecipient());
+                jyxxsq.setGfsjrdz(adapterDataOrderBuyer.getReciAddress());
+                jyxxsq.setGfyb(adapterDataOrderBuyer.getZip());
+                jyxxsqList.add(jyxxsq);
+
+                for(int i=0;i<adapterDataOrderOrderDetails.size();i++){
+                    Jymxsq jymxsq = new Jymxsq();
+                    jymxsq.setLrsj(new Date());
+                    jymxsq.setXgsj(new Date());
+                    jymxsq.setDdh(jyxxsq.getDdh());
+                    jymxsq.setSpmxxh(i);
+                    jymxsq.setSpggxh(adapterDataOrderOrderDetails.get(i).getSpec());
+                    jymxsq.setJshj(adapterDataOrderOrderDetails.get(i).getMxTotalAmount());
+                    jymxsq.setSpje(adapterDataOrderOrderDetails.get(i).getAmount());
+                    jymxsq.setSpdj(adapterDataOrderOrderDetails.get(i).getUnitPrice());
+                    jymxsq.setSps(adapterDataOrderOrderDetails.get(i).getQuantity());
+                    jymxsq.setSpse(adapterDataOrderOrderDetails.get(i).getTaxAmount());
+                    jymxsq.setSpdm(adapterDataOrderOrderDetails.get(i).getProductCode());
+                    jymxsq.setFphxz(adapterDataOrderOrderDetails.get(i).getRowType());
+                    jymxsq.setSpsl(adapterDataOrderOrderDetails.get(i).getTaxRate());
+                    jymxsq.setSpmc(adapterDataOrderOrderDetails.get(i).getProductName());
+                    jymxsq.setSpggxh(adapterDataOrderOrderDetails.get(i).getSpec());
+                    jymxsq.setSpdw(adapterDataOrderOrderDetails.get(i).getUtil());
+                    jymxsq.setYhzcmc(adapterDataOrderOrderDetails.get(i).getPolicyName());
+                    jymxsq.setYhzcbs(adapterDataOrderOrderDetails.get(i).getPolicyMark());
+                    jymxsq.setLslbz(adapterDataOrderOrderDetails.get(i).getTaxRateMark());
+                    jymxsq.setSpzxbm(adapterDataOrderOrderDetails.get(i).getVenderOwnCode());
+                    jymxsq.setKce(adapterDataOrderOrderDetails.get(i).getDeductAmount());
+                    jymxsq.setYkjje(0d);
+                    jymxsq.setKkjje(adapterDataOrderOrderDetails.get(i).getMxTotalAmount());
+                    jymxsqList.add(jymxsq);
+                }
+
+
+                for(int i=0;i<adapterDataOrderPayments.size();i++){
+                    Jyzfmx jyzfmx = new Jyzfmx();
+                    jyzfmx.setLrsj(new Date());
+                    jyzfmx.setXgsj(new Date());
+                    jyzfmx.setDdh(jyxxsq.getDdh());
+                    jyzfmx.setZfje(adapterDataOrderPayments.get(i).getPayPrice());
+                    jyzfmx.setZffsDm(adapterDataOrderPayments.get(i).getPayCode());
+                }
+
+                Map kpMap = new HashMap();
+                kpMap.put("jyxxsqList",jyxxsqList);
+                kpMap.put("jymxsqList",jymxsqList);
+                kpMap.put("jyzfmxList",jyzfmxList);
+                String xmlString = kpService.uploadOrderData(gsdm, kpMap, "01");
+                DefaultResult defaultResult = XmlJaxbUtils.convertXmlStrToObject(DefaultResult.class, xmlString);
+                if (null != defaultResult.getReturnCode() && "9999".equals(defaultResult.getReturnCode())) {
+                    logger.info("进入拒绝开票-----错误原因为" + defaultResult.getReturnMessage());
+                    String reason = defaultResult.getReturnMessage();
                     if (null != sjly && "4".equals(sjly)) {
                         logger.info("进行拒绝开票的weixinOrderN+++++" + weixinOrderNo);
                         weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
@@ -496,11 +591,10 @@ public class AdapterServiceImpl implements AdapterService {
                 }
 
                 Map map = new HashMap();
-                map.put("returnMsg", result.getMsg());
-                map.put("returnCode", result.getCode());
+                map.put("returnMsg", defaultResult.getReturnMessage());
+                map.put("returnCode", defaultResult.getReturnCode());
                 map.put("serialorder", data.getSerialNumber() + order.getOrderNo());
-                json = JSON.toJSONString(map);
-                return json;
+                return JSON.toJSONString(map);
             } catch (Exception e) {
                 e.printStackTrace();
                 return "-1";
