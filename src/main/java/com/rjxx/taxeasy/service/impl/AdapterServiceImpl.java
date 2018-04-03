@@ -494,6 +494,8 @@ public class AdapterServiceImpl implements AdapterService {
                     for (int i = 0; i < priceSize + 1; i++) {
                         AdapterDataOrderDetails detail = new AdapterDataOrderDetails();
                         detail.setAmount(Double.valueOf(priceArray[i]));
+                        detail.setMxTotalAmount(Double.valueOf(priceArray[i]));
+                        detail.setTaxAmount(0d);
                         detail.setVenderOwnCode(spdmArray[i]);
                         details.add(detail);
                         order.setTotalAmount(order.getTotalDiscount() + Double.valueOf(priceArray[i]));
@@ -502,6 +504,8 @@ public class AdapterServiceImpl implements AdapterService {
                     AdapterDataOrderDetails detail = new AdapterDataOrderDetails();
                     order.setTotalAmount(Double.valueOf(price));
                     detail.setAmount(Double.valueOf(price));
+                    detail.setMxTotalAmount(Double.valueOf(price));
+                    detail.setTaxAmount(0d);
                     if("".equals(spdm)){
                         detail.setVenderOwnCode(null);
                     }else{
