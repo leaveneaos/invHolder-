@@ -224,6 +224,10 @@ public class WeiXinController extends BaseController {
                     weixinTask.setBarcodeService(barcodeService);
                     weixinTask.setXfService(xfService);
                     weixinTask.setSkpService(skpService);
+                    weixinTask.setPpJpaDao(ppJpaDao);
+                    weixinTask.setXfJpaDao(xfJpaDao);
+                    weixinTask.setAdapterService(adapterService);
+                    weixinTask.setSkpJpaDao(skpJpaDao);
                     Thread thread = new Thread(weixinTask);
                     thread.start();
                     return "";
