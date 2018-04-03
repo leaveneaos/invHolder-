@@ -370,6 +370,8 @@ public class AdapterController extends BaseController {
                 String bodycolor = result.get("bodycolor").toString();
                 String orderNo = result.get("orderNo").toString();
                 String tqm = ppdm + orderNo;
+                session.setAttribute("tqm",tqm);
+                session.setAttribute("orderNo",orderNo);
                 List<String> status = adapterService.checkStatus(tqm, gsdm);
                 if (!status.isEmpty()) {
                     if (status.contains("可开具")) {
