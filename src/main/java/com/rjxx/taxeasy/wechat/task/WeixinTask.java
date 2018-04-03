@@ -190,6 +190,7 @@ public class WeixinTask implements Runnable{
                             String re = "解析门店号失败，请重试！";
                             weixinUtils.jujuekp(SuccOrderId, re, access_token);
                             e.printStackTrace();
+                            return;
                         }
                     }
                     AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
@@ -204,6 +205,7 @@ public class WeixinTask implements Runnable{
                     if(!b){
                         String re = "抬头发送失败，请重试！";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                        return;
                     }
                     //离线开票
                 }else {
@@ -245,6 +247,7 @@ public class WeixinTask implements Runnable{
                                 re = "解析门店号失败，请重试！";
                                 weixinUtils.jujuekp(SuccOrderId, re, access_token);
                                 e.printStackTrace();
+                                return;
                             }
                         }
                         status = adapterService.makeInvoice(gsdm, orderNo, storeNo, extractCode, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, openid, "4", access_token, SuccOrderId);
@@ -252,14 +255,18 @@ public class WeixinTask implements Runnable{
                     if ("-1".equals(status)) {
                         re="开具失败";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                        return;
                     } else if ("0".equals(status)) {
                         re="所需信息为空";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                        return;
                     } else if("-2".equals(status)){
                         re="交易数据上传中";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                        return;
                     }else{
                         //成功
+                        return;
                     }
                 }
             }else {
