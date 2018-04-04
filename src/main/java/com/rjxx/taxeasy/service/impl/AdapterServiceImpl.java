@@ -574,8 +574,8 @@ public class AdapterServiceImpl implements AdapterService {
                 if(post==null){
                     return "-2";
                 }
-                AdapterData data = new AdapterData();
-                AdapterDataOrder order = new AdapterDataOrder();
+                AdapterData data = post.getData();
+                AdapterDataOrder order = data.getOrder();
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
                 post.setData(data);
                 post.setClientNo(sn);
