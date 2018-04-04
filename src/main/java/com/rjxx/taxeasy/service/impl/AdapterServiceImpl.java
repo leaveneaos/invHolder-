@@ -474,6 +474,7 @@ public class AdapterServiceImpl implements AdapterService {
                 }
                 order.setBuyer(buyer);
                 order.setPayments(payments);
+                order.setTotalAmount(0d);
 
                 buyer.setEmail(email);
                 buyer.setTelephoneNo(gfdh);
