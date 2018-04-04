@@ -335,17 +335,17 @@ public class AdapterServiceImpl implements AdapterService {
         try {
             Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
             Xf xf = xfJpaDao.findOneById(skp.getXfid());
-            AdapterPost post = getApiMsg(gsdm, xf.getId(), skp.getId(), tq);
-            if (post == null) {
+            AdapterData data = getApiMsg(gsdm, xf.getId(), skp.getId(), tq);
+            if (data == null) {
                 return "1";
             }
             String orderNo = on;
-            String orderTime = new SimpleDateFormat("yyyyMMddHHmmss").format(post.getData().getOrder().getOrderDate());
+            String orderTime = new SimpleDateFormat("yyyyMMddHHmmss").format(data.getOrder().getOrderDate());
             StringBuilder price = new StringBuilder();
             StringBuilder spsl = new StringBuilder();
             StringBuilder spmc = new StringBuilder();
 
-            List<AdapterDataOrderDetails> orderDetails = post.getData().getOrder().getOrderDetails();
+            List<AdapterDataOrderDetails> orderDetails = data.getOrder().getOrderDetails();
             for (int i = 0; i < orderDetails.size(); i++) {
                 String amount = orderDetails.get(i).getAmount().toString();
                 String taxRate = orderDetails.get(i).getTaxRate().toString();
@@ -570,11 +570,11 @@ public class AdapterServiceImpl implements AdapterService {
             try {
                 Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
                 Xf xf = xfJpaDao.findOneById(skp.getXfid());
-                AdapterPost post = getApiMsg(gsdm,xf.getId(),skp.getId(), tq);
-                if(post==null){
+                AdapterData data = getApiMsg(gsdm,xf.getId(),skp.getId(), tq);
+                if(data==null){
                     return "-2";
                 }
-                AdapterData data = post.getData();
+                AdapterPost post = new AdapterPost();
                 AdapterDataOrder order = data.getOrder();
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
                 post.setData(data);
@@ -663,14 +663,14 @@ public class AdapterServiceImpl implements AdapterService {
      * @param tq
      * @return
      */
-    private AdapterPost getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq){
+    private AdapterData getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq){
         try {
             Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "extractMethod");
             if(StringUtil.isNotBlankList(cszb.getCsz())){
                 Class<? extends TransferExtractDataService> clazz = transferExtractDataService.getClass();
                 Method method = clazz.getDeclaredMethod(cszb.getCsz(), String.class);
-                AdapterPost post = (AdapterPost)method.invoke(transferExtractDataService, tq);
-                return post;
+                AdapterData data = (AdapterData)method.invoke(transferExtractDataService, tq);
+                return data;
             }else{
                 return null;
             }
@@ -726,11 +726,11 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setJshj(adapterDataOrder.getTotalAmount());
         jyxxsq.setBz(adapterDataOrder.getRemark());
         jyxxsq.setTqm(adapterDataOrder.getExtractedCode());
-        jyxxsq.setSfcp("1");
-        jyxxsq.setHsbz("1");
-        jyxxsq.setSfdyqd("0");
-        jyxxsq.setSfdy("0");
-        jyxxsq.setZsfs("0");
+        jyxxsq.setSfcp(adapterDataOrder.getInvoiceSplit());
+        jyxxsq.setHsbz(adapterDataOrder.getTaxMark());
+        jyxxsq.setSfdyqd(adapterDataOrder.getInvoiceList());
+        jyxxsq.setSfdy(adapterDataOrder.getInvoiceSfdy());
+        jyxxsq.setZsfs(adapterDataOrder.getChargeTaxWay());
 
         jyxxsq.setGfemail(adapterDataOrderBuyer.getEmail());
         jyxxsq.setGfsh(adapterDataOrderBuyer.getIdentifier());

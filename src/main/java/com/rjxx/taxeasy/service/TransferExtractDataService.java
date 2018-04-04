@@ -20,24 +20,23 @@ import java.util.List;
 @Component
 public class TransferExtractDataService {
     private static Logger logger = LoggerFactory.getLogger(TransferExtractDataService.class);
-    public AdapterPost seaway(String tq) {
-        AdapterPost post = new AdapterPost();
-        return post;
+    public AdapterData seaway(String tq) {
+        AdapterData data = new AdapterData();
+        return data;
     }
 
-    public AdapterPost kgc(String tq) {
-        AdapterPost post = new AdapterPost();
-        return post;
+    public AdapterData kgc(String tq) {
+        AdapterData data = new AdapterData();
+        return data;
     }
 
-    public AdapterPost fujifilm(String tq) {
-        AdapterPost post = new AdapterPost();
-        return post;
+    public AdapterData fujifilm(String tq) {
+        AdapterData data = new AdapterData();
+        return data;
     }
 
-    public AdapterPost test(String tq) {
+    public AdapterData test(String tq) {
         logger.info("抽取数据KEY={}",tq);
-        AdapterPost post = new AdapterPost();
         AdapterData data = new AdapterData();
         AdapterDataOrder order = new AdapterDataOrder();
         AdapterDataSeller seller = new AdapterDataSeller();
@@ -79,6 +78,11 @@ public class TransferExtractDataService {
         order.setOrderDate(new Date());
         order.setTotalAmount(10d);
         order.setRemark("这是备注");
+        order.setInvoiceSfdy("0");
+        order.setTaxMark("1");
+        order.setInvoiceSplit("1");
+        order.setInvoiceList("0");
+        order.setChargeTaxWay("0");
 
         //销方
         seller.setName("上海百旺测试3643");
@@ -95,8 +99,7 @@ public class TransferExtractDataService {
         data.setOrder(order);
         data.setSeller(seller);
 
-        post.setData(data);
-        logger.info("抽取的数据=【"+JSON.toJSONString(post)+"】");
-        return post;
+        logger.info("抽取的数据=【"+JSON.toJSONString(data)+"】");
+        return data;
     }
 }
