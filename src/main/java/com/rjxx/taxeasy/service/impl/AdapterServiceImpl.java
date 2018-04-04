@@ -741,6 +741,8 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setGflxr(adapterDataOrderBuyer.getRecipient());
         jyxxsq.setGfsjrdz(adapterDataOrderBuyer.getReciAddress());
         jyxxsq.setGfyb(adapterDataOrderBuyer.getZip());
+
+        jyxxsq.setYkpjshj(0d);
         jyxxsqList.add(jyxxsq);
 
         for(int i=0;i<adapterDataOrderOrderDetails.size();i++){
