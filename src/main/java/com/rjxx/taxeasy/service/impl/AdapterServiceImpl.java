@@ -459,6 +459,7 @@ public class AdapterServiceImpl implements AdapterService {
 
 
                 order.setOrderNo(orderNo);
+                order.setOrderDate(new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime));
                 order.setOrderDetails(details);
                 if(StringUtil.isNotBlankList(tqm)){
                     order.setExtractedCode(tqm);
