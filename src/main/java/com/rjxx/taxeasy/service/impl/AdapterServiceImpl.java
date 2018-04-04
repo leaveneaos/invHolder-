@@ -499,7 +499,7 @@ public class AdapterServiceImpl implements AdapterService {
                         detail.setTaxAmount(0d);
                         detail.setVenderOwnCode(spdmArray[i]);
                         details.add(detail);
-                        order.setTotalAmount(order.getTotalDiscount() + Double.valueOf(priceArray[i]));
+                        order.setTotalAmount(order.getTotalAmount() + Double.valueOf(priceArray[i]));
                     }
                 } else {
                     AdapterDataOrderDetails detail = new AdapterDataOrderDetails();
