@@ -697,6 +697,7 @@ public class AdapterServiceImpl implements AdapterService {
         List<Jyzfmx> jyzfmxList = new ArrayList<>();
 
         Jyxxsq jyxxsq = new Jyxxsq();
+        jyxxsq.setYxbz("1");
         jyxxsq.setGsdm(gsdm);
         jyxxsq.setLrsj(new Date());
         jyxxsq.setXgsj(new Date());
@@ -710,6 +711,7 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setSjly(adapterData.getDatasource());
         jyxxsq.setOpenid(adapterData.getOpenid());
         jyxxsq.setFpzldm(adapterData.getInvType());
+        jyxxsq.setFpczlxdm("11");
 
         jyxxsq.setXfyhzh(adapterDataSeller.getBankAcc());
         jyxxsq.setXfyh(adapterDataSeller.getBank());
@@ -737,7 +739,7 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setGfyh(adapterDataOrderBuyer.getBank());
         jyxxsq.setGfyhzh(adapterDataOrderBuyer.getBankAcc());
         jyxxsq.setGflx(adapterDataOrderBuyer.getCustomerType());
-        jyxxsq.setSffsyj(adapterDataOrderBuyer.getIsSend());
+        jyxxsq.setSffsyj("1");
         jyxxsq.setGflxr(adapterDataOrderBuyer.getRecipient());
         jyxxsq.setGfsjrdz(adapterDataOrderBuyer.getReciAddress());
         jyxxsq.setGfyb(adapterDataOrderBuyer.getZip());
@@ -747,6 +749,7 @@ public class AdapterServiceImpl implements AdapterService {
 
         for(int i=0;i<adapterDataOrderOrderDetails.size();i++){
             Jymxsq jymxsq = new Jymxsq();
+            jymxsq.setYxbz("1");
             jymxsq.setGsdm(gsdm);
             jymxsq.setLrsj(new Date());
             jymxsq.setXgsj(new Date());
