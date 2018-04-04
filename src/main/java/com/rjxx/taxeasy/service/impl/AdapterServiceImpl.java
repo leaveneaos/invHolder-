@@ -685,7 +685,7 @@ public class AdapterServiceImpl implements AdapterService {
      * @param post
      * @return
      */
-    public static Map transAdapterForSq(String gsdm,AdapterPost post){
+    private  Map transAdapterForSq(String gsdm,AdapterPost post){
         AdapterData adapterData=post.getData();
         AdapterDataOrder adapterDataOrder=adapterData.getOrder();
         AdapterDataSeller adapterDataSeller = adapterData.getSeller();
@@ -711,7 +711,7 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setSkr(adapterData.getPayee());
         jyxxsq.setSjly(adapterData.getDatasource());
         jyxxsq.setOpenid(adapterData.getOpenid());
-        jyxxsq.setFpzldm(adapterData.getInvType());
+        jyxxsq.setFpzldm("12");
         jyxxsq.setFpczlxdm("11");
 
         jyxxsq.setXfyhzh(adapterDataSeller.getBankAcc());
@@ -722,15 +722,15 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setXfmc(adapterDataSeller.getName());
 
         jyxxsq.setDdh(adapterDataOrder.getOrderNo());
-        jyxxsq.setSfdyqd(adapterDataOrder.getInvoiceList());
-        jyxxsq.setSfcp(adapterDataOrder.getInvoiceSplit());
-        jyxxsq.setSfdy(adapterDataOrder.getInvoiceSfdy());
         jyxxsq.setDdrq(adapterDataOrder.getOrderDate());
-        jyxxsq.setZsfs(adapterDataOrder.getChargeTaxWay());
         jyxxsq.setJshj(adapterDataOrder.getTotalAmount());
-        jyxxsq.setHsbz(adapterDataOrder.getTaxMark());
         jyxxsq.setBz(adapterDataOrder.getRemark());
         jyxxsq.setTqm(adapterDataOrder.getExtractedCode());
+        jyxxsq.setSfcp("1");
+        jyxxsq.setHsbz("1");
+        jyxxsq.setSfdyqd("0");
+        jyxxsq.setSfdy("0");
+        jyxxsq.setZsfs("0");
 
         jyxxsq.setGfemail(adapterDataOrderBuyer.getEmail());
         jyxxsq.setGfsh(adapterDataOrderBuyer.getIdentifier());
