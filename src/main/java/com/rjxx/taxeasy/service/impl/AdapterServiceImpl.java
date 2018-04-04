@@ -747,6 +747,7 @@ public class AdapterServiceImpl implements AdapterService {
 
         for(int i=0;i<adapterDataOrderOrderDetails.size();i++){
             Jymxsq jymxsq = new Jymxsq();
+            jymxsq.setGsdm(gsdm);
             jymxsq.setLrsj(new Date());
             jymxsq.setXgsj(new Date());
             jymxsq.setDdh(jyxxsq.getDdh());
@@ -776,6 +777,7 @@ public class AdapterServiceImpl implements AdapterService {
 
         for(int i=0;i<adapterDataOrderPayments.size();i++){
             Jyzfmx jyzfmx = new Jyzfmx();
+            jyzfmx.setGsdm(gsdm);
             jyzfmx.setLrsj(new Date());
             jyzfmx.setXgsj(new Date());
             jyzfmx.setDdh(jyxxsq.getDdh());
