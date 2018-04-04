@@ -578,6 +578,7 @@ public class AdapterServiceImpl implements AdapterService {
                 AdapterDataOrder order = new AdapterDataOrder();
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
                 post.setData(data);
+                post.setClientNo(sn);
                 data.setSerialNumber("JY" + System.currentTimeMillis() + NumberUtil.getRandomLetter());
                 data.setDatasource(sjly);
                 data.setOpenid(openid);
