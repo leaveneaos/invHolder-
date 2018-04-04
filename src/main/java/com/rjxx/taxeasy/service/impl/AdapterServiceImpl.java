@@ -583,6 +583,7 @@ public class AdapterServiceImpl implements AdapterService {
                 data.setDatasource(sjly);
                 data.setOpenid(openid);
                 data.setOrder(order);
+                order.setOrderNo(on);
                 order.setBuyer(buyer);
                 if(StringUtil.isNotBlankList(tqm)){
                     order.setExtractedCode(tqm);
