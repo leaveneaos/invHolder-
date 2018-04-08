@@ -603,6 +603,7 @@ public class AdapterServiceImpl implements AdapterService {
                 buyer.setBankAcc(gfyhzh);
                 buyer.setBank(gfyh);
                 buyer.setAddress(gfdz);
+                buyer.setIdentifier(gfsh);
                 //转换
                 Map kpMap = transAdapterForSq(gsdm, post);
                 String xmlString = kpService.uploadOrderData(gsdm, kpMap, "01");
