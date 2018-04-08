@@ -133,7 +133,7 @@ public class WeixinTask implements Runnable{
                     e.printStackTrace();
                 }
                 return ;
-            }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm)||"beautyfarm".equals(gsdm)||"phtons".equals(gsdm))) {
+            }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm)||"beautyfarm".equals(gsdm)||"phtons".equals(gsdm)||"yfw".equals(gsdm))) {
                 try {
 //                    if(tqm.indexOf("RJ")<0){
                     barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"), (String) resultMap.get("tax_no"),
