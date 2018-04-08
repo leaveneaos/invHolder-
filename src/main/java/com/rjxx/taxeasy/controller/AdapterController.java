@@ -64,10 +64,12 @@ public class AdapterController extends BaseController {
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
         if(gsxx==null){
             errorRedirect("COMPANY_MSG_ERROR");
+            return;
         }
         Boolean checkResult = RJCheckUtil.checkMD5ForAll(gsxx.getSecretKey(), q);
         if (!checkResult) {
             errorRedirect("QRCODE_VALIDATION_FAILED");
+            return;
         }
         Map map = RJCheckUtil.decodeForAll(q);
         String data = (String) map.get("A0");
@@ -81,11 +83,13 @@ public class AdapterController extends BaseController {
         String type = jsonData.getString("type");
         if (!StringUtil.isNotBlankList(type)) {
             errorRedirect("MISSING_TYPE");
+            return;
         }
         switch (type) {
             case "1":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
                     errorRedirect("TYPE_ONE_REQUIRED_PARAMETER_MISSING");
+                    return;
                 }
                 session.setAttribute("gsdm", gsdm);
                 session.setAttribute("q", q);
@@ -106,11 +110,12 @@ public class AdapterController extends BaseController {
                 } catch (Exception e) {
                     e.printStackTrace();
                     errorRedirect("REDIRECT_ERROR");
+                    return;
                 }
-                break;
             case "2":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
                     errorRedirect("TYPE_TWO_REQUIRED_PARAMETER_MISSING");
+                    return;
                 }
                 session.setAttribute("q", q);
                 session.setAttribute("gsdm", gsdm);
@@ -132,6 +137,7 @@ public class AdapterController extends BaseController {
             case "3":
                 if (StringUtil.isBlankList(on, tq)) {
                     errorRedirect("TYPE_THREE_REQUIRED_PARAMETER_MISSING");
+                    return;
                 }
                 String orderNo = "";
                 String extractCode = "";
@@ -157,6 +163,7 @@ public class AdapterController extends BaseController {
                         storeNo = skp.getKpddm();
                     } catch (Exception e) {
                         errorRedirect("TYPE_THREE_SN_PARAMETER_MISSING");
+                        return;
                     }
                 }
                 session.setAttribute("gsdm", gsdm);
@@ -173,6 +180,7 @@ public class AdapterController extends BaseController {
                     } catch (IOException e) {
                         e.printStackTrace();
                         errorRedirect("REDIRECT_ERROR");
+                        return;
                     }
                     return;
                 } else {
@@ -182,7 +190,7 @@ public class AdapterController extends BaseController {
                 break;
             default:
                 errorRedirect("UNKNOWN_TYPE");
-                break;
+                return;
         }
     }
 
@@ -198,6 +206,7 @@ public class AdapterController extends BaseController {
         }
         if (session.getAttribute("gsdm") == null) {
             errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
+            return;
         }
         String gsdm = session.getAttribute("gsdm").toString();
         String q = session.getAttribute("q").toString();
@@ -224,6 +233,7 @@ public class AdapterController extends BaseController {
         }
         if (session.getAttribute("gsdm") == null) {
             errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
+            return;
         }
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
@@ -244,11 +254,13 @@ public class AdapterController extends BaseController {
                 storeNoOne = skp.getKpddm();
             } catch (Exception e) {
                 errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
+                return;
             }
         }
         boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request,"1");
         if (!b) {
             errorRedirect("保存发票信息失败，请重试！");
+            return;
         }
         commonController.isWeiXin(storeNoOne, on, ot, pr, gsdm);
     }
@@ -345,6 +357,7 @@ public class AdapterController extends BaseController {
                 storeNoOne = skp.getKpddm();
             } catch (Exception e) {
                 errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
+                return null;
             }
         }
         AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
@@ -384,6 +397,7 @@ public class AdapterController extends BaseController {
                         } else {
                             //无品牌
                             errorRedirect("GET_GRAND_ERROR");
+                            return;
                         }
                     } else if (status.contains("开具中")) {
                         //开具中对应的url
@@ -406,13 +420,16 @@ public class AdapterController extends BaseController {
                 } else {
                     //获取pdf状态码失败的url
                     errorRedirect("GET_PDF_STATE_ERROR");
+                    return;
                 }
             } else {
                 errorRedirect("STORE_BRAND_MISSING");
+                return;
             }
         } catch (IOException e) {
             e.printStackTrace();
             errorRedirect("REDIRECT_ERROR");
+            return;
         }
     }
 
@@ -435,6 +452,5 @@ public class AdapterController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return;
     }
 }
