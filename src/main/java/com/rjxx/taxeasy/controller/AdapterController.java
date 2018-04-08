@@ -62,10 +62,12 @@ public class AdapterController extends BaseController {
     public void get(@PathVariable String gsdm, @PathVariable String q) {
         String ua = request.getHeader("user-agent").toLowerCase();
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
+        if(gsxx==null){
+            errorRedirect("COMPANY_MSG_ERROR");
+        }
         Boolean checkResult = RJCheckUtil.checkMD5ForAll(gsxx.getSecretKey(), q);
         if (!checkResult) {
             errorRedirect("QRCODE_VALIDATION_FAILED");
-            return;
         }
         Map map = RJCheckUtil.decodeForAll(q);
         String data = (String) map.get("A0");
