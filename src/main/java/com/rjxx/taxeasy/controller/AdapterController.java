@@ -301,7 +301,7 @@ public class AdapterController extends BaseController {
             }else{
                 if(isInvoiceDateRestriction){
                     logger.info("超过开票期限");
-                    return ResultUtil.error("保存发票信息失败，请重试！");
+                    return ResultUtil.error("已超过开票截止日期，请联系商家");
                 }
             }
             String tqm = jsonObject.getString("tqm");
