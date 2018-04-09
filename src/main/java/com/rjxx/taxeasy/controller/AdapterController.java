@@ -63,14 +63,12 @@ public class AdapterController extends BaseController {
         String ua = request.getHeader("user-agent").toLowerCase();
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
         if(gsxx==null){
-//            errorRedirect("COMPANY_MSG_ERROR");
-            errorRedirect("未知的公司代码");
+            errorRedirect("COMPANY_MSG_ERROR");
             return;
         }
         Boolean checkResult = RJCheckUtil.checkMD5ForAll(gsxx.getSecretKey(), q);
         if (!checkResult) {
-//            errorRedirect("QRCODE_VALIDATION_FAILED");
-            errorRedirect("二维码验签失败");
+            errorRedirect("QRCODE_VALIDATION_FAILED");
             return;
         }
         Map map = RJCheckUtil.decodeForAll(q);
@@ -84,15 +82,13 @@ public class AdapterController extends BaseController {
         String tq = jsonData.getString("tq");
         String type = jsonData.getString("type");
         if (!StringUtil.isNotBlankList(type)) {
-//            errorRedirect("MISSING_TYPE");
-            errorRedirect("开票类型缺失");
+            errorRedirect("MISSING_TYPE");
             return;
         }
         switch (type) {
             case "1":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
-//                    errorRedirect("TYPE_ONE_REQUIRED_PARAMETER_MISSING");
-                    errorRedirect("必要参数缺失");
+                    errorRedirect("TYPE_ONE_REQUIRED_PARAMETER_MISSING");
                     return;
                 }
                 session.setAttribute("gsdm", gsdm);
@@ -113,14 +109,12 @@ public class AdapterController extends BaseController {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-//                    errorRedirect("REDIRECT_ERROR");
-                    errorRedirect("重定向失败");
+                    errorRedirect("REDIRECT_ERROR");
                     return;
                 }
             case "2":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
-//                    errorRedirect("TYPE_TWO_REQUIRED_PARAMETER_MISSING");
-                    errorRedirect("必要参数缺失");
+                    errorRedirect("TYPE_TWO_REQUIRED_PARAMETER_MISSING");
                     return;
                 }
                 session.setAttribute("q", q);
@@ -132,8 +126,7 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(grant);
                     } catch (IOException e) {
                         e.printStackTrace();
-//                        errorRedirect("REDIRECT_ERROR");
-                        errorRedirect("重定向失败");
+                        errorRedirect("REDIRECT_ERROR");
                     }
                     return;
                 } else {
@@ -143,8 +136,7 @@ public class AdapterController extends BaseController {
                 break;
             case "3":
                 if (StringUtil.isBlankList(on, tq)) {
-//                    errorRedirect("TYPE_THREE_REQUIRED_PARAMETER_MISSING");
-                    errorRedirect("必要参数缺失");
+                    errorRedirect("TYPE_THREE_REQUIRED_PARAMETER_MISSING");
                     return;
                 }
                 String orderNo;
@@ -170,8 +162,7 @@ public class AdapterController extends BaseController {
                         Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
                         storeNo = skp.getKpddm();
                     } catch (Exception e) {
-//                        errorRedirect("TYPE_THREE_SN_PARAMETER_MISSING");
-                        errorRedirect("确认订单时门店号缺失");
+                        errorRedirect("TYPE_THREE_SN_PARAMETER_MISSING");
                         return;
                     }
                 }
@@ -188,8 +179,7 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(grantThree);
                     } catch (IOException e) {
                         e.printStackTrace();
-//                        errorRedirect("REDIRECT_ERROR");
-                        errorRedirect("重定向失败");
+                        errorRedirect("REDIRECT_ERROR");
                         return;
                     }
                     return;
@@ -199,8 +189,7 @@ public class AdapterController extends BaseController {
                 }
                 break;
             default:
-//                errorRedirect("UNKNOWN_TYPE");
-                errorRedirect("未知的开票类型");
+                errorRedirect("UNKNOWN_TYPE");
                 return;
         }
     }
@@ -216,8 +205,7 @@ public class AdapterController extends BaseController {
             session.setAttribute("openid", openid);
         }
         if (session.getAttribute("gsdm") == null) {
-//            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
-            errorRedirect("获取微信授权失败");
+            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
             return;
         }
         String gsdm = session.getAttribute("gsdm").toString();
@@ -244,8 +232,7 @@ public class AdapterController extends BaseController {
             session.setAttribute("openid", openid);
         }
         if (session.getAttribute("gsdm") == null) {
-//            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
-            errorRedirect("获取微信授权失败");
+            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
             return;
         }
         String gsdm = (String) session.getAttribute("gsdm");
@@ -266,14 +253,13 @@ public class AdapterController extends BaseController {
                 Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
                 storeNoOne = skp.getKpddm();
             } catch (Exception e) {
-//                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
-                errorRedirect("获取OPENID时门店号缺失");
+                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
                 return;
             }
         }
         boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request,"1");
         if (!b) {
-            errorRedirect("保存发票信息失败，请重试");
+            errorRedirect("SAVE_WECAHT_ERROR");
             return;
         }
         commonController.isWeiXin(storeNoOne, on, ot, pr, gsdm);
@@ -373,8 +359,7 @@ public class AdapterController extends BaseController {
                 Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
                 storeNoOne = skp.getKpddm();
             } catch (Exception e) {
-//                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
-                errorRedirect("发送抬头时门店号缺失");
+                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
                 return null;
             }
         }
@@ -414,8 +399,7 @@ public class AdapterController extends BaseController {
                             return;
                         } else {
                             //无品牌
-//                            errorRedirect("GET_GRAND_ERROR");
-                            errorRedirect("获取品牌失败");
+                            errorRedirect("GET_GRAND_ERROR");
                             return;
                         }
                     } else if (status.contains("开具中")) {
@@ -423,7 +407,7 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                         return;
                     }else if(status.contains("纸票")){
-                        errorRedirect("该订单已开具纸质发票，不可重复开票");
+                        errorRedirect("The order has been issued with paper invoice and cannot be repeated.");
                         return;
                     } else {
                         StringBuilder sb = new StringBuilder();
@@ -441,19 +425,16 @@ public class AdapterController extends BaseController {
                     }
                 } else {
                     //获取pdf状态码失败的url
-//                    errorRedirect("GET_PDF_STATE_ERROR");
-                    errorRedirect("获取PDF文件失败");
+                    errorRedirect("GET_PDF_STATE_ERROR");
                     return;
                 }
             } else {
-//                errorRedirect("STORE_BRAND_MISSING");
-                errorRedirect("门店号或品牌缺失");
+                errorRedirect("STORE_BRAND_MISSING");
                 return;
             }
         } catch (IOException e) {
             e.printStackTrace();
-//            errorRedirect("REDIRECT_ERROR");
-            errorRedirect("重定向错误");
+            errorRedirect("REDIRECT_ERROR");
             return;
         }
     }
@@ -482,11 +463,11 @@ public class AdapterController extends BaseController {
     private void dateRestriction(String gsdm,String orderTime){
         Boolean b = adapterService.isInvoiceDateRestriction(gsdm,null,null,orderTime);
         if(b==null){
-            errorRedirect("日期格式错误或开票期限天数错误");
+            errorRedirect("DATE_OR_DAYS_ERROR");
             return;
         }else{
             if(b){
-                errorRedirect("已超过开票截止日期，请联系商家");
+                errorRedirect("It has exceeded the deadline of opening the ticket, please contact the merchant.");
                 return;
             }
         }
