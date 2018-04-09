@@ -172,14 +172,12 @@ public class AdapterServiceImpl implements AdapterService {
         try {
             List<String> result = new ArrayList();
             List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
-            if (djhs != null && djhs.size() > 0) {
-                logger.info("list不等于空");
+            if (!djhs.isEmpty()) {
                 for (Integer djh : djhs) {
                     if (djh != null) {
-                        logger.info("djh不等于空");
                         Kpls kpls = kplsJpaDao.findOneByDjh(djh);
-                        logger.info("kpls=", kpls);
                         String fpztdm = kpls.getFpztdm();
+                        String fpzldm = kpls.getFpzldm();
                         String pdfurl = kpls.getPdfurl();
                         String fphm = kpls.getFphm();
                         String je = kpls.getJshj() + "";
@@ -187,21 +185,31 @@ public class AdapterServiceImpl implements AdapterService {
                         String orderTime = sdf.format(kpls.getLrsj());
                         String kplsh = kpls.getKplsh() + "";
                         String serialorder = kpls.getSerialorder();
-                        if ("00".equals(fpztdm) && StringUtils.isNotBlank(pdfurl) && StringUtils.isNotBlank(fphm)) {
-                            result.add(pdfurl + "+" + je + "+" + orderTime + "+" + kplsh + "+" + serialorder);
+                        if ("00".equals(fpztdm)  && StringUtils.isNotBlank(fphm)) {
+                            if("12".equals(fpzldm)&& StringUtils.isNotBlank(pdfurl)){
+                                logger.info("已开具电票");
+                                result.add(pdfurl + "+" + je + "+" + orderTime + "+" + kplsh + "+" + serialorder);
+                            }else if("01".equals(fpzldm)||"02".equals(fpzldm)){
+                                logger.info("已开具纸票");
+                                result.add("纸票");
+                            }else{
+                                logger.info("异常");
+                                result.add("开具中");
+                            }
                         } else {
+                            logger.info("开具中");
                             result.add("开具中");
                         }
                     } else {
-                        logger.info("djh等于空");
+                        logger.info("可开具");
                         result.add("可开具");
                     }
                 }
             } else {
-                logger.info("list等于空");
+                logger.info("可开具");
                 result.add("可开具");
             }
-            logger.info("result=", result);
+            logger.info("开具状态={}", result);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
