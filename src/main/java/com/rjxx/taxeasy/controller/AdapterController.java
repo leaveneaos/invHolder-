@@ -297,13 +297,11 @@ public class AdapterController extends BaseController {
             //开票限期判断
             Boolean isInvoiceDateRestriction = adapterService.isInvoiceDateRestriction(gsdm,null,null,orderTime);
             if(isInvoiceDateRestriction==null){
-                errorRedirect("DATE_OR_DAYS_ERROR");
-                return null;
+                return ResultUtil.error("开票期限格式错误");
             }else{
                 if(isInvoiceDateRestriction){
                     logger.info("超过开票期限");
-                    errorRedirect("OUT_MAKE_INVOICE_TIME");
-                    return null;
+                    return ResultUtil.error("保存发票信息失败，请重试！");
                 }
             }
             String tqm = jsonObject.getString("tqm");
@@ -417,7 +415,7 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                         return;
                     }else if(status.contains("纸票")){
-                        errorRedirect("ZHIPIAO");
+                        errorRedirect("该订单已开具纸质发票，不能重复开具");
                         return;
                     } else {
                         StringBuilder sb = new StringBuilder();
