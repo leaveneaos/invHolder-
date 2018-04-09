@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
+import java.math.BigInteger;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -161,61 +163,7 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
-    /**
-     * 验证这笔订单是否已开具过
-     * @param tqm
-     * @param gsdm
-     * @return
-     */
-    @Override
-    public List<String> checkStatus(String tqm, String gsdm) {
-        try {
-            List<String> result = new ArrayList();
-            List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
-            if (!djhs.isEmpty()) {
-                for (Integer djh : djhs) {
-                    if (djh != null) {
-                        Kpls kpls = kplsJpaDao.findOneByDjh(djh);
-                        String fpztdm = kpls.getFpztdm();
-                        String fpzldm = kpls.getFpzldm();
-                        String pdfurl = kpls.getPdfurl();
-                        String fphm = kpls.getFphm();
-                        String je = kpls.getJshj() + "";
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                        String orderTime = sdf.format(kpls.getLrsj());
-                        String kplsh = kpls.getKplsh() + "";
-                        String serialorder = kpls.getSerialorder();
-                        if ("00".equals(fpztdm)  && StringUtils.isNotBlank(fphm)) {
-                            if("12".equals(fpzldm)&& StringUtils.isNotBlank(pdfurl)){
-                                logger.info("已开具电票");
-                                result.add(pdfurl + "+" + je + "+" + orderTime + "+" + kplsh + "+" + serialorder);
-                            }else if("01".equals(fpzldm)||"02".equals(fpzldm)){
-                                logger.info("已开具纸票");
-                                result.add("纸票");
-                            }else{
-                                logger.info("异常");
-                                result.add("开具中");
-                            }
-                        } else {
-                            logger.info("开具中");
-                            result.add("开具中");
-                        }
-                    } else {
-                        logger.info("可开具");
-                        result.add("可开具");
-                    }
-                }
-            } else {
-                logger.info("可开具");
-                result.add("可开具");
-            }
-            logger.info("开具状态={}", result);
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 
 
     /**
@@ -804,5 +752,104 @@ public class AdapterServiceImpl implements AdapterService {
         kpMap.put("jymxsqList",jymxsqList);
         kpMap.put("jyzfmxList",jyzfmxList);
         return kpMap;
+    }
+
+    /**
+     * 验证这笔订单是否已开具过
+     * @param tqm
+     * @param gsdm
+     * @return
+     */
+    @Override
+    public List<String> checkStatus(String tqm, String gsdm) {
+        try {
+            List<String> result = new ArrayList();
+            List<Integer> djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
+            if (!djhs.isEmpty()) {
+                for (Integer djh : djhs) {
+                    if (djh != null) {
+                        Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                        String fpztdm = kpls.getFpztdm();
+                        String fpzldm = kpls.getFpzldm();
+                        String pdfurl = kpls.getPdfurl();
+                        String fphm = kpls.getFphm();
+                        String je = kpls.getJshj() + "";
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                        String orderTime = sdf.format(kpls.getLrsj());
+                        String kplsh = kpls.getKplsh() + "";
+                        String serialorder = kpls.getSerialorder();
+                        if ("00".equals(fpztdm)  && StringUtils.isNotBlank(fphm)) {
+                            if("12".equals(fpzldm)&& StringUtils.isNotBlank(pdfurl)){
+                                logger.info("已开具电票");
+                                result.add(pdfurl + "+" + je + "+" + orderTime + "+" + kplsh + "+" + serialorder);
+                            }else if("01".equals(fpzldm)||"02".equals(fpzldm)){
+                                logger.info("已开具纸票");
+                                result.add("纸票");
+                            }else{
+                                logger.info("异常");
+                                result.add("开具中");
+                            }
+                        } else {
+                            logger.info("开具中");
+                            result.add("开具中");
+                        }
+                    } else {
+                        logger.info("可开具");
+                        result.add("可开具");
+                    }
+                }
+            } else {
+                logger.info("可开具");
+                result.add("可开具");
+            }
+            logger.info("开具状态={}", result);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 开票日期限制
+     * @param orderTime
+     */
+    @Override
+    public Boolean isInvoiceDateRestriction(String gsdm,Integer xfid,Integer skpid,String orderTime){
+        Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "dateRestriction");
+        if(cszb.getCsz()==null){
+            return false;
+        }
+        //获取限制天数
+        BigInteger days;
+        try {
+            days = new BigInteger(cszb.getCsz());
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        //一天的毫秒数
+        BigInteger oneDay = new BigInteger("86400000");//毫秒
+        Long nowDate = System.currentTimeMillis();
+        Date yyyyMMddHHmmss = null;
+        try {
+            yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss").parse(orderTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        Long orderDate =yyyyMMddHHmmss.getTime();
+        //当前时间较订单时间过去了多久
+        BigInteger timeOuting = BigInteger.valueOf(nowDate - orderDate);
+        //限制天数的毫秒数
+        BigInteger restriction = days.multiply(oneDay);
+        //逝去的时间减去限制时间
+        BigInteger time = timeOuting.subtract(restriction);
+        //等于1则大于
+        if (time.compareTo(new BigInteger("0"))==1) {
+            //过了限制天数
+            return true;
+        }
+        return false;
     }
 }

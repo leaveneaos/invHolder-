@@ -25,4 +25,6 @@ public interface AdapterService {
                        String gfyh, String gfyhzh, String gfdz, String gfdh, String tqm, String openid, String sjly, String access_token, String weixinOrderNo);
 
     boolean sendBuyer(String gsdm,String sn,AdapterDataOrderBuyer buyer);
+
+    Boolean isInvoiceDateRestriction(String gsdm, Integer xfid, Integer skpid, String orderTime);
 }

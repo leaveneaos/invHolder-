@@ -147,9 +147,9 @@ public class AdapterController extends BaseController {
                     errorRedirect("必要参数缺失");
                     return;
                 }
-                String orderNo = "";
-                String extractCode = "";
-                String storeNo = "";
+                String orderNo;
+                String extractCode;
+                String storeNo;
                 if (StringUtil.isNotBlankList(on)) {
                     orderNo = on;
                 } else {
@@ -303,7 +303,13 @@ public class AdapterController extends BaseController {
             apiType = "3";
         }
         if (jsonData != null) {
+            if ("1".equals(jsonData)) {
+                return ResultUtil.error("开票数据未上传，请稍后再试");
+            }
             JSONObject jsonObject = JSON.parseObject(jsonData);
+            String orderTime = jsonObject.getString("orderTime");
+            //开票限期判断
+            dateRestriction(gsdm,orderTime);
             String tqm = jsonObject.getString("tqm");
             String orderNo = jsonObject.getString("orderNo");
             boolean b = wechateFpxxService.InFapxx(tqm, gsdm, orderNo, q, "1", openid,
@@ -313,9 +319,6 @@ public class AdapterController extends BaseController {
             }
             return ResultUtil.success(jsonData);//订单号,订单时间,门店号,金额,商品名,商品税率
         } else {
-            if ("1".equals(jsonData)) {
-                return ResultUtil.error("交易数据上传中");
-            }
             return ResultUtil.error("二维码信息获取失败");
         }
     }
@@ -344,7 +347,7 @@ public class AdapterController extends BaseController {
         } else if ("0".equals(status)) {
             return ResultUtil.error("所需信息为空");
         } else if("-2".equals(status)){
-            return ResultUtil.error("交易数据上传中");
+            return ResultUtil.error("开票数据未上传，请稍后再试");
         }else {
             JSONObject jsonObject = JSON.parseObject(status);
             session.setAttribute("serialorder", jsonObject.getString("serialorder"));
@@ -473,6 +476,19 @@ public class AdapterController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void dateRestriction(String gsdm,String orderTime){
+        Boolean b = adapterService.isInvoiceDateRestriction(gsdm,null,null,orderTime);
+        if(b==null){
+            errorRedirect("日期格式错误或开票期限天数错误");
+            return;
+        }else{
+            if(b){
+                errorRedirect("已超过开票截止日期，请联系商家");
+                return;
+            }
         }
     }
 }
