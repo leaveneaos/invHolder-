@@ -407,7 +407,7 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                         return;
                     }else if(status.contains("纸票")){
-                        errorRedirect("The order has been issued with paper invoice and cannot be repeated.");
+                        errorRedirect("ZHIPIAO");
                         return;
                     } else {
                         StringBuilder sb = new StringBuilder();
@@ -467,7 +467,8 @@ public class AdapterController extends BaseController {
             return;
         }else{
             if(b){
-                errorRedirect("It has exceeded the deadline of opening the ticket, please contact the merchant.");
+                logger.info("超过开票期限");
+                errorRedirect("OUT_MAKE_INVOICE_TIME");
                 return;
             }
         }
