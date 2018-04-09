@@ -295,7 +295,17 @@ public class AdapterController extends BaseController {
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String orderTime = jsonObject.getString("orderTime");
             //开票限期判断
-            dateRestriction(gsdm,orderTime);
+            Boolean isInvoiceDateRestriction = adapterService.isInvoiceDateRestriction(gsdm,null,null,orderTime);
+            if(isInvoiceDateRestriction==null){
+                errorRedirect("DATE_OR_DAYS_ERROR");
+                return null;
+            }else{
+                if(isInvoiceDateRestriction){
+                    logger.info("超过开票期限");
+                    errorRedirect("OUT_MAKE_INVOICE_TIME");
+                    return null;
+                }
+            }
             String tqm = jsonObject.getString("tqm");
             String orderNo = jsonObject.getString("orderNo");
             boolean b = wechateFpxxService.InFapxx(tqm, gsdm, orderNo, q, "1", openid,
@@ -457,20 +467,6 @@ public class AdapterController extends BaseController {
             response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void dateRestriction(String gsdm,String orderTime){
-        Boolean b = adapterService.isInvoiceDateRestriction(gsdm,null,null,orderTime);
-        if(b==null){
-            errorRedirect("DATE_OR_DAYS_ERROR");
-            return;
-        }else{
-            if(b){
-                logger.info("超过开票期限");
-                errorRedirect("OUT_MAKE_INVOICE_TIME");
-                return;
-            }
         }
     }
 }
