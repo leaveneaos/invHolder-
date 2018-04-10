@@ -591,16 +591,17 @@ public class AdapterServiceImpl implements AdapterService {
     /**
      * 发送抬头数据给客户（根据参数获取客户接收抬头信息的接口），适用于GET_TYPE_1
      * @param gsdm
-     * @param sn
+     * @param on
      * @param buyer
      * @return
      */
     @Override
-    public boolean sendBuyer(String gsdm,String sn,AdapterDataOrderBuyer buyer) {
+    public boolean sendBuyer(String gsdm,String on,AdapterDataOrderBuyer buyer) {
         try {
-            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
-            Cszb cszb = cszbService.getSpbmbbh(gsdm, skp.getXfid(), skp.getId(), "sendBuyerUrl");
-            String result=HttpClientUtil.doPostJson(cszb.getCsz(), JSON.toJSONString(buyer));
+            Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "sendBuyerUrl");
+            JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(buyer));
+            jsonObject.put("orderNo", on);
+            String result=HttpClientUtil.doPostJson(cszb.getCsz(), JSON.toJSONString(jsonObject));
             if("0000".equals(JSON.parseObject(result).getString("returnCode"))){
                 return true;
             }else{

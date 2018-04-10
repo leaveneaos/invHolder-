@@ -99,15 +99,6 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(grantOne);
                         return;
                     } else {
-                        if (StringUtil.isBlankList(sn)) {
-                            try {
-                                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
-                                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
-                            } catch (Exception e) {
-                                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
-                                return;
-                            }
-                        }
                         response.sendRedirect(
                                 request.getContextPath() + "/qrcode/input.html?" +
                                         "t=" + System.currentTimeMillis() +
@@ -252,26 +243,12 @@ public class AdapterController extends BaseController {
         String on = jsonData.getString("on");
         String ot = jsonData.getString("ot");
         String pr = jsonData.getString("pr");
-        String sn = jsonData.getString("sn");
-        String storeNoOne = "";
-        if (StringUtil.isNotBlankList(sn)) {
-            storeNoOne = sn;
-        } else {
-            try {
-                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
-                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
-                storeNoOne = skp.getKpddm();
-            } catch (Exception e) {
-                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
-                return;
-            }
-        }
         boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request,"1");
         if (!b) {
             errorRedirect("SAVE_WECAHT_ERROR");
             return;
         }
-        commonController.isWeiXin(storeNoOne, on, ot, pr, gsdm);
+        commonController.isWeiXin(null, on, ot, pr, gsdm);
     }
 
     @RequestMapping("/scanConfirm")
@@ -366,19 +343,7 @@ public class AdapterController extends BaseController {
         Map map = RJCheckUtil.decodeForAll(q);
         String data = (String) map.get("A0");
         JSONObject jsonData = JSON.parseObject(data);
-        String sn = jsonData.getString("sn");
-        String storeNoOne = "";
-        if (StringUtil.isNotBlankList(sn)) {
-            storeNoOne = sn;
-        } else {
-            try {
-                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
-                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
-                storeNoOne = skp.getKpddm();
-            } catch (Exception e) {
-                ResultUtil.error("TYPE_ONE_SN_PARAMETER_MISSING");
-            }
-        }
+        String on = jsonData.getString("on");
         AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
         buyer.setName(gfmc);
         buyer.setIdentifier(gfsh);
@@ -387,7 +352,7 @@ public class AdapterController extends BaseController {
         buyer.setTelephoneNo(gfdh);
         buyer.setBankAcc(gfyhzh);
         buyer.setBank(gfyh);
-        boolean b = adapterService.sendBuyer(gsdm, storeNoOne, buyer);
+        boolean b = adapterService.sendBuyer(gsdm,on,buyer);
         if (!b) {
             return ResultUtil.error("发送失败");
         }
