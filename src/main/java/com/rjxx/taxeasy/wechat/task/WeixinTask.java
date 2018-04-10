@@ -177,22 +177,7 @@ public class WeixinTask implements Runnable{
                     Map map = RJCheckUtil.decodeForAll(q);
                     String data = (String) map.get("A0");
                     JSONObject jsonData = JSON.parseObject(data);
-                    String sn = jsonData.getString("sn");
-                    String storeNoOne = "";
-                    if (StringUtil.isNotBlankList(sn)) {
-                        storeNoOne = sn;
-                    } else {
-                        try {
-                            Xf xf = xfJpaDao.findOneByGsdm(gsdm);
-                            Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
-                            storeNoOne = skp.getKpddm();
-                        } catch (Exception e) {
-                            String re = "解析门店号失败，请重试！";
-                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                            e.printStackTrace();
-                            return;
-                        }
-                    }
+                    String on = jsonData.getString("on");
                     AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
                     buyer.setBank(gfyh);
                     buyer.setBankAcc(gfyhzh);
@@ -201,7 +186,7 @@ public class WeixinTask implements Runnable{
                     buyer.setEmail(email);
                     buyer.setIdentifier(gfsh);
                     buyer.setName(gfmc);
-                    boolean b = adapterService.sendBuyer(gsdm, storeNoOne, buyer);
+                    boolean b = adapterService.sendBuyer(gsdm, on, buyer);
                     if(!b){
                         String re = "抬头发送失败，请重试！";
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
