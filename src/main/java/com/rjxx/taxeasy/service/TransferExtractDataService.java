@@ -1,14 +1,16 @@
 package com.rjxx.taxeasy.service;
 
 import com.alibaba.fastjson.JSON;
+import com.rjxx.taxeasy.domains.Jymxsq;
+import com.rjxx.taxeasy.domains.Jyxxsq;
+import com.rjxx.taxeasy.domains.Jyzfmx;
 import com.rjxx.taxeasy.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author wangyahui
@@ -19,23 +21,119 @@ import java.util.List;
 
 @Component
 public class TransferExtractDataService {
+    @Autowired
+    private JyxxsqService jyxxsqService;
+    @Autowired
+    private JymxsqService jymxsqService;
+    @Autowired
+    private JyzfmxService jyzfmxService;
+
     private static Logger logger = LoggerFactory.getLogger(TransferExtractDataService.class);
-    public AdapterData seaway(String tq) {
+    public AdapterData seaway(String gsdm,String tq) {
         AdapterData data = new AdapterData();
         return data;
     }
 
-    public AdapterData kgc(String tq) {
+    public AdapterData kgc(String gsdm,String tq) {
         AdapterData data = new AdapterData();
         return data;
     }
 
-    public AdapterData fujifilm(String tq) {
+    public AdapterData fujifilm(String gsdm,String tq) {
         AdapterData data = new AdapterData();
         return data;
     }
 
-    public AdapterData test(String tq) {
+    public AdapterData jyxxsq(String gsdm,String tq) {
+        logger.info("抽取数据KEY={}",tq);
+        Map jyxxsqParam = new HashMap<>();
+        jyxxsqParam.put("gsdm", gsdm);
+        jyxxsqParam.put("ddh", tq);
+        Jyxxsq jyxxsq = jyxxsqService.findOneByParams(jyxxsqParam);
+        if(jyxxsq==null){
+            logger.info("TPYE3根据订单号【"+tq+"】未找到数据");
+            return null;
+        }
+        Map jymxsqParam = new HashMap();
+        jymxsqParam.put("sqlsh", jyxxsq.getSqlsh());
+        List<Jymxsq> jymxsqs = jymxsqService.findAllBySqlsh(jymxsqParam);
+        Map jyzfmxparam = new HashMap<>();
+        jyzfmxparam.put("gsdm", gsdm);
+        jyzfmxparam.put("sqlsh", jyxxsq.getSqlsh());
+        jyzfmxparam.put("orderBy", "asc");
+        List<Jyzfmx> jyzfmxs = jyzfmxService.findAllByParams(jyzfmxparam);
+        AdapterData data = new AdapterData();
+        AdapterDataOrder order = new AdapterDataOrder();
+        AdapterDataSeller seller = new AdapterDataSeller();
+        List<AdapterDataOrderDetails> details = new ArrayList<>();
+        List<AdapterDataOrderPayments> payments = new ArrayList<>();
+
+        //明细
+        for(int i=0;i<jymxsqs.size();i++){
+            Jymxsq jymxsq = jymxsqs.get(i);
+            AdapterDataOrderDetails detail = new AdapterDataOrderDetails();
+            detail.setAmount(jymxsq.getSpje());
+            detail.setMxTotalAmount(jymxsq.getJshj());
+            detail.setPolicyMark(jymxsq.getYhzcbs());
+            detail.setPolicyName(jymxsq.getYhzcmc());
+            detail.setProductCode(jymxsq.getSpdm());
+            detail.setProductName(jymxsq.getSpmc());
+            detail.setQuantity(jymxsq.getSps());
+            detail.setUnitPrice(jymxsq.getSpdj());
+            detail.setSpec(jymxsq.getSpggxh());
+            detail.setUtil(jymxsq.getSpdw());
+            detail.setRowType(jymxsq.getFphxz());
+            detail.setTaxRate(jymxsq.getSpsl());
+            detail.setTaxAmount(jymxsq.getSpse());
+            detail.setVenderOwnCode(jymxsq.getSpzxbm());
+            detail.setTaxRateMark(jymxsq.getLslbz());
+            detail.setDeductAmount(jymxsq.getKce());
+            details.add(detail);
+        }
+
+        //支付
+        for (Jyzfmx jyzfmx:jyzfmxs){
+            AdapterDataOrderPayments payment = new AdapterDataOrderPayments();
+            payment.setPayPrice(jyzfmx.getZfje());
+            payment.setPayCode(jyzfmx.getZffsDm());
+            payments.add(payment);
+        }
+
+        //订单
+        order.setPayments(payments);
+        order.setOrderDetails(details);
+        order.setOrderNo(jyxxsq.getDdh());
+        order.setOrderDate(jyxxsq.getDdrq());
+        order.setTotalAmount(jyxxsq.getJshj());
+        order.setRemark(jyxxsq.getBz());
+        order.setInvoiceSfdy(jyxxsq.getSfdy());
+        order.setTaxMark(jyxxsq.getHsbz());
+        order.setInvoiceSplit(jyxxsq.getSfcp());
+        order.setInvoiceList(jyxxsq.getSfdyqd());
+        order.setChargeTaxWay(jyxxsq.getZsfs());
+        order.setTotalDiscount(jyxxsq.getQjzk());
+        order.setExtractedCode(jyxxsq.getTqm());
+
+        //销方
+        seller.setName(jyxxsq.getXfmc());
+        seller.setIdentifier(jyxxsq.getXfsh());
+        seller.setTelephoneNo(jyxxsq.getXfdh());
+        seller.setAddress(jyxxsq.getXfdz());
+        seller.setBank(jyxxsq.getXfyh());
+        seller.setBankAcc(jyxxsq.getXfyhzh());
+
+        //数据
+        data.setDrawer(jyxxsq.getKpr());
+        data.setPayee(jyxxsq.getSkr());
+        data.setReviewer(jyxxsq.getFhr());
+        data.setOrder(order);
+        data.setSeller(seller);
+
+        logger.info("抽取的数据=【"+JSON.toJSONString(data)+"】");
+        return data;
+    }
+
+    public AdapterData test(String gsdm,String tq) {
         logger.info("抽取数据KEY={}",tq);
         AdapterData data = new AdapterData();
         AdapterDataOrder order = new AdapterDataOrder();

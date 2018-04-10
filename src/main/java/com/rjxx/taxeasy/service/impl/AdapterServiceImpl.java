@@ -625,8 +625,11 @@ public class AdapterServiceImpl implements AdapterService {
             Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "extractMethod");
             if(StringUtil.isNotBlankList(cszb.getCsz())){
                 Class<? extends TransferExtractDataService> clazz = transferExtractDataService.getClass();
-                Method method = clazz.getDeclaredMethod(cszb.getCsz(), String.class);
-                AdapterData data = (AdapterData)method.invoke(transferExtractDataService, tq);
+                Method method = clazz.getDeclaredMethod(cszb.getCsz(), String.class,String.class);
+                AdapterData data = (AdapterData)method.invoke(transferExtractDataService, gsdm,tq);
+                if(data==null){
+                    return null;
+                }
                 return data;
             }else{
                 return null;
@@ -681,6 +684,7 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setDdh(adapterDataOrder.getOrderNo());
         jyxxsq.setDdrq(adapterDataOrder.getOrderDate());
         jyxxsq.setJshj(adapterDataOrder.getTotalAmount());
+        jyxxsq.setQjzk(adapterDataOrder.getTotalDiscount());
         jyxxsq.setBz(adapterDataOrder.getRemark());
         jyxxsq.setTqm(adapterDataOrder.getExtractedCode());
         jyxxsq.setSfcp(adapterDataOrder.getInvoiceSplit());
