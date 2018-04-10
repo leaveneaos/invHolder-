@@ -936,15 +936,9 @@ public class TestController extends BaseController {
             }*/
 
            String stri ="0301208888000,1181408418";
-           String str2 ="03012088880001181408418";
-            String[] split = stri.split(",");
-            String[] split2 = str2.split(",");
-            System.out.println(split.length);
-            System.out.println(split2.length);
-            if(split.length>1){
-                System.out.println(1);
-            }else {
-                System.out.println(2);
+            String[] strs=stri.split(",");
+            for(int i=0,len=strs.length;i<len;i++){
+                System.out.println(strs[i].toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
