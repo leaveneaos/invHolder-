@@ -99,6 +99,15 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(grantOne);
                         return;
                     } else {
+                        if (StringUtil.isBlankList(sn)) {
+                            try {
+                                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                            } catch (Exception e) {
+                                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
+                                return;
+                            }
+                        }
                         response.sendRedirect(
                                 request.getContextPath() + "/qrcode/input.html?" +
                                         "t=" + System.currentTimeMillis() +
@@ -367,8 +376,7 @@ public class AdapterController extends BaseController {
                 Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
                 storeNoOne = skp.getKpddm();
             } catch (Exception e) {
-                errorRedirect("TYPE_ONE_SN_PARAMETER_MISSING");
-                return null;
+                ResultUtil.error("TYPE_ONE_SN_PARAMETER_MISSING");
             }
         }
         AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
