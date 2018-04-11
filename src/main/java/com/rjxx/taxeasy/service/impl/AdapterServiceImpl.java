@@ -291,10 +291,11 @@ public class AdapterServiceImpl implements AdapterService {
         try {
             Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
             Xf xf = xfJpaDao.findOneById(skp.getXfid());
-            AdapterData data = getApiMsg(gsdm, xf.getId(), skp.getId(), tq);
-            if (data == null) {
+            AdapterPost post = getApiMsg(gsdm, xf.getId(), skp.getId(), tq);
+            if (post == null) {
                 return "1";
             }
+            AdapterData data = post.getData();
             String orderNo = on;
             String orderTime = new SimpleDateFormat("yyyyMMddHHmmss").format(data.getOrder().getOrderDate());
             StringBuilder price = new StringBuilder();
@@ -526,11 +527,11 @@ public class AdapterServiceImpl implements AdapterService {
             try {
                 Skp skp = skpJpaDao.findOneByKpddmAndGsdm(sn, gsdm);
                 Xf xf = xfJpaDao.findOneById(skp.getXfid());
-                AdapterData data = getApiMsg(gsdm,xf.getId(),skp.getId(), tq);
-                if(data==null){
+                AdapterPost post = getApiMsg(gsdm,xf.getId(),skp.getId(), tq);
+                if(post==null){
                     return "-2";
                 }
-                AdapterPost post = new AdapterPost();
+                AdapterData data = post.getData();
                 AdapterDataOrder order = data.getOrder();
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
                 post.setData(data);
@@ -621,17 +622,17 @@ public class AdapterServiceImpl implements AdapterService {
      * @param tq
      * @return
      */
-    private AdapterData getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq){
+    private AdapterPost getApiMsg(String gsdm,Integer xfid,Integer skpid, String tq){
         try {
             Cszb cszb = cszbService.getSpbmbbh(gsdm, xfid, skpid, "extractMethod");
             if(StringUtil.isNotBlankList(cszb.getCsz())){
                 Class<? extends TransferExtractDataService> clazz = transferExtractDataService.getClass();
                 Method method = clazz.getDeclaredMethod(cszb.getCsz(), String.class,String.class);
-                AdapterData data = (AdapterData)method.invoke(transferExtractDataService, gsdm,tq);
-                if(data==null){
+                AdapterPost post = (AdapterPost)method.invoke(transferExtractDataService, gsdm,tq);
+                if(post==null){
                     return null;
                 }
-                return data;
+                return post;
             }else{
                 return null;
             }
@@ -706,6 +707,7 @@ public class AdapterServiceImpl implements AdapterService {
         jyxxsq.setGflxr(adapterDataOrderBuyer.getRecipient());
         jyxxsq.setGfsjrdz(adapterDataOrderBuyer.getReciAddress());
         jyxxsq.setGfyb(adapterDataOrderBuyer.getZip());
+        jyxxsq.setKhh(adapterDataOrderBuyer.getMemberId());
 
         jyxxsq.setYkpjshj(0d);
         jyxxsqList.add(jyxxsq);

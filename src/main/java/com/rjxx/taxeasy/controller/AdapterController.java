@@ -188,6 +188,8 @@ public class AdapterController extends BaseController {
                     deal(result, gsdm);
                 }
                 break;
+            case "4":
+                break;
             default:
                 errorRedirect("UNKNOWN_TYPE");
                 return;

@@ -1,6 +1,7 @@
 package com.rjxx.taxeasy.service;
 
 import com.alibaba.fastjson.JSON;
+import com.rjxx.taxeasy.dao.JyxxsqJpaDao;
 import com.rjxx.taxeasy.domains.Jymxsq;
 import com.rjxx.taxeasy.domains.Jyxxsq;
 import com.rjxx.taxeasy.domains.Jyzfmx;
@@ -22,34 +23,31 @@ import java.util.*;
 @Component
 public class TransferExtractDataService {
     @Autowired
-    private JyxxsqService jyxxsqService;
-    @Autowired
     private JymxsqService jymxsqService;
     @Autowired
     private JyzfmxService jyzfmxService;
+    @Autowired
+    private JyxxsqJpaDao jyxxsqJpaDao;
 
     private static Logger logger = LoggerFactory.getLogger(TransferExtractDataService.class);
-    public AdapterData seaway(String gsdm,String tq) {
-        AdapterData data = new AdapterData();
+    public AdapterPost seaway(String gsdm,String tq) {
+        AdapterPost data = new AdapterPost();
         return data;
     }
 
-    public AdapterData kgc(String gsdm,String tq) {
-        AdapterData data = new AdapterData();
+    public AdapterPost kgc(String gsdm,String tq) {
+        AdapterPost data = new AdapterPost();
         return data;
     }
 
-    public AdapterData fujifilm(String gsdm,String tq) {
-        AdapterData data = new AdapterData();
+    public AdapterPost fujifilm(String gsdm,String tq) {
+        AdapterPost data = new AdapterPost();
         return data;
     }
 
-    public AdapterData jyxxsq(String gsdm,String tq) {
+    public AdapterPost jyxxsq(String gsdm,String tq) {
         logger.info("抽取数据KEY={}",tq);
-        Map jyxxsqParam = new HashMap<>();
-        jyxxsqParam.put("gsdm", gsdm);
-        jyxxsqParam.put("ddh", tq);
-        Jyxxsq jyxxsq = jyxxsqService.findOneByParams(jyxxsqParam);
+        Jyxxsq jyxxsq = jyxxsqJpaDao.findOneByGsdmAndDdhAndFpzldm(gsdm, tq, "12");
         if(jyxxsq==null){
             logger.info("TPYE3根据订单号【"+tq+"】未找到数据");
             return null;
@@ -62,9 +60,12 @@ public class TransferExtractDataService {
         jyzfmxparam.put("sqlsh", jyxxsq.getSqlsh());
         jyzfmxparam.put("orderBy", "asc");
         List<Jyzfmx> jyzfmxs = jyzfmxService.findAllByParams(jyzfmxparam);
+
+        AdapterPost post = new AdapterPost();
         AdapterData data = new AdapterData();
         AdapterDataOrder order = new AdapterDataOrder();
         AdapterDataSeller seller = new AdapterDataSeller();
+        AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
         List<AdapterDataOrderDetails> details = new ArrayList<>();
         List<AdapterDataOrderPayments> payments = new ArrayList<>();
 
@@ -99,7 +100,11 @@ public class TransferExtractDataService {
             payments.add(payment);
         }
 
+        //购方
+        buyer.setMemberId(jyxxsq.getKhh());
+
         //订单
+        order.setBuyer(buyer);
         order.setPayments(payments);
         order.setOrderDetails(details);
         order.setOrderNo(jyxxsq.getDdh());
@@ -129,17 +134,25 @@ public class TransferExtractDataService {
         data.setOrder(order);
         data.setSeller(seller);
 
-        logger.info("抽取的数据=【"+JSON.toJSONString(data)+"】");
-        return data;
+        post.setClientNo(jyxxsq.getKpddm());
+        post.setData(data);
+
+        logger.info("抽取的数据=【"+JSON.toJSONString(post)+"】");
+        return post;
     }
 
-    public AdapterData test(String gsdm,String tq) {
+    public static AdapterPost test(String gsdm,String tq) {
         logger.info("抽取数据KEY={}",tq);
+        AdapterPost post = new AdapterPost();
         AdapterData data = new AdapterData();
         AdapterDataOrder order = new AdapterDataOrder();
+        AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
         AdapterDataSeller seller = new AdapterDataSeller();
         List<AdapterDataOrderDetails> details = new ArrayList<>();
         List<AdapterDataOrderPayments> payments = new ArrayList<>();
+
+        post.setClientNo("wyh_01");
+        post.setData(data);
 
         //明细
         for (int i = 2; i > 0; i--) {
@@ -169,7 +182,11 @@ public class TransferExtractDataService {
         payment2.setPayPrice(5d);
         payments.add(payment2);
 
+        //购方
+        buyer.setMemberId("khh12345678");
+
         //订单
+        order.setBuyer(buyer);
         order.setPayments(payments);
         order.setOrderDetails(details);
         order.setOrderNo("DDH"+System.currentTimeMillis());
@@ -197,7 +214,12 @@ public class TransferExtractDataService {
         data.setOrder(order);
         data.setSeller(seller);
 
-        logger.info("抽取的数据=【"+JSON.toJSONString(data)+"】");
-        return data;
+
+        logger.info("抽取的数据=【"+JSON.toJSONString(post)+"】");
+        return post;
+    }
+
+    public static void main(String[] args) {
+        test("gsdm","q");
     }
 }
