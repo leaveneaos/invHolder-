@@ -1,0 +1,25 @@
+body{
+	overflow-x: hidden;
+	overflow: hidden;
+}
+header{
+	background-color: #67481b;
+}
+.middle ul {
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	margin: 0 auto;
+	box-sizing: border-box;
+	border-bottom: 1px dashed #ECECEC;
+	text-indent: 20px;
+}
+.middle li.fl {
+	width: 35%;
+	color: #94969C;
+}
+.middle li.fr {
+	width: 65%;
+	color: #424347;
+}
+

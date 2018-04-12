@@ -1,0 +1,72 @@
+body{
+	overflow-x: hidden;
+	overflow: hidden;
+}
+header{
+	background-color: #67481b;
+}
+.entry {
+	width: 90%;
+	height: 35px;
+	line-height: 35px;
+	margin: 0px auto;
+    box-sizing: border-box;
+    border-bottom: 1px dashed #ECECEC;
+}
+.entry:last-child {
+	border-bottom: none;
+}
+.entry label {
+	width: 40%;
+	color: #7B7F87;
+	font-size: 14px;
+	margin-right: 20px;
+}
+.entry input {
+	width: 60%;
+}
+.middle {
+	margin-top: 0px;
+}
+.type {
+    width: 90%;
+    margin: 10px auto;
+	font-size: 0;
+}
+.checkType {
+	font-size: 14px;
+	font-weight: bold;
+    margin: 5px 0px;
+}
+#company,#personal {
+	width: 45%;
+	height: 30px;
+	line-height: 26px;
+	box-sizing: border-box;
+	font-size: 14px;
+	border: 1px solid #ccc;
+}
+#company {
+	margin-right: 5%;
+}
+#personal {
+	margin-left: 5%;
+}
+.checkStyle {
+	background-color: #fff;
+	color: black;
+}
+/*选框位置控制*/
+.entry:first-child {
+	border-top: 1px solid #ECECEC;
+	position: relative;
+}
+#getFptt {
+	width: 20px;
+	height: 20px;
+	background-color: #ccc;
+	position: absolute;
+	top: 8px;
+	right: 1px;
+    display: none;
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="threePage" xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="UTF-8">
+	<title>订单确认</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/fpttCommon.css">
+    <script>
+            window.onresize = function(){
+                document.getElementsByTagName('html')[0].style.fontSize = (window.document.documentElement.getBoundingClientRect().width/753*100)+'px';
+            }
+            document.getElementsByTagName('html')[0].style.fontSize = (window.document.documentElement.getBoundingClientRect().width/753*100)+'px';
+
+    </script>
+</head>
+<body>
+	<header>
+		<!--<img id="logo" class="logo" src="logo/dicos.png"/>-->
+	</header>
+	<section class="main" style="">
+		<div class="content">
+			<div style="width: 100%">
+				<div id="you" style="float: left;width: 30%;margin-left: 10%">
+				    <!-- <svg class="icon"  aria-hidden="true">
+						<use xlink:href="#icon-youxiang"></use>
+					</svg> -->
+					<img class="bg"  src="./logo/newimg/email/t0.png">
+					<img class="email"  src="./logo/newimg/email/t00.png">
+				</div>
+				<div id="wechat" style="float: left;width: 30%;display: none">
+					<svg class="icon"   aria-hidden="true">
+						<use xlink:href="#icon-weixin"></use>
+					</svg>
+				</div>
+				<div id="alipay" style="float: left;width: 30%;display: none">
+					<svg class="icon"  aria-hidden="true">
+						<use xlink:href="#icon-zfb"></use>
+					</svg>
+				</div>
+			</div>
+			<div style="width: 100%;float: left" class="kjz1">
+				<p>您将通过以下途径获取电子发票：</p>
+				<li>1、发送至您的个人邮箱。</li>
+				<li>2、关注公众号，及时获取发票通知。</li>
+				<li class="wdpq" style="display: none">3、发票自动存入微信卡包"我的票券"。</li>
+				<li class="fpgj" style="display: none">3、发票自动存入支付宝"发票管家"。</li>
+			</div>
+			<div class="ewm" >
+				<img class="fl" src="./logo/newimg/email/ercode.png">
+				<span class="fr">长按识别二维码,关注公众号及时收到发票信息</span>
+			</div>
+		</div>
+		<div class="shadow2"></div>
+		<div class="shadow1"></div>
+	</section>
+	<footer>
+		<p class="company fl">泰易电子发票云服务平台</p>
+		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
+	</footer>
+	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+    </script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="js/iconfont.js"></script>
+	<script type="text/javascript">
+        //pageIndex 从0开始到8结束对于ui顺序
+        var changePageBg = function(pageIndex){
+            // $('#you img').attr('src','./logo/newimg/email/t'+pageIndex+'.png')
+            $('body').addClass('bodyBg'+pageIndex);
+            $('#you .bg').attr('src','./logo/newimg/email/t'+(pageIndex+1)+'.png')
+            $('#you .email').attr('src','./logo/newimg/email/t'+(pageIndex+1)+''+(pageIndex+1)+'.png')
+        }
+        $(function() {
+            var thisURL = document.URL;
+            var myurl=decodeURI(thisURL);
+            var getval =myurl.split('?')[1];
+            pp = getval.split("=")[2];
+            changePageBg(pp);
+        }
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var isAlipay = ua.indexOf('alipay') != -1;
+
+        if(isWeixin){
+            $(".wdpq").css('display',"");
+            $(".fpgj").css('display','none');
+            $("#wechat").css('display',"");
+            $("#alipay").css('display','none');
+		}
+		if(isAlipay){
+            $(".wdpq").css('display',"");
+            $(".fpgj").css('display','block');
+            $("#wechat").css('display','none');
+            $("#alipay").css('display',"");
+		}
+
+	</script>
+</body>
+</html>
