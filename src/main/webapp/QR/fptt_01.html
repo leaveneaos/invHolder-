@@ -30,12 +30,12 @@
 			</div>
 			<div class="middle">
 				<div class="type">
-					<button id="company">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
-					<button id="personal" class="checkStyle" type="submit">个人/其他</button>
+					<button id="company" class="">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
+					<button id="personal" class="checkStyle " type="submit">个人/其他</button>
 				</div>
 		     	<div class="main-msg">
 					<form class="" action="" method="">
-						<div class="entry">
+						<div class="entry firstInput">
 							<span style="color: red;">*</span><label>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
 							<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称(必填)" onkeyup="query()">
 							<select class="hide" id="getFptt" oninput="changeFptt(this.value)">
@@ -79,6 +79,8 @@
 		<p class="company fl">泰易电子发票云服务平台</p>
 		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
+
+
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.9.1.js"></script>
@@ -94,7 +96,7 @@
             $('header.header').addClass('header'+pageIndex);
             $('body').addClass('bodyBg'+pageIndex);
             $('#company').addClass('pageBtnColor'+pageIndex);
-
+			window.pageIndex = pageIndex;
             if(pageIndex==3){
                 $('.header').addClass('boxShadow0')
             }else if(pageIndex==5){
@@ -114,10 +116,10 @@
         $(function() {
             var thisURL = document.URL;
             var myurl=decodeURI(thisURL);
-            var getval =myurl.split('?')[1];
-            pp = getval.split("=")[2];
-            changePageBg(pp);
-
+            // var getval =myurl.split('?')[1];
+            // pp = getval.split("=")[2];
+            // changePageBg(pp);
+            changePageBg(2);
             // 选择抬头类型
             var $fptt = $('#fptt');
             	$nsrsbh = $('#nsrsbh'),
@@ -128,15 +130,20 @@
                 $yx = $('#yx');
             var arr = [$nsrsbh,$dz,$khh,$yhzh];
             $('#personal').on('click',function() {
+                $('#company').removeClass('pageBtnColor'+pageIndex);
+                $('#personal').addClass('pageBtnColor'+pageIndex);
+				console.log(111)
                 $('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
                 for(var i=0;i<arr.length;i++) {
                     arr[i].parent().css('display','none');
                 }
             })
             $('#company').on('click',function() {
+                $('#company').addClass('pageBtnColor'+pageIndex);
+                $('#personal').removeClass('pageBtnColor'+pageIndex);
                 $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
                 for(var i=0;i<arr.length;i++) {
-                    arr[i].parent().css('display','block');
+                    arr[i].parent().css('display','flex');
                 }
             })
             // 获取支付宝默认抬头信息

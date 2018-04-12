@@ -287,30 +287,39 @@ footer .help {
 
 .pageBtnColor0{
   background: #B09471 !important;
+  color: white !important;
 }
 .pageBtnColor1{
   background: #FAE9E9 !important;
+  color: white !important;
 }
 .pageBtnColor2{
   background: #D0CEBC !important;
+  color: white !important;
 }
 .pageBtnColor3{
   background: #A3DEF4 !important;
+  color: white !important;
 }
 .pageBtnColor4{
   background: #D2D0C1 !important;
+  color: white !important;
 }
 .pageBtnColor5{
   background: #AED4C9 !important;
+  color: white !important;
 }
 .pageBtnColor6{
   background: #D7CAC1 !important;
+  color: white !important;
 }
 .pageBtnColor7{
   background: #D3D2CA !important;
+  color: white !important;
 }
 .pageBtnColor8{
   background: #C3CFC0 !important;
+  color: white !important;
 }
 
 /* //第二个页面 */
@@ -323,9 +332,11 @@ footer .help {
   position: relative;
 }
 .twoPage .entry input{
-  border-width:0; width: 100%;
+  border-width: 0;
+  width: 100%;
   flex: 3;
-  height: 0.5rem;
+  height: 0.40rem;
+  margin-top: 0.03rem;
 }
 .twoPage .entry span{
   border-width:0; 
@@ -363,8 +374,8 @@ footer .help {
   background: white;
 }  
 .twoPage .middle .type #company{
-  background: #B39774;
-  color: white;
+  background: white;
+
 }       
 .twoPage  #company{
   margin-right: 1.2rem;
@@ -442,4 +453,12 @@ line-height: 0.32rem;
 height: 0.44rem;
 margin-top: 0.4rem;
 margin-left: 0.33rem;
+}
+
+.twoPage .selectBtn{
+  background: #B39774 !important;
+  color: white !important;
+}
+.twoPage .ui-corner-all{
+  font-size: 0.24rem !important;
 }
