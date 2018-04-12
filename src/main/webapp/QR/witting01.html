@@ -24,8 +24,8 @@
 				    <!-- <svg class="icon"  aria-hidden="true">
 						<use xlink:href="#icon-youxiang"></use>
 					</svg> -->
-					<img class="bg"  src="./logo/newimg/email/t0.png">
-					<img class="email"  src="./logo/newimg/email/t00.png">
+					<img class="bg"  src="./logo/newimg/email/T3.png">
+					<img class="email"  src="./logo/newimg/email/T33.png">
 				</div>
 				<div id="wechat" style="float: left;width: 30%;display: none">
 					<svg class="icon"   aria-hidden="true">
@@ -67,33 +67,33 @@
         var changePageBg = function(pageIndex){
             // $('#you img').attr('src','./logo/newimg/email/t'+pageIndex+'.png')
             $('body').addClass('bodyBg'+pageIndex);
-            $('#you .bg').attr('src','./logo/newimg/email/t'+(pageIndex+1)+'.png')
-            $('#you .email').attr('src','./logo/newimg/email/t'+(pageIndex+1)+''+(pageIndex+1)+'.png')
+            $('#you .bg').attr('src','./logo/newimg/email/T'+(pageIndex+1)+'.png')
+            $('#you .email').attr('src','./logo/newimg/email/T'+(pageIndex+1)+''+(pageIndex+1)+'.png')
         }
-        $(function() {
+        $(function () {
             var thisURL = document.URL;
-            var myurl=decodeURI(thisURL);
-            var getval =myurl.split('?')[1];
-            pp = getval.split("=")[2];
+            var myurl = decodeURI(thisURL);
+            var getval = myurl.split('?')[1];
+            var pp = getval.split("=")[2];
             changePageBg(pp);
-        }
-        var ua = navigator.userAgent.toLowerCase();
-        var isWeixin = ua.indexOf('micromessenger') != -1;
-        var isAlipay = ua.indexOf('alipay') != -1;
 
-        if(isWeixin){
-            $(".wdpq").css('display',"");
-            $(".fpgj").css('display','none');
-            $("#wechat").css('display',"");
-            $("#alipay").css('display','none');
-		}
-		if(isAlipay){
-            $(".wdpq").css('display',"");
-            $(".fpgj").css('display','block');
-            $("#wechat").css('display','none');
-            $("#alipay").css('display',"");
-		}
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
 
+            if(isWeixin){
+                $(".wdpq").css('display',"");
+                $(".fpgj").css('display','none');
+                $("#wechat").css('display',"");
+                $("#alipay").css('display','none');
+            }
+            if(isAlipay){
+                $(".wdpq").css('display',"");
+                $(".fpgj").css('display','block');
+                $("#wechat").css('display','none');
+                $("#alipay").css('display',"");
+            }
+        });
 	</script>
 </body>
 </html>
