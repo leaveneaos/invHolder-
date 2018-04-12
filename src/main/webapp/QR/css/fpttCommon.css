@@ -78,8 +78,8 @@ input {
 }
 .os1{
     overflow: hidden;
-text-overflow:ellipsis;
-white-space: nowrap;
+    text-overflow:ellipsis;
+    white-space: nowrap;
 }
 /*# sourceMappingURL=reset.css.map */
 
