@@ -115,10 +115,9 @@
     $(function() {
         var thisURL = document.URL;
         var myurl=decodeURI(thisURL);
-        // var getval =myurl.split('?')[1];
-        // pp = getval.split("=")[2];
-        // changePageBg(pp);
-        changePageBg(2);
+        var getval =myurl.split('?')[1];
+        pp = getval.split("=")[2];
+        changePageBg(pp);
         // 选择抬头类型
         var $fptt = $('#fptt');
         $nsrsbh = $('#nsrsbh'),
