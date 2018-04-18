@@ -78,8 +78,8 @@ input {
 }
 .os1{
     overflow: hidden;
-    text-overflow:ellipsis;
-    white-space: nowrap;
+text-overflow:ellipsis;
+white-space: nowrap;
 }
 /*# sourceMappingURL=reset.css.map */
 
@@ -189,97 +189,97 @@ footer .help {
   color: #ff3428 !important;
 }
 .header0{
-  background: #F5F4ED !important;
+  background: #B01F24 !important;
 }
 .header0 img{
   width: 2.33rem !important;
   height: 0.58rem !important;
 }
 .header1{
-  background: #F6E4E4 !important;
+  background: #CD342F !important;
 }
 .header1 img{
   width: 3.73rem !important;
   height: 0.78rem !important;
 }
 .header2{
-  background: #F5F4ED !important;
+  background: #EF8201 !important;
 }
 .header2 img{
   width: 3.20rem !important;
   height: 0.55rem !important;
 }
 .header3{
-  background: #A0DAF0 !important;
+  background: #2A588C !important;
 }
 .header3 img{
   width: 3.84rem !important;
   height: 0.82rem !important;
 }
 .header4{
-  background: #F5F4ED !important;
+  background: #231816 !important;
 }
 .header4 img{
   width: 5.2rem !important;
   height: 0.97rem !important;
 }
 .header5{
-  background: #C3EDE0 !important;
+  background: #FFFFFF !important;
 }
 .header5 img{
   width: 3.58rem !important;
   height: 0.6rem !important;
 }
 .header6{
-  background: #ECE0D7 !important;
+  background: #B86428 !important;
 }
 .header6 img{
   width:4.64rem !important;
   height: 0.88rem !important;
 }
 .header7{
-  background: #F5F4ED !important;
+  background: #F5F5ED !important;
 }
 .header7 img{
   width:4.56rem !important;
   height: 0.89rem !important;
 }
 .header8{
-  background: #E2F0DE !important;
+  background: #334722 !important;
 }
 .header8 img{
   width: 4.82rem !important;
   height: 0.92rem !important;
 }
 .bodyBg0{
-  background: #FEFDF6 !important;
+  background: #FEFEF6 !important;
 }
 .bodyBg1{
-  background: #FEF2F2 !important;
+  background: #F7F5F6 !important;
 }
 .bodyBg2{
-  background: #FFFEF5 !important;
+  background: #FEFEF6 !important;
 }
 .bodyBg3{
-  background: #B2E8FD !important;
+  background: #B1E8FD !important;
 }
 .bodyBg4{
-  background: #FFFEF6 !important;
+  background: #FEFEF6 !important;
 }
 .bodyBg5{
-  background: #CDF7EA !important;
+  background: #F8F8F8 !important;
 }
 .bodyBg6{
-  background: #FFF5EC !important;
+  background: #F9E7D9 !important;
 }
 .bodyBg7{
-  background: #FFFEF4 !important;
+  background: #FEFEF2 !important;
 }
 .bodyBg8{
-  background: #F8FFF6 !important;
+  background: #ACBD9D !important;
 }
 .boxShadow1{
-  box-shadow: 0px 2px 4px 2px #B6DBD0 !important;
+  box-shadow: 0px 2px 4px 2px #9FB397 !important;
 }
 .boxShadow0{
   box-shadow: 0px 2px 4px 2px #9ECEE0 !important;
@@ -287,39 +287,30 @@ footer .help {
 
 .pageBtnColor0{
   background: #B09471 !important;
-  color: white !important;
 }
 .pageBtnColor1{
   background: #FAE9E9 !important;
-  color: white !important;
 }
 .pageBtnColor2{
   background: #D0CEBC !important;
-  color: white !important;
 }
 .pageBtnColor3{
   background: #A3DEF4 !important;
-  color: white !important;
 }
 .pageBtnColor4{
   background: #D2D0C1 !important;
-  color: white !important;
 }
 .pageBtnColor5{
   background: #AED4C9 !important;
-  color: white !important;
 }
 .pageBtnColor6{
   background: #D7CAC1 !important;
-  color: white !important;
 }
 .pageBtnColor7{
   background: #D3D2CA !important;
-  color: white !important;
 }
 .pageBtnColor8{
   background: #C3CFC0 !important;
-  color: white !important;
 }
 
 /* //第二个页面 */
@@ -332,11 +323,9 @@ footer .help {
   position: relative;
 }
 .twoPage .entry input{
-  border-width: 0;
-  width: 100%;
+  border-width:0; width: 100%;
   flex: 3;
-  height: 0.40rem;
-  margin-top: 0.03rem;
+  height: 0.5rem;
 }
 .twoPage .entry span{
   border-width:0; 
@@ -374,8 +363,8 @@ footer .help {
   background: white;
 }  
 .twoPage .middle .type #company{
-  background: white;
-
+  background: #B39774;
+  color: white;
 }       
 .twoPage  #company{
   margin-right: 1.2rem;
@@ -453,12 +442,4 @@ line-height: 0.32rem;
 height: 0.44rem;
 margin-top: 0.4rem;
 margin-left: 0.33rem;
-}
-
-.twoPage .selectBtn{
-  background: #B39774 !important;
-  color: white !important;
-}
-.twoPage .ui-corner-all{
-  font-size: 0.24rem !important;
 }
