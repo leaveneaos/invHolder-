@@ -6,11 +6,13 @@ import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.GsxxJpaDao;
 import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.XfJpaDao;
+import com.rjxx.taxeasy.domains.Cszb;
 import com.rjxx.taxeasy.domains.Gsxx;
 import com.rjxx.taxeasy.domains.Skp;
 import com.rjxx.taxeasy.domains.Xf;
 import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
 import com.rjxx.taxeasy.service.AdapterService;
+import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
@@ -52,17 +54,19 @@ public class AdapterController extends BaseController {
     private CommonController commonController;
     @Autowired
     private wechatFpxxServiceImpl wechatFpxxService;
+    @Autowired
+    private CszbService cszbService;
 
     private static final String TYPE_ONE_CALLBACKURL = "kptService/getOpenidForOne";
     private static final String TYPE_TWO_CALLBACKURL = "kptService/getOpenid";
     private static final String TYPE_THREE_CALLBACKURL = "kptService/getOpenid";
+    private static final String TYPE_FOUR_CALLBACKURL = "kptService/getOpenidForFour";
 
 
     @RequestMapping(value = "/{gsdm}/{q}", method = RequestMethod.GET)
     public void get(@PathVariable String gsdm, @PathVariable String q) {
-        String ua = request.getHeader("user-agent").toLowerCase();
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
-        if(gsxx==null){
+        if (gsxx == null) {
             errorRedirect("COMPANY_MSG_ERROR");
             return;
         }
@@ -81,6 +85,7 @@ public class AdapterController extends BaseController {
         String sp = jsonData.getString("sp");
         String tq = jsonData.getString("tq");
         String type = jsonData.getString("type");
+        String mi = jsonData.getString("mi");
         if (!StringUtil.isNotBlankList(type)) {
             errorRedirect("MISSING_TYPE");
             return;
@@ -93,7 +98,7 @@ public class AdapterController extends BaseController {
                 }
                 session.setAttribute("gsdm", gsdm);
                 session.setAttribute("q", q);
-                String grantOne = isWechat(ua, TYPE_ONE_CALLBACKURL);
+                String grantOne = isWechat(TYPE_ONE_CALLBACKURL);
                 try {
                     if (grantOne != null) {
                         response.sendRedirect(grantOne);
@@ -119,7 +124,7 @@ public class AdapterController extends BaseController {
                 }
                 session.setAttribute("q", q);
                 session.setAttribute("gsdm", gsdm);
-                String grant = isWechat(ua, TYPE_TWO_CALLBACKURL);
+                String grant = isWechat(TYPE_TWO_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grant != null) {
                     try {
@@ -172,7 +177,7 @@ public class AdapterController extends BaseController {
                 session.setAttribute("tq", extractCode);
                 //跳转不需要Q，微信发票信息需要
                 session.setAttribute("q", q);
-                String grantThree = isWechat(ua, TYPE_THREE_CALLBACKURL);
+                String grantThree = isWechat(TYPE_THREE_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grantThree != null) {
                     try {
@@ -189,38 +194,40 @@ public class AdapterController extends BaseController {
                 }
                 break;
             case "4":
-                break;
+                if (!StringUtil.isNotBlankList(mi, ot)) {
+                    errorRedirect("TYPE_FOUR_REQUIRED_PARAMETER_MISSING");
+                    return;
+                }
+                String confirmMsg = adapterService.getConfirmMsg(gsdm, q);
+                if ("error".equals(confirmMsg)) {
+                    errorRedirect("GET_CONFIRM_MSG_ERROR");
+                    return;
+                } else if ("sn".equals(confirmMsg)) {
+                    errorRedirect("GET_STORENO_ERROR");
+                    return;
+                } else if ("jyxxsq".equals(confirmMsg)) {
+                    errorRedirect("GET_ORDER_ERROR");
+                    return;
+                } else if ("pp".equals(confirmMsg)) {
+                    errorRedirect("GET_GRAND_ERROR");
+                    return;
+                } else {
+                    JSONObject msgJson = JSON.parseObject(confirmMsg);
+                    String ppdm = msgJson.getString("ppdm");
+                    String ppurl = msgJson.getString("ppurl");
+                    session.setAttribute("gsdm", gsdm);
+                    session.setAttribute("q", q);
+                    try {
+                        response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
+                        return;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             default:
                 errorRedirect("UNKNOWN_TYPE");
                 return;
         }
-    }
-
-    @RequestMapping("/getOpenid")
-    public void getOpenid(String state, String code) {
-        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
-                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
-        String resultJson = HttpClientUtil.doGet(turl);
-        JSONObject resultObject = JSONObject.parseObject(resultJson);
-        String openid = resultObject.getString("openid");
-        if (openid != null) {
-            session.setAttribute("openid", openid);
-        }
-        if (session.getAttribute("gsdm") == null) {
-            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
-            return;
-        }
-        String gsdm = session.getAttribute("gsdm").toString();
-        String q = session.getAttribute("q").toString();
-        String on = (String) session.getAttribute("on");
-        String sn = (String) session.getAttribute("sn");
-        Map result;
-        if (StringUtil.isNotBlankList(q)&&StringUtil.isBlankList(on,sn)) {
-            result = adapterService.getGrandMsg(gsdm, q);
-        } else {
-            result = adapterService.getGrandMsg(gsdm, on, sn);
-        }
-        deal(result, gsdm);
     }
 
     @RequestMapping("/getOpenidForOne")
@@ -245,7 +252,7 @@ public class AdapterController extends BaseController {
         String on = jsonData.getString("on");
         String ot = jsonData.getString("ot");
         String pr = jsonData.getString("pr");
-        boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request,"1");
+        boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request, "1");
         if (!b) {
             errorRedirect("SAVE_WECAHT_ERROR");
             return;
@@ -253,8 +260,59 @@ public class AdapterController extends BaseController {
         commonController.isWeiXin(null, on, ot, pr, gsdm);
     }
 
+    @RequestMapping(value = "/input", method = RequestMethod.GET)
+    public Result submitForOne(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
+                               String gfdz, String gfdh, String gfyhzh, String gfyh) {
+        String gsdm = (String) session.getAttribute("gsdm");
+        String q = (String) session.getAttribute("q");
+        Map map = RJCheckUtil.decodeForAll(q);
+        String data = (String) map.get("A0");
+        JSONObject jsonData = JSON.parseObject(data);
+        String on = jsonData.getString("on");
+        AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
+        buyer.setName(gfmc);
+        buyer.setIdentifier(gfsh);
+        buyer.setEmail(email);
+        buyer.setAddress(gfdz);
+        buyer.setTelephoneNo(gfdh);
+        buyer.setBankAcc(gfyhzh);
+        buyer.setBank(gfyh);
+        boolean b = adapterService.sendBuyer(gsdm, on, buyer);
+        if (!b) {
+            return ResultUtil.error("发送失败");
+        }
+        return ResultUtil.success();
+    }
+
+    @RequestMapping("/getOpenid")
+    public void getOpenidForTwoAndThree(String state, String code) {
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
+        String resultJson = HttpClientUtil.doGet(turl);
+        JSONObject resultObject = JSONObject.parseObject(resultJson);
+        String openid = resultObject.getString("openid");
+        if (openid != null) {
+            session.setAttribute("openid", openid);
+        }
+        if (session.getAttribute("gsdm") == null) {
+            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
+            return;
+        }
+        String gsdm = session.getAttribute("gsdm").toString();
+        String q = session.getAttribute("q").toString();
+        String on = (String) session.getAttribute("on");
+        String sn = (String) session.getAttribute("sn");
+        Map result;
+        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+            result = adapterService.getGrandMsg(gsdm, q);//type2
+        } else {
+            result = adapterService.getGrandMsg(gsdm, on, sn);//type3
+        }
+        deal(result, gsdm);
+    }
+
     @RequestMapping("/scanConfirm")
-    public Result smConfirm() {
+    public Result getConfirmMsgForTwoAndThree() {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
         String openid = (String) session.getAttribute("openid");
@@ -266,7 +324,7 @@ public class AdapterController extends BaseController {
         }
         String jsonData;
         String apiType;
-        if (StringUtil.isNotBlankList(q)&&StringUtil.isBlankList(on,sn)) {
+        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
             jsonData = adapterService.getSpxx(gsdm, q);
             apiType = "2";
         } else {
@@ -283,11 +341,11 @@ public class AdapterController extends BaseController {
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String orderTime = jsonObject.getString("orderTime");
             //开票限期判断
-            Boolean isInvoiceDateRestriction = adapterService.isInvoiceDateRestriction(gsdm,null,null,orderTime);
-            if(isInvoiceDateRestriction==null){
+            Boolean isInvoiceDateRestriction = adapterService.isInvoiceDateRestriction(gsdm, null, null, orderTime);
+            if (isInvoiceDateRestriction == null) {
                 return ResultUtil.error("开票期限格式错误");
-            }else{
-                if(isInvoiceDateRestriction){
+            } else {
+                if (isInvoiceDateRestriction) {
                     logger.info("超过开票期限");
                     return ResultUtil.error("已超过开票截止日期，请联系商家");
                 }
@@ -295,7 +353,7 @@ public class AdapterController extends BaseController {
             String tqm = jsonObject.getString("tqm");
             String orderNo = jsonObject.getString("orderNo");
             boolean b = wechateFpxxService.InFapxx(tqm, gsdm, orderNo, q, "1", openid,
-                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request,apiType);
+                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request, apiType);
             if (!b) {
                 return ResultUtil.error("保存发票信息失败，请重试！");
             }
@@ -306,8 +364,8 @@ public class AdapterController extends BaseController {
     }
 
     @RequestMapping("/submit")
-    public Result submit(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
-                         String gfdz, String gfdh, String gfyhzh, String gfyh, String tqm) {
+    public Result submitForTwoAndThree(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
+                                       String gfdz, String gfdh, String gfyhzh, String gfyh, String tqm) {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
         String on = (String) session.getAttribute("on");
@@ -318,7 +376,7 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("redirect");
         }
         String status;
-        if (StringUtil.isNotBlankList(q)&&StringUtil.isBlankList(on,sn)) {
+        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
             status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
         } else {
             status = adapterService.makeInvoice(gsdm, on, sn, tq, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
@@ -328,39 +386,117 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("开具失败");
         } else if ("0".equals(status)) {
             return ResultUtil.error("所需信息为空");
-        } else if("-2".equals(status)){
+        } else if ("-2".equals(status)) {
             return ResultUtil.error("开票数据未上传，请稍后再试");
-        }else {
+        } else {
             JSONObject jsonObject = JSON.parseObject(status);
             session.setAttribute("serialorder", jsonObject.getString("serialorder"));
             return ResultUtil.success(status);
         }
     }
 
-    @RequestMapping(value = "/input", method = RequestMethod.GET)
-    public Result input(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
-                        String gfdz, String gfdh, String gfyhzh, String gfyh) {
-        String gsdm = (String) session.getAttribute("gsdm");
+    @RequestMapping(value = "/getConfirmMsg", method = RequestMethod.POST)
+    public Result getConfirmMsgForFour() {
         String q = (String) session.getAttribute("q");
-        Map map = RJCheckUtil.decodeForAll(q);
-        String data = (String) map.get("A0");
-        JSONObject jsonData = JSON.parseObject(data);
-        String on = jsonData.getString("on");
-        AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
-        buyer.setName(gfmc);
-        buyer.setIdentifier(gfsh);
-        buyer.setEmail(email);
-        buyer.setAddress(gfdz);
-        buyer.setTelephoneNo(gfdh);
-        buyer.setBankAcc(gfyhzh);
-        buyer.setBank(gfyh);
-        boolean b = adapterService.sendBuyer(gsdm,on,buyer);
-        if (!b) {
-            return ResultUtil.error("发送失败");
+        String gsdm = (String) session.getAttribute("gsdm");
+        if (!StringUtil.isNotBlankList(q, gsdm)) {
+            return ResultUtil.error("会话超时，请重新扫码");
         }
-        return ResultUtil.success();
+        return ResultUtil.success(adapterService.getConfirmMsg(gsdm, q));
     }
 
+    @RequestMapping(value = "/getInvoiceList", method = RequestMethod.POST)
+    public Result getInvoiceList(String gsdm, String khh) {
+        String invoiceList = adapterService.getInvoiceList(gsdm, khh);
+        if (invoiceList == null) {
+            return ResultUtil.error("开票数据未上传，请稍后再试");
+        }
+        return ResultUtil.success(invoiceList);
+    }
+
+    @RequestMapping(value = "/getPDFList", method = RequestMethod.GET)
+    public void getPDFList(String serialorder) {
+        session.setAttribute("serialorder", serialorder);
+        try {
+            response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return;
+    }
+
+    @RequestMapping(value = "/submitForFour", method = RequestMethod.POST)
+    public Result submitForFour(String gfmc, String gfsh, String gfdz,
+                                String gfdh, String gfyhzh, String gfyh,
+                                String gsdm, String email, String jylsh,
+                                String ddh,String ddrq,String je,String kpddm) {
+        Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "sfsycdtt");//是否使用C端抬头
+        String isC = cszb.getCsz();
+        if ("是".equals(isC)) {
+            //FIXME
+            return null;
+        } else {
+            String wechat = isWechat(TYPE_FOUR_CALLBACKURL);
+            if (wechat != null) {
+                session.setAttribute("ddh",ddh);
+                session.setAttribute("ddrq",ddrq);
+                session.setAttribute("je",je);
+                session.setAttribute("kpddm",kpddm);
+                session.setAttribute("jylsh",jylsh);
+                session.setAttribute("email",email);
+                try {
+                    response.sendRedirect(wechat);
+                    return null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    errorRedirect("REDIRECT_ERROR");
+                    return null;
+                }
+            } else {
+                String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
+                String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
+                        gfdh, gfyhzh, gfyh, email, userId, "5", "", "");
+                //开票
+                if ("-1".equals(status)) {
+                    return ResultUtil.error("开具失败");
+                } else {
+                    JSONObject jsonObject = JSON.parseObject(status);
+                    session.setAttribute("serialorder", jsonObject.getString("serialorder"));
+                    return ResultUtil.success(status);
+                }
+            }
+        }
+    }
+
+
+    @RequestMapping("/getOpenidForFour")
+    public void getOpenidForFour(String state, String code) {
+        String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
+                + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
+        String resultJson = HttpClientUtil.doGet(turl);
+        JSONObject resultObject = JSONObject.parseObject(resultJson);
+        String openid = resultObject.getString("openid");
+        if (openid != null) {
+            session.setAttribute("openid", openid);
+        }
+        if (session.getAttribute("gsdm") == null) {
+            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
+            return;
+        }
+        String gsdm = (String) session.getAttribute("gsdm");
+        String ddh = (String) session.getAttribute("ddh");
+        String ddrq = (String) session.getAttribute("ddrq");
+        String je = (String) session.getAttribute("je");
+        String kpddm = (String) session.getAttribute("kpddm");
+        String jylsh = (String) session.getAttribute("jylsh");
+        String email = (String) session.getAttribute("email");
+        boolean b = wechatFpxxService.InFapxx(email, gsdm, ddh, null, "1", openid, "", jylsh, request, "4");
+        if (!b) {
+            errorRedirect("SAVE_WECAHT_ERROR");
+            return;
+        }
+        commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm,"1");
+    }
 
     private void deal(Map result, String gsdm) {
         try {
@@ -371,8 +507,8 @@ public class AdapterController extends BaseController {
                 String bodycolor = result.get("bodycolor").toString();
                 String orderNo = result.get("orderNo").toString();
                 String tqm = ppdm + orderNo;
-                session.setAttribute("tqm",tqm);
-                session.setAttribute("orderNo",orderNo);
+                session.setAttribute("tqm", tqm);
+                session.setAttribute("orderNo", orderNo);
                 List<String> status = adapterService.checkStatus(tqm, gsdm);
                 if (!status.isEmpty()) {
                     if (status.contains("可开具")) {
@@ -389,18 +525,10 @@ public class AdapterController extends BaseController {
                         //开具中对应的url
                         response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                         return;
-                    }else if(status.contains("纸票")){
+                    } else if (status.contains("纸票")) {
                         errorRedirect("该订单已开具纸质发票，不能重复开具");
                         return;
                     } else {
-                        StringBuilder sb = new StringBuilder();
-                        for (String str : status) {
-                            if (str.indexOf("pdf") != -1) {
-                                String pdf = str.split("[+]")[0];
-                                String img = pdf.replace("pdf", "jpg");
-                                sb.append("&" + img);
-                            }
-                        }
                         String serialOrder = status.get(0).split("[+]")[4];
                         session.setAttribute("serialorder", serialOrder);
                         response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
@@ -422,7 +550,8 @@ public class AdapterController extends BaseController {
         }
     }
 
-    private String isWechat(String ua, String callbackurl) {
+    private String isWechat(String callbackurl) {
+        String ua = request.getHeader("user-agent").toLowerCase();
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);

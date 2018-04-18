@@ -7,10 +7,7 @@ import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.*;
 import com.rjxx.taxeasy.invoice.DefaultResult;
 import com.rjxx.taxeasy.invoice.KpService;
-import com.rjxx.taxeasy.service.AdapterService;
-import com.rjxx.taxeasy.service.CszbService;
-import com.rjxx.taxeasy.service.SpvoService;
-import com.rjxx.taxeasy.service.TransferExtractDataService;
+import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.service.jkpz.JkpzService;
 import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.vo.Spvo;
@@ -62,6 +59,16 @@ public class AdapterServiceImpl implements AdapterService {
     private TransferExtractDataService transferExtractDataService;
     @Autowired
     private KpService kpService;
+    @Autowired
+    private JyxxsqJpaDao jyxxsqJpaDao;
+    @Autowired
+    private JymxsqService jymxsqService;
+    @Autowired
+    private JyxxsqService jyxxsqService;
+    @Autowired
+    private KplsService kplsService;
+    @Autowired
+    private JyzfmxService jyzfmxService;
 
     /**
      * GET_TYPE_2获取品牌信息
@@ -858,5 +865,188 @@ public class AdapterServiceImpl implements AdapterService {
             return true;
         }
         return false;
+    }
+
+    private static final String MAKED_AND_PDF = "2";
+    private static final String MAKED_AND_NO_PDF = "1";
+    private static final String NO_MAKED = "0";
+
+    @Override
+    public String getConfirmMsg(String gsdm, String q) {
+        Map map = RJCheckUtil.decodeForAll(q);
+        String data = (String) map.get("A0");
+        JSONObject jsonData = JSON.parseObject(data);
+        String ot = jsonData.getString("ot");
+        String sn = jsonData.getString("sn");
+        String mi = jsonData.getString("mi");
+        String storeNo;
+        if (StringUtil.isNotBlankList(sn)) {
+            storeNo = sn;
+        } else {
+            try {
+                Xf xf = xfJpaDao.findOneByGsdm(gsdm);
+                Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
+                storeNo = skp.getKpddm();
+            } catch (Exception e) {
+                return "sn";
+            }
+        }
+        String ppdm;
+        String ppurl;
+        Skp skp = skpJpaDao.findOneByKpddmAndGsdm(storeNo, gsdm);
+        Integer pid = skp.getPid();
+        if(pid==null){
+            return "pp";
+        }else{
+            Pp pp = ppJpaDao.findOneById(pid);
+            ppdm = pp.getPpdm();
+            ppurl = pp.getPpurl();
+            if(!StringUtil.isNotBlankList(ppdm,ppurl)){
+                return "pp";
+            }
+        }
+        try {
+            List<Jyxxsq> jyxxsqs = jyxxsqJpaDao.findOneByKhhAndGsdm(mi, gsdm);
+            if(jyxxsqs.isEmpty()){
+                return "jyxxsq";
+            }
+            Jyxxsq jyxxsq = jyxxsqs.get(0);
+            String gfmc = jyxxsq.getGfmc();
+            Map result = new HashMap();
+            result.put("gfmc", gfmc);
+            result.put("khh", mi);
+            result.put("ddrq", ot);
+            result.put("ppdm", ppdm);
+            result.put("ppurl", ppurl);
+            result.put("gsdm", gsdm);
+            return JSON.toJSONString(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return "error";
+        }
+    }
+
+    @Override
+    public String getInvoiceList(String gsdm,String khh) {
+        List<Map> resultList = new ArrayList<>();
+        List<Jyxxsq> jyxxsqs = jyxxsqJpaDao.findOneByKhhAndGsdm(khh, gsdm);
+        if(jyxxsqs.isEmpty()){
+            return null;
+        }
+        for (Jyxxsq jyxxsq : jyxxsqs) {
+            Map jymxsqParam = new HashMap();
+            jymxsqParam.put("sqlsh", jyxxsq.getSqlsh());
+            jymxsqParam.put("gsdm", gsdm);
+            List<Jymxsq> jymxsqs = jymxsqService.findAllBySqlsh(jymxsqParam);
+            List<Map> jymxList = new ArrayList<>();
+            for (Jymxsq jymxsq : jymxsqs) {
+                Map map = new HashMap();
+                map.put("spmc", jymxsq.getSpmc());
+                map.put("spje", jymxsq.getSpje());
+                map.put("spsl", jymxsq.getSpsl());
+                jymxList.add(map);
+            }
+            Map map = new HashMap();
+            map.put("mxs", jymxList);
+            map.put("gfsh", jyxxsq.getGfsh());
+            map.put("gfyh", jyxxsq.getGfyh());
+            map.put("gfyhzh", jyxxsq.getGfyhzh());
+            map.put("gfdz", jyxxsq.getGfdz());
+            map.put("gfdh", jyxxsq.getGfdh());
+            map.put("gfmc", jyxxsq.getGfmc());
+            map.put("je", jyxxsq.getJshj());
+            map.put("ddh", jyxxsq.getDdh());
+            map.put("ddrq", new SimpleDateFormat("yyyyMMddHHmmss").format(jyxxsq.getDdrq()));
+            map.put("jylsh", jyxxsq.getJylsh());
+            map.put("kpddm", jyxxsq.getKpddm());
+            Map kplsParam = new HashMap();
+            kplsParam.put("jylsh", jyxxsq.getJylsh());
+            kplsParam.put("gsdm", gsdm);
+            Kpls kpls = kplsService.findOneByParams(kplsParam);
+            map.put("serialorder", kpls.getSerialorder());
+            if("12".equals(kpls.getFpzldm())){
+                if(StringUtil.isNotBlankList(kpls.getFpdm(),kpls.getFphm(),kpls.getPdfurl())){
+                    map.put("sfkj", MAKED_AND_PDF);
+                }else{
+                    map.put("sfkj", NO_MAKED);
+                }
+            }else if("01".equals(kpls.getFpzldm())||"02".equals(kpls.getFpzldm())){
+                if(StringUtil.isNotBlankList(kpls.getFpdm(),kpls.getFphm())){
+                    map.put("sfkj", MAKED_AND_NO_PDF);
+                }else{
+                    map.put("sfkj", NO_MAKED);
+
+                }
+            }else{
+                continue;
+            }
+            resultList.add(map);
+        }
+
+        return JSON.toJSONString(resultList);
+    }
+
+    @Override
+    public String makeInvoiceForFour(String gsdm,String jylsh,String gfmc, String gfsh, String gfdz,
+                                     String gfdh, String gfyhzh, String gfyh,String email,String openid,String sjly,String access_token,String weixinOrderNo) {
+        Map jyxxsqParam = new HashMap();
+        jyxxsqParam.put("jylsh", jylsh);
+        jyxxsqParam.put("gsdm", gsdm);
+        Jyxxsq jyxxsq = jyxxsqService.findOneByParams(jyxxsqParam);
+        if(gfmc!=null){
+            jyxxsq.setGfmc(gfmc);
+        }
+        if(gfsh!=null){
+            jyxxsq.setGfsh(gfsh);
+        }
+        if(gfdz!=null){
+            jyxxsq.setGfdz(gfdz);
+        }
+        if(gfdh!=null){
+            jyxxsq.setGfdh(gfdh);
+        }
+        if(gfyhzh!=null){
+            jyxxsq.setGfyhzh(gfyhzh);
+        }
+        if(gfyh!=null){
+            jyxxsq.setGfyh(gfyh);
+        }
+        jyxxsq.setGfemail(email);
+        jyxxsq.setSjly(sjly);
+        jyxxsq.setOpenid(openid);
+        List<Jyxxsq> jyxxsqList = new ArrayList<>();
+        jyxxsqList.add(jyxxsq);
+        Map jymxsqParam = new HashMap();
+        jymxsqParam.put("sqlsh", jyxxsq.getSqlsh());
+        jymxsqParam.put("gsdm", gsdm);
+        List<Jymxsq> jymxsqs = jymxsqService.findAllBySqlsh(jymxsqParam);
+        List<Jyzfmx> jyzfmxs = jyzfmxService.findAllByParams(jymxsqParam);
+        Map kpMap = new HashMap();
+        kpMap.put("jyxxsqList",jyxxsqList);
+        kpMap.put("jymxsqList",jymxsqs);
+        kpMap.put("jyzfmxList",jyzfmxs);
+        String result = kpService.uploadOrderData(gsdm, kpMap, "01");
+        DefaultResult defaultResult = null;
+        try {
+            defaultResult = XmlJaxbUtils.convertXmlStrToObject(DefaultResult.class, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "-1";
+        }
+        if (null != defaultResult.getReturnCode() && "9999".equals(defaultResult.getReturnCode())) {
+            logger.info("进入拒绝开票-----错误原因为" + defaultResult.getReturnMessage());
+            String reason = defaultResult.getReturnMessage();
+            if (null != sjly && "4".equals(sjly)) {
+                logger.info("进行拒绝开票的weixinOrderN+++++" + weixinOrderNo);
+                weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
+            }
+            return "-1";
+        }
+
+        Map map = new HashMap();
+        map.put("returnMsg", defaultResult.getReturnMessage());
+        map.put("returnCode", defaultResult.getReturnCode());
+        map.put("serialorder", jyxxsq.getJylsh() + jyxxsq.getDdh());
+        return JSON.toJSONString(map);
     }
 }

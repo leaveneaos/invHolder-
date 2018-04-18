@@ -11,7 +11,6 @@ import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +62,8 @@ public class CommonController extends BaseController {
 
     @Autowired
     private WechatBatchCard wechatBatchCard;
+    @Autowired
+    private AdapterService adapterService;
 
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
@@ -201,6 +202,102 @@ public class CommonController extends BaseController {
         return resultMap;
     }
 
+    public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price,String gsdm,String type){
+        String redirectUrl ="";
+        Map resultMap = new HashMap();
+        if(weixinUtils.isWeiXinBrowser(request)){
+            try {
+                logger.info("------orderNo---------"+orderNo);
+                if(null==orderNo || "".equals(orderNo)){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                if(null == orderTime || "".equals(orderTime)){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                if(null == price || "".equals(price)){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                if("0.0".equals(price)){
+                    request.getSession().setAttribute("msg", "该订单可开票金额为0");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
+                if(null==wxFpxx){
+                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return null;
+                }
+                List<String> status = adapterService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
+                if(status!=null){
+                    if(status.contains("开具中")){
+                        //开具中对应的url
+                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+                        return null;
+                    }else if(status.contains("可开具")){
+                        String access_token ="";
+                        String ticket = "";
+                        WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                        if(wxToken==null){
+                            access_token= (String) weixinUtils.hqtk().get("access_token");
+                            ticket = weixinUtils.getTicket(access_token);
+                        }else {
+                            access_token = wxToken.getAccessToken();
+                            ticket= wxToken.getTicket();
+                        }
+                        if(ticket==null){
+                            //获取授权失败
+                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return null;
+                        }
+                        String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                        if(null==spappid ||"".equals(spappid)){
+                            //获取授权失败
+                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return null;
+                        }
+                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
+                        logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
+//                        String gsdm = wxFpxx.getGsdm();
+                        //可开具 跳转微信授权链接
+                        redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, storeNo,type,access_token,ticket,spappid);
+                        if(null==redirectUrl||redirectUrl.equals("")){
+                            //获取授权失败
+                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return null;
+                        }else {
+                            //成功跳转
+                            response.sendRedirect(redirectUrl);
+                            return null;
+                        }
+                    }else if(status.contains("纸票")){
+                        request.getSession().setAttribute("msg", "该订单已开具纸质发票，不能重复开具");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
+                    }else {
+                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            logger.info("不是微信浏览器-------------");
+            resultMap.put("num" ,"1");
+        }
+        return resultMap;
+    }
 
     @RequestMapping(value = "/fpInfo")
     @ResponseBody

@@ -27,4 +27,11 @@ public interface AdapterService {
     boolean sendBuyer(String gsdm,String on,AdapterDataOrderBuyer buyer);
 
     Boolean isInvoiceDateRestriction(String gsdm, Integer xfid, Integer skpid, String orderTime);
+
+    String getInvoiceList(String gsdm,String khh);
+
+    String getConfirmMsg(String gsdm,String q);
+
+    String makeInvoiceForFour(String gsdm,String jylsh,String gfmc, String gfsh, String gfdz,
+                              String gfdh, String gfyhzh, String gfyh,String email,String openid,String sjly,String access_token,String weixinOrderNo);
 }

@@ -236,6 +236,8 @@ public class WeixinTask implements Runnable{
                             }
                         }
                         status = adapterService.makeInvoice(gsdm, orderNo, storeNo, extractCode, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, openid, "4", access_token, SuccOrderId);
+                    }else if("4".equals(apiTpye)){
+                        status=adapterService.makeInvoiceForFour(gsdm,wxFpxx.getKplsh(),null,null,null,null,null,null,wxFpxx.getTqm(),openid,"4",access_token,SuccOrderId);
                     }
                     if ("-1".equals(status)) {
                         re="开具失败";
