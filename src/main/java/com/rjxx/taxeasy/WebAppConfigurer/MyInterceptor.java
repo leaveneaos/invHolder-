@@ -29,7 +29,8 @@ public class MyInterceptor implements HandlerInterceptor {
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
         if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||
-                url.equals("/mb") || url.equals("/dzfp_sqj")||url.equals("/tq")||url.equals("/barcode/beautyfarm")||url.equals("/barcode/phtons")){
+                url.equals("/mb") || url.equals("/dzfp_sqj")||url.equals("/tq")||url.equals("/barcode/beautyfarm")||url.equals("/barcode/phtons")
+                ||url.contains("/kptService/seaway") ||url.contains("/kptService/bwy")||url.equals("/barcode/yfw")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
@@ -48,6 +49,8 @@ public class MyInterceptor implements HandlerInterceptor {
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?t="+t);
                     }else if(t!= null && q!=null && g==null){
                         AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath()+"?t="+t+"&q="+q);
+                    }else if(q==null&&g==null&&t==null){
+                        AlipayUtils.initAlipayAuthorization(request, response, request.getServletPath());
                     }
                     logger.info("-----初始化支付宝授权----end------");
                     logger.info("-----初始化URL----end-----"+request.getServletPath());
