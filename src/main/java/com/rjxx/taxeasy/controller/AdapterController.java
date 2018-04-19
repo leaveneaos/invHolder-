@@ -39,6 +39,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/kptService")
+@CrossOrigin
 public class AdapterController extends BaseController {
     @Autowired
     private GsxxJpaDao gsxxJpaDao;
