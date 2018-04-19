@@ -416,14 +416,9 @@ public class AdapterController extends BaseController {
     }
 
     @RequestMapping(value = "/getPDFList", method = RequestMethod.GET)
-    public void getPDFList(String serialorder) {
+    public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
-        try {
-            response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return;
+        return ResultUtil.success(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
     }
 
     @RequestMapping(value = "/submitForFour", method = RequestMethod.POST)
@@ -445,14 +440,7 @@ public class AdapterController extends BaseController {
                 session.setAttribute("kpddm",kpddm);
                 session.setAttribute("jylsh",jylsh);
                 session.setAttribute("email",email);
-                try {
-                    response.sendRedirect(wechat);
-                    return null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    errorRedirect("REDIRECT_ERROR");
-                    return null;
-                }
+                return ResultUtil.success(wechat);
             } else {
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
                 String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
