@@ -219,7 +219,7 @@ public class AdapterController extends BaseController {
                     session.setAttribute("gsdm", gsdm);
                     session.setAttribute("q", q);
                     try {
-                        response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
+                        response.sendRedirect(ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
                         return;
                     } catch (IOException e) {
                         e.printStackTrace();
