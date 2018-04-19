@@ -77,9 +77,9 @@ input {
   outline: none;
 }
 .os1{
-    overflow: hidden;
-text-overflow:ellipsis;
-white-space: nowrap;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 /*# sourceMappingURL=reset.css.map */
 
@@ -109,10 +109,10 @@ body{
 .main .content{
   background: white;
   overflow: hidden;
-  border-radius:.10rem; 
+  border-radius:.10rem;
   -moz-box-shadow:2px 2px 5px #ccc;
-   -webkit-box-shadow:2px 2px 5px #ccc;
-    box-shadow:0px 2px 40px #ccc;
+  -webkit-box-shadow:2px 2px 5px #ccc;
+  box-shadow:0px 2px 40px #ccc;
 }
 .main .content .top{
   height: 0.71rem;
@@ -134,21 +134,22 @@ body{
   background: white;
 }
 .main .content .middle ul{
- height: 1.12rem;
- border-bottom: #E6E8F1 solid 1px ;display: flex;
- margin: 0 0.80rem;
+  height: 1.12rem;
+  border-bottom: #E6E8F1 solid 1px ;display: flex;
+  margin: 0 0.80rem;
 }
 .main .content .middle ul li{
-  overflow: hidden;
-  text-overflow:ellipsis;
-  white-space: nowrap;
- font-size:0.32rem;
- font-family: SimHei;
- text-align: left;
- line-height: 1.12rem;
+
+  font-size:0.32rem;
+  font-family: SimHei;
+  text-align: left;
+  line-height: 1.12rem;
 }
 .main .content .middle ul .fr{
   padding-left: 0.25rem;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 #advert{
   width: 100%;
@@ -156,16 +157,16 @@ body{
 }
 .bottom{
   margin: 0.265rem  0.8rem 0.26rem 0.8rem;
-   /* height: 45px; */
+  /* height: 45px; */
   padding-bottom: 0.23rem;
 }
 .bottom #sure{
   width: 100%;
   background-color:transparent;
-  border:0;  
+  border:0;
   background: url('./../logo/newimg/banner/t000.png') no-repeat 100%;
   height: 0.89rem;
-  border-radius:5px; 
+  border-radius:5px;
   color: #FFFFFF;
   font-size: 17.5px
 }
@@ -328,7 +329,7 @@ footer .help {
   height: 0.5rem;
 }
 .twoPage .entry span{
-  border-width:0; 
+  border-width:0;
   position: absolute;
   left: -0.12rem;
   top: 0.12rem;
@@ -340,32 +341,32 @@ footer .help {
   flex: 1;
 }
 .twoPage input::-webkit-input-placeholder {
-    /* placeholder颜色  */
-    color: #aab2bd;
-    /* placeholder字体大小  */
-    font-size: 12px;
-    /* placeholder位置  */
-    text-align: right;
+  /* placeholder颜色  */
+  color: #aab2bd;
+  /* placeholder字体大小  */
+  font-size: 12px;
+  /* placeholder位置  */
+  text-align: right;
 }
 .twoPage .middle .type{
   display: flex;
   justify-content: center ;
   margin: 0.2rem 0 0.25rem 0;
-} 
+}
 .twoPage .middle .type button{
   width: 1.98rem;
   height: 0.63rem;
   border-radius:0.1rem;
   border:0.03rem solid  #F0F0F0 ;
   font-size: 0.24rem;
-}  
+}
 .twoPage .middle .type #personal{
   background: white;
-}  
+}
 .twoPage .middle .type #company{
   background: #B39774;
   color: white;
-}       
+}
 .twoPage  #company{
   margin-right: 1.2rem;
 }
@@ -404,7 +405,7 @@ footer .help {
   font-size: 0.24rem;
   font-family: SourceHanSansCN-Bold;
   padding-left: 1.04rem;
-  list-style-type:none  
+  list-style-type:none
 }
 .threePage .content .kjz1 li{
   margin-top: 0.33rem;
@@ -426,20 +427,23 @@ footer .help {
   color: #333333;
   margin: 1.2rem 0 0 0.94rem;
   top: 3.70rem;
-    position: relative;
-    
+  position: relative;
+
 }
 .threePage .content  .ewm img{
-float: left;
-width: 1.62rem;
-height: 1.44rem;
+  float: left;
+  width: 1.62rem;
+  height: 1.44rem;
 }
 .threePage .content  .ewm .fr{
-float: left;
-display: block;
-width: 2.59rem;
-line-height: 0.32rem;
-height: 0.44rem;
-margin-top: 0.4rem;
-margin-left: 0.33rem;
+  float: left;
+  display: block;
+  width: 2.59rem;
+  line-height: 0.32rem;
+  height: 0.44rem;
+  margin-top: 0.4rem;
+  margin-left: 0.33rem;
+}
+.ui-corner-all{
+  font-size: 0.3rem;
 }
