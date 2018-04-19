@@ -146,10 +146,10 @@ body{
   line-height: 1.12rem;
 }
 .main .content .middle ul .fl{
-  width: 1.5rem;
+  width: 1.8rem;
 }
 .main .content .middle ul .fr{
-  padding-left: 0.25rem;
+  /*padding-left: 0.25rem;*/
   overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
