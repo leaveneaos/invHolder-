@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -418,7 +419,9 @@ public class AdapterController extends BaseController {
     @RequestMapping(value = "/getPDFList")
     public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
-        return ResultUtil.success(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+        Map map = new HashMap();
+        map.put("url", request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+        return ResultUtil.success(JSON.toJSONString(map));
     }
 
     @RequestMapping(value = "/submitForFour")
@@ -440,7 +443,9 @@ public class AdapterController extends BaseController {
                 session.setAttribute("kpddm",kpddm);
                 session.setAttribute("jylsh",jylsh);
                 session.setAttribute("email",email);
-                return ResultUtil.success(wechat);
+                Map map = new HashMap();
+                map.put("url", wechat);
+                return ResultUtil.success(map);
             } else {
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
                 String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
