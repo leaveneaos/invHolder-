@@ -445,7 +445,7 @@ public class AdapterController extends BaseController {
                 session.setAttribute("email",email);
                 Map map = new HashMap();
                 map.put("url", wechat);
-                return ResultUtil.success(map);
+                return ResultUtil.success(JSON.toJSONString(map));
             } else {
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
                 String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
