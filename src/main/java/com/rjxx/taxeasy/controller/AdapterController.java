@@ -489,7 +489,7 @@ public class AdapterController extends BaseController {
             errorRedirect("SAVE_WECAHT_ERROR");
             return;
         }
-        commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm,"1");
+        commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm,"0");
     }
 
     private void deal(Map result, String gsdm) {
