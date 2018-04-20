@@ -396,7 +396,7 @@ public class AdapterController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/getConfirmMsg", method = RequestMethod.POST)
+    @RequestMapping(value = "/getConfirmMsg")
     public Result getConfirmMsgForFour() {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
@@ -406,7 +406,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(adapterService.getConfirmMsg(gsdm, q));
     }
 
-    @RequestMapping(value = "/getInvoiceList", method = RequestMethod.POST)
+    @RequestMapping(value = "/getInvoiceList")
     public Result getInvoiceList(String gsdm, String khh) {
         String invoiceList = adapterService.getInvoiceList(gsdm, khh);
         if (invoiceList == null) {
@@ -415,13 +415,13 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(invoiceList);
     }
 
-    @RequestMapping(value = "/getPDFList", method = RequestMethod.GET)
+    @RequestMapping(value = "/getPDFList")
     public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
         return ResultUtil.success(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
     }
 
-    @RequestMapping(value = "/submitForFour", method = RequestMethod.POST)
+    @RequestMapping(value = "/submitForFour")
     public Result submitForFour(String gfmc, String gfsh, String gfdz,
                                 String gfdh, String gfyhzh, String gfyh,
                                 String gsdm, String email, String jylsh,
