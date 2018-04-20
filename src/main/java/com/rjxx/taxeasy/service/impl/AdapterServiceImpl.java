@@ -949,6 +949,7 @@ public class AdapterServiceImpl implements AdapterService {
             }
             Map map = new HashMap();
             map.put("mxs", jymxList);
+            map.put("gsdm", jyxxsq.getGsdm());
             map.put("gfsh", jyxxsq.getGfsh());
             map.put("gfyh", jyxxsq.getGfyh());
             map.put("gfyhzh", jyxxsq.getGfyhzh());
