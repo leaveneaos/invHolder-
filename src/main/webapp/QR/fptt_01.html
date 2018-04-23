@@ -16,12 +16,12 @@
 </head>
 <body onresize="document.activeElement.scrollIntoView(true);" >
 <header class="header">
-	<img id="logo" class="logo" src="./logo/newimg/LOGO/t0.png"/>
+	<img id="logo" src="./logo/newimg/banner/defalt.png"  class="logo" />
 </header>
 <section class="main">
 	<div class="content">
 		<div class="advertimg">
-			<img src="./logo/newimg/banner/t0.png"  id="advert" class="advertimg">
+			<img src="./logo/newimg/banner/defalt.png"  id="advert" class="advertimg">
 		</div>
 		<div class="top">
 			<span>信息确认</span><img class="rightgo" src="./logo/newimg/LOGO/rightCout.png" alt="">
@@ -38,7 +38,7 @@
 					<div class="entry firstInput">
 						<span style="color: red;">*</span><label>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
 						<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称(必填)" onkeyup="query()">
-						<select class="hide" id="getFptt" oninput="changeFptt(this.value)">
+						<select  id="getFptt" oninput="changeFptt(this.value)">
 						</select>
 					</div>
 					<div class="entry">
@@ -117,7 +117,7 @@
         var myurl=decodeURI(thisURL);
         var getval =myurl.split('?')[1];
         pp = getval.split("=")[2];
-        changePageBg(pp);
+        changePageBg(1);
         // 选择抬头类型
         var $fptt = $('#fptt');
         $nsrsbh = $('#nsrsbh'),
