@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -396,7 +397,7 @@ public class AdapterController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/getConfirmMsg", method = RequestMethod.POST)
+    @RequestMapping(value = "/getConfirmMsg")
     public Result getConfirmMsgForFour() {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
@@ -406,7 +407,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(adapterService.getConfirmMsg(gsdm, q));
     }
 
-    @RequestMapping(value = "/getInvoiceList", method = RequestMethod.POST)
+    @RequestMapping(value = "/getInvoiceList")
     public Result getInvoiceList(String gsdm, String khh) {
         String invoiceList = adapterService.getInvoiceList(gsdm, khh);
         if (invoiceList == null) {
@@ -415,18 +416,15 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(invoiceList);
     }
 
-    @RequestMapping(value = "/getPDFList", method = RequestMethod.GET)
-    public void getPDFList(String serialorder) {
+    @RequestMapping(value = "/getPDFList")
+    public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
-        try {
-            response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return;
+        Map map = new HashMap();
+        map.put("url", request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+        return ResultUtil.success(JSON.toJSONString(map));
     }
 
-    @RequestMapping(value = "/submitForFour", method = RequestMethod.POST)
+    @RequestMapping(value = "/submitForFour")
     public Result submitForFour(String gfmc, String gfsh, String gfdz,
                                 String gfdh, String gfyhzh, String gfyh,
                                 String gsdm, String email, String jylsh,
@@ -445,14 +443,9 @@ public class AdapterController extends BaseController {
                 session.setAttribute("kpddm",kpddm);
                 session.setAttribute("jylsh",jylsh);
                 session.setAttribute("email",email);
-                try {
-                    response.sendRedirect(wechat);
-                    return null;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    errorRedirect("REDIRECT_ERROR");
-                    return null;
-                }
+                Map map = new HashMap();
+                map.put("url", wechat);
+                return ResultUtil.success(JSON.toJSONString(map));
             } else {
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
                 String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
@@ -496,7 +489,7 @@ public class AdapterController extends BaseController {
             errorRedirect("SAVE_WECAHT_ERROR");
             return;
         }
-        commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm,"1");
+        commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm,"0");
     }
 
     private void deal(Map result, String gsdm) {

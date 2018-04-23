@@ -870,6 +870,7 @@ public class AdapterServiceImpl implements AdapterService {
     private static final String MAKED_AND_PDF = "2";
     private static final String MAKED_AND_NO_PDF = "1";
     private static final String NO_MAKED = "0";
+    private static final String MAKING = "3";
 
     @Override
     public String getConfirmMsg(String gsdm, String q) {
@@ -948,6 +949,7 @@ public class AdapterServiceImpl implements AdapterService {
             }
             Map map = new HashMap();
             map.put("mxs", jymxList);
+            map.put("gsdm", jyxxsq.getGsdm());
             map.put("gfsh", jyxxsq.getGfsh());
             map.put("gfyh", jyxxsq.getGfyh());
             map.put("gfyhzh", jyxxsq.getGfyhzh());
@@ -963,22 +965,37 @@ public class AdapterServiceImpl implements AdapterService {
             kplsParam.put("jylsh", jyxxsq.getJylsh());
             kplsParam.put("gsdm", gsdm);
             Kpls kpls = kplsService.findOneByParams(kplsParam);
-            map.put("serialorder", kpls.getSerialorder());
-            if("12".equals(kpls.getFpzldm())){
-                if(StringUtil.isNotBlankList(kpls.getFpdm(),kpls.getFphm(),kpls.getPdfurl())){
-                    map.put("sfkj", MAKED_AND_PDF);
+            if(kpls!=null){
+                map.put("serialorder", kpls.getSerialorder());
+                if("12".equals(kpls.getFpzldm())){
+                    if("00".equals(kpls.getFpztdm())){
+                        if(StringUtil.isNotBlankList(kpls.getFpdm(),kpls.getFphm(),kpls.getPdfurl())){
+                            map.put("sfkj", MAKED_AND_PDF);
+                        }else{
+                            map.put("sfkj", MAKING);
+                        }
+                    }else if("05".equals(kpls.getFpztdm())){
+                        map.put("sfkj", MAKING);
+                    }else{
+                        map.put("sfkj", MAKING);
+                    }
+                }else if("01".equals(kpls.getFpzldm())||"02".equals(kpls.getFpzldm())){
+                    if("00".equals(kpls.getFpztdm())) {
+                        if(StringUtil.isNotBlankList(kpls.getFpdm(),kpls.getFphm())){
+                            map.put("sfkj", MAKED_AND_NO_PDF);
+                        }else{
+                            map.put("sfkj", MAKING);
+                        }
+                    }else if("05".equals(kpls.getFpztdm())){
+                        map.put("sfkj", MAKING);
+                    }else{
+                        map.put("sfkj", MAKING);
+                    }
                 }else{
-                    map.put("sfkj", NO_MAKED);
-                }
-            }else if("01".equals(kpls.getFpzldm())||"02".equals(kpls.getFpzldm())){
-                if(StringUtil.isNotBlankList(kpls.getFpdm(),kpls.getFphm())){
-                    map.put("sfkj", MAKED_AND_NO_PDF);
-                }else{
-                    map.put("sfkj", NO_MAKED);
-
+                    continue;
                 }
             }else{
-                continue;
+                map.put("sfkj", NO_MAKED);
             }
             resultList.add(map);
         }
