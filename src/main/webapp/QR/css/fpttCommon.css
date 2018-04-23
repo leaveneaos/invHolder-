@@ -467,6 +467,7 @@ footer .help {
     background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
     /*为下拉小箭头留出一点位置，避免被文字覆盖*/
     background-position: center;
-
+    color: transparent;
+    user-select:none;
     border: 0.03rem solid  #F0F0F0;
 }
