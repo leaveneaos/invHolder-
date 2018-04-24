@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.WxFpxx;
 import com.rjxx.taxeasy.domains.WxToken;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.wechat.task.WeixinTask;
 import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeiXinConstants;

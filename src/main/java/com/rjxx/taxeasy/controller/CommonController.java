@@ -7,6 +7,7 @@ import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;

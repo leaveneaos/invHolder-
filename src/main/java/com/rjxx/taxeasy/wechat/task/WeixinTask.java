@@ -10,6 +10,7 @@ import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.StringUtil;
 import com.rjxx.utils.weixin.WechatBatchCard;

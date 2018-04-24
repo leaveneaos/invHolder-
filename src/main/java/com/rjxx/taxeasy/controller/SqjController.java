@@ -1,7 +1,5 @@
 package com.rjxx.taxeasy.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.FpclService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
@@ -13,15 +11,11 @@ import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
-import com.rjxx.taxeasy.utils.NumberUtil;
 import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.taxeasy.vo.Spvo;
-import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.MD5Util;
-import com.rjxx.utils.StringUtils;
-import com.rjxx.utils.XmlUtil;
+import com.rjxx.utils.*;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
