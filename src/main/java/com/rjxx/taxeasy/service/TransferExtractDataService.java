@@ -6,6 +6,7 @@ import com.rjxx.taxeasy.domains.Jymxsq;
 import com.rjxx.taxeasy.domains.Jyxxsq;
 import com.rjxx.taxeasy.domains.Jyzfmx;
 import com.rjxx.taxeasy.dto.*;
+import com.rjxx.taxeasy.utils.NumberUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,7 @@ public class TransferExtractDataService {
         seller.setBankAcc(jyxxsq.getXfyhzh());
 
         //数据
+        data.setSerialNumber(jyxxsq.getJylsh());
         data.setDrawer(jyxxsq.getKpr());
         data.setPayee(jyxxsq.getSkr());
         data.setReviewer(jyxxsq.getFhr());
@@ -213,6 +215,7 @@ public class TransferExtractDataService {
         data.setReviewer("复核人");
         data.setOrder(order);
         data.setSeller(seller);
+        data.setSerialNumber("JY" + System.currentTimeMillis() + NumberUtil.getRandomLetter());
 
 
         logger.info("抽取的数据=【"+JSON.toJSONString(post)+"】");

@@ -2,6 +2,7 @@ package com.rjxx.taxeasy.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.rjxx.taxeasy.bizcomm.utils.FpclService;
 import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.*;
@@ -69,6 +70,8 @@ public class AdapterServiceImpl implements AdapterService {
     private KplsService kplsService;
     @Autowired
     private JyzfmxService jyzfmxService;
+    @Autowired
+    private FpclService fpclService;
 
     /**
      * GET_TYPE_2获取品牌信息
@@ -543,7 +546,7 @@ public class AdapterServiceImpl implements AdapterService {
                 AdapterDataOrderBuyer buyer = new AdapterDataOrderBuyer();
                 post.setData(data);
                 post.setClientNo(sn);
-                data.setSerialNumber("JY" + System.currentTimeMillis() + NumberUtil.getRandomLetter());
+//                data.setSerialNumber("JY" + System.currentTimeMillis() + NumberUtil.getRandomLetter());
                 data.setDatasource(sjly);
                 data.setOpenid(openid);
                 data.setOrder(order);
@@ -570,23 +573,34 @@ public class AdapterServiceImpl implements AdapterService {
                 buyer.setIdentifier(gfsh);
                 //转换
                 Map kpMap = transAdapterForSq(gsdm, post);
-                String xmlString = kpService.uploadOrderData(gsdm, kpMap, "01");
-                DefaultResult defaultResult = XmlJaxbUtils.convertXmlStrToObject(DefaultResult.class, xmlString);
-                if (null != defaultResult.getReturnCode() && "9999".equals(defaultResult.getReturnCode())) {
-                    logger.info("进入拒绝开票-----错误原因为" + defaultResult.getReturnMessage());
-                    String reason = defaultResult.getReturnMessage();
-                    if (null != sjly && "4".equals(sjly)) {
-                        logger.info("进行拒绝开票的weixinOrderN+++++" + weixinOrderNo);
-                        weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
-                    }
-                    return "-1";
-                }
 
-                Map map = new HashMap();
-                map.put("returnMsg", defaultResult.getReturnMessage());
-                map.put("returnCode", defaultResult.getReturnCode());
-                map.put("serialorder", data.getSerialNumber() + order.getOrderNo());
-                return JSON.toJSONString(map);
+                Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "extractMethod");
+                Map resultMap = new HashMap();
+                if("jyxxsq".equals(cszb.getCsz())){
+                    Cszb kpfs = cszbService.getSpbmbbh(gsdm, null, null, "kpfs");
+                    Map map =transAdapterForSq(gsdm, post);
+                    fpclService.zjkp((List<Jyxxsq>) map.get("jyxxsqList"),kpfs.getCsz());
+                    resultMap.put("returnMsg", "成功");
+                    resultMap.put("returnCode", "0000");
+                    resultMap.put("serialorder", data.getSerialNumber() + order.getOrderNo());
+                }else{
+                    String xmlString = kpService.uploadOrderData(gsdm, kpMap, "01");
+                    DefaultResult defaultResult = XmlJaxbUtils.convertXmlStrToObject(DefaultResult.class, xmlString);
+                    if (null != defaultResult.getReturnCode() && "9999".equals(defaultResult.getReturnCode())) {
+                        logger.info("进入拒绝开票-----错误原因为" + defaultResult.getReturnMessage());
+                        String reason = defaultResult.getReturnMessage();
+                        if (null != sjly && "4".equals(sjly)) {
+                            logger.info("进行拒绝开票的weixinOrderN+++++" + weixinOrderNo);
+                            weixinUtils.jujuekp(weixinOrderNo, reason, access_token);
+                        }
+                        return "-1";
+                    }
+
+                    resultMap.put("returnMsg", defaultResult.getReturnMessage());
+                    resultMap.put("returnCode", defaultResult.getReturnCode());
+                    resultMap.put("serialorder", data.getSerialNumber() + order.getOrderNo());
+                }
+                return JSON.toJSONString(resultMap);
             } catch (Exception e) {
                 e.printStackTrace();
                 return "-1";
