@@ -1,4 +1,4 @@
-package com.rjxx.taxeasy.wechat.config;
+package com.rjxx.taxeasy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
