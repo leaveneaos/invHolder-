@@ -2,9 +2,6 @@ package com.rjxx.taxeasy.controller;
 import com.alibaba.fastjson.JSON;
 import com.rjxx.taxeasy.bizcomm.utils.InvoiceQueryUtil;
 import com.rjxx.taxeasy.comm.BaseController;
-import com.rjxx.taxeasy.domains.Gsxx;
-import com.rjxx.taxeasy.domains.Jyls;
-import com.rjxx.taxeasy.domains.Kpls;
 import com.rjxx.taxeasy.service.GsxxService;
 import com.rjxx.taxeasy.service.JylsService;
 import com.rjxx.taxeasy.service.KplsService;
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,8 +62,9 @@ public class TqController extends BaseController{
     @ResponseBody
     public Map tjsession() {
         Map<String, Object> result = new HashMap<String, Object>();
-        if(null!=request.getSession().getAttribute("khh")&&(request.getSession().getAttribute("gsdm").equals("cmsc")
-          || request.getSession().getAttribute("gsdm").equals("hdsc")||request.getSession().getAttribute("gsdm").equals("shssts"))){
+//        if(null!=request.getSession().getAttribute("khh")&&(request.getSession().getAttribute("gsdm").equals("cmsc")
+//          || request.getSession().getAttribute("gsdm").equals("hdsc")||request.getSession().getAttribute("gsdm").equals("shssts"))){
+        if(session.getAttribute("khh")!=null&&session.getAttribute("gsdm")!=null){
             String khh= request.getSession().getAttribute("khh").toString();
             String gsdm= request.getSession().getAttribute("gsdm").toString();
             List<Fpcxvo> invoiceListByKhh = invoiceQueryUtil.getInvoiceListByKhh(gsdm,khh);

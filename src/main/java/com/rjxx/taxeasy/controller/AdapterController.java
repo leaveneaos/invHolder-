@@ -232,6 +232,22 @@ public class AdapterController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/getDetails")
+    public Result getDetails(){
+        String gsdm = (String) session.getAttribute("gsdm");
+        String on = (String) session.getAttribute("on");
+        String sn = (String) session.getAttribute("sn");
+        String tq = (String) session.getAttribute("tq");
+        String spxx = adapterService.getSpxx(gsdm, on, sn, tq);
+        if(spxx==null){
+            return ResultUtil.error("二维码信息获取失败");
+        }
+        if("1".equals(spxx)){
+            return ResultUtil.error("开票数据未上传，请稍后再试");
+        }
+        return ResultUtil.success(spxx);
+    }
+
     @RequestMapping("/getOpenidForOne")
     public void getOpenidForOne(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
@@ -409,6 +425,7 @@ public class AdapterController extends BaseController {
 
     @RequestMapping(value = "/getInvoiceList")
     public Result getInvoiceList(String gsdm, String khh) {
+        session.setAttribute("khh",khh);
         String invoiceList = adapterService.getInvoiceList(gsdm, khh);
         if (invoiceList == null) {
             return ResultUtil.error("开票数据未上传，请稍后再试");
