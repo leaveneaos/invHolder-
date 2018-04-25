@@ -520,6 +520,7 @@ public class AdapterController extends BaseController {
                 String ppurl = result.get("ppurl").toString();
                 String headcolor = result.get("headcolor").toString();
                 String bodycolor = result.get("bodycolor").toString();
+                String buttoncolor = result.get("buttoncolor").toString();
                 String orderNo = result.get("orderNo").toString();
                 String tqm = ppdm + orderNo;
                 session.setAttribute("tqm", tqm);
@@ -529,7 +530,7 @@ public class AdapterController extends BaseController {
                     if (status.contains("可开具")) {
                         if (StringUtils.isNotBlank(ppdm)) {
                             //有品牌代码对应的url
-                            response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm + "=" + headcolor + "=" + bodycolor);
+                            response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm + "=" + headcolor + "=" + bodycolor+"="+buttoncolor);
                             return;
                         } else {
                             //无品牌

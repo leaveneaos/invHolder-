@@ -108,7 +108,7 @@
         var headcolor = getval.split("=")[3];
         var bodycolor = getval.split("=")[4];
         var buttoncolor = getval.split("=")[5];
-        if (headcolor != "no" && bodycolor != "no") {
+        if (headcolor != "no" && bodycolor != "no"&&buttoncolor!="no") {
             $("body").css("background-color", bodycolor);
             $("header").css("background-color", headcolor);
             $("#sure").css("background-color", buttoncolor);
