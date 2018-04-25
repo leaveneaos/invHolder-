@@ -18,11 +18,11 @@
             <div class="advertimg">
                 <img src="logo/dicos_advert.png" id="advert" class="advertimg">
             </div>
-            <div class="top">
-                <span class="one">信息确认</span><span class="one">&gt;</span>
-                <span>发票抬头</span><span>&gt;</span>
-                <span>提交发票</span>
-            </div>
+            <!--<div class="top">-->
+                <!--<span class="one">信息确认</span><span class="one">&gt;</span>-->
+                <!--<span>发票抬头</span><span>&gt;</span>-->
+                <!--<span>提交发票</span>-->
+            <!--</div>-->
             <ul>
                 <li class="fl">订单编号 :</li>
                 <li class="fr omit" id="orderNo"></li>
@@ -67,9 +67,11 @@
         ppdm = getval.split("=")[2];
         headcolor = getval.split("=")[3];
         bodycolor = getval.split("=")[4];
-        if (headcolor != "no" && bodycolor!="no") {
+        buttoncolor = getval.split("=")[5];
+        if (headcolor != "no" && bodycolor!="no" &&buttoncolor!="no") {
             $("body").css("background-color", bodycolor);
             $("header").css("background-color", headcolor);
+            $("#sure").css("background-color", buttoncolor);
         }
         $("#logo").attr("src", "logo/" + ppdm + ".png");
         $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
@@ -147,7 +149,7 @@
             if (ppdm == null) {
                 redirect("跳转出现错误，请重新扫描！");
             }
-            var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor;
+            var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
             window.location.assign(encodeURI(myurl));
         }
     }
