@@ -8,10 +8,7 @@ import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.PasswordUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +21,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/buildQR")
+@CrossOrigin
 public class BuildQRController extends BaseController{
     @Autowired
     private BuildQRService buildQRService;
