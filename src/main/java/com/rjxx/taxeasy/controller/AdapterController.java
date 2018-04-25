@@ -484,7 +484,11 @@ public class AdapterController extends BaseController {
         String kpddm = (String) session.getAttribute("kpddm");
         String jylsh = (String) session.getAttribute("jylsh");
         String email = (String) session.getAttribute("email");
-        boolean b = wechatFpxxService.InFapxx(email, gsdm, ddh, null, "1", openid, "", jylsh, request, "4");
+        if(session.getAttribute("gsdm")==null || session.getAttribute("jylsh")==null){
+            errorRedirect("SESSION_MISSING");
+            return;
+        }
+        boolean b = wechatFpxxService.InFapxx(email, gsdm, ddh, jylsh, "1", openid, "", "", request, "4");
         if (!b) {
             errorRedirect("SAVE_WECAHT_ERROR");
             return;
