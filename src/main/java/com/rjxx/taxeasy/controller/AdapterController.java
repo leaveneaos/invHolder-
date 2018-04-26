@@ -494,6 +494,10 @@ public class AdapterController extends BaseController {
             errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
             return;
         }
+        if(session.getAttribute("gsdm")==null || session.getAttribute("jylsh")==null){
+            errorRedirect("SESSION_MISSING");
+            return;
+        }
         String gsdm = (String) session.getAttribute("gsdm");
         String ddh = (String) session.getAttribute("ddh");
         String ddrq = (String) session.getAttribute("ddrq");
@@ -501,10 +505,6 @@ public class AdapterController extends BaseController {
         String kpddm = (String) session.getAttribute("kpddm");
         String jylsh = (String) session.getAttribute("jylsh");
         String email = (String) session.getAttribute("email");
-        if(session.getAttribute("gsdm")==null || session.getAttribute("jylsh")==null){
-            errorRedirect("SESSION_MISSING");
-            return;
-        }
         boolean b = wechatFpxxService.InFapxx(email, gsdm, ddh, jylsh, "1", openid, "", "", request, "4");
         if (!b) {
             errorRedirect("SAVE_WECAHT_ERROR");
