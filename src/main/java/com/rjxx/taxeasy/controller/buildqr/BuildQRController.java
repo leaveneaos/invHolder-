@@ -1,11 +1,14 @@
 package com.rjxx.taxeasy.controller.buildqr;
 
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.domains.Cszb;
+import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.buildqr.BuildQRService;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.PasswordUtils;
+import com.rjxx.utils.dwz.ShortUrlUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,8 @@ import java.util.Map;
 public class BuildQRController extends BaseController{
     @Autowired
     private BuildQRService buildQRService;
+    @Autowired
+    private CszbService cszbService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "登录")
@@ -60,7 +65,18 @@ public class BuildQRController extends BaseController{
         String q = buildQRService.create(gsdm, orderNo, orderTime, storeNo, price);
         if(q!=null){
             Map map = new HashMap<>();
-            map.put("url", HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
+            Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "isStartDWZ");
+            if("是".equals(cszb.getCsz())){
+                try {
+                    String dwz = ShortUrlUtil.dwz(HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
+                    map.put("url", dwz);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    return ResultUtil.error("短网址服务错误");
+                }
+            }else{
+                map.put("url", HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
+            }
             return ResultUtil.success(map);
         }else{
             return ResultUtil.error("生成二维码失败");

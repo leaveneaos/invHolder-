@@ -518,9 +518,9 @@ public class AdapterController extends BaseController {
             if (result != null) {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
-                String headcolor = result.get("headcolor").toString();
-                String bodycolor = result.get("bodycolor").toString();
-                String buttoncolor = result.get("buttoncolor").toString();
+                String headcolor = (String)result.get("headcolor");
+                String bodycolor = (String)result.get("bodycolor");
+                String buttoncolor = (String)result.get("buttoncolor");
                 String orderNo = result.get("orderNo").toString();
                 String tqm = ppdm + orderNo;
                 session.setAttribute("tqm", tqm);
