@@ -8,6 +8,11 @@
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/fptt.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery.alerts.css">
+    <style>
+        body{
+            display: none;
+        }
+    </style>
 </head>
 <body onresize="document.activeElement.scrollIntoView(true);">
 <header>
@@ -172,6 +177,7 @@
                 ;
             }
         );
+        $("body").css("display", "block");
     })
 
     // 选择支付宝抬头信息
