@@ -61,7 +61,9 @@ public class BuildQRController extends BaseController{
     @ApiOperation(value = "生成二维码")
     public Result create(@RequestParam String gsdm,@RequestParam String orderNo,@RequestParam String orderTime,
                          @RequestParam String storeNo, @RequestParam String price){
-
+        if(session.getAttribute("username")==null||session.getAttribute("password")==null){
+            return null;
+        }
         String q = buildQRService.create(gsdm, orderNo, orderTime, storeNo, price);
         if(q!=null){
             Map map = new HashMap<>();
