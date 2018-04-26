@@ -458,7 +458,7 @@ public class AdapterController extends BaseController {
                 session.setAttribute("ddrq",ddrq);
                 session.setAttribute("je",je);
                 session.setAttribute("kpddm",kpddm);
-                session.setAttribute("jylsh",jylsh);
+                session.setAttribute("jylsh",jylsh);//其实是sqlsh
                 session.setAttribute("email",email);
                 Map map = new HashMap();
                 map.put("url", wechat);

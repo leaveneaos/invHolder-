@@ -40,4 +40,28 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
+
+    @Bean
+    public Docket dwzAPI() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("dwz")
+                .genericModelSubstitutes(DeferredResult.class)
+                .useDefaultResponseMessages(false)
+                .forCodeGeneration(false)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.rjxx.taxeasy.controller.dwz"))
+                .paths(PathSelectors.any())//过滤的接口
+                .build()
+                .apiInfo(dwzInfo());
+    }
+
+    private ApiInfo dwzInfo() {
+        return new ApiInfoBuilder()
+                .title("短网址转换")
+                .description("长转短")
+                .termsOfServiceUrl("https://gitee.com/wyhtoString/projects")
+                .contact("wangyahui")
+                .version("1.0")
+                .build();
+    }
 }
