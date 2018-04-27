@@ -21,20 +21,16 @@
 </head>
 <body>
     <header>
-        <img src="logo/logo@2x.png">
+        <img id="logo" src="logo/fujifilm.png">
     </header>
     <div class="content">
-        <img src="logo/banner2@2x.png">
-        <ul>
-            <li class="title"><span>品名</span><span>数量</span><span>金额</span></li>
-            <li class="item"><span>FUJIFILM GFX 50S</span><span>1</span><span>18000</span></li>
-            <li class="item"><span>FUJIFILM GFX 50S</span><span>1</span><span>18000</span></li>
-            <li class="item"><span>FUJIFILM GFX 50S</span><span>1</span><span>18000</span></li>
-            <li class="item"><span>FUJIFILM GFX 50S</span><span>1</span><span>18000</span></li>
+        <img id="advert" src="logo/fujifilm_advert.png">
+        <ul id="tab">
+            <li class="title"><span>品名</span><span>税率</span><span>金额</span></li>
         </ul>
         <div class="money">
-            <div class="txt">合计订单金额：36000</div>
-            <div class="btn">确认</div>
+            <div class="txt">合计订单金额：<span id="hjje"></span>></div>
+            <div id="sure" class="btn"  onclick="sure()">确认</div>
         </div>
     </div>
     <footer><span>泰易开票通云服务平台</span><span>遇到问题？</span></footer>
@@ -42,7 +38,97 @@
 
 <script src="../js/jquery.min.js"></script>
 <script type="text/javascript">
+    function redirect(errorMsg) {
+        var myurl = "../QR/error.html?msg=" + new Date + "=" + errorMsg;
+        window.location.assign(encodeURI(myurl));
+    }
+    $(function () {
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var thisURL = document.URL;
+        var getval = thisURL.split('?')[1];
+        ppdm = getval.split("=")[2];
+        headcolor = getval.split("=")[3];
+        bodycolor = getval.split("=")[4];
+        buttoncolor = getval.split("=")[5];
+        if (headcolor != "no" && bodycolor!="no" &&buttoncolor!="no") {
+            $("body").css("background-color", bodycolor+"");
+            $("header").css("background-color", headcolor+"");
+            $("#sure").css("background-color", buttoncolor+"");
+        }else{
+            $("body").css("background-color", "white");
+            $("header").css("background-color", "gray");
+            $("#sure").css("background-color", "blue");
+        }
+        $("#logo").attr("src", "logo/" + ppdm + ".png");
+        $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
+        $.post(
+            "../kptService/scanConfirm",
+            {},
+            function (obj) {
+                if (obj.code == "1") {
+                    var data = eval("(" + obj.data + ")");
+                    //价格，多个则显示带逗号的多个，一个则显示一个
+                    price = data.price;
+                    //最后价格，如果是多个价格则算总和，如果只有一个只算一个
+                    lastPrice = null;
+                    lastSpsl = data.spsl;
+                    lastSpmc = data.spmc;
+                    orderTime = data.orderTime;
+                    storeNo = data.storeNo;
+                    gsmc = data.gsmc;
+                    orderNo = data.orderNo;
 
+                    var showMc = data.spmc;
+                    var showSl = data.spsl;
+                    var showJe = data.price;
+
+                    if (price.indexOf(",") != -1 && lastSpsl.indexOf(",") != -1 && lastSpmc.indexOf(",") != -1) {
+                        var pricesize = price.length - (price.replace(/,/g, "").length);
+                        var spslsize = lastSpsl.length - (lastSpsl.replace(/,/g, "").length);
+                        var spmcsize = lastSpmc.length - (lastSpmc.replace(/,/g, "").length);
+                        //如果传过来的数据个数匹配
+                        if (pricesize == spslsize && pricesize == spmcsize) {
+                            for (var i = 0; i < pricesize + 1; i++) {
+                                $("#tab").append("<li><span>" + showMc.split(",")[i] + "</span><span>" + showSl.split(",")[i] + "</span><span>" + showJe.split(",")[i] + "</span></li>");
+                                lastPrice += parseFloat(price.split(",")[i]);
+                            }
+                        } else {
+                            redirect("传入数据有误,confirm.line[155]");
+                        }
+                    } else {
+                        //如果传过来的数据，有的是多个有的是一个
+                        if (lastSpsl.indexOf(",") != -1 || lastSpmc.indexOf(",") != -1 || price.indexOf(",") != -1) {
+                            redirect("传入数据有误,confirm.line[160]");
+                        }
+                        $("#tab").append("<li><span>" + showMc + "</span><span>" + showSl + "</span><span>" + showJe + "</span></li>");
+                        lastPrice = price;
+                    }
+                    document.getElementById("hjje").innerText = lastPrice;
+                } else {
+                    redirect(obj.msg);
+                }
+            }
+        )
+    })
+
+    function sure() {
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            if (isWeixin) {
+                if (null == orderNo || orderTime == null || lastPrice == null) {
+                    redirect("传入数据有误,请重新扫描！");
+                }
+                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + lastPrice + "&gsdm=" + gsmc;
+            } else {
+                if (ppdm == null) {
+                    redirect("跳转出现错误，请重新扫描！");
+                }
+                var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
+                window.location.assign(encodeURI(myurl));
+            }
+    }
 </script>
 </body>
 </html>

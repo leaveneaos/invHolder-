@@ -4,29 +4,31 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.GsxxJpaDao;
+import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.XfJpaDao;
-import com.rjxx.taxeasy.domains.Cszb;
-import com.rjxx.taxeasy.domains.Gsxx;
-import com.rjxx.taxeasy.domains.Skp;
-import com.rjxx.taxeasy.domains.Xf;
+import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
+import com.rjxx.taxeasy.dto.AdapterGet;
 import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
+import com.rjxx.utils.Base64Util;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.StringUtil;
 import com.rjxx.utils.weixin.HttpClientUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,12 +60,70 @@ public class AdapterController extends BaseController {
     private wechatFpxxServiceImpl wechatFpxxService;
     @Autowired
     private CszbService cszbService;
+    @Autowired
+    private PpJpaDao ppJpaDao;
 
     private static final String TYPE_ONE_CALLBACKURL = "kptService/getOpenidForOne";
     private static final String TYPE_TWO_CALLBACKURL = "kptService/getOpenid";
     private static final String TYPE_THREE_CALLBACKURL = "kptService/getOpenid";
     private static final String TYPE_FOUR_CALLBACKURL = "kptService/getOpenidForFour";
 
+    @RequestMapping(value="/{ppdm}",method = RequestMethod.GET)
+    public void extract(@PathVariable String ppdm) {
+        Pp pp;
+        try {
+            pp = ppJpaDao.findOneByPpdm(ppdm);
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorRedirect("获取品牌信息有误");
+            return;
+        }
+        String gsdm = pp.getGsdm();
+        String button = pp.getPpbuttoncolor();
+        String bodycolor = pp.getPpbodycolor();
+        String headcolor = pp.getPpheadcolor();
+        session.setAttribute("gsdm", gsdm);
+        try {
+            response.sendRedirect(
+                    request.getContextPath() + "/qrcode/luru.html?t=" +
+                            "t=" + System.currentTimeMillis() + "=" + headcolor + "=" + bodycolor + "=" + button);
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
+            errorRedirect("重定向失败");
+            return;
+        }
+    }
+    @RequestMapping(value = "/lrqr",method = RequestMethod.POST)
+    public Result lrqr(@RequestParam String tq){
+        if(session.getAttribute("gsdm")==null){
+            return ResultUtil.error("会话超时");
+        }
+        String gsdm=(String) session.getAttribute("gsdm");
+        Map apiMsg = adapterService.getApiMsg(gsdm, tq);
+        if(apiMsg==null){
+            return ResultUtil.error("开票数据未上传，请稍后再试");
+        }
+        Jyxxsq jyxxsq = (Jyxxsq)apiMsg.get("jyxxsq");
+        AdapterGet adapterGet = new AdapterGet();
+        adapterGet.setType("3");
+        adapterGet.setOn(jyxxsq.getDdh());
+        adapterGet.setSn(jyxxsq.getKpddm());
+        String dataJson = JSON.toJSONString(adapterGet);
+        Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
+        String key = gsxx.getSecretKey();
+        String sign = DigestUtils.md5Hex("data=" + dataJson + "&key=" + key);
+        String str = "data=" + dataJson + "&si=" + sign;
+        String q = null;
+        try {
+            q = Base64Util.encode(str);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Map map = new HashMap();
+        map.put("url", HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
+        return ResultUtil.success(map);
+    }
 
     @RequestMapping(value = "/{gsdm}/{q}", method = RequestMethod.GET)
     public void get(@PathVariable String gsdm, @PathVariable String q) {
@@ -230,22 +290,6 @@ public class AdapterController extends BaseController {
                 errorRedirect("UNKNOWN_TYPE");
                 return;
         }
-    }
-
-    @RequestMapping(value = "/getDetails")
-    public Result getDetails(){
-        String gsdm = (String) session.getAttribute("gsdm");
-        String on = (String) session.getAttribute("on");
-        String sn = (String) session.getAttribute("sn");
-        String tq = (String) session.getAttribute("tq");
-        String spxx = adapterService.getSpxx(gsdm, on, sn, tq);
-        if(spxx==null){
-            return ResultUtil.error("二维码信息获取失败");
-        }
-        if("1".equals(spxx)){
-            return ResultUtil.error("开票数据未上传，请稍后再试");
-        }
-        return ResultUtil.success(spxx);
     }
 
     @RequestMapping("/getOpenidForOne")

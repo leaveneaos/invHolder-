@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/common.css">
-    <link rel="stylesheet" type="text/css" href="css/dianzifapiao.css">
+    <!--<link rel="stylesheet" type="text/css" href="css/dianzifapiao.css">-->
     <script>
         window.onresize = function(){
             document.getElementsByTagName('html')[0].style.fontSize = (window.document.documentElement.getBoundingClientRect().width/750*100)+'px';
@@ -169,22 +169,22 @@
 </head>
 <body>
     <header>
-        <img src="logo/logo@2x.png">
+        <img id="logo" src="logo/fujifilm.png">
     </header>
     <div class="content">
-        <img src="logo/haibao1@2x.png">
+        <img id="advert" src="logo/haibao1@2x.png">
         <ul>
             <li class="item0">
-                <input  placeholder="请输入提取码" type="number"/>
+                <input  placeholder="请输入提取码" type="text"/>
             </li>
             <li class="item1">
-                <input  placeholder="请输入右侧的验证码" type="number"/>
+                <input  placeholder="请输入右侧的验证码" type="text"/>
                 <img src="logo/s3.png">
             </li>
         </ul>
         <div class="money">
             <div class="txt"></div>
-            <div class="btn">提交</div>
+            <div id="sure" class="btn">提交</div>
         </div>
     </div>
     <footer><span>泰易开票通云服务平台</span><span>遇到问题？</span></footer>
@@ -192,7 +192,40 @@
 
 <script src="../js/jquery.min.js"></script>
 <script type="text/javascript">
+    function redirect(errorMsg) {
+        var myurl = "../QR/error.html?msg=" + new Date + "=" + errorMsg;
+        window.location.assign(encodeURI(myurl));
+    }
+    $(function () {
+        var thisURL = document.URL;
+        var getval = thisURL.split('?')[1];
+        ppdm = getval.split("=")[2];
+        headcolor = getval.split("=")[3];
+        bodycolor = getval.split("=")[4];
+        buttoncolor = getval.split("=")[5];
+        if (headcolor != "no" && bodycolor!="no" &&buttoncolor!="no") {
+            $("body").css("background-color", bodycolor+"");
+            $("header").css("background-color", headcolor+"");
+            $("#sure").css("background-color", buttoncolor+"");
+        }else{
+            $("body").css("background-color", "white");
+            $("header").css("background-color", "gray");
+            $("#sure").css("background-color", "blue");
+        }
+        $("#logo").attr("src", "logo/" + ppdm + ".png");
+        $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
 
+        $.post(
+            "../kptService/lrqr",
+            {},
+            function (obj) {
+                if(obj.code=="1"){
+                    window.location.assign(encodeURI(obj.data.url));
+                }else{
+                    redirect(obj.msg);
+                }
+            })
+        })
 </script>
 </body>
 </html>
