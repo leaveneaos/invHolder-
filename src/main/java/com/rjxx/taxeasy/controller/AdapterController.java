@@ -75,7 +75,7 @@ public class AdapterController extends BaseController {
             pp = ppJpaDao.findOneByPpdm(ppdm);
         } catch (Exception e) {
             e.printStackTrace();
-            errorRedirect("获取品牌信息有误");
+            errorRedirect("GET_GRAND_ERROR");
             return;
         }
         String gsdm = pp.getGsdm();
@@ -86,11 +86,11 @@ public class AdapterController extends BaseController {
         try {
             response.sendRedirect(
                     request.getContextPath() + "/qrcode/luru.html?t=" +
-                            "t=" + System.currentTimeMillis() + "=" + headcolor + "=" + bodycolor + "=" + button);
+                            "t=" + System.currentTimeMillis() +"="+ppdm+ "=" + headcolor + "=" + bodycolor + "=" + button);
             return;
         } catch (IOException e) {
             e.printStackTrace();
-            errorRedirect("重定向失败");
+            errorRedirect("REDIRECT_ERROR");
             return;
         }
     }
