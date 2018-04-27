@@ -102,6 +102,15 @@
             $("#alipay").css('display',"");
 		}
 
+		$(function () {
+            var thisURL = document.URL;
+            var getval = thisURL.split('?')[1];
+            ppdm = getval.split("=")[2];
+            headcolor = getval.split("=")[3];
+            bodycolor = getval.split("=")[4];
+            buttoncolor = getval.split("=")[5];
+            $("body").css("background-color", bodycolor+"");
+        })
 	</script>
 </body>
 </html>

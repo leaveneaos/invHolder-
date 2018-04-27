@@ -238,7 +238,13 @@ public class WeixinTask implements Runnable{
                         }
                         status = adapterService.makeInvoice(gsdm, orderNo, storeNo, extractCode, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, openid, "4", access_token, SuccOrderId);
                     }else if("4".equals(apiTpye)){
-                        status=adapterService.makeInvoiceForFour(gsdm,wxFpxx.getQ(),null,null,null,null,null,null,wxFpxx.getTqm(),openid,"4",access_token,SuccOrderId);
+                        String yx;
+                        if(email!=null){
+                            yx = email;
+                        }else{
+                            yx = wxFpxx.getTqm();//该字段临时存放邮箱
+                        }
+                        status=adapterService.makeInvoiceForFour(gsdm,wxFpxx.getQ(),gfmc,gfsh,gfdz,gfdh,gfyhzh,gfyh,yx,openid,"4",access_token,SuccOrderId);
                     }
                     if ("-1".equals(status)) {
                         re="开具失败";

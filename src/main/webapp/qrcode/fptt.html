@@ -110,22 +110,20 @@
         var myurl = decodeURI(thisURL);
         var getval = myurl.split('?')[1];
         var ppdm = getval.split("=")[2];
-        var headcolor = getval.split("=")[3];
-        var bodycolor = getval.split("=")[4];
-        var buttoncolor = getval.split("=")[5];
+        headcolor = getval.split("=")[3];
+        bodycolor = getval.split("=")[4];
+        buttoncolor = getval.split("=")[5];
         if (headcolor != "no" && bodycolor != "no"&&buttoncolor!="no") {
             $("body").css("background-color", bodycolor+"");
             $("header").css("background-color", headcolor+"");
             $("#sure").css("background-color", buttoncolor+"");
-            $("#logo").attr("src", "logo/" + ppdm + ".png");
-            $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
         }else{
             $("body").css("background-color", "white");
             $("header").css("background-color", "gray");
             $("#sure").css("background-color", "blue");
-            $("#logo").attr("src", "logo/rjxx.png");
-            $("#advert").attr("src", "logo/rjxx_advert.png");
         }
+        $("#logo").attr("src", "logo/" + ppdm + ".png");
+        $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
         // 选择抬头类型
         var $fptt = $('#fptt');
         $nsrsbh = $('#nsrsbh'),
@@ -358,7 +356,7 @@
                         if (obj.msg == "成功") {
                             var data = eval("(" + obj.data + ")");
                             if (data.returnCode == "0000" || data.returnCode == null) {
-                                window.location.href = "../qrcode/witting.html";
+                                window.location.href = "../qrcode/witting.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
                             } else {
                                 redirect(data.returnMsg);
                             }

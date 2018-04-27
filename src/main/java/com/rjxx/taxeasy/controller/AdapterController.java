@@ -445,36 +445,29 @@ public class AdapterController extends BaseController {
     public Result submitForFour(String gfmc, String gfsh, String gfdz,
                                 String gfdh, String gfyhzh, String gfyh,
                                 String gsdm, String email, String jylsh,
-                                String ddh,String ddrq,String je,String kpddm) {
-        Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "sfsycdtt");//是否使用C端抬头
-        String isC = cszb.getCsz();
-        if ("是".equals(isC)) {
-            //FIXME
-            return null;
+                                String ddh, String ddrq, String je, String kpddm) {
+        String wechat = isWechat(TYPE_FOUR_CALLBACKURL);
+        if (wechat != null) {
+            session.setAttribute("ddh", ddh);
+            session.setAttribute("ddrq", ddrq);
+            session.setAttribute("je", je);
+            session.setAttribute("kpddm", kpddm);
+            session.setAttribute("jylsh", jylsh);//其实是sqlsh
+            session.setAttribute("email", email);
+            Map map = new HashMap();
+            map.put("url", wechat);
+            return ResultUtil.success(JSON.toJSONString(map));
         } else {
-            String wechat = isWechat(TYPE_FOUR_CALLBACKURL);
-            if (wechat != null) {
-                session.setAttribute("ddh",ddh);
-                session.setAttribute("ddrq",ddrq);
-                session.setAttribute("je",je);
-                session.setAttribute("kpddm",kpddm);
-                session.setAttribute("jylsh",jylsh);//其实是sqlsh
-                session.setAttribute("email",email);
-                Map map = new HashMap();
-                map.put("url", wechat);
-                return ResultUtil.success(JSON.toJSONString(map));
+            String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
+            String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
+                    gfdh, gfyhzh, gfyh, email, userId, "5", "", "");
+            //开票
+            if ("-1".equals(status)) {
+                return ResultUtil.error("开具失败");
             } else {
-                String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
-                String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
-                        gfdh, gfyhzh, gfyh, email, userId, "5", "", "");
-                //开票
-                if ("-1".equals(status)) {
-                    return ResultUtil.error("开具失败");
-                } else {
-                    JSONObject jsonObject = JSON.parseObject(status);
-                    session.setAttribute("serialorder", jsonObject.getString("serialorder"));
-                    return ResultUtil.success(status);
-                }
+                JSONObject jsonObject = JSON.parseObject(status);
+                session.setAttribute("serialorder", jsonObject.getString("serialorder"));
+                return ResultUtil.success(status);
             }
         }
     }
@@ -494,7 +487,7 @@ public class AdapterController extends BaseController {
             errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
             return;
         }
-        if(session.getAttribute("gsdm")==null || session.getAttribute("jylsh")==null){
+        if (session.getAttribute("gsdm") == null || session.getAttribute("jylsh") == null) {
             errorRedirect("SESSION_MISSING");
             return;
         }
@@ -505,12 +498,23 @@ public class AdapterController extends BaseController {
         String kpddm = (String) session.getAttribute("kpddm");
         String jylsh = (String) session.getAttribute("jylsh");
         String email = (String) session.getAttribute("email");
-        boolean b = wechatFpxxService.InFapxx(email, gsdm, ddh, jylsh, "1", openid, "", "", request, "4");
+        Boolean b = wechatFpxxService.InFapxx(email, gsdm, ddh, jylsh, "1", openid, "", "", request, "4");
         if (!b) {
             errorRedirect("SAVE_WECAHT_ERROR");
             return;
         }
-        commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm,"0");
+        Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "sfsycdtt");//是否使用C端抬头
+        String isC = cszb.getCsz();
+        String wechatAuthType;
+        if("是".equals(isC)){
+            wechatAuthType = "1";
+        }else if("否".equals(isC)){
+            wechatAuthType = "0";
+        }else{
+            errorRedirect("UNKNOW_2C_TYPE");
+            return;
+        }
+        commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm, wechatAuthType);
     }
 
     private void deal(Map result, String gsdm) {
