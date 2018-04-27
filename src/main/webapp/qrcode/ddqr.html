@@ -141,31 +141,31 @@
         return source.join(".");
     };
 
-//     function sure() {
-//         var ua = navigator.userAgent.toLowerCase();
-//         var isWeixin = ua.indexOf('micromessenger') != -1;
-//         if (isWeixin) {
-//             if (null == orderNo || orderTime == null || lastPrice == null) {
-//                 redirect("传入数据有误,请重新扫描！");
-//             }
-// //				alert(orderNo+"-"+gsmc);
-//             window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
-//                 "&storeNo=" + storeNo + "&price=" + lastPrice + "&gsdm=" + gsmc;
-//         } else {
-//             if (ppdm == null) {
-//                 redirect("跳转出现错误，请重新扫描！");
-//             }
-//             var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
-//             window.location.assign(encodeURI(myurl));
-//         }
-//     }
-
     function sure() {
-        if (ppdm == null) {
-            redirect("跳转出现错误，请重新扫描！");
+        if(ppdm=="fujifilm"){
+            if (ppdm == null) {
+                redirect("跳转出现错误，请重新扫描！");
+            }
+            var myurl = "../qrcode/dianzifapiao.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
+            window.location.assign(encodeURI(myurl));
+        }else{
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            if (isWeixin) {
+                if (null == orderNo || orderTime == null || lastPrice == null) {
+                    redirect("传入数据有误,请重新扫描！");
+                }
+//				alert(orderNo+"-"+gsmc);
+                window.location = "../common/isBrowser?orderNo=" + orderNo + "&orderTime=" + orderTime +
+                    "&storeNo=" + storeNo + "&price=" + lastPrice + "&gsdm=" + gsmc;
+            } else {
+                if (ppdm == null) {
+                    redirect("跳转出现错误，请重新扫描！");
+                }
+                var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
+                window.location.assign(encodeURI(myurl));
+            }
         }
-        var myurl = "../qrcode/dianzifapiao.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
-        window.location.assign(encodeURI(myurl));
     }
 </script>
 </body>
