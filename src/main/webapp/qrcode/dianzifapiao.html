@@ -26,10 +26,10 @@
     <div class="content">
         <img id="advert" src="logo/fujifilm_advert.png">
         <ul id="tab">
-            <li class="title"><span>品名</span><span>税率</span><span>金额</span></li>
+            <li class="title" style="padding-left: 30px"><span>品名</span><span>税率</span><span>金额</span></li>
         </ul>
         <div class="money">
-            <div class="txt">合计订单金额：<span id="hjje"></span>></div>
+            <div class="txt">合计订单金额：<span id="hjje"></span></div>
             <div id="sure" class="btn"  onclick="sure()">确认</div>
         </div>
     </div>
@@ -43,6 +43,7 @@
         window.location.assign(encodeURI(myurl));
     }
     $(function () {
+        $("#tab").append("<li class='title'><span>" + "啊洗吧" + "</span><span>" + "0.06" + "</span><span>" + "10" + "</span></li>");
         var ua = navigator.userAgent.toLowerCase();
         var isWeixin = ua.indexOf('micromessenger') != -1;
         var thisURL = document.URL;
