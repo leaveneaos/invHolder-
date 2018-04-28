@@ -85,6 +85,7 @@
         } else {
             $(".top").css('display', "");
         }
+        $("body").css("display", "block");
         $.post(
             "../kptService/scanConfirm",
             {},
@@ -131,7 +132,6 @@
                 }
             }
         )
-        $("body").css("display", "block");
     })
 
     function RetainedDecimalPlaces(num) {

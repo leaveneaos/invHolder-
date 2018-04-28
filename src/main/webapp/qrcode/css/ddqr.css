@@ -2,8 +2,18 @@ body{
 	overflow-x: hidden;
 	overflow: hidden;
 }
-header{
-	background-color: #67481b;
+header {
+	height: 80px;
+	line-height: 116px;
+	text-align: center;
+	background-color: #01906d;
+	box-shadow: 0px 5px 17px 0px rgba(25, 101, 82, 0.49);
+}
+
+header img {
+	width: 234px;
+	height: 26px;
+	margin-left: 0 !important;
 }
 .middle ul {
 	width: 100%;

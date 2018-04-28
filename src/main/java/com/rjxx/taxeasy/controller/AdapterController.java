@@ -10,6 +10,7 @@ import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
 import com.rjxx.taxeasy.dto.AdapterGet;
+import com.rjxx.taxeasy.dto.AdapterPost;
 import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
@@ -95,34 +96,46 @@ public class AdapterController extends BaseController {
         }
     }
     @RequestMapping(value = "/lrqr",method = RequestMethod.POST)
-    public Result lrqr(@RequestParam String tq){
-        if(session.getAttribute("gsdm")==null){
-            return ResultUtil.error("会话超时");
+    public Result lrqr(@RequestParam String tq,@RequestParam String code){
+        String sessionCode = (String) session.getAttribute("rand");
+        if (code != null && sessionCode != null && code.equals(sessionCode)) {
+            if(session.getAttribute("gsdm")==null){
+                return ResultUtil.error("会话超时");
+            }
+            String gsdm=(String) session.getAttribute("gsdm");
+            Map apiMsg = adapterService.getApiMsg(gsdm, tq);
+            if(apiMsg==null){
+                return ResultUtil.error("开票数据未上传，请稍后再试");
+            }
+            AdapterGet adapterGet = new AdapterGet();
+            adapterGet.setType("3");
+            if(apiMsg.get("jyxxsq")!=null){
+                Jyxxsq jyxxsq = (Jyxxsq)apiMsg.get("jyxxsq");
+                adapterGet.setOn(jyxxsq.getDdh());
+                adapterGet.setSn(jyxxsq.getKpddm());
+            }else{
+                AdapterPost post = (AdapterPost)apiMsg.get("post");
+                adapterGet.setOn(post.getData().getOrder().getOrderNo());
+                adapterGet.setSn(post.getClientNo());
+            }
+
+            String dataJson = JSON.toJSONString(adapterGet);
+            Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
+            String key = gsxx.getSecretKey();
+            String sign = DigestUtils.md5Hex("data=" + dataJson + "&key=" + key);
+            String str = "data=" + dataJson + "&si=" + sign;
+            String q = null;
+            try {
+                q = Base64Util.encode(str);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Map map = new HashMap();
+            map.put("url", HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
+            return ResultUtil.success(map);
+        }else{
+            return ResultUtil.error("验证码输入错误");
         }
-        String gsdm=(String) session.getAttribute("gsdm");
-        Map apiMsg = adapterService.getApiMsg(gsdm, tq);
-        if(apiMsg==null){
-            return ResultUtil.error("开票数据未上传，请稍后再试");
-        }
-        Jyxxsq jyxxsq = (Jyxxsq)apiMsg.get("jyxxsq");
-        AdapterGet adapterGet = new AdapterGet();
-        adapterGet.setType("3");
-        adapterGet.setOn(jyxxsq.getDdh());
-        adapterGet.setSn(jyxxsq.getKpddm());
-        String dataJson = JSON.toJSONString(adapterGet);
-        Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
-        String key = gsxx.getSecretKey();
-        String sign = DigestUtils.md5Hex("data=" + dataJson + "&key=" + key);
-        String str = "data=" + dataJson + "&si=" + sign;
-        String q = null;
-        try {
-            q = Base64Util.encode(str);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        Map map = new HashMap();
-        map.put("url", HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
-        return ResultUtil.success(map);
     }
 
     @RequestMapping(value = "/{gsdm}/{q}", method = RequestMethod.GET)

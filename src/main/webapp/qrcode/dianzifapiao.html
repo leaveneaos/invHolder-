@@ -15,7 +15,10 @@
 
     </script>
     <style>
-
+        body{
+            height: 100%;
+            display: none;
+        }
 
     </style>
 </head>
@@ -26,7 +29,7 @@
     <div class="content">
         <img id="advert" src="logo/fujifilm_advert.png">
         <ul id="tab">
-            <li class="title" style="padding-left: 30px"><span>品名</span><span>税率</span><span>金额</span></li>
+            <li class="title" style=""><span>品名</span><span>税率</span><span>金额</span></li>
         </ul>
         <div class="money">
             <div class="txt">合计订单金额：<span id="hjje"></span></div>
@@ -45,8 +48,6 @@
         window.location.assign(encodeURI(myurl));
     }
     $(function () {
-        var ua = navigator.userAgent.toLowerCase();
-        var isWeixin = ua.indexOf('micromessenger') != -1;
         var thisURL = document.URL;
         var getval = thisURL.split('?')[1];
         ppdm = getval.split("=")[2];
@@ -54,12 +55,13 @@
         bodycolor = getval.split("=")[4];
         buttoncolor = getval.split("=")[5];
         if (headcolor != "no" && bodycolor!="no" &&buttoncolor!="no") {
-            $("body").css("background-color", bodycolor+"");
+            $("body,html").css("background-color", bodycolor+"");
             $("header").css("background-color", headcolor+"");
             $("#sure").css("background-color", buttoncolor+"");
         }
         $("#logo").attr("src", "logo/" + ppdm + ".png");
         $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
+        $("body").css("display", "block");
         $.post(
             "../kptService/scanConfirm",
             {},
