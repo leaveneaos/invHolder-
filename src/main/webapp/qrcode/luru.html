@@ -273,15 +273,15 @@
         var tqm = $('#tqm').val();
         var code = $('#code').val();
         if(tqm == null||tqm==""){
-            alert("tqm"+tqm);
+            alert("提取码不能为空");
             return;
         }
         if(code== null||code==""){
-            alert("code"+code);
+            alert("验证码不能为空");
             return;
         }
         $.post(
-            "/kptService/lrqr",
+            "../kptService/lrqr",
             {
                 "tq":tqm,
                 "code":code
