@@ -70,14 +70,27 @@
         var thisURL = document.URL;
         var getval = thisURL.split('?')[1];
         ppdm = getval.split("=")[2];
-        headcolor = getval.split("=")[3];
-        bodycolor = getval.split("=")[4];
-        buttoncolor = getval.split("=")[5];
-        if (headcolor != "no" && bodycolor!="no" &&buttoncolor!="no") {
-            $("body").css("background-color", bodycolor+"");
-            $("header").css("background-color", headcolor+"");
-            $("#sure").css("background-color", buttoncolor+"");
-        }
+        $.post(
+            "../kptService/getShowMsg",
+            {
+                "ppdm":ppdm
+            },
+            function (obj) {
+                if (obj.code == "1") {
+                    var data = eval("(" + obj.data + ")");
+                    var head = data.headcolor;
+                    var body = data.bodycolor;
+                    var button = data.buttoncolor;
+                    if (head != "no" && body!="no" &&button!="no") {
+                        $("body").css("background-color", body+"");
+                        $("header").css("background-color", head+"");
+                        $("#sure").css("background-color", button+"");
+                    }
+                } else {
+                    redirect(obj.msg)
+                }
+            }
+        )
         $("#logo").attr("src", "logo/" + ppdm + ".png");
         $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
         if (isWeixin) {
@@ -146,7 +159,7 @@
             if (ppdm == null) {
                 redirect("跳转出现错误，请重新扫描！");
             }
-            var myurl = "../qrcode/dianzifapiao.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
+            var myurl = "../qrcode/dianzifapiao.html?param=" + new Date() + "=" + ppdm;
             window.location.assign(encodeURI(myurl));
         }else{
             var ua = navigator.userAgent.toLowerCase();
@@ -162,7 +175,7 @@
                 if (ppdm == null) {
                     redirect("跳转出现错误，请重新扫描！");
                 }
-                var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
+                var myurl = "../qrcode/fptt.html?param=" + new Date() + "=" + ppdm;
                 window.location.assign(encodeURI(myurl));
             }
         }

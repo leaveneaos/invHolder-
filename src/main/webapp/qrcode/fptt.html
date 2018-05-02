@@ -110,16 +110,29 @@
         var myurl = decodeURI(thisURL);
         var getval = myurl.split('?')[1];
         var ppdm = getval.split("=")[2];
-        headcolor = getval.split("=")[3];
-        bodycolor = getval.split("=")[4];
-        buttoncolor = getval.split("=")[5];
-        if (headcolor != "no" && bodycolor != "no"&&buttoncolor!="no") {
-            $("body").css("background-color", bodycolor+"");
-            $("header").css("background-color", headcolor+"");
-            $("#sure").css("background-color", buttoncolor+"");
-            $("#personal").css("background-color", buttoncolor+"");
-            $("#company").css("background-color", buttoncolor+"");
-        }
+        $.post(
+            "../kptService/getShowMsg",
+            {
+                "ppdm":ppdm
+            },
+            function (obj) {
+                if (obj.code == "1") {
+                    var data = eval("(" + obj.data + ")");
+                    var head = data.headcolor;
+                    var body = data.bodycolor;
+                    var button = data.buttoncolor;
+                    if (head != "no" && body!="no" &&button!="no") {
+                        $("body").css("background-color", body+"");
+                        $("header").css("background-color", head+"");
+                        $("#sure").css("background-color", button+"");
+                        $("#personal").css("background-color", button+"");
+                        $("#company").css("background-color", button+"");
+                    }
+                } else {
+                    redirect(obj.msg)
+                }
+            }
+        )
         $("#logo").attr("src", "logo/" + ppdm + ".png");
         $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
         $("body").css("display", "block");
@@ -354,7 +367,7 @@
                         if (obj.msg == "成功") {
                             var data = eval("(" + obj.data + ")");
                             if (data.returnCode == "0000" || data.returnCode == null) {
-                                window.location.href = "../qrcode/witting.html?param=" + new Date() + "=" + ppdm+"="+headcolor+"="+bodycolor+"="+buttoncolor;
+                                window.location.href = "../qrcode/witting.html?param=" + new Date() + "=" + ppdm;
                             } else {
                                 redirect(data.returnMsg);
                             }

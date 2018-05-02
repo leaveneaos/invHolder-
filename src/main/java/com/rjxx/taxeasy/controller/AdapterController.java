@@ -583,14 +583,25 @@ public class AdapterController extends BaseController {
         commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm, wechatAuthType);
     }
 
+
+    @RequestMapping(value = "/getShowMsg",method = RequestMethod.POST)
+    public Result getShowMsg(@RequestParam String ppdm){
+        String showMsg = adapterService.getShowMsg(ppdm);
+        if(showMsg!=null){
+            return ResultUtil.success(showMsg);
+        }else{
+            return ResultUtil.error("获取品牌信息失败");
+        }
+    }
+
     private void deal(Map result, String gsdm) {
         try {
             if (result != null) {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
-                String headcolor = (String)result.get("headcolor");
-                String bodycolor = (String)result.get("bodycolor");
-                String buttoncolor = (String)result.get("buttoncolor");
+//                String headcolor = (String)result.get("headcolor");
+//                String bodycolor = (String)result.get("bodycolor");
+//                String buttoncolor = (String)result.get("buttoncolor");
                 String orderNo = result.get("orderNo").toString();
                 String tqm = ppdm + orderNo;
                 session.setAttribute("tqm", tqm);
@@ -600,7 +611,7 @@ public class AdapterController extends BaseController {
                     if (status.contains("可开具")) {
                         if (StringUtils.isNotBlank(ppdm)) {
                             //有品牌代码对应的url
-                            response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm + "=" + headcolor + "=" + bodycolor+"="+buttoncolor);
+                            response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
                             return;
                         } else {
                             //无品牌
