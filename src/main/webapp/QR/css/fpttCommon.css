@@ -294,30 +294,39 @@ footer .help {
 
 .pageBtnColor0{
     background: #B09471 !important;
+    color: white !important;
 }
 .pageBtnColor1{
     background: #FAE9E9 !important;
+    color: white !important;
 }
 .pageBtnColor2{
     background: #D0CEBC !important;
+    color: white !important;
 }
 .pageBtnColor3{
     background: #A3DEF4 !important;
+    color: white !important;
 }
 .pageBtnColor4{
     background: #D2D0C1 !important;
+    color: white !important;
 }
 .pageBtnColor5{
     background: #AED4C9 !important;
+    color: white !important;
 }
 .pageBtnColor6{
     background: #D7CAC1 !important;
+    color: white !important;
 }
 .pageBtnColor7{
     background: #D3D2CA !important;
+    color: white !important;
 }
 .pageBtnColor8{
     background: #C3CFC0 !important;
+    color: white !important;
 }
 
 /* //第二个页面 */
@@ -375,8 +384,8 @@ footer .help {
     background: white;
 }
 .twoPage .middle .type #company{
-    background: #B39774;
-    color: white;
+    background: white;
+    color: #333333;
 }
 .twoPage  #company{
     margin-right: 1.2rem;
