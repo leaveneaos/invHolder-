@@ -146,12 +146,14 @@ body{
     line-height: 1.12rem;
 }
 .main .content .middle ul .fl{
-    width: 1.5rem;
+    /*width: 1.5rem;*/
+    flex: 1;
 }
 .main .content .middle ul .fr{
-    padding-left: 0.25rem;
+    /*padding-left: 0.25rem;*/
     overflow: hidden;
     text-overflow:ellipsis;
+    flex: 2;
     white-space: nowrap;
 }
 #advert{
