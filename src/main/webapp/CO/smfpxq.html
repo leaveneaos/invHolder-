@@ -67,6 +67,7 @@
 		orderNo = null;
 		orderTime = null;
 		price =null;
+		var gsdms="";
       	$(function () {
 			  var ua = navigator.userAgent.toLowerCase();
 			  var isWeixin = ua.indexOf('micromessenger') != -1;
@@ -91,6 +92,7 @@
                         orderNo = data.orderNo;
                         price = data.price;
                         orderTime = data.orderTime;
+                        gsdms=data.gsdm;
                         if(data.gsdm!=null&&data.gsdm=='gvc'){
                             $(".company").css('display','none');
                             $(".help").css('display','none');
@@ -115,8 +117,13 @@
             $(".wx").click(function () {
                 if(null==orderNo || null==price||orderTime==null){
                     redirect("归入微信卡包出现未知错误，请重试！");
+                    return;
                 }
-                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
+                if(gsdms==null || gsdms==""){
+                    redirect("归入微信卡包出现未知错误，请重试！");
+                    return;
+				}
+                window.location = "../common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime+"&gsdm="+gsdms;
             });
 
         //金额千位分隔2
