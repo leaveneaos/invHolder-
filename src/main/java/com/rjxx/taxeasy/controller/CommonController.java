@@ -366,8 +366,9 @@ public class CommonController extends BaseController {
                 result.put("msg","未查询到发票详情，请重试！");
                 return result;
             }
+
             String gsdm = kplsList.get(0).getGsdm();
-            result.put("price",kplsList.get(0).getJshj());
+
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             result.put("orderTime",sdf.format(kplsList.get(0).getLrsj()));
             Jyls jyls = new Jyls();
@@ -376,12 +377,24 @@ public class CommonController extends BaseController {
             jyls.setJylsh(kplsList.get(0).getJylsh());
             Jyls jylsxx = jylsService.findOneByParams(jyls);
             String orderNo= "";
-            if(jylsxx.getGsdm().equals("hdsc")||jylsxx.getGsdm().equals("cmsc")){
-                orderNo = jylsxx.getKhh();
+            String price ="";
+            if(kplsList.size()>1){
+                for (Kpls kpls : kplsList) {
+                    orderNo=kpls.getKplsh()+"";
+                    price +=kpls.getJshj()+",";
+                }
+                result.put("price",price);
                 result.put("orderNo",orderNo);
             }else {
-                orderNo = jylsxx.getDdh();
-                result.put("orderNo",orderNo);
+                price = kplsList.get(0).getJshj().toString();
+                result.put("price",price);
+                if(jylsxx.getGsdm().equals("hdsc")||jylsxx.getGsdm().equals("cmsc")){
+                    orderNo = jylsxx.getKhh();
+                    result.put("orderNo",orderNo);
+                }else {
+                    orderNo = jylsxx.getDdh();
+                    result.put("orderNo",orderNo);
+                }
             }
             result.put("kplsList", kplsList);
             String tqm="";
@@ -397,10 +410,9 @@ public class CommonController extends BaseController {
                 result.put("msg","保存发票信息失败，请重试！");
                 return result;
             }
-            if(kplsList.get(0).getGsdm().equals("gvc")){
-                request.getSession().setAttribute("gsdm",kplsList.get(0).getGsdm());
-            }
+            request.getSession().setAttribute("gsdm",kplsList.get(0).getGsdm());
             result.put("gsdm",kplsList.get(0).getGsdm());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
