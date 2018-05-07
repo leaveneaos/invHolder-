@@ -380,8 +380,8 @@ public class CommonController extends BaseController {
             String price ="";
             if(kplsList.size()>1){
                 for (Kpls kpls : kplsList) {
-                    orderNo=kpls.getKplsh()+"";
-                    price +=kpls.getJshj()+",";
+                    orderNo +=kpls.getKplsh()+"";
+                    price  +=kpls.getJshj()+",";
                 }
                 result.put("price",price);
                 result.put("orderNo",orderNo);
