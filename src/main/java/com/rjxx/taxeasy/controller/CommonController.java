@@ -378,10 +378,12 @@ public class CommonController extends BaseController {
             Jyls jylsxx = jylsService.findOneByParams(jyls);
             String orderNo= "";
             String price ="";
+            String kplsh="";
             if(kplsList.size()>1){
                 for (Kpls kpls : kplsList) {
-                    orderNo +=kpls.getKplsh()+"";
+                    orderNo +=kpls.getKplsh()+",";
                     price  +=kpls.getJshj()+",";
+                    kplsh +=kpls.getKplsh()+",";
                 }
                 result.put("price",price);
                 result.put("orderNo",orderNo);
@@ -395,6 +397,7 @@ public class CommonController extends BaseController {
                     orderNo = jylsxx.getDdh();
                     result.put("orderNo",orderNo);
                 }
+                kplsh= kplsList.get(0).getKplsh().toString();
             }
             result.put("kplsList", kplsList);
             String tqm="";
@@ -405,7 +408,7 @@ public class CommonController extends BaseController {
             }
             //保存微信发票信息
             boolean b = wechatFpxxService.InFapxx(tqm, gsdm, orderNo, "", "2", (String) session.getAttribute("openid"),
-                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), kplsList.get(0).getKplsh().toString(), request);
+                    (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID),kplsh, request);
             if(!b){
                 result.put("msg","保存发票信息失败，请重试！");
                 return result;
