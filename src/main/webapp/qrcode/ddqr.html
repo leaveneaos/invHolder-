@@ -130,52 +130,52 @@
             $(".top").css('display', "");
         }
         $("body").css("display", "block");
-        // $.post(
-        //     "../kptService/scanConfirm",
-        //     {},
-        //     function (obj) {
-        //         if (obj.code == "1") {
-        //             var data = eval("(" + obj.data + ")");
-        //             //价格，多个则显示带逗号的多个，一个则显示一个
-        //             price = data.price;
-        //             //最后价格，如果是多个价格则算总和，如果只有一个只算一个
-        //             lastPrice = null;
-        //             lastSpsl = data.spsl;
-        //             lastSpmc = data.spmc;
-        //
-        //             if (price.indexOf(",") != -1 && lastSpsl.indexOf(",") != -1 && lastSpmc.indexOf(",") != -1) {
-        //                 var pricesize = price.length - (price.replace(/,/g, "").length);
-        //                 var spslsize = lastSpsl.length - (lastSpsl.replace(/,/g, "").length);
-        //                 var spmcsize = lastSpmc.length - (lastSpmc.replace(/,/g, "").length);
-        //                 //如果传过来的数据个数匹配
-        //                 if (pricesize == spslsize && pricesize == spmcsize) {
-        //                     for (var i = 0; i < pricesize + 1; i++) {
-        //                         lastPrice += parseFloat(price.split(",")[i]);
-        //                     }
-        //                 } else {
-        //                     redirect("传入数据有误,confirm.line[155]");
-        //                 }
-        //             } else {
-        //                 //如果传过来的数据，有的是多个有的是一个
-        //                 if (lastSpsl.indexOf(",") != -1 || lastSpmc.indexOf(",") != -1 || price.indexOf(",") != -1) {
-        //                     redirect("传入数据有误,confirm.line[160]");
-        //                 }
-        //                 lastPrice = price;
-        //             }
-        //
-        //             orderTime = data.orderTime;
-        //             storeNo = data.storeNo;
-        //             gsmc = data.gsmc;
-        //             orderNo = data.orderNo;
-        //             $('#orderNo').html(data.orderNo);
-        //             $('#orderTime').html(data.orderTime);
-        //             $('#storeNo').html(data.kpdmc);
-        //             $('#price').html(RetainedDecimalPlaces(lastPrice) + "元");
-        //         } else {
-        //             redirect(obj.msg)
-        //         }
-        //     }
-        // )
+        $.post(
+            "../kptService/scanConfirm",
+            {},
+            function (obj) {
+                if (obj.code == "1") {
+                    var data = eval("(" + obj.data + ")");
+                    //价格，多个则显示带逗号的多个，一个则显示一个
+                    price = data.price;
+                    //最后价格，如果是多个价格则算总和，如果只有一个只算一个
+                    lastPrice = null;
+                    lastSpsl = data.spsl;
+                    lastSpmc = data.spmc;
+
+                    if (price.indexOf(",") != -1 && lastSpsl.indexOf(",") != -1 && lastSpmc.indexOf(",") != -1) {
+                        var pricesize = price.length - (price.replace(/,/g, "").length);
+                        var spslsize = lastSpsl.length - (lastSpsl.replace(/,/g, "").length);
+                        var spmcsize = lastSpmc.length - (lastSpmc.replace(/,/g, "").length);
+                        //如果传过来的数据个数匹配
+                        if (pricesize == spslsize && pricesize == spmcsize) {
+                            for (var i = 0; i < pricesize + 1; i++) {
+                                lastPrice += parseFloat(price.split(",")[i]);
+                            }
+                        } else {
+                            redirect("传入数据有误,confirm.line[155]");
+                        }
+                    } else {
+                        //如果传过来的数据，有的是多个有的是一个
+                        if (lastSpsl.indexOf(",") != -1 || lastSpmc.indexOf(",") != -1 || price.indexOf(",") != -1) {
+                            redirect("传入数据有误,confirm.line[160]");
+                        }
+                        lastPrice = price;
+                    }
+
+                    orderTime = data.orderTime;
+                    storeNo = data.storeNo;
+                    gsmc = data.gsmc;
+                    orderNo = data.orderNo;
+                    $('#orderNo').html(data.orderNo);
+                    $('#orderTime').html(data.orderTime);
+                    $('#storeNo').html(data.kpdmc);
+                    $('#price').html(RetainedDecimalPlaces(lastPrice) + "元");
+                } else {
+                    redirect(obj.msg)
+                }
+            }
+        )
     })
 
     function RetainedDecimalPlaces(num) {
