@@ -183,6 +183,7 @@
                         var button = data.buttoncolor;
                         if (head != "no" && body!="no" &&button!="no") {
                             $("body").css("background-color", body+"");
+                            $("#you").css("background-color", head+"")
                         }
                     } else {
                         redirect(obj.msg)

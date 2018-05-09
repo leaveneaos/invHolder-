@@ -146,7 +146,7 @@
         var thisURL = document.URL;
         var myurl = decodeURI(thisURL);
         var getval = myurl.split('?')[1];
-        var ppdm = getval.split("=")[2];
+        ppdm = getval.split("=")[2];
         $.post(
             "../kptService/getShowMsg",
             {
@@ -404,8 +404,11 @@
                         "email": yx
                     }, function (obj) {
                         if (obj.msg == "成功") {
+                            alert(obj.data);
                             var data = eval("(" + obj.data + ")");
+                            alert(data);
                             if (data.returnCode == "0000" || data.returnCode == null) {
+                                alert("success");
                                 window.location.href = "../qrcode/witting.html?param=" + new Date() + "=" + ppdm;
                             } else {
                                 redirect(data.returnMsg);
