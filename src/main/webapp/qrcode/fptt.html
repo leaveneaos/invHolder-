@@ -9,8 +9,45 @@
     <link rel="stylesheet" type="text/css" href="css/fptt.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery.alerts.css">
     <style>
+        html,body{
+            background: white;
+            height: 100%;
+        }
         body{
             display: none;
+        }
+        header{
+            margin-bottom: 14px;
+            height: 68px;
+            line-height: 86px;
+        }
+        header img {
+            width: 234px;
+            height: 26px;
+            margin-left: 0 !important;
+        }
+        button{
+            border-radius: 0;
+        }
+        .content{
+            padding-bottom: 22px;
+        }
+        #sure{
+            border-radius: 0; margin-top: 64px;border-radius: 5px;
+            height: 44px;
+            line-height: 44px;
+        }
+        .bottom{
+            height: auto;
+        }
+        .content{
+            width: 90%;
+            overflow-x: hidden;
+            margin-left: 5%;border-radius: 5px;
+        }
+        footer{
+
+            font-size: 11px;
         }
     </style>
 </head>
@@ -18,11 +55,11 @@
 <header>
     <img id="logo" class="logo" src="logo/dicos.png"/>
 </header>
-<section class="main">
+<section class="main1">
     <div class="content">
-        <div class="advertimg">
-            <img src="logo/dicos_advert.png" id="advert" class="advertimg">
-        </div>
+        <!--<div class="advertimg">-->
+            <!--<img src="logo/dicos_advert.png" id="advert" class="advertimg">-->
+        <!--</div>-->
         <!--<div class="top">-->
             <!--<span>信息确认</span><span>&gt;</span>-->
             <!--<span class="three">发票抬头</span><span class="three">&gt;</span>-->
@@ -73,8 +110,8 @@
             <button id="sure" type="submit" onclick="sure()">确&nbsp;&nbsp;&nbsp;&nbsp;认</button>
         </div>
     </div>
-    <div class="shadow2"></div>
-    <div class="shadow1"></div>
+    <div class="shadow2 hide"></div>
+    <div class="shadow1 hide"></div>
 </section>
 <footer>
     <p class="company fl">泰易电子发票云服务平台</p>
@@ -147,11 +184,13 @@
         var arr = [$nsrsbh, $dz, $khh, $yhzh];
         $('#personal').on('click', function () {
             $('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
+            // $('#company').css('background','#ffffff')
             for (var i = 0; i < arr.length; i++) {
                 arr[i].parent().css('display', 'none');
             }
         })
         $('#company').on('click', function () {
+            // $('#personal').css('background','#ffffff')
             $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
             for (var i = 0; i < arr.length; i++) {
                 arr[i].parent().css('display', 'block');

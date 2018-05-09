@@ -7,7 +7,7 @@ header {
 	line-height: 116px;
 	text-align: center;
 	background-color: #01906d;
-	box-shadow: 0px 5px 17px 0px rgba(25, 101, 82, 0.49);
+	box-shadow: 0px 5px 17px 0px  #D3B176;
 }
 
 header img {
@@ -36,11 +36,11 @@ header img {
 	width: 60%;
 }
 .middle {
+
 	margin-top: 0px;
 }
 .type {
-    width: 90%;
-    margin: 10px auto;
+    /*margin: 10px auto;*/
 	font-size: 0;
 }
 .checkType {
@@ -49,21 +49,19 @@ header img {
     margin: 5px 0px;
 }
 #company,#personal {
-	width: 45%;
-	height: 30px;
-	line-height: 26px;
+	width: 50%;
+	height: 43px;
+	line-height: 36px;
 	box-sizing: border-box;
 	font-size: 14px;
-	border: 1px solid #ccc;
+	/*border: 1px solid #ccc;*/
 }
 #company {
-	margin-right: 5%;
 }
 #personal {
-	margin-left: 5%;
 }
 .checkStyle {
-	background-color: #fff;
+	background-color: #fff !important;
 	color: black;
 }
 /*选框位置控制*/

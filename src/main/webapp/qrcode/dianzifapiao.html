@@ -15,19 +15,50 @@
 
     </script>
     <style>
+        html,body{
+            background: white;
+        }
         body{
             height: 100%;
             display: none;
         }
-
+        header{
+            margin-bottom: 4px;
+            height: 68px;
+            line-height: 68px;
+        }
+        header img {
+            width: 234px;
+            height: 26px;
+            margin-left: 0 !important;
+        }
+        #advert{
+            width: 100%;
+            height: 3rem;display: block;
+        }
+        .money .btn{
+            border-radius: 5px !important;
+            margin-top: 20px;
+        }
+        .money{
+            padding-top: 20px;
+        }
+        #sure{
+            border-radius: 5px;
+            border-radius: 5px;
+            margin-top: 22px;
+            height: 44px;
+            line-height: 44px;
+        }
     </style>
 </head>
 <body>
     <header>
         <img id="logo" src="logo/fujifilm.png">
     </header>
+    <img id="advert" src="logo/fujifilm_advert.png">
+
     <div class="content">
-        <img id="advert" src="logo/fujifilm_advert.png">
         <ul id="tab">
             <li class="title" style=""><span>品名</span><span>税率</span><span>金额</span></li>
         </ul>
@@ -36,8 +67,8 @@
             <div id="sure" class="btn"  onclick="sure()">确认</div>
         </div>
     </div>
-    <div class="shadow2">&nbsp;</div>
-    <div class="shadow1">&nbsp;</div>
+    <div class="shadow2 hide">&nbsp;</div>
+    <div class="shadow1 hide">&nbsp;</div>
     <footer><span>泰易开票通云服务平台</span><span>遇到问题？</span></footer>
 
 
@@ -75,54 +106,54 @@
         $("#logo").attr("src", "logo/" + ppdm + ".png");
         $("#advert").attr("src", "logo/" + ppdm + "_advert.png");
         $("body").css("display", "block");
-        $.post(
-            "../kptService/scanConfirm",
-            {},
-            function (obj) {
-                if (obj.code == "1") {
-                    var data = eval("(" + obj.data + ")");
-                    //价格，多个则显示带逗号的多个，一个则显示一个
-                    price = data.price;
-                    //最后价格，如果是多个价格则算总和，如果只有一个只算一个
-                    lastPrice = null;
-                    lastSpsl = data.spsl;
-                    lastSpmc = data.spmc;
-                    orderTime = data.orderTime;
-                    storeNo = data.storeNo;
-                    gsmc = data.gsmc;
-                    orderNo = data.orderNo;
-
-                    var showMc = data.spmc;
-                    var showSl = data.spsl;
-                    var showJe = data.price;
-
-                    if (price.indexOf(",") != -1 && lastSpsl.indexOf(",") != -1 && lastSpmc.indexOf(",") != -1) {
-                        var pricesize = price.length - (price.replace(/,/g, "").length);
-                        var spslsize = lastSpsl.length - (lastSpsl.replace(/,/g, "").length);
-                        var spmcsize = lastSpmc.length - (lastSpmc.replace(/,/g, "").length);
-                        //如果传过来的数据个数匹配
-                        if (pricesize == spslsize && pricesize == spmcsize) {
-                            for (var i = 0; i < pricesize + 1; i++) {
-                                $("#tab").append("<li><span>" + showMc.split(",")[i] + "</span><span>" + showSl.split(",")[i] + "</span><span>" + showJe.split(",")[i] + "</span></li>");
-                                lastPrice += parseFloat(price.split(",")[i]);
-                            }
-                        } else {
-                            redirect("传入数据有误,confirm.line[155]");
-                        }
-                    } else {
-                        //如果传过来的数据，有的是多个有的是一个
-                        if (lastSpsl.indexOf(",") != -1 || lastSpmc.indexOf(",") != -1 || price.indexOf(",") != -1) {
-                            redirect("传入数据有误,confirm.line[160]");
-                        }
-                        $("#tab").append("<li><span>" + showMc + "</span><span>" + showSl + "</span><span>" + showJe + "</span></li>");
-                        lastPrice = price;
-                    }
-                    document.getElementById("hjje").innerText = lastPrice;
-                } else {
-                    redirect(obj.msg);
-                }
-            }
-        )
+        // $.post(
+        //     "../kptService/scanConfirm",
+        //     {},
+        //     function (obj) {
+        //         if (obj.code == "1") {
+        //             var data = eval("(" + obj.data + ")");
+        //             //价格，多个则显示带逗号的多个，一个则显示一个
+        //             price = data.price;
+        //             //最后价格，如果是多个价格则算总和，如果只有一个只算一个
+        //             lastPrice = null;
+        //             lastSpsl = data.spsl;
+        //             lastSpmc = data.spmc;
+        //             orderTime = data.orderTime;
+        //             storeNo = data.storeNo;
+        //             gsmc = data.gsmc;
+        //             orderNo = data.orderNo;
+        //
+        //             var showMc = data.spmc;
+        //             var showSl = data.spsl;
+        //             var showJe = data.price;
+        //
+        //             if (price.indexOf(",") != -1 && lastSpsl.indexOf(",") != -1 && lastSpmc.indexOf(",") != -1) {
+        //                 var pricesize = price.length - (price.replace(/,/g, "").length);
+        //                 var spslsize = lastSpsl.length - (lastSpsl.replace(/,/g, "").length);
+        //                 var spmcsize = lastSpmc.length - (lastSpmc.replace(/,/g, "").length);
+        //                 //如果传过来的数据个数匹配
+        //                 if (pricesize == spslsize && pricesize == spmcsize) {
+        //                     for (var i = 0; i < pricesize + 1; i++) {
+        //                         $("#tab").append("<li><span>" + showMc.split(",")[i] + "</span><span>" + showSl.split(",")[i] + "</span><span>" + showJe.split(",")[i] + "</span></li>");
+        //                         lastPrice += parseFloat(price.split(",")[i]);
+        //                     }
+        //                 } else {
+        //                     redirect("传入数据有误,confirm.line[155]");
+        //                 }
+        //             } else {
+        //                 //如果传过来的数据，有的是多个有的是一个
+        //                 if (lastSpsl.indexOf(",") != -1 || lastSpmc.indexOf(",") != -1 || price.indexOf(",") != -1) {
+        //                     redirect("传入数据有误,confirm.line[160]");
+        //                 }
+        //                 $("#tab").append("<li><span>" + showMc + "</span><span>" + showSl + "</span><span>" + showJe + "</span></li>");
+        //                 lastPrice = price;
+        //             }
+        //             document.getElementById("hjje").innerText = lastPrice;
+        //         } else {
+        //             redirect(obj.msg);
+        //         }
+        //     }
+        // )
     })
 
     function sure() {
