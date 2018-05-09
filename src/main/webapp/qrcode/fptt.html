@@ -404,11 +404,8 @@
                         "email": yx
                     }, function (obj) {
                         if (obj.msg == "成功") {
-                            alert(obj.data);
                             var data = eval("(" + obj.data + ")");
-                            alert(data);
                             if (data.returnCode == "0000" || data.returnCode == null) {
-                                alert("success");
                                 window.location.href = "../qrcode/witting.html?param=" + new Date() + "=" + ppdm;
                             } else {
                                 redirect(data.returnMsg);
