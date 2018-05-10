@@ -421,6 +421,12 @@ public class AdapterController extends BaseController {
         if (jsonData != null) {
             if ("1".equals(jsonData)) {
                 return ResultUtil.error("开票数据未上传，请稍后再试");
+            }else if("1001".equals(jsonData)){
+                return ResultUtil.error("该订单号已查询到多笔数据，请重新输入！");
+            }else if("1002".equals(jsonData)){
+                return ResultUtil.error("该订单号已被处理，请重新输入！");
+            }else if("1003".equals(jsonData)){
+                return ResultUtil.error("该笔订单已开具过");
             }
             JSONObject jsonObject = JSON.parseObject(jsonData);
             String orderTime = jsonObject.getString("orderTime");
@@ -472,7 +478,13 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("所需信息为空");
         } else if ("-2".equals(status)) {
             return ResultUtil.error("开票数据未上传，请稍后再试");
-        } else {
+        } else if ("1001".equals(status)) {
+            return ResultUtil.error("该订单号已查询到多笔数据，请重新输入！");
+        }else if ("1002".equals(status)) {
+            return ResultUtil.error("该订单号已被处理，请重新输入！");
+        }else if ("1003".equals(status)) {
+            return ResultUtil.error("该笔订单已开具过");
+        }else {
             JSONObject jsonObject = JSON.parseObject(status);
             session.setAttribute("serialorder", jsonObject.getString("serialorder"));
             return ResultUtil.success(status);
