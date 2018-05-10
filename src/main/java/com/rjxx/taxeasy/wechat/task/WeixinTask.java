@@ -261,6 +261,14 @@ public class WeixinTask implements Runnable{
                         weixinUtils.jujuekp(SuccOrderId, re, access_token);
                         return;
                     }else{
+                        JSONObject jsonObject;
+                        try {
+                            jsonObject = JSON.parseObject(status);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            re = status;
+                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                        }
                         //成功
                         return;
                     }
