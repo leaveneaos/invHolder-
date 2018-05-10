@@ -201,6 +201,7 @@ public class WeixinTask implements Runnable{
                         status=adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, openid, "4", access_token, SuccOrderId);
                         //抽数据开票
                     }else if("3".equals(apiTpye)){
+                        logger.info("apiType="+apiTpye);
                         Map map = RJCheckUtil.decodeForAll(q);
                         String data = (String) map.get("A0");
                         JSONObject jsonData = JSON.parseObject(data);
@@ -236,6 +237,7 @@ public class WeixinTask implements Runnable{
                                 return;
                             }
                         }
+                        logger.info("makeInvoiceForApiType=3");
                         status = adapterService.makeInvoice(gsdm, orderNo, storeNo, extractCode, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, openid, "4", access_token, SuccOrderId);
                     }else if("4".equals(apiTpye)){
                         String yx;
