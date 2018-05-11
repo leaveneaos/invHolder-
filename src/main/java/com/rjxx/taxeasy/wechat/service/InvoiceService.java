@@ -49,8 +49,7 @@ public class InvoiceService {
         if (StringUtils.isNotBlank(purchaserName) &&
                 StringUtils.isNotBlank(email) &&
                 amount != null &&
-                StringUtils.isNotBlank(username) &&
-                StringUtils.isNotBlank(openid)) {
+                StringUtils.isNotBlank(username)) {
             try {
                 logger.info("service中的openid="+openid);
                 //调接口

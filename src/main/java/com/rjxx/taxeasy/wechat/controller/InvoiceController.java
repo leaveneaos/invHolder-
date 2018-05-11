@@ -36,28 +36,12 @@ public class InvoiceController extends BaseController {
     @ApiOperation(value = "接收抬头")
     public Result send(@RequestParam String purchaserName,
                        @RequestParam String email,
-                       @RequestParam Double amount,
-                       @RequestParam String user,
-                       @RequestParam String id) {
-        String username = "";
-        String openid = "";
-        //如果前台传值
-        if (StringUtils.isNotBlank(user) && StringUtils.isNotBlank(id)
-                && !"no".equals(user) && !"no".equals(id)) {
-            username = user;
-            openid = id;
-            //如果不传值
-        } else {
-            //如果session中没有
-            if (session.getAttribute("username") == null || session.getAttribute("openid") == null) {
-                return ResultUtil.error("redirect");
-            } else {
-                username = (String) session.getAttribute("username");
-                openid =
-                        (String) session.getAttribute("openid");
-//                        "openid";
-            }
+                       @RequestParam Double amount) {
+        if (session.getAttribute("username") == null) {
+                    return ResultUtil.error("redirect");
         }
+        String  username = (String) session.getAttribute("username");
+        String  openid = (String) session.getAttribute("openid");
         String purchaserTaxNo=request.getParameter("purchaserTaxNo");
         String status = invoiceService.send(purchaserName, purchaserTaxNo, email, amount, username, openid);
         if ("-1".equals(status)) {
@@ -100,8 +84,8 @@ public class InvoiceController extends BaseController {
         //判断是否是微信浏览器
         if (ua.indexOf("micromessenger") > 0) {
             String url = HtmlUtils.getBasePath(request);
-            String openid = String.valueOf(session.getAttribute("openid"));
-            if (openid == null || "null".equals(openid)) {
+            String openid = (String) session.getAttribute("openid");
+            if (StringUtils.isBlank(openid)) {
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "wechat/getOpenid&" + "response_type=code&scope=snsapi_base&state=" + "yjkp"
                         + "#wechat_redirect";
@@ -135,9 +119,7 @@ public class InvoiceController extends BaseController {
                 + WeiXinConstants.APP_SECRET + "&code=" + code + "&grant_type=authorization_code";
         String resultJson = HttpClientUtil.doGet(turl);
         JSONObject resultObject = JSONObject.parseObject(resultJson);
-        logger.error("result="+resultObject.toJSONString());
         String openid = resultObject.getString("openid");
-        logger.error("openid="+openid);
         if (openid != null) {
             session.setAttribute("openid", openid);
         }

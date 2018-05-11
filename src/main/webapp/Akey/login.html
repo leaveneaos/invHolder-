@@ -99,8 +99,9 @@
                 },
                 function(data) {
                     if(data.code=="1"){
-                        window.location.href = "../Akey/fptt.html?time=" + new Date()+"=no=no";
-					}else{
+                        // window.location.href = "../Akey/fptt.html?time=" + new Date()+"=no=no";
+                        window.location.href = "../Akey/fptt.html?time=" + new Date();
+                    }else{
                         alert(data.msg);
                     }
                 }

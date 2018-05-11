@@ -307,19 +307,20 @@
             }
         }
         showMask();
-        var thisURL = document.URL;
-        var  getval =thisURL.split('?')[1];
-        urlId= getval.split("=")[2];
-        urlUsers= getval.split("=")[3];
+        // var thisURL = document.URL;
+        // var  getval =thisURL.split('?')[1];
+        // urlId= getval.split("=")[2];
+        // urlUsers= getval.split("=")[3];
         $.post(
             "../wechat/invoice",
             {
                 "purchaserName": gfmc,
                 "purchaserTaxNo": gfsh,
                 "email": yxdz,
-                "amount": jshj,
-                "user":urlUsers+"",
-                "id":urlId+""
+                "amount": jshj
+                // "amount": jshj,
+                // "user":urlUsers+"",
+                // "id":urlId+""
             },
             function (obj) {
                 if (obj.msg == "redirect") {
@@ -338,7 +339,8 @@
                             localStorage.gfsh = gfsh;
                             localStorage.yxdz = yxdz;
                             localStorage.jshj = jshj;
-                            window.location.href = "../Akey/fpbc.html?time=" + new Date()+"="+id+"="+users;
+                            // window.location.href = "../Akey/fpbc.html?time=" + new Date()+"="+id+"="+users;
+                            window.location.href = "../Akey/fpbc.html?time=" + new Date();
                         } else if (data.returnCode == null) {
                             var fphm = data.fphm;
                             var fpdm = data.fpdm;
@@ -352,7 +354,8 @@
                             localStorage.purchaserName = purchaserName;
                             localStorage.amount = amount;
                             localStorage.kprq = kprq;
-                            window.location.href = "../Akey/fpxq.html?time=" + new Date()+"="+id+"="+users;
+                            // window.location.href = "../Akey/fpxq.html?time=" + new Date()+"="+id+"="+users;
+                            window.location.href = "../Akey/fpxq.html?time=" + new Date();
                         } else {
                             alert(data.returnMsg)
                         }
