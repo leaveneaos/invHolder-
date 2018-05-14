@@ -284,6 +284,10 @@ public class CommonController extends BaseController {
                         request.getSession().setAttribute("msg", "该订单已开具纸质发票，不能重复开具");
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return null;
+                    }else if(status.contains("红冲")){
+                        request.getSession().setAttribute("msg", "该订单已红冲");
+                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        return null;
                     }else {
                         request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
