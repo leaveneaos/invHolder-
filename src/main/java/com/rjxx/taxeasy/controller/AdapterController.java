@@ -638,7 +638,7 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                         return;
                     } else if (status.contains("红冲")) {
-                        errorRedirect("该订单已红冲");
+                        errorRedirect("ORDER_CANCELLED");
                         return;
                     }else if (status.contains("纸票")) {
                         errorRedirect("该订单已开具纸质发票，不能重复开具");
