@@ -49,10 +49,10 @@ footer{
     font-weight: normal;
     font-stretch: normal;
     line-height: 0.67rem;
-    height:0.67rem;
+    /*height:0.67rem;*/
     letter-spacing: 0px;
     color: #999999;
-    border-top:0.01rem dashed #cccccc ;
+    border-bottom:0.01rem dashed #cccccc ;
 }
 .content ul li span{
     flex: 1;
