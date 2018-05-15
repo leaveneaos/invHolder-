@@ -74,11 +74,16 @@ public class AdapterController extends BaseController {
         Pp pp;
         try {
             pp = ppJpaDao.findOneByPpdm(ppdm);
+            if(pp==null){
+                errorRedirect2("获取品牌失败");
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             errorRedirect("GET_GRAND_ERROR");
             return;
         }
+
         String gsdm = pp.getGsdm();
         String buttoncolor = "no";
         String bodycolor = "no";
@@ -609,6 +614,16 @@ public class AdapterController extends BaseController {
         }
     }
 
+
+    @RequestMapping(value = "/getErrorMsg",method = RequestMethod.POST)
+    public Result getErrorMsg(){
+        if(session.getAttribute("errorMsg")==null){
+            return ResultUtil.error("会话超时,请重新扫码");
+        }
+        String errorMsg = (String) session.getAttribute("errorMsg");
+        return ResultUtil.error(errorMsg);
+    }
+
     private void deal(Map result, String gsdm) {
         try {
             if (result != null) {
@@ -679,9 +694,18 @@ public class AdapterController extends BaseController {
         }
     }
 
-    private void errorRedirect(String errorName) {
+    public void errorRedirect(String errorName) {
         try {
             response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void errorRedirect2(String errorName) {
+        request.getSession().setAttribute("errorMsg", errorName);
+        try {
+            response.sendRedirect(request.getContextPath() + "/qrcode/error.html?t=" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
