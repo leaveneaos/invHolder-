@@ -171,12 +171,18 @@
                         lastPrice = price;
                     }
 
-                    orderTime = data.orderTime;
+                    var year = data.orderTime.substring(0, 4);
+                    var month = data.orderTime.substring(4, 6);
+                    var day = data.orderTime.substring(6, 8);
+                    var hour = data.orderTime.substring(8, 10);
+                    var minute = data.orderTime.substring(10, 12);
+                    var seconds = data.orderTime.substring(12, 14);
+                    orderTime = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + seconds;
                     storeNo = data.storeNo;
                     gsmc = data.gsmc;
                     orderNo = data.orderNo;
                     $('#orderNo').html(data.orderNo);
-                    $('#orderTime').html(data.orderTime);
+                    $('#orderTime').html(orderTime);
                     $('#storeNo').html(data.kpdmc);
                     $('#price').html(RetainedDecimalPlaces(lastPrice) + "元");
                 } else {
