@@ -103,9 +103,12 @@ public class AdapterController extends BaseController {
         }
         session.setAttribute("gsdm", gsdm);
         try {
+//            response.sendRedirect(
+//                    request.getContextPath() + "/qrcode/luru.html?t="
+//                            + System.currentTimeMillis() +"="+ppdm+ "=" + headcolor + "=" + bodycolor + "=" + buttoncolor);
             response.sendRedirect(
                     request.getContextPath() + "/qrcode/luru.html?t="
-                            + System.currentTimeMillis() +"="+ppdm+ "=" + headcolor + "=" + bodycolor + "=" + buttoncolor);
+                            + System.currentTimeMillis() +"="+ppdm);
             return;
         } catch (IOException e) {
             e.printStackTrace();
