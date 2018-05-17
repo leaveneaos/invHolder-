@@ -77,7 +77,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.rjxx.taxeasy.controller.adapter"))
                 .paths(PathSelectors.any())//过滤的接口
                 .build()
-                .apiInfo(dwzInfo());
+                .apiInfo(adapterInfo());
     }
 
     private ApiInfo adapterInfo() {
