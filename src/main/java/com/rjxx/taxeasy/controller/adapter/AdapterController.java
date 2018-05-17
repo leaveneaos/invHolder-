@@ -24,6 +24,7 @@ import com.rjxx.utils.StringUtil;
 import com.rjxx.utils.weixin.HttpClientUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,7 @@ public class AdapterController extends BaseController {
     private static final String TYPE_THREE_CALLBACKURL = "kptService/getOpenid";
     private static final String TYPE_FOUR_CALLBACKURL = "kptService/getOpenidForFour";
 
+    @ApiOperation(value = "手输提取码入口")
     @RequestMapping(value="/{ppdm}",method = RequestMethod.GET)
     public void extract(@PathVariable String ppdm) {
         Pp pp;
@@ -110,6 +112,8 @@ public class AdapterController extends BaseController {
             return;
         }
     }
+
+    @ApiOperation(value = "手输提取码界面提交接口")
     @RequestMapping(value = "/lrqr",method = RequestMethod.POST)
     public Result lrqr(@RequestParam String tq,@RequestParam String code){
         String sessionCode = (String) session.getAttribute("rand");
@@ -156,6 +160,7 @@ public class AdapterController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "通用提取接口总入口")
     @RequestMapping(value = "/{gsdm}/{q}", method = RequestMethod.GET)
     public void get(@PathVariable String gsdm, @PathVariable String q) {
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
@@ -323,6 +328,7 @@ public class AdapterController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "type1获取openid")
     @RequestMapping("/getOpenidForOne")
     public void getOpenidForOne(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
@@ -353,6 +359,7 @@ public class AdapterController extends BaseController {
         commonController.isWeiXin(null, on, ot, pr, gsdm);
     }
 
+    @ApiOperation(value = "type1抬头页面提交接口")
     @RequestMapping(value = "/input", method = RequestMethod.GET)
     public Result submitForOne(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
                                String gfdz, String gfdh, String gfyhzh, String gfyh) {
@@ -377,6 +384,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success();
     }
 
+    @ApiOperation(value = "type2和3获取openid")
     @RequestMapping("/getOpenid")
     public void getOpenidForTwoAndThree(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
@@ -404,6 +412,7 @@ public class AdapterController extends BaseController {
         deal(result, gsdm);
     }
 
+    @ApiOperation(value = "type2和3获取确认页面参数接口")
     @RequestMapping("/scanConfirm")
     public Result getConfirmMsgForTwoAndThree() {
         String q = (String) session.getAttribute("q");
@@ -462,6 +471,7 @@ public class AdapterController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "type2和3抬头页面提交接口")
     @RequestMapping("/submit")
     public Result submitForTwoAndThree(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
                                        String gfdz, String gfdh, String gfyhzh, String gfyh, String tqm) {
@@ -500,6 +510,7 @@ public class AdapterController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "type4获取确认页面信息接口")
     @RequestMapping(value = "/getConfirmMsg")
     public Result getConfirmMsgForFour() {
         String q = (String) session.getAttribute("q");
@@ -510,6 +521,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(adapterService.getConfirmMsg(gsdm, q));
     }
 
+    @ApiOperation(value = "type4获取订单列表接口")
     @RequestMapping(value = "/getInvoiceList")
     public Result getInvoiceList(String gsdm, String khh) {
         session.setAttribute("khh",khh);
@@ -520,6 +532,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(invoiceList);
     }
 
+    @ApiOperation(value = "已开票跳转查看发票接口")
     @RequestMapping(value = "/getPDFList")
     public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
@@ -528,6 +541,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(JSON.toJSONString(map));
     }
 
+    @ApiOperation(value = "type4抬头页面提交接口")
     @RequestMapping(value = "/submitForFour")
     public Result submitForFour(String gfmc, String gfsh, String gfdz,
                                 String gfdh, String gfyhzh, String gfyh,
@@ -559,7 +573,7 @@ public class AdapterController extends BaseController {
         }
     }
 
-
+    @ApiOperation(value = "type4获取openid")
     @RequestMapping("/getOpenidForFour")
     public void getOpenidForFour(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
@@ -604,7 +618,7 @@ public class AdapterController extends BaseController {
         commonController.isWeiXin(kpddm, ddh, ddrq, je, gsdm, wechatAuthType);
     }
 
-
+    @ApiOperation(value = "所有页面根据ppdm获取定制化信息接口（headcolor、bodycolor、buttoncolor等）")
     @RequestMapping(value = "/getShowMsg",method = RequestMethod.POST)
     public Result getShowMsg(@RequestParam String ppdm){
         String showMsg = adapterService.getShowMsg(ppdm);
