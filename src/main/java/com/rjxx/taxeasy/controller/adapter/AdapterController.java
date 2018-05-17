@@ -1,8 +1,9 @@
-package com.rjxx.taxeasy.controller;
+package com.rjxx.taxeasy.controller.adapter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.controller.CommonController;
 import com.rjxx.taxeasy.dao.GsxxJpaDao;
 import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.SkpJpaDao;

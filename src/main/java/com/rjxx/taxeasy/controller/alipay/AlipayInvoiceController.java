@@ -1,87 +1,85 @@
-//package com.rjxx.taxeasy.controller.alipay;
-//
-//import com.rjxx.taxeasy.comm.BaseController;
-//import com.rjxx.taxeasy.controller.AdapterController;
-//import com.rjxx.taxeasy.domains.Kpls;
-//import com.rjxx.taxeasy.domains.Kpspmx;
-//import com.rjxx.taxeasy.domains.Pp;
-//import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
-//import com.rjxx.utils.StringUtils;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.io.IOException;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
-///**
-// * @author wangyahui
-// * @email wangyahui@datarj.com
-// * @company 上海容津信息技术有限公司
-// * @date 2018/5/15
-// */
-//@CrossOrigin
-//@RestController
-//@RequestMapping("/alipayInvoice")
-//public class AlipayInvoiceController extends BaseController{
-//
-//    /**
-//     * 将发票信息同步到支付宝
-//     *
-//     * @return
-//     */
-//    @RequestMapping(value = "/sync")
-//    @ResponseBody
-//    public String syncAlipay(@RequestParam(required = false) String serialorder) throws Exception {
-//        if (serialorder == null) {
-//            Object serialorderObject = session.getAttribute("serialorder");
-//            if (serialorderObject == null) {
-//                request.getSession().setAttribute("msg", "会话超时，请重新开始操作!");
-//                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                return null;
-//            }
-//            serialorder = serialorderObject.toString();
-//        }
-//        //判断是否是支付宝内
-//        if (!AlipayUtils.isAlipayBrowser(request)) {
-//            request.getSession().setAttribute("msg", "请使用支付宝进行该操作");
-//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//            return null;
-//        }
-//        if (!AlipayUtils.isAlipayAuthorized(session)) {
-//            AlipayUtils.initAlipayAuthorization(request, response, "/syncAlipay");
-//            return null;
-//        }
-//        Map params = new HashMap();
-//        params.put("serialorder", serialorder);
-//        List<Kpls> kplsList = kplsService.findAll(params);
-//        String redirectUrl = null;
-//        for (Kpls kpls : kplsList) {
-//            int kplsh = kpls.getKplsh();
-//            Map params2 = new HashMap();
-//            params2.put("kplsh", kplsh);
-//            List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
-//            Pp pp = ppService.findOnePpByGsdmSkpid(kpls.getSkpid(), kpls.getGsdm());
-//            if (pp == null || StringUtils.isBlank(pp.getAliMShortName()) || StringUtils.isBlank(pp.getAliSubMShortName())) {
-//                request.getSession().setAttribute("msg", "该商户没有注册到支付宝发票管家");
-//                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                return null;
-//            }
-//            redirectUrl = AlipayUtils.syncInvoice2Alipay(session, kpls, kpspmxList, pp.getAliMShortName(), pp.getAliSubMShortName());
-//            if (redirectUrl == null) {
-//                request.getSession().setAttribute("msg", "将发票归集到支付宝发票管家出现异常");
-//                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                return null;
-//            }
-//        }
-//        if (redirectUrl == null) {
-//            request.getSession().setAttribute("msg", "将发票归集到支付宝发票管家出现异常");
-//            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//            return null;
-//        } else {
-//            response.sendRedirect(redirectUrl);
-//            return null;
-//        }
-//    }
-//}
+package com.rjxx.taxeasy.controller.alipay;
+
+import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dto.alipay.AlipayReceiveApplyDto;
+import com.rjxx.taxeasy.dto.alipay.AlipayResult;
+import com.rjxx.utils.alipay.AlipayRSAUtil;
+import com.rjxx.utils.alipay.AlipayResultUtil;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author wangyahui
+ * @email wangyahui@datarj.com
+ * @company 上海容津信息技术有限公司
+ * @date 2018/5/15
+ */
+@CrossOrigin
+@RestController
+@RequestMapping("/alipayInvoice")
+public class AlipayInvoiceController extends BaseController{
+
+    private static final String ALIPAY_PUBLIC_KEY = "";
+    private static final String ALIPAY_PRIVATE_KEY = "";
+    private static final int MESSAGE_CACHE_SIZE = 1000;
+    private static List<String> cacheList = new ArrayList<>(MESSAGE_CACHE_SIZE);
+
+
+    @RequestMapping(value = "receiveApply",method = RequestMethod.POST)
+    public AlipayResult receiveApply(@RequestBody AlipayReceiveApplyDto data){
+        String applyId = data.getApplyId();
+        String userId = data.getUserId();
+        String subShortName = data.getSubShortName();
+        String mShortName = data.getmShortName();
+        String orderNo = data.getOrderNo();
+        String payerName = data.getPayerName();
+        String payerRegisterNo = data.getPayerRegisterNo();
+        String invoiceAmount = data.getInvoiceAmount();
+        String payerAddressPhone = data.getPayerAddressPhone();
+        String payerBankNameAccount = data.getPayerBankNameAccount();
+        String sign = data.getSign();
+        boolean distinct = distinct(applyId, orderNo, userId);
+        if(!distinct){
+            return null;
+        }
+        Map<String, String> params = new HashMap<>();
+        params.put("applyId", applyId);
+        params.put("userId", userId);
+        params.put("subShortName", subShortName);
+        params.put("mShortName", mShortName);
+        params.put("orderNo", orderNo);
+        params.put("payerName", payerName);
+        params.put("payerRegisterNo", payerRegisterNo);
+        params.put("invoiceAmount", invoiceAmount);
+        params.put("payerAddressPhone", payerAddressPhone);
+        params.put("payerBankNameAccount", payerBankNameAccount);
+        String signature = AlipayRSAUtil.toSign(params, ALIPAY_PRIVATE_KEY);
+        try {
+            boolean b = AlipayRSAUtil.toVerify(signature, ALIPAY_PUBLIC_KEY, sign);
+            if(!b){
+                return AlipayResultUtil.result(AlipayResultUtil.INVOICE_PARAM_ILLEGAL,"开票参数非法");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AlipayResultUtil.result(AlipayResultUtil.SYSTEM_ERROR,"系统错误");
+        }
+        return null;
+    }
+
+    private synchronized boolean distinct(String applyId,String orderNo,String userId){
+        String flag = applyId + orderNo + userId;
+        if (cacheList.contains(flag)) {
+            logger.info("cacheList里已存在"+flag);
+            return false;
+        }
+        if(cacheList.size()>=MESSAGE_CACHE_SIZE){
+            cacheList.remove(0);
+        }
+        cacheList.add(flag);
+        return true;
+    }
+}
