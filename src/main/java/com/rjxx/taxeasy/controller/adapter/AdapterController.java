@@ -29,6 +29,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -327,8 +328,7 @@ public class AdapterController extends BaseController {
                 return;
         }
     }
-
-    @ApiOperation(value = "type1获取openid")
+    @ApiIgnore
     @RequestMapping("/getOpenidForOne")
     public void getOpenidForOne(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
@@ -384,7 +384,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success();
     }
 
-    @ApiOperation(value = "type2和3获取openid")
+    @ApiIgnore
     @RequestMapping("/getOpenid")
     public void getOpenidForTwoAndThree(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
@@ -413,7 +413,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type2和3获取确认页面参数接口")
-    @RequestMapping("/scanConfirm")
+    @RequestMapping(value = "/scanConfirm",method = RequestMethod.POST)
     public Result getConfirmMsgForTwoAndThree() {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
@@ -472,7 +472,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type2和3抬头页面提交接口")
-    @RequestMapping("/submit")
+    @RequestMapping(value = "/submit",method = RequestMethod.POST)
     public Result submitForTwoAndThree(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
                                        String gfdz, String gfdh, String gfyhzh, String gfyh, String tqm) {
         String gsdm = (String) session.getAttribute("gsdm");
@@ -511,7 +511,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type4获取确认页面信息接口")
-    @RequestMapping(value = "/getConfirmMsg")
+    @RequestMapping(value = "/getConfirmMsg",method = RequestMethod.POST)
     public Result getConfirmMsgForFour() {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
@@ -522,7 +522,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type4获取订单列表接口")
-    @RequestMapping(value = "/getInvoiceList")
+    @RequestMapping(value = "/getInvoiceList",method = RequestMethod.POST)
     public Result getInvoiceList(String gsdm, String khh) {
         session.setAttribute("khh",khh);
         String invoiceList = adapterService.getInvoiceList(gsdm, khh);
@@ -533,7 +533,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "已开票跳转查看发票接口")
-    @RequestMapping(value = "/getPDFList")
+    @RequestMapping(value = "/getPDFList",method = RequestMethod.POST)
     public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
         Map map = new HashMap();
@@ -542,7 +542,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type4抬头页面提交接口")
-    @RequestMapping(value = "/submitForFour")
+    @RequestMapping(value = "/submitForFour",method = RequestMethod.POST)
     public Result submitForFour(String gfmc, String gfsh, String gfdz,
                                 String gfdh, String gfyhzh, String gfyh,
                                 String gsdm, String email, String jylsh,
@@ -572,8 +572,7 @@ public class AdapterController extends BaseController {
             }
         }
     }
-
-    @ApiOperation(value = "type4获取openid")
+    @ApiIgnore
     @RequestMapping("/getOpenidForFour")
     public void getOpenidForFour(String state, String code) {
         String turl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + WeiXinConstants.APP_ID + "&secret="
