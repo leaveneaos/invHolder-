@@ -8,17 +8,18 @@ import com.rjxx.web.JsonStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017-07-05.
  */
 @Controller
+@CrossOrigin
 public class InvoiceTitleController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
