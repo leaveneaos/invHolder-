@@ -89,23 +89,8 @@ public class AdapterController extends BaseController {
         }
 
         String gsdm = pp.getGsdm();
-        String buttoncolor = "no";
-        String bodycolor = "no";
-        String headcolor = "no";
-        if(pp.getPpbuttoncolor()!=null){
-            buttoncolor = pp.getPpbuttoncolor();
-        }
-        if(pp.getPpbodycolor()!=null){
-            bodycolor = pp.getPpbodycolor();
-        }
-        if(pp.getPpheadcolor()!=null){
-            headcolor = pp.getPpheadcolor();
-        }
         session.setAttribute("gsdm", gsdm);
         try {
-//            response.sendRedirect(
-//                    request.getContextPath() + "/qrcode/luru.html?t="
-//                            + System.currentTimeMillis() +"="+ppdm+ "=" + headcolor + "=" + bodycolor + "=" + buttoncolor);
             response.sendRedirect(
                     request.getContextPath() + "/qrcode/luru.html?t="
                             + System.currentTimeMillis() +"="+ppdm);
