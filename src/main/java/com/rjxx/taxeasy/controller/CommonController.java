@@ -13,6 +13,7 @@ import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -65,6 +66,21 @@ public class CommonController extends BaseController {
     @Autowired
     private AdapterService adapterService;
 
+    @Value("${web.url.error}")
+    private String errorUrl;
+
+    @Value("${web.url.success}")
+    private String succesUrl;
+
+    @Value("${web.url.ticketing}")
+    private String ticketingUrl;
+
+    @Value("${web.url.luru}")
+    private String luruUrl;
+
+    @Value("${web.url.maked}")
+    private String makedUrl;
+
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
     public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price,String gsdm){
@@ -74,36 +90,42 @@ public class CommonController extends BaseController {
             try {
                 logger.info("------orderNo---------"+orderNo);
                 if(null==orderNo || "".equals(orderNo)){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("订单号为空,获取微信授权失败!请重试!");
                     return null;
                 }
                 if(null == orderTime || "".equals(orderTime)){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("订单时间为空,获取微信授权失败!请重试!");
                     return null;
                 }
                 if(null == price || "".equals(price)){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("金额为空,获取微信授权失败!请重试!");
                     return null;
                 }
                 if("0.0".equals(price)){
-                    request.getSession().setAttribute("msg", "该订单可开票金额为0");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "该订单可开票金额为0");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("该订单可开票金额为0");
                     return null;
                 }
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
                 if(null==wxFpxx){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("根据微信回传订单号未找到该笔订单");
                     return null;
                 }
                 List<String> status = barcodeService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
                 if(status!=null){
                     if(status.contains("开具中")){
                         //开具中对应的url
-                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+//                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+                        response.sendRedirect(ticketingUrl);
                         return null;
                     }else if(status.contains("可开具")){
                         String access_token ="";
@@ -118,15 +140,17 @@ public class CommonController extends BaseController {
                         }
                         if(ticket==null){
                             //获取授权失败
-                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            errorRedirect("获取ticket失败!请重试");
                             return null;
                         }
                         String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
                         if(null==spappid ||"".equals(spappid)){
                             //获取授权失败
-                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            errorRedirect("获取spappid失败!请重试");
                             return null;
                         }
                         String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
@@ -136,8 +160,9 @@ public class CommonController extends BaseController {
                         redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){
                             //获取授权失败
-                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            errorRedirect("获取微信授权页失败!请重试");
                             return null;
                         }else {
                             //成功跳转
@@ -145,52 +170,12 @@ public class CommonController extends BaseController {
                             return null;
                         }
                     }else {
-                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        errorRedirect("获取微信授权失败!请重试!");
                         return null;
                     }
                 }
-//                if(status!=null&& status.equals("开具中")){
-//                    //开具中对应的url
-//                    response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
-//                    return null;
-//                }else if(status!=null && status.equals("可开具")){
-//                    String access_token ="";
-//                    String ticket = "";
-//                    WxToken wxToken = wxTokenJpaDao.findByFlag("01");
-//                    if(wxToken==null){
-//                        access_token= (String) weixinUtils.hqtk().get("access_token");
-//                        ticket = weixinUtils.getTicket(access_token);
-//                    }else {
-//                        access_token = wxToken.getAccessToken();
-//                        ticket= wxToken.getTicket();
-//                    }
-//                    String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
-//                    logger.info("----获取的spappid"+spappid);
-//                    if(null==spappid ||"".equals(spappid)){
-//                        //获取授权失败
-//                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                        return null;
-//                    }
-//                    //可开具 跳转微信授权链接
-//                    redirectUrl = weixinUtils.getTiaoURL(orderNo,price,orderTime, storeNo,"1",access_token,ticket,spappid);
-//                    if(null==redirectUrl||redirectUrl.equals("")){
-//                        //获取授权失败
-//                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                        return null;
-//                    }else {
-//                        //成功跳转
-//                        response.sendRedirect(redirectUrl);
-//                        return null;
-//                    }
-//                }else {
-//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-//                    return null;
-//                }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -208,36 +193,42 @@ public class CommonController extends BaseController {
             try {
                 logger.info("------orderNo---------"+orderNo);
                 if(null==orderNo || "".equals(orderNo)){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("订单号为空,获取微信授权失败!请重试!");
                     return null;
                 }
                 if(null == orderTime || "".equals(orderTime)){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("订单时间为空,获取微信授权失败!请重试!");
                     return null;
                 }
                 if(null == price || "".equals(price)){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("金额为空,获取微信授权失败!请重试!");
                     return null;
                 }
                 if("0.0".equals(price)){
-                    request.getSession().setAttribute("msg", "该订单可开票金额为0");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "该订单可开票金额为0");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("该订单可开票金额为0");
                     return null;
                 }
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
                 if(null==wxFpxx){
-                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                    request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("根据微信回传订单号未找到该笔订单");
                     return null;
                 }
                 List<String> status = adapterService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
                 if(status!=null){
                     if(status.contains("开具中")){
                         //开具中对应的url
-                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+//                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+                        response.sendRedirect(ticketingUrl);
                         return null;
                     }else if(status.contains("可开具")){
                         String access_token ="";
@@ -252,15 +243,17 @@ public class CommonController extends BaseController {
                         }
                         if(ticket==null){
                             //获取授权失败
-                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            errorRedirect("获取ticket失败!请重试");
                             return null;
                         }
                         String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
                         if(null==spappid ||"".equals(spappid)){
                             //获取授权失败
-                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            errorRedirect("获取spappid失败!请重试");
                             return null;
                         }
                         String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
@@ -270,8 +263,9 @@ public class CommonController extends BaseController {
                         redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, storeNo,type,access_token,ticket,spappid);
                         if(null==redirectUrl||redirectUrl.equals("")){
                             //获取授权失败
-                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                            request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            errorRedirect("获取微信授权页失败!请重试");
                             return null;
                         }else {
                             //成功跳转
@@ -279,16 +273,19 @@ public class CommonController extends BaseController {
                             return null;
                         }
                     }else if(status.contains("纸票")){
-                        request.getSession().setAttribute("msg", "该订单已开具纸质发票，不能重复开具");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                        request.getSession().setAttribute("msg", "该订单已开具纸质发票，不能重复开具");
+//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        errorRedirect("该订单已开具纸质发票，不能重复开具");
                         return null;
                     }else if(status.contains("红冲")){
-                        request.getSession().setAttribute("msg", "该订单已红冲");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                        request.getSession().setAttribute("msg", "该订单已红冲");
+//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        errorRedirect("该订单已红冲");
                         return null;
                     }else {
-                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                        request.getSession().setAttribute("msg", "获取微信授权失败!请重试!");
+//                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        errorRedirect("获取微信授权失败!请重试!");
                         return null;
                     }
                 }
@@ -587,5 +584,14 @@ public class CommonController extends BaseController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void errorRedirect(String errorName) {
+        try {
+//            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
+            response.sendRedirect(errorUrl + "/" + errorName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
