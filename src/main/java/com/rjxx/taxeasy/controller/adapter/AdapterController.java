@@ -17,10 +17,7 @@ import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
-import com.rjxx.utils.Base64Util;
-import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.RJCheckUtil;
-import com.rjxx.utils.StringUtil;
+import com.rjxx.utils.*;
 import com.rjxx.utils.weixin.HttpClientUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
@@ -28,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -67,18 +65,33 @@ public class AdapterController extends BaseController {
     @Autowired
     private PpJpaDao ppJpaDao;
 
+    @Value("${web.url.error}")
+    private String errorUrl;
+
+    @Value("${web.url.success}")
+    private String succesUrl;
+
+    @Value("${web.url.ticketing}")
+    private String ticketingUrl;
+
+    @Value("${web.url.luru}")
+    private String luruUrl;
+
+    @Value("${web.url.maked}")
+    private String makedUrl;
+
     private static final String TYPE_ONE_CALLBACKURL = "kptService/getOpenidForOne";
     private static final String TYPE_TWO_CALLBACKURL = "kptService/getOpenid";
     private static final String TYPE_THREE_CALLBACKURL = "kptService/getOpenid";
     private static final String TYPE_FOUR_CALLBACKURL = "kptService/getOpenidForFour";
 
     @ApiOperation(value = "手输提取码入口")
-    @RequestMapping(value="/{ppdm}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{ppdm}", method = RequestMethod.GET)
     public void extract(@PathVariable String ppdm) {
         Pp pp;
         try {
             pp = ppJpaDao.findOneByPpdm(ppdm);
-            if(pp==null){
+            if (pp == null) {
                 errorRedirect("GET_GRAND_ERROR");
                 return;
             }
@@ -91,9 +104,13 @@ public class AdapterController extends BaseController {
         String gsdm = pp.getGsdm();
         session.setAttribute("gsdm", gsdm);
         try {
-            response.sendRedirect(
-                    request.getContextPath() + "/qrcode/luru.html?t="
-                            + System.currentTimeMillis() +"="+ppdm);
+            String url;
+            if (pp.getPpurl().contains("http")) {
+                url = luruUrl + "/?t=" + System.currentTimeMillis() + "=" + ppdm;
+            } else {
+                url = request.getContextPath() + "/qrcode/luru.html?t=" + System.currentTimeMillis() + "=" + ppdm;
+            }
+            response.sendRedirect(url);
             return;
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,29 +120,34 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "手输提取码界面提交接口")
-    @RequestMapping(value = "/lrqr",method = RequestMethod.POST)
-    public Result lrqr(@RequestParam String tq,@RequestParam String code){
-        String sessionCode = (String) session.getAttribute("rand");
+    @RequestMapping(value = "/lrqr", method = RequestMethod.POST)
+    public Result lrqr(@RequestParam String tq, @RequestParam String code) {
+        String sessionCode = "";
+        if (session.getAttribute("rand") != null) {
+            sessionCode = (String) session.getAttribute("rand");
+        } else {
+            sessionCode = (String) session.getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
+        }
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            if(session.getAttribute("gsdm")==null){
+            if (session.getAttribute("gsdm") == null) {
                 return ResultUtil.error("会话超时");
             }
-            String gsdm=(String) session.getAttribute("gsdm");
+            String gsdm = (String) session.getAttribute("gsdm");
             Map apiMsg = adapterService.getApiMsg(gsdm, tq);
-            if(apiMsg==null){
+            if (apiMsg == null) {
                 return ResultUtil.error("开票数据未上传，请稍后再试");
             }
-            if(apiMsg.get("msg")!=null){
+            if (apiMsg.get("msg") != null) {
                 return ResultUtil.error((String) apiMsg.get("msg"));
             }
             AdapterGet adapterGet = new AdapterGet();
             adapterGet.setType("3");
-            if(apiMsg.get("jyxxsq")!=null){
-                Jyxxsq jyxxsq = (Jyxxsq)apiMsg.get("jyxxsq");
+            if (apiMsg.get("jyxxsq") != null) {
+                Jyxxsq jyxxsq = (Jyxxsq) apiMsg.get("jyxxsq");
                 adapterGet.setOn(jyxxsq.getDdh());
                 adapterGet.setSn(jyxxsq.getKpddm());
-            }else{
-                AdapterPost post = (AdapterPost)apiMsg.get("post");
+            } else {
+                AdapterPost post = (AdapterPost) apiMsg.get("post");
                 adapterGet.setOn(post.getData().getOrder().getOrderNo());
                 adapterGet.setSn(post.getClientNo());
             }
@@ -144,7 +166,7 @@ public class AdapterController extends BaseController {
             Map map = new HashMap();
             map.put("url", HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
             return ResultUtil.success(map);
-        }else{
+        } else {
             return ResultUtil.error("验证码输入错误");
         }
     }
@@ -316,6 +338,7 @@ public class AdapterController extends BaseController {
                 return;
         }
     }
+
     @ApiIgnore
     @RequestMapping("/getOpenidForOne")
     public void getOpenidForOne(String state, String code) {
@@ -401,7 +424,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type2和3获取确认页面参数接口")
-    @RequestMapping(value = "/scanConfirm",method = RequestMethod.POST)
+    @RequestMapping(value = "/scanConfirm", method = RequestMethod.POST)
     public Result getConfirmMsgForTwoAndThree() {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
@@ -431,7 +454,7 @@ public class AdapterController extends BaseController {
             JSONObject jsonObject;
             try {
                 jsonObject = JSON.parseObject(jsonData);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return ResultUtil.error(jsonData);
             }
@@ -460,8 +483,8 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type2和3抬头页面提交接口")
-    @RequestMapping(value = "/submit",method = RequestMethod.POST)
-    public Result submitForTwoAndThree(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
+    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    public Result submitForTwoAndThree(@RequestParam String gfmc, @RequestParam(required = false) String gfsh, @RequestParam String email,
                                        String gfdz, String gfdh, String gfyhzh, String gfyh, String tqm) {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
@@ -470,7 +493,7 @@ public class AdapterController extends BaseController {
         String tq = (String) session.getAttribute("tq");
         String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
         if (gsdm == null) {
-            return ResultUtil.error("redirect");
+            return ResultUtil.error("session过期,请重新扫码");
         }
         String status;
         if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
@@ -489,7 +512,7 @@ public class AdapterController extends BaseController {
             JSONObject jsonObject;
             try {
                 jsonObject = JSON.parseObject(status);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return ResultUtil.error(status);
             }
@@ -499,7 +522,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type4获取确认页面信息接口")
-    @RequestMapping(value = "/getConfirmMsg",method = RequestMethod.POST)
+    @RequestMapping(value = "/getConfirmMsg", method = RequestMethod.POST)
     public Result getConfirmMsgForFour() {
         String q = (String) session.getAttribute("q");
         String gsdm = (String) session.getAttribute("gsdm");
@@ -510,9 +533,9 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type4获取订单列表接口")
-    @RequestMapping(value = "/getInvoiceList",method = RequestMethod.POST)
+    @RequestMapping(value = "/getInvoiceList", method = RequestMethod.POST)
     public Result getInvoiceList(String gsdm, String khh) {
-        session.setAttribute("khh",khh);
+        session.setAttribute("khh", khh);
         String invoiceList = adapterService.getInvoiceList(gsdm, khh);
         if (invoiceList == null) {
             return ResultUtil.error("开票数据未上传，请稍后再试");
@@ -521,16 +544,18 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "已开票跳转查看发票接口")
-    @RequestMapping(value = "/getPDFList",method = RequestMethod.POST)
+    @RequestMapping(value = "/getPDFList", method = RequestMethod.POST)
     public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
         Map map = new HashMap();
-        map.put("url", request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+//        map.put("url", request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+        map.put("url", makedUrl + "?serialorder=" + serialorder + "&t=" + System.currentTimeMillis());
+
         return ResultUtil.success(JSON.toJSONString(map));
     }
 
     @ApiOperation(value = "type4抬头页面提交接口")
-    @RequestMapping(value = "/submitForFour",method = RequestMethod.POST)
+    @RequestMapping(value = "/submitForFour", method = RequestMethod.POST)
     public Result submitForFour(String gfmc, String gfsh, String gfdz,
                                 String gfdh, String gfyhzh, String gfyh,
                                 String gsdm, String email, String jylsh,
@@ -560,6 +585,7 @@ public class AdapterController extends BaseController {
             }
         }
     }
+
     @ApiIgnore
     @RequestMapping("/getOpenidForFour")
     public void getOpenidForFour(String state, String code) {
@@ -594,11 +620,11 @@ public class AdapterController extends BaseController {
         Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "sfsycdtt");//是否使用C端抬头
         String isC = cszb.getCsz();
         String wechatAuthType;
-        if("是".equals(isC)){
+        if ("是".equals(isC)) {
             wechatAuthType = "1";
-        }else if("否".equals(isC)){
+        } else if ("否".equals(isC)) {
             wechatAuthType = "0";
-        }else{
+        } else {
             errorRedirect("UNKNOW_2C_TYPE");
             return;
         }
@@ -606,12 +632,12 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "所有页面根据ppdm获取定制化信息接口（headcolor、bodycolor、buttoncolor等）")
-    @RequestMapping(value = "/getShowMsg",method = RequestMethod.POST)
-    public Result getShowMsg(@RequestParam String ppdm){
+    @RequestMapping(value = "/getShowMsg", method = RequestMethod.POST)
+    public Result getShowMsg(@RequestParam String ppdm) {
         String showMsg = adapterService.getShowMsg(ppdm);
-        if(showMsg!=null){
+        if (showMsg != null) {
             return ResultUtil.success(showMsg);
-        }else{
+        } else {
             return ResultUtil.error("获取品牌信息失败");
         }
     }
@@ -621,9 +647,6 @@ public class AdapterController extends BaseController {
             if (result != null) {
                 String ppdm = result.get("ppdm").toString();
                 String ppurl = result.get("ppurl").toString();
-//                String headcolor = (String)result.get("headcolor");
-//                String bodycolor = (String)result.get("bodycolor");
-//                String buttoncolor = (String)result.get("buttoncolor");
                 String orderNo = result.get("orderNo").toString();
                 String tqm = ppdm + orderNo;
                 session.setAttribute("tqm", tqm);
@@ -633,7 +656,13 @@ public class AdapterController extends BaseController {
                     if (status.contains("可开具")) {
                         if (StringUtils.isNotBlank(ppdm)) {
                             //有品牌代码对应的url
-                            response.sendRedirect(request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm);
+                            String sendUrl;
+                            if (ppurl.contains("http")) {
+                                sendUrl = ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm;
+                            } else {
+                                sendUrl = request.getContextPath() + ppurl + "?t=" + System.currentTimeMillis() + "=" + ppdm;
+                            }
+                            response.sendRedirect(sendUrl);
                             return;
                         } else {
                             //无品牌
@@ -642,18 +671,20 @@ public class AdapterController extends BaseController {
                         }
                     } else if (status.contains("开具中")) {
                         //开具中对应的url
-                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+//                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
+                        response.sendRedirect(ticketingUrl);
                         return;
                     } else if (status.contains("红冲")) {
                         errorRedirect("ORDER_CANCELLED");
                         return;
-                    }else if (status.contains("纸票")) {
+                    } else if (status.contains("纸票")) {
                         errorRedirect("该订单已开具纸质发票，不能重复开具");
                         return;
                     } else {
                         String serialOrder = status.get(0).split("[+]")[4];
                         session.setAttribute("serialorder", serialOrder);
-                        response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+//                        response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
+                        response.sendRedirect(makedUrl + "?serialorder=" + serialOrder + "&t=" + System.currentTimeMillis());
                         return;
                     }
                 } else {
@@ -688,7 +719,8 @@ public class AdapterController extends BaseController {
 
     public void errorRedirect(String errorName) {
         try {
-            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
+//            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
+            response.sendRedirect(errorUrl + "/" + errorName);
         } catch (IOException e) {
             e.printStackTrace();
         }

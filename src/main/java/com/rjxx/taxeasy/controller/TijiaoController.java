@@ -19,7 +19,9 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/tijiao")
+@CrossOrigin
 public class TijiaoController extends BaseController {
     @Autowired
     private JyspmxService jyspmxService;
@@ -160,7 +163,7 @@ public class TijiaoController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/xyxfs")
+    @RequestMapping(value = "/xyxfs",method = RequestMethod.POST)
     @ResponseBody
     public Map xyxfs(String yx, String serialorder) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();

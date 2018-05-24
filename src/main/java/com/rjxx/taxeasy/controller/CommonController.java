@@ -13,10 +13,7 @@ import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -26,9 +23,9 @@ import java.util.*;
 /**
  * Created by Administrator on 2017-08-16.
  */
-@Controller
-@RequestMapping("/common")
 @CrossOrigin
+@RestController
+@RequestMapping("/common")
 public class CommonController extends BaseController {
 
     @Autowired
@@ -70,7 +67,6 @@ public class CommonController extends BaseController {
 
     //判断是否微信浏览器
     @RequestMapping(value = "/isBrowser")
-    @ResponseBody
     public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price,String gsdm){
         String redirectUrl ="";
         Map resultMap = new HashMap();
@@ -307,7 +303,6 @@ public class CommonController extends BaseController {
     }
 
     @RequestMapping(value = "/fpInfo")
-    @ResponseBody
     public void fpInfoPageUrl(String encrypt_code ,String card_id) throws IOException {
         if(null == encrypt_code || null == card_id ){
             request.getSession().setAttribute("msg", "发票跳转失败了，请重试!");
@@ -354,21 +349,20 @@ public class CommonController extends BaseController {
         }
 
     }
-    @RequestMapping(value = "/smfpxq")
-    @ResponseBody
-    public Map smfpxq(String serialOrder ) throws IOException {
+    @RequestMapping(value = "/smfpxq",method = RequestMethod.POST)
+    public Map smfpxq(@RequestParam String serialOrder ) throws IOException {
         Map<String, Object> result = new HashMap<String, Object>();
         try {
-            if(null == serialOrder ){
-                request.getSession().setAttribute("msg", "出现未知错误，请重试!");
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-                return null;
-            }
+//            if(null == serialOrder ){
+//                request.getSession().setAttribute("msg", "出现未知错误，请重试!");
+//                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+//                return null;
+//            }
             Map map2 = new HashMap();
             map2.put("serialorder",serialOrder);
             List<Kpls> kplsList = kplsService.findAll(map2);
             if(kplsList.size()==0){
-                request.getSession().setAttribute("msg", "出现未知错误，请重试!");
+//                request.getSession().setAttribute("msg", "出现未知错误，请重试!");
                 result.put("msg","未查询到发票详情，请重试！");
                 return result;
             }
@@ -422,14 +416,13 @@ public class CommonController extends BaseController {
             request.getSession().setAttribute("gsdm",kplsList.get(0).getGsdm());
             result.put("gsdm",kplsList.get(0).getGsdm());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return  result;
     }
 
     @RequestMapping(value = "/syncWeiXin")
-    @ResponseBody
     private String syncWeiXin(String orderNo, String price, String orderTime,String gsdm){
         String redirectUrl="";
         try {
@@ -558,7 +551,6 @@ public class CommonController extends BaseController {
         return redirectUrl;
     }
     @RequestMapping(value = "/getGsxx")
-    @ResponseBody
     private String getGsxx(String gsdm){
         String gsInfo="";
         if(gsdm==null){
@@ -579,7 +571,6 @@ public class CommonController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/smInOut")
-    @ResponseBody
     private String smInOut(String serialOrder){
         try {
             if(serialOrder==null){

@@ -89,4 +89,28 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
+
+    @Bean
+    public Docket randomCodeAPI() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("randomCode")
+                .genericModelSubstitutes(DeferredResult.class)
+                .useDefaultResponseMessages(false)
+                .forCodeGeneration(false)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.rjxx.taxeasy.controller.randomCode"))
+                .paths(PathSelectors.any())//过滤的接口
+                .build()
+                .apiInfo(randomCodeInfo());
+    }
+
+    private ApiInfo randomCodeInfo() {
+        return new ApiInfoBuilder()
+                .title("开票通验证码接口")
+                .description("生成验证码")
+                .termsOfServiceUrl("https://gitee.com/wyhtoString/projects")
+                .contact("wangyahui")
+                .version("1.0")
+                .build();
+    }
 }
