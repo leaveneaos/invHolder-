@@ -140,6 +140,7 @@ public class AdapterController extends BaseController {
             }
             if (apiMsg.get("msg") != null) {
                 if(!"该订单已接收过开票申请".equals(apiMsg.get("msg"))){
+                    logger.info("不等于");
                     return ResultUtil.error((String) apiMsg.get("msg"));
                 }
             }
