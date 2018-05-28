@@ -66,7 +66,7 @@ public class AlipayInvoiceController extends BaseController {
     public static final String APPLY_SUCCESS = "APPLY_SUCCESS";
     public static final String INVOICE_IS_APPLIED = "INVOICE_IS_APPLIED";
     public static final String INVOICE_PARAM_ILLEGAL = "INVOICE_PARAM_ILLEGAL";
-    public static final String SYSTEM_ERROR = "SYSTEM_ERROR";
+    public static final String UNKNOW_ORDER = "UNKNOW_ORDER";
 
     private static final int MESSAGE_CACHE_SIZE = 1000;
     private static List<String> cacheList = new ArrayList<>(MESSAGE_CACHE_SIZE);
@@ -122,7 +122,7 @@ public class AlipayInvoiceController extends BaseController {
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByWeiXinOrderNo(orderNo);
         if (null == wxFpxx) {
             logger.info("根据支付宝回传订单号未找到wxfpxx");
-            return AlipayResultUtil.result(SYSTEM_ERROR, "未知的订单");
+            return AlipayResultUtil.result(UNKNOW_ORDER, "未知的订单");
         }
         AlipayTask alipayTask = new AlipayTask();
         alipayTask.setAdapterService(adapterService);
