@@ -1,5 +1,11 @@
 package com.rjxx.taxeasy.controller.alipay;
 
+import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayEbppInvoiceApplyResultSyncRequest;
+import com.alipay.api.response.AlipayEbppInvoiceApplyResultSyncResponse;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.SkpJpaDao;
@@ -14,15 +20,15 @@ import com.rjxx.taxeasy.service.SkpService;
 import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.task.AlipayTask;
 import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.alipay.AlipayRSAUtil;
-import com.rjxx.utils.alipay.AlipayResultUtil;
-import com.rjxx.utils.alipay.AlipayUtils;
+import com.rjxx.utils.alipay.*;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,15 +59,14 @@ public class AlipayInvoiceController extends BaseController {
     @Autowired
     private PpJpaDao ppJpaDao;
 
+    @Value("${web.url.error}")
+    private String errorUrl;
+
     public static final String APPLY_SUCCESS = "APPLY_SUCCESS";
-    public static final String INVOICE_SUCCESS = "INVOICE_SUCCESS";
-    public static final String INVOICE_ERROR = "INVOICE_ERROR";
     public static final String INVOICE_IS_APPLIED = "INVOICE_IS_APPLIED";
     public static final String INVOICE_PARAM_ILLEGAL = "INVOICE_PARAM_ILLEGAL";
     public static final String SYSTEM_ERROR = "SYSTEM_ERROR";
 
-    private static final String ALIPAY_PUBLIC_KEY = "";
-    private static final String ALIPAY_PRIVATE_KEY = "";
     private static final int MESSAGE_CACHE_SIZE = 1000;
     private static List<String> cacheList = new ArrayList<>(MESSAGE_CACHE_SIZE);
 
@@ -83,7 +88,7 @@ public class AlipayInvoiceController extends BaseController {
         String sign = data.getSign();
         boolean distinct = distinct(applyId, orderNo, userId);
         if (!distinct) {
-            return null;
+            return AlipayResultUtil.result(APPLY_SUCCESS, "开票申请的信息校验无误，已提交开票");
         }
         Map<String, String> alipayResultMap = new HashMap<>();
         alipayResultMap.put("applyId", applyId);
@@ -98,21 +103,25 @@ public class AlipayInvoiceController extends BaseController {
         alipayResultMap.put("payerTelphone", payerTelphone);
         alipayResultMap.put("payerBankName", payerBankName);
         alipayResultMap.put("payerBankAccount", payerBankAccount);
-        String signature = AlipayRSAUtil.toSign(alipayResultMap, ALIPAY_PRIVATE_KEY);
+        alipayResultMap.put("sign", sign);
+
         try {
-            boolean b = AlipayRSAUtil.toVerify(signature, ALIPAY_PUBLIC_KEY, sign);
-            if (!b) {
+            String signatureContent = AlipaySignUtil.getSignatureContent(alipayResultMap);
+            boolean verify = AlipaySignUtil.verify(signatureContent, AlipayRSAUtil.getPublickey(AlipayRSAUtil.PUBKEY));
+            if(!verify){
                 return AlipayResultUtil.result(INVOICE_PARAM_ILLEGAL, "开票参数非法");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return AlipayResultUtil.result(SYSTEM_ERROR, "系统错误");
+            logger.info("发生未知错误");
+            return null;
         }
 
         logger.info("拿到支付宝回传的订单编号为" + orderNo);
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByWeiXinOrderNo(orderNo);
         if (null == wxFpxx) {
-            return AlipayResultUtil.result(SYSTEM_ERROR, "根据订单号未查到该笔订单");
+            logger.info("根据支付宝回传订单号未找到wxfpxx");
+            return null;
         }
         AlipayTask alipayTask = new AlipayTask();
         alipayTask.setAdapterService(adapterService);
@@ -122,7 +131,7 @@ public class AlipayInvoiceController extends BaseController {
         alipayTask.setXfJpaDao(xfJpaDao);
         Thread t = new Thread(alipayTask);
         t.start();
-        return null;
+        return AlipayResultUtil.result(APPLY_SUCCESS, "开票申请的信息校验无误，已提交开票");
     }
 
     /**
@@ -156,29 +165,24 @@ public class AlipayInvoiceController extends BaseController {
     @RequestMapping(value = "/isAlipay", method = RequestMethod.POST)
     public void isAlipay(String storeNo, String orderNo, String price, String gsdm, String type) {
         String redirectUrl = "";
-        Map resultMap = new HashMap();
         if (AlipayUtils.isAlipayBrowser(request)) {
             try {
                 logger.info("------orderNo---------" + orderNo);
                 if (null == orderNo || "".equals(orderNo)) {
-                    request.getSession().setAttribute("msg", "订单号为空,拉取支付宝授权页失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("订单号为空,拉取支付宝授权页失败!请重试!");
                     return;
                 }
                 if (null == price || "".equals(price)) {
-                    request.getSession().setAttribute("msg", "金额为空,拉取支付宝授权页失败!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("金额为空,拉取支付宝授权页失败!请重试!");
                     return;
                 }
                 if ("0.0".equals(price)) {
-                    request.getSession().setAttribute("msg", "该订单可开票金额为0");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("该订单可开票金额为0");
                     return;
                 }
                 WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo, gsdm);
                 if (null == wxFpxx) {
-                    request.getSession().setAttribute("msg", "根据支付宝回传订单号未找到该订单!请重试!");
-                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    errorRedirect("根据该订单号未找到该订单!请重试!");
                     return;
                 }
                 List<String> status = adapterService.checkStatus(wxFpxx.getTqm(), wxFpxx.getGsdm());
@@ -194,8 +198,7 @@ public class AlipayInvoiceController extends BaseController {
                         redirectUrl = redirectAlipay(gsdm, weixinOrderNo, price, storeNo, type);
                         if (null == redirectUrl || redirectUrl.equals("")) {
                             //获取授权失败
-                            request.getSession().setAttribute("msg", "获取支付宝授权页URL失败!请重试!");
-                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            errorRedirect("获取支付宝授权页URL失败!请重试!");
                             return;
                         } else {
                             //成功跳转
@@ -203,29 +206,23 @@ public class AlipayInvoiceController extends BaseController {
                             return;
                         }
                     } else if (status.contains("纸票")) {
-                        request.getSession().setAttribute("msg", "该订单已开具纸质发票，不能重复开具");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        errorRedirect("该订单已开具纸质发票，不能重复开具");
                         return;
                     } else if (status.contains("红冲")) {
-                        request.getSession().setAttribute("msg", "该订单已红冲");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        errorRedirect("该订单已红冲");
                         return;
                     } else {
-                        request.getSession().setAttribute("msg", "获取授权失败!请重试!");
-                        response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                        errorRedirect("获取授权失败!请重试!");
                         return;
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                errorRedirect("发生未知错误！获取授权失败!请重试!");
+                return;
             }
         } else {
-            request.getSession().setAttribute("msg", "不是支付宝浏览器!请重试!");
-            try {
-                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            errorRedirect("不是支付宝浏览器!请重试!");
             return;
         }
         return;
@@ -277,15 +274,23 @@ public class AlipayInvoiceController extends BaseController {
             logger.info("发生未知错误，跳转授权页失败!");
             return null;
         }
-        String sign = "";
         Map sendParam = new HashMap();
         sendParam.put("invoiceAmount", doumoney);
         sendParam.put("orderNo", orderNo);
         sendParam.put("mShortName", mShortName);
         sendParam.put("subShortName", subShortName);
-        sendParam.put("resultUrl", redirect_url);
-        sendParam.put("sign", sign);
-        return null;
+        sendParam.put("resultUrl", URLEncoder.encode(redirect_url));
+        String params = null;
+        try {
+            params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams="+URLEncoder.encode(params));
+        String redirectUrl = "alipays://platformapi/startapp?" +
+                "appId=20000920&startMultApp=YES&appClearTop=false&url="+url;
+        System.out.println(redirectUrl);
+        return url;
     }
 
     /**
@@ -293,7 +298,71 @@ public class AlipayInvoiceController extends BaseController {
      * @param applyId
      * @param reason
      */
-    public void refuse(String applyId, String reason) {
-        //FIXME
+    public void refuse(String orderNo,String applyId, String reason) {
+        String serverUrl = AlipayConstant.GATEWAY_URL;
+        String appId = AlipayConstant.APP_ID;
+        String privateKey = AlipayConstant.PRIVATE_KEY;
+        String format = AlipayConstant.FORMAT;
+        String charset = AlipayConstant.CHARSET;
+        String alipayPulicKey = AlipayConstant.ALIPAY_PUBLIC_KEY;
+        String signType=AlipayConstant.SIGN_TYPE;
+
+        AlipayClient alipayClient = new DefaultAlipayClient(serverUrl, appId, privateKey,
+                format, charset, alipayPulicKey, signType);
+        AlipayEbppInvoiceApplyResultSyncRequest request = new AlipayEbppInvoiceApplyResultSyncRequest();
+
+        Map param = new HashMap();
+        param.put("apply_id", applyId);
+        param.put("result", "失败");
+        param.put("result_code", "fail");
+        param.put("result_msg", reason);
+
+        String bizContent = JSON.toJSONString(param);
+        request.setBizContent(bizContent);
+        AlipayEbppInvoiceApplyResultSyncResponse response = null;
+        try {
+            response = alipayClient.execute(request);
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        }
+        if (response.isSuccess()) {
+            logger.info("------支付宝拒绝开票成功------");
+            WxFpxx wxFpxx = wxfpxxJpaDao.selectByWeiXinOrderNo(orderNo);
+            int coun = wxFpxx.getCount()+ 1;
+            wxFpxx.setCount(coun);
+            wxfpxxJpaDao.save(wxFpxx);
+            logger.info("拒绝开票----更新计数"+coun);
+        }else{
+            logger.info("------支付宝拒绝开票失败-------");
+            logger.info(response.getCode()+"--------"+response.getMsg());
+            logger.info(response.getSubCode()+"--------"+response.getSubMsg());
+        }
+    }
+
+    public void errorRedirect(String errorName) {
+        try {
+            response.sendRedirect(errorUrl + "/" + errorName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        Map sendParam = new HashMap();
+        sendParam.put("invoiceAmount", "10");
+        sendParam.put("orderNo", "test1");
+        sendParam.put("mShortName", "STANDARD_INVOICE");
+        sendParam.put("subShortName", "STANDARD_INVOICE");
+        sendParam.put("resultUrl", URLEncoder.encode("http://fpjtest.datarj.com/web/template/#/succes/?t=+"+System.currentTimeMillis()+"&ppdm=rjxx"));
+        String params = null;
+        try {
+            params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams="+URLEncoder.encode(params));
+        String redirectUrl = "alipays://platformapi/startapp?" +
+                "appId=20000920&startMultApp=YES&appClearTop=false&url="+url;
+        System.out.println(redirectUrl);
     }
 }
