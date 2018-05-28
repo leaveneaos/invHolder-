@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -114,14 +115,14 @@ public class AlipayInvoiceController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("发生未知错误");
-            return null;
+            return AlipayResultUtil.result(INVOICE_PARAM_ILLEGAL, "发生未知错误,验签不通过");
         }
 
         logger.info("拿到支付宝回传的订单编号为" + orderNo);
         WxFpxx wxFpxx = wxfpxxJpaDao.selectByWeiXinOrderNo(orderNo);
         if (null == wxFpxx) {
             logger.info("根据支付宝回传订单号未找到wxfpxx");
-            return null;
+            return AlipayResultUtil.result(SYSTEM_ERROR, "未知的订单");
         }
         AlipayTask alipayTask = new AlipayTask();
         alipayTask.setAdapterService(adapterService);
@@ -347,20 +348,20 @@ public class AlipayInvoiceController extends BaseController {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
         Map sendParam = new HashMap();
         sendParam.put("invoiceAmount", "10");
         sendParam.put("orderNo", "test1");
         sendParam.put("mShortName", "STANDARD_INVOICE");
         sendParam.put("subShortName", "STANDARD_INVOICE");
-        sendParam.put("resultUrl", URLEncoder.encode("http://fpjtest.datarj.com/web/template/#/succes/?t=+"+System.currentTimeMillis()+"&ppdm=rjxx"));
+        sendParam.put("resultUrl", URLEncoder.encode("http://fpjtest.datarj.com/web/template/#/succes/?t=+"+System.currentTimeMillis()+"&ppdm=rjxx","utf-8"));
         String params = null;
         try {
             params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams="+URLEncoder.encode(params));
+        String url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams="+URLEncoder.encode(params,"utf-8"),"utf-8");
         String redirectUrl = "alipays://platformapi/startapp?" +
                 "appId=20000920&startMultApp=YES&appClearTop=false&url="+url;
         System.out.println(redirectUrl);
