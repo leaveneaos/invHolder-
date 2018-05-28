@@ -138,9 +138,9 @@ public class AdapterController extends BaseController {
             if (apiMsg == null) {
                 return ResultUtil.error("开票数据未上传，请稍后再试");
             }
-            if (apiMsg.get("msg") != null) {
-                return ResultUtil.error((String) apiMsg.get("msg"));
-            }
+//            if (apiMsg.get("msg") != null) {
+//                return ResultUtil.error((String) apiMsg.get("msg"));
+//            }
             AdapterGet adapterGet = new AdapterGet();
             adapterGet.setType("3");
             if (apiMsg.get("jyxxsq") != null) {
