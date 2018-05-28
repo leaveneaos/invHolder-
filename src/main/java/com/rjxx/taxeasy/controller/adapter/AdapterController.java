@@ -15,6 +15,7 @@ import com.rjxx.taxeasy.dto.AdapterPost;
 import com.rjxx.taxeasy.service.CszbService;
 import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.*;
@@ -496,10 +497,16 @@ public class AdapterController extends BaseController {
             return ResultUtil.error("session过期,请重新扫码");
         }
         String status;
+        String sjly;
+        if(AlipayUtils.isAlipayBrowser(request)){
+            sjly = "5";//支付宝
+        }else{
+            sjly = "1";//接口录入
+        }
         if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
-            status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
+            status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, sjly, "", "");
         } else {
-            status = adapterService.makeInvoice(gsdm, on, sn, tq, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, "5", "", "");
+            status = adapterService.makeInvoice(gsdm, on, sn, tq, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, sjly, "", "");
         }
         //开票
         if ("-1".equals(status)) {
@@ -554,7 +561,7 @@ public class AdapterController extends BaseController {
         return ResultUtil.success(JSON.toJSONString(map));
     }
 
-    @ApiOperation(value = "type4抬头页面提交接口")
+    @ApiOperation(value = "type4抬头页面提交接口（含微信授权页）")
     @RequestMapping(value = "/submitForFour", method = RequestMethod.POST)
     public Result submitForFour(String gfmc, String gfsh, String gfdz,
                                 String gfdh, String gfyhzh, String gfyh,
@@ -572,9 +579,15 @@ public class AdapterController extends BaseController {
             map.put("url", wechat);
             return ResultUtil.success(JSON.toJSONString(map));
         } else {
+            String sjly;
+            if(AlipayUtils.isAlipayBrowser(request)){
+                sjly = "5";//支付宝
+            }else{
+                sjly = "1";//接口录入
+            }
             String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
             String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
-                    gfdh, gfyhzh, gfyh, email, userId, "5", "", "");
+                    gfdh, gfyhzh, gfyh, email, userId, sjly, "", "");
             //开票
             if ("-1".equals(status)) {
                 return ResultUtil.error("开具失败");
@@ -584,6 +597,31 @@ public class AdapterController extends BaseController {
                 return ResultUtil.success(status);
             }
         }
+    }
+
+    @ApiOperation(value = "type4抬头页面直接提交接口)")
+    @RequestMapping(value = "/submitFour", method = RequestMethod.POST)
+    public Result submitFour(String gfmc, String gfsh, String gfdz,
+                                String gfdh, String gfyhzh, String gfyh,
+                                String gsdm, String email, String jylsh,
+                                String ddh, String ddrq, String je, String kpddm) {
+            String sjly;
+            if(AlipayUtils.isAlipayBrowser(request)){
+                sjly = "5";//支付宝
+            }else{
+                sjly = "1";//接口录入
+            }
+            String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
+            String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
+                    gfdh, gfyhzh, gfyh, email, userId, sjly, "", "");
+            //开票
+            if ("-1".equals(status)) {
+                return ResultUtil.error("开具失败");
+            } else {
+                JSONObject jsonObject = JSON.parseObject(status);
+                session.setAttribute("serialorder", jsonObject.getString("serialorder"));
+                return ResultUtil.success(status);
+            }
     }
 
     @ApiIgnore
