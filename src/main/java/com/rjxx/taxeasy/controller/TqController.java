@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.service.KplsService;
 import com.rjxx.taxeasy.vo.Fpcxvo;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +37,8 @@ public class TqController extends BaseController{
     private wechatFpxxServiceImpl wechatFpxxService;
     @Autowired
     private GsxxService gsxxService;
-
+    @Value("${web.url.maked}")
+    private String makedUrl;
     @RequestMapping
     @ResponseBody
     public void index() throws Exception{
@@ -48,7 +50,8 @@ public class TqController extends BaseController{
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
             return;
         }else {
-            response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+//            response.sendRedirect(request.getContextPath() + "/CO/smfpxq.html?serialOrder="+serialOrder+"&&_t=" + System.currentTimeMillis());
+            response.sendRedirect(makedUrl + "?serialorder=" + serialOrder + "&t=" + System.currentTimeMillis());
             return;
         }
     }
