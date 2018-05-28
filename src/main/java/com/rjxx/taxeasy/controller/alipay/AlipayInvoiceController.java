@@ -72,6 +72,12 @@ public class AlipayInvoiceController extends BaseController {
     private static List<String> cacheList = new ArrayList<>(MESSAGE_CACHE_SIZE);
 
 
+    /**
+     * 此处使用支付宝提供的公钥私钥
+     *
+     * @param data
+     * @return
+     */
     @RequestMapping(value = "/receiveApply", method = RequestMethod.POST)
     public AlipayResult receiveApply(@RequestBody AlipayReceiveApplyDto data) {
         String applyId = data.getApplyId();
@@ -109,7 +115,7 @@ public class AlipayInvoiceController extends BaseController {
         try {
             String signatureContent = AlipaySignUtil.getSignatureContent(alipayResultMap);
             boolean verify = AlipaySignUtil.verify(signatureContent, AlipayRSAUtil.getPublickey(AlipayRSAUtil.PUBKEY));
-            if(!verify){
+            if (!verify) {
                 return AlipayResultUtil.result(INVOICE_PARAM_ILLEGAL, "开票参数非法");
             }
         } catch (Exception e) {
@@ -137,6 +143,7 @@ public class AlipayInvoiceController extends BaseController {
 
     /**
      * 排重
+     *
      * @param applyId
      * @param orderNo
      * @param userId
@@ -157,6 +164,7 @@ public class AlipayInvoiceController extends BaseController {
 
     /**
      * 开始拉取支付宝授权
+     *
      * @param storeNo
      * @param orderNo
      * @param price
@@ -230,7 +238,8 @@ public class AlipayInvoiceController extends BaseController {
     }
 
     /**
-     * 重定向到支付宝授权页
+     * 重定向到支付宝授权页,此处使用我们公司自己的公钥私钥
+     *
      * @param gsdm
      * @param orderNo
      * @param price
@@ -275,38 +284,39 @@ public class AlipayInvoiceController extends BaseController {
             logger.info("发生未知错误，跳转授权页失败!");
             return null;
         }
-        Map sendParam = new HashMap();
-        sendParam.put("invoiceAmount", doumoney);
-        sendParam.put("orderNo", orderNo);
-        sendParam.put("mShortName", mShortName);
-        sendParam.put("subShortName", subShortName);
-        sendParam.put("resultUrl", URLEncoder.encode(redirect_url));
-        String params = null;
+        String url = "";
         try {
-            params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
+            Map sendParam = new HashMap();
+            sendParam.put("invoiceAmount", doumoney);
+            sendParam.put("orderNo", orderNo);
+            sendParam.put("mShortName", mShortName);
+            sendParam.put("subShortName", subShortName);
+            sendParam.put("resultUrl", URLEncoder.encode(redirect_url, "utf-8"));
+            String params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
+            url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams=" + URLEncoder.encode(params,"utf-8"),"utf-8");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams="+URLEncoder.encode(params));
         String redirectUrl = "alipays://platformapi/startapp?" +
-                "appId=20000920&startMultApp=YES&appClearTop=false&url="+url;
+                "appId=20000920&startMultApp=YES&appClearTop=false&url=" + url;
         System.out.println(redirectUrl);
         return url;
     }
 
     /**
      * 拒绝开票
+     *
      * @param applyId
      * @param reason
      */
-    public void refuse(String orderNo,String applyId, String reason) {
+    public void refuse(String orderNo, String applyId, String reason) {
         String serverUrl = AlipayConstant.GATEWAY_URL;
         String appId = AlipayConstant.APP_ID;
         String privateKey = AlipayConstant.PRIVATE_KEY;
         String format = AlipayConstant.FORMAT;
         String charset = AlipayConstant.CHARSET;
         String alipayPulicKey = AlipayConstant.ALIPAY_PUBLIC_KEY;
-        String signType=AlipayConstant.SIGN_TYPE;
+        String signType = AlipayConstant.SIGN_TYPE;
 
         AlipayClient alipayClient = new DefaultAlipayClient(serverUrl, appId, privateKey,
                 format, charset, alipayPulicKey, signType);
@@ -329,14 +339,14 @@ public class AlipayInvoiceController extends BaseController {
         if (response.isSuccess()) {
             logger.info("------支付宝拒绝开票成功------");
             WxFpxx wxFpxx = wxfpxxJpaDao.selectByWeiXinOrderNo(orderNo);
-            int coun = wxFpxx.getCount()+ 1;
+            int coun = wxFpxx.getCount() + 1;
             wxFpxx.setCount(coun);
             wxfpxxJpaDao.save(wxFpxx);
-            logger.info("拒绝开票----更新计数"+coun);
-        }else{
+            logger.info("拒绝开票----更新计数" + coun);
+        } else {
             logger.info("------支付宝拒绝开票失败-------");
-            logger.info(response.getCode()+"--------"+response.getMsg());
-            logger.info(response.getSubCode()+"--------"+response.getSubMsg());
+            logger.info(response.getCode() + "--------" + response.getMsg());
+            logger.info(response.getSubCode() + "--------" + response.getSubMsg());
         }
     }
 
@@ -354,16 +364,16 @@ public class AlipayInvoiceController extends BaseController {
         sendParam.put("orderNo", "test1");
         sendParam.put("mShortName", "STANDARD_INVOICE");
         sendParam.put("subShortName", "STANDARD_INVOICE");
-        sendParam.put("resultUrl", URLEncoder.encode("http://fpjtest.datarj.com/web/template/#/succes/?t=+"+System.currentTimeMillis()+"&ppdm=rjxx","utf-8"));
+        sendParam.put("resultUrl", URLEncoder.encode("http://fpjtest.datarj.com/web/template/#/succes/?t=+" + System.currentTimeMillis() + "&ppdm=rjxx", "utf-8"));
         String params = null;
         try {
             params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams="+URLEncoder.encode(params,"utf-8"),"utf-8");
+        String url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams=" + URLEncoder.encode(params, "utf-8"), "utf-8");
         String redirectUrl = "alipays://platformapi/startapp?" +
-                "appId=20000920&startMultApp=YES&appClearTop=false&url="+url;
+                "appId=20000920&startMultApp=YES&appClearTop=false&url=" + url;
         System.out.println(redirectUrl);
     }
 }
