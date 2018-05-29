@@ -5,23 +5,26 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayEbppInvoiceApplyResultSyncRequest;
+import com.alipay.api.request.AlipayEbppInvoiceSycnRequest;
 import com.alipay.api.response.AlipayEbppInvoiceApplyResultSyncResponse;
+import com.alipay.api.response.AlipayEbppInvoiceSycnResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.dao.XfJpaDao;
-import com.rjxx.taxeasy.domains.Pp;
-import com.rjxx.taxeasy.domains.Skp;
-import com.rjxx.taxeasy.domains.WxFpxx;
+import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.alipay.AlipayReceiveApplyDto;
 import com.rjxx.taxeasy.dto.alipay.AlipayResult;
 import com.rjxx.taxeasy.service.SkpService;
 import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.task.AlipayTask;
 import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.StringUtils;
 import com.rjxx.utils.alipay.*;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +33,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +85,7 @@ public class AlipayInvoiceController extends BaseController {
     @RequestMapping(value = "/receiveApply", method = RequestMethod.POST)
     public AlipayResult receiveApply(@RequestBody AlipayReceiveApplyDto data) {
         String applyId = data.getApplyId();
-        String userId = data.getUserId();
+//        String userId = data.getUserId();
         String subShortName = data.getSubShortName();
         String mShortName = data.getmShortName();
         String orderNo = data.getOrderNo();
@@ -93,13 +97,13 @@ public class AlipayInvoiceController extends BaseController {
         String payerBankName = data.getPayerBankName();
         String payerBankAccount = data.getPayerBankAccount();
         String sign = data.getSign();
-        boolean distinct = distinct(applyId, orderNo, userId);
+        boolean distinct = distinct(applyId, orderNo);
         if (!distinct) {
             return AlipayResultUtil.result(APPLY_SUCCESS, "开票申请的信息校验无误，已提交开票");
         }
         Map<String, String> alipayResultMap = new HashMap<>();
         alipayResultMap.put("applyId", applyId);
-        alipayResultMap.put("userId", userId);
+//        alipayResultMap.put("userId", userId);
         alipayResultMap.put("subShortName", subShortName);
         alipayResultMap.put("mShortName", mShortName);
         alipayResultMap.put("orderNo", orderNo);
@@ -114,7 +118,7 @@ public class AlipayInvoiceController extends BaseController {
 
         try {
             String signatureContent = AlipaySignUtil.getSignatureContent(alipayResultMap);
-            boolean verify = AlipaySignUtil.verify(signatureContent, AlipayRSAUtil.getPublickey(AlipayRSAUtil.PUBKEY));
+            boolean verify = AlipaySignUtil.verify(signatureContent, AlipaySignUtil.getPublickey(AlipaySignUtil.PUBKEY));
             if (!verify) {
                 return AlipayResultUtil.result(INVOICE_PARAM_ILLEGAL, "开票参数非法");
             }
@@ -146,11 +150,10 @@ public class AlipayInvoiceController extends BaseController {
      *
      * @param applyId
      * @param orderNo
-     * @param userId
      * @return
      */
-    private synchronized boolean distinct(String applyId, String orderNo, String userId) {
-        String flag = applyId + orderNo + userId;
+    private synchronized boolean distinct(String applyId, String orderNo) {
+        String flag = applyId + orderNo;
         if (cacheList.contains(flag)) {
             logger.info("cacheList里已存在" + flag);
             return false;
@@ -292,7 +295,7 @@ public class AlipayInvoiceController extends BaseController {
             sendParam.put("mShortName", mShortName);
             sendParam.put("subShortName", subShortName);
             sendParam.put("resultUrl", URLEncoder.encode(redirect_url, "utf-8"));
-            String params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
+            String params = AlipaySignUtil.sign(sendParam, AlipaySignUtil.getPrivateKey(AlipaySignUtil.PRIKEY));
             url = URLEncoder.encode("/www/route.htm?scene=STANDARD_INVOICE&invoiceParams=" + URLEncoder.encode(params,"utf-8"),"utf-8");
         } catch (Exception e) {
             e.printStackTrace();
@@ -367,7 +370,7 @@ public class AlipayInvoiceController extends BaseController {
         sendParam.put("resultUrl", URLEncoder.encode("http://fpjtest.datarj.com/web/template/#/succes/?t=+" + System.currentTimeMillis() + "&ppdm=rjxx", "utf-8"));
         String params = null;
         try {
-            params = AlipaySignUtil.sign(sendParam, AlipayRSAUtil.getPrivateKey(AlipayRSAUtil.PRIKEY));
+            params = AlipaySignUtil.sign(sendParam, AlipaySignUtil.getPrivateKey(AlipaySignUtil.PRIKEY));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -375,5 +378,112 @@ public class AlipayInvoiceController extends BaseController {
         String redirectUrl = "alipays://platformapi/startapp?" +
                 "appId=20000920&startMultApp=YES&appClearTop=false&url=" + url;
         System.out.println(redirectUrl);
+    }
+
+    /**
+     * 同步发票到支付宝发票管家，成功返回支付宝的url，失败则返回null
+     *
+     * @param kpls
+     * @param kpspmxList
+     * @param mShortName
+     * @param subMShortName
+     * @return
+     */
+    public static String syncInvoiceAlipay(String userId, Kpls kpls, List<Kpspmx> kpspmxList, String mShortName, String subMShortName) throws Exception {
+        AlipayClient alipayClient = new DefaultAlipayClient("openapi.stable.dl.alipaydev.com",
+                AlipayConstant.APP_ID, AlipayConstant.PRIVATE_KEY,
+                AlipayConstant.FORMAT, AlipayConstant.CHARSET, AlipayConstant.ALIPAY_PUBLIC_KEY,
+                AlipayConstant.SIGN_TYPE);
+        AlipayEbppInvoiceSycnRequest alipayEbppInvoiceSycnRequest = new AlipayEbppInvoiceSycnRequest();
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        AlipayBizObject alipayBizObject = new AlipayBizObject();
+        alipayBizObject.setM_short_name(mShortName);
+        alipayBizObject.setSub_m_short_name(subMShortName);
+        InvoiceInfo invoiceInfo = new InvoiceInfo();
+        List<InvoiceInfo> invoiceInfoList = new ArrayList<>();
+        invoiceInfoList.add(invoiceInfo);
+        alipayBizObject.setInvoice_info(invoiceInfoList);
+        invoiceInfo.setUser_id(userId);
+        invoiceInfo.setInvoice_code(kpls.getFpdm());
+        invoiceInfo.setInvoice_no(kpls.getFphm());
+        invoiceInfo.setRegister_no(kpls.getXfsh());
+        invoiceInfo.setInvoice_amount(decimalFormat.format(kpls.getJshj()));
+        invoiceInfo.setInvoice_date(DateFormatUtils.format(kpls.getKprq(), "yyyy-MM-dd"));
+        List<InvoiceContent> invoiceContentList = new ArrayList<>();
+        invoiceInfo.setInvoice_content(invoiceContentList);
+
+        for (Kpspmx kpspmx : kpspmxList) {
+            InvoiceContent invoiceContent = new InvoiceContent();
+            invoiceContentList.add(invoiceContent);
+            invoiceContent.setItem_name(kpspmx.getSpmc());
+            invoiceContent.setItem_no(kpspmx.getSpdm());
+            if (kpspmx.getSpdj() != null) {
+                invoiceContent.setItem_price(decimalFormat.format(kpspmx.getSpdj()));
+            }
+            if (kpspmx.getSps() != null) {
+                invoiceContent.setItem_quantity(kpspmx.getSps());
+            }
+            invoiceContent.setRow_type(Integer.valueOf(kpspmx.getFphxz()));
+            invoiceContent.setItem_sum_price(decimalFormat.format(kpspmx.getSpje()));
+            invoiceContent.setItem_tax_price(decimalFormat.format(kpspmx.getSpse()));
+            invoiceContent.setItem_tax_rate(decimalFormat.format(kpspmx.getSpsl()));
+            invoiceContent.setItem_unit(kpspmx.getSpdw());
+            invoiceContent.setItem_amount(decimalFormat.format((kpspmx.getSpje() + kpspmx.getSpse())));
+        }
+        invoiceInfo.setOut_biz_no(kpls.getFpdm() + kpls.getFphm());
+        invoiceInfo.setInvoice_type("blue");
+        String pdfUrl = kpls.getPdfurl();
+        String imgUrl = pdfUrl.replace(".pdf", ".jpg");
+        invoiceInfo.setInvoice_img_url(imgUrl);
+        InvoiceTitle invoiceTitle = new InvoiceTitle();
+        invoiceInfo.setInvoice_title(invoiceTitle);
+        invoiceTitle.setUser_id(userId);
+        invoiceTitle.setTitle_name(kpls.getGfmc());
+        if (StringUtils.isNotBlank(kpls.getGfsh())) {
+            invoiceTitle.setTitle_type("CORPORATION");
+        } else {
+            invoiceTitle.setTitle_type("PERSONAL");
+        }
+        invoiceTitle.setUser_mobile(kpls.getGfdh());
+        invoiceTitle.setLogon_id("");
+        invoiceTitle.setUser_email("");
+        invoiceTitle.setIs_default(false);
+        invoiceTitle.setTax_register_no(kpls.getGfsh());
+        invoiceTitle.setUser_address(kpls.getGfdz());
+        invoiceTitle.setOpen_bank_name(kpls.getGfyh());
+        invoiceTitle.setOpen_bank_account(kpls.getGfyhzh());
+        invoiceInfo.setInvoice_file_data("");
+        invoiceInfo.setInvoice_fake_code(kpls.getJym());
+        invoiceInfo.setOut_invoice_id(kpls.getFpdm() + kpls.getFphm());
+        invoiceInfo.setFile_download_type("pdf");
+        invoiceInfo.setOriginal_blue_invoice_code("");
+        invoiceInfo.setOriginal_blue_invoice_no("");
+        invoiceInfo.setRegister_name(kpls.getXfmc());
+        invoiceInfo.setRegister_phone_no(kpls.getXfdh());
+        invoiceInfo.setRegister_address(kpls.getXfdz());
+        invoiceInfo.setExtend_fields("");
+        invoiceInfo.setInvoice_operator(kpls.getKpr());
+        invoiceInfo.setFile_download_url(pdfUrl);
+        invoiceInfo.setTax_amount(decimalFormat.format(kpls.getHjse()));
+        invoiceInfo.setSum_amount(decimalFormat.format(kpls.getJshj()));
+        if ("12".equals(kpls.getFpzldm())) {
+            invoiceInfo.setTax_type("PLAIN");
+        } else if ("01".equals(kpls.getFpzldm())) {
+            invoiceInfo.setTax_type("SPECIAL");
+        } else if ("02".equals(kpls.getFpzldm())) {
+            invoiceInfo.setTax_type("PLAIN_INVOICE");
+        }
+        invoiceInfo.setRegister_bank_name(kpls.getXfyh());
+        invoiceInfo.setRegister_bank_account(kpls.getXfyhzh());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result = objectMapper.writeValueAsString(alipayBizObject);
+        result = result.replace("_default", "is_default");
+        alipayEbppInvoiceSycnRequest.setBizContent(result);
+        AlipayEbppInvoiceSycnResponse response = alipayClient.execute(alipayEbppInvoiceSycnRequest);
+        if (response.isSuccess()) {
+            return response.getUrl();
+        } else {
+            return null;
+        }
     }
 }
