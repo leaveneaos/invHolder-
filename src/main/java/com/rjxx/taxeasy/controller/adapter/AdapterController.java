@@ -86,6 +86,10 @@ public class AdapterController extends BaseController {
     private static final String TYPE_THREE_CALLBACKURL = "kptService/getOpenid";
     private static final String TYPE_FOUR_CALLBACKURL = "kptService/getOpenidForFour";
 
+    /**
+     * 该品牌代码必须全平台唯一
+     * @param ppdm
+     */
     @ApiOperation(value = "手输提取码入口")
     @RequestMapping(value = "/{ppdm}", method = RequestMethod.GET)
     public void extract(@PathVariable String ppdm) {
