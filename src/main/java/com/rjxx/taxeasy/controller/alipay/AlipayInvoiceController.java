@@ -1,11 +1,5 @@
 package com.rjxx.taxeasy.controller.alipay;
 
-import com.alibaba.fastjson.JSON;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipayEbppInvoiceApplyResultSyncRequest;
-import com.alipay.api.response.AlipayEbppInvoiceApplyResultSyncResponse;
 import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.PpJpaDao;
 import com.rjxx.taxeasy.dao.SkpJpaDao;
@@ -20,7 +14,6 @@ import com.rjxx.taxeasy.service.SkpService;
 import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.task.AlipayTask;
 import com.rjxx.utils.HtmlUtils;
-import com.rjxx.utils.alipay.AlipayConstant;
 import com.rjxx.utils.alipay.AlipayResultUtil;
 import com.rjxx.utils.alipay.AlipaySignUtil;
 import com.rjxx.utils.alipay.AlipayUtils;
@@ -227,53 +220,6 @@ public class AlipayInvoiceController extends BaseController {
                 "appId=20000920&startMultApp=YES&appClearTop=false&url=" + url;
         System.out.println(redirectUrl);
         return url;
-    }
-
-    /**
-     * 拒绝开票
-     *
-     * @param applyId
-     * @param reason
-     */
-    public void refuse(String orderNo, String applyId, String reason) {
-        String serverUrl = AlipayConstant.GATEWAY_URL;
-        String appId = AlipayConstant.APP_ID;
-        String privateKey = AlipayConstant.PRIVATE_KEY;
-        String format = AlipayConstant.FORMAT;
-        String charset = AlipayConstant.CHARSET;
-        String alipayPulicKey = AlipayConstant.ALIPAY_PUBLIC_KEY;
-        String signType = AlipayConstant.SIGN_TYPE;
-
-        AlipayClient alipayClient = new DefaultAlipayClient(serverUrl, appId, privateKey,
-                format, charset, alipayPulicKey, signType);
-        AlipayEbppInvoiceApplyResultSyncRequest request = new AlipayEbppInvoiceApplyResultSyncRequest();
-
-        Map param = new HashMap();
-        param.put("apply_id", applyId);
-        param.put("result", "失败");
-        param.put("result_code", "fail");
-        param.put("result_msg", reason);
-
-        String bizContent = JSON.toJSONString(param);
-        request.setBizContent(bizContent);
-        AlipayEbppInvoiceApplyResultSyncResponse response = null;
-        try {
-            response = alipayClient.execute(request);
-        } catch (AlipayApiException e) {
-            e.printStackTrace();
-        }
-        if (response.isSuccess()) {
-            logger.info("------支付宝拒绝开票成功------");
-            WxFpxx wxFpxx = wxfpxxJpaDao.selectByWeiXinOrderNo(orderNo);
-            int coun = wxFpxx.getCount() + 1;
-            wxFpxx.setCount(coun);
-            wxfpxxJpaDao.save(wxFpxx);
-            logger.info("拒绝开票----更新计数" + coun);
-        } else {
-            logger.info("------支付宝拒绝开票失败-------");
-            logger.info(response.getCode() + "--------" + response.getMsg());
-            logger.info(response.getSubCode() + "--------" + response.getSubMsg());
-        }
     }
 
     /**

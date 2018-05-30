@@ -19,19 +19,13 @@ public class MyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session=request.getSession();
-//        long l1 = System.currentTimeMillis();
-//        long l2 = session.getCreationTime();
-//        if((System.currentTimeMillis()-session.getCreationTime())/1000 > 30*60){
-//            logger.info("session过期了");
-//            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=session_out");
-//            return true;
-//        }
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
 //        if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||
 //                url.equals("/mb") || url.equals("/dzfp_sqj")||url.equals("/tq")||url.equals("/barcode/beautyfarm")||url.equals("/barcode/phtons")
 //                ||url.contains("/kptService/seaway") ||url.contains("/kptService/bwy")||url.equals("/barcode/yfw")
-//                ||url.contains("/kptService/fujifilm")||url.contains("/kptService/nhsc")){
+//                ||url.contains("/kptService/fujifilm")||url.contains("/kptService/nhsc")||url.contains("/kptService/hirice")){
+        if(!url .contains("/getAlipay")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
@@ -58,7 +52,7 @@ public class MyInterceptor implements HandlerInterceptor {
                     return false;
                 }
             }
-//        }
+        }
         logger.info("-----初始化URL----end-----"+request.getServletPath());
         return true;
     }
