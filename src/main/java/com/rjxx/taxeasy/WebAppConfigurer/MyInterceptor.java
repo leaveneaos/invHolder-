@@ -28,10 +28,10 @@ public class MyInterceptor implements HandlerInterceptor {
 //        }
         String url=request.getServletPath();
         logger.info("-----初始化URL----Start-----"+url);
-        if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||
-                url.equals("/mb") || url.equals("/dzfp_sqj")||url.equals("/tq")||url.equals("/barcode/beautyfarm")||url.equals("/barcode/phtons")
-                ||url.contains("/kptService/seaway") ||url.contains("/kptService/bwy")||url.equals("/barcode/yfw")
-                ||url.contains("/kptService/fujifilm")||url.contains("/kptService/nhsc")){
+//        if(url.equals("/fm")||url.equals("/af")||url.equals("/barcode/chamate")||url.equals("/barcode/dicos")||
+//                url.equals("/mb") || url.equals("/dzfp_sqj")||url.equals("/tq")||url.equals("/barcode/beautyfarm")||url.equals("/barcode/phtons")
+//                ||url.contains("/kptService/seaway") ||url.contains("/kptService/bwy")||url.equals("/barcode/yfw")
+//                ||url.contains("/kptService/fujifilm")||url.contains("/kptService/nhsc")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
@@ -58,7 +58,7 @@ public class MyInterceptor implements HandlerInterceptor {
                     return false;
                 }
             }
-        }
+//        }
         logger.info("-----初始化URL----end-----"+request.getServletPath());
         return true;
     }
