@@ -8,7 +8,7 @@ import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.Pp;
 import com.rjxx.taxeasy.domains.Skp;
 import com.rjxx.taxeasy.domains.WxFpxx;
-import com.rjxx.taxeasy.dto.alipay.AlipayReceiveApplyDto;
+import com.rjxx.taxeasy.dto.alipay.AlipayReceiveApplyDTO;
 import com.rjxx.taxeasy.dto.alipay.AlipayResult;
 import com.rjxx.taxeasy.service.SkpService;
 import com.rjxx.taxeasy.service.adapter.AdapterService;
@@ -74,7 +74,7 @@ public class AlipayInvoiceController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/receiveApply", method = RequestMethod.POST)
-    public AlipayResult receiveApply(@RequestBody AlipayReceiveApplyDto data) {
+    public AlipayResult receiveApply(@RequestBody AlipayReceiveApplyDTO data) {
         String applyId = data.getApplyId();
 //        String userId = data.getUserId();
         String subShortName = data.getSubShortName();

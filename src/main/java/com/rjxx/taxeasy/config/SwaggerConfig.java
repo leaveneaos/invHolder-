@@ -113,4 +113,28 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
+
+    @Bean
+    public Docket initKeyApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("initKey")
+                .genericModelSubstitutes(DeferredResult.class)
+                .useDefaultResponseMessages(false)
+                .forCodeGeneration(false)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.rjxx.taxeasy.controller.initkey"))
+                .paths(PathSelectors.any())//过滤的接口
+                .build()
+                .apiInfo(initKeyInfo());
+    }
+
+    private ApiInfo initKeyInfo() {
+        return new ApiInfoBuilder()
+                .title("初始化信息")
+                .description("生成APPID与KEY,生成的APPID入库之前在头部加上RJ")
+                .termsOfServiceUrl("https://gitee.com/wyhtoString/projects")
+                .contact("wangyahui")
+                .version("1.0")
+                .build();
+    }
 }
