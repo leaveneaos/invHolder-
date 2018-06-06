@@ -142,10 +142,10 @@ public class AdapterController extends BaseController {
             if (apiMsg == null) {
                 return ResultUtil.error("开票数据未上传，请稍后再试");
             }
-            if (apiMsg.get("msg") != null) {
-                if(!"该订单已处理！".equals((String) apiMsg.get("msg"))){
-                    logger.info("不等于");
-                    return ResultUtil.error((String) apiMsg.get("msg"));
+            String msg = (String) apiMsg.get("msg");
+            if (msg != null) {
+                if(!msg.contains("已处理")){
+                    return ResultUtil.error(msg);
                 }
             }
             AdapterGet adapterGet = new AdapterGet();
