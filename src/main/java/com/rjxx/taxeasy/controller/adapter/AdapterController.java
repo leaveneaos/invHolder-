@@ -508,7 +508,7 @@ public class AdapterController extends BaseController {
         if(AlipayUtils.isAlipayBrowser(request)){
             sjly = "5";//支付宝
         }else{
-            sjly = "1";//接口录入
+            sjly = "6";//其他浏览器
         }
         if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
             status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, sjly, "", "");
@@ -590,7 +590,7 @@ public class AdapterController extends BaseController {
             if(AlipayUtils.isAlipayBrowser(request)){
                 sjly = "5";//支付宝
             }else{
-                sjly = "1";//接口录入
+                sjly = "6";//其他浏览器
             }
             String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
             String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
@@ -616,7 +616,7 @@ public class AdapterController extends BaseController {
             if(AlipayUtils.isAlipayBrowser(request)){
                 sjly = "5";//支付宝
             }else{
-                sjly = "1";//接口录入
+                sjly = "6";//接口录入
             }
             String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
             String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
