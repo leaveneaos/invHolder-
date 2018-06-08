@@ -458,6 +458,8 @@ public class AdapterController extends BaseController {
         if (jsonData != null) {
             if ("1".equals(jsonData)) {
                 return ResultUtil.error("开票数据未上传，请稍后再试");
+            }else if("2".equals(jsonData)){
+                return ResultUtil.error("金额传入有误，金额必须大于0");
             }
             JSONObject jsonObject;
             try {
