@@ -589,7 +589,7 @@ public class CommonController extends BaseController {
     public void errorRedirect(String errorName) {
         try {
 //            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
-            response.sendRedirect(errorUrl + "/" + errorName);
+            response.sendRedirect(errorUrl + "/" + errorName+"?t="+System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
