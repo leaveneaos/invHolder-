@@ -79,7 +79,7 @@
         }
 
        function redirect(errorMsg){
-            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            var myurl = "../QR/error.html?msg="+new Date().getTime()+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
 
@@ -185,7 +185,7 @@
                 if(pp==null){
                     redirect("跳转出现错误，请重新扫描！");
                 }
-                var myurl = "../QR/fptt_01.html?param="+new Date()+"="+pp;
+                var myurl = "../QR/fptt_01.html?param="+new Date().getTime()+"="+pp;
                 window.location.assign(encodeURI(myurl));
             }
         }

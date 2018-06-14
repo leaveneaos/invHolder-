@@ -208,7 +208,7 @@
     <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
     <script type="text/javascript">
         function redirect(errorMsg){
-            var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
+            var myurl = "../QR/error.html?msg="+new Date().getTime()+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
 

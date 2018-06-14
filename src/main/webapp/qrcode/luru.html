@@ -266,7 +266,7 @@
 <script src="../js/jquery.min.js"></script>
 <script type="text/javascript">
     function redirect(errorMsg) {
-        var myurl = "../QR/error.html?msg=" + new Date + "=" + errorMsg;
+        var myurl = "../QR/error.html?msg=" + new Date().getTime() + "=" + errorMsg;
         window.location.assign(encodeURI(myurl));
     }
 

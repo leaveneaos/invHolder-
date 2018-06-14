@@ -379,7 +379,7 @@ public class AdapterController extends BaseController {
     }
 
     @ApiOperation(value = "type1抬头页面提交接口")
-    @RequestMapping(value = "/input", method = RequestMethod.GET)
+    @RequestMapping(value = "/input", method = RequestMethod.POST)
     public Result submitForOne(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email,
                                String gfdz, String gfdh, String gfyhzh, String gfyh) {
         String gsdm = (String) session.getAttribute("gsdm");

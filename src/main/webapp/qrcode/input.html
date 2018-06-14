@@ -103,7 +103,7 @@
     var storage = window.localStorage;
 
     function redirect(errorMsg) {
-        var myurl = "../QR/error.html?msg=" + new Date + "=" + errorMsg;
+        var myurl = "../QR/error.html?msg=" + new Date().getTime() + "=" + errorMsg;
         window.location.assign(encodeURI(myurl));
     }
 
@@ -338,7 +338,7 @@
 
             jConfirm(firm, title, function (r) {
                 if (r) {
-                    $.get("../kptService/input", {
+                    $.post("../kptService/input", {
                         "gfmc": fptt,
                         "gfsh": nsrsbh,
                         "gfdz": dz,
