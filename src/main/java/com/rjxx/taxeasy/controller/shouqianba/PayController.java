@@ -24,6 +24,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -170,7 +171,7 @@ public class PayController extends BaseController {
 
     public void errorRedirect(String errorName) {
         try {
-            response.sendRedirect(errorUrl + "/" + errorName+"?t="+System.currentTimeMillis());
+            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName)+"?t="+System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
