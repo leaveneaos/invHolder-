@@ -137,4 +137,28 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
+
+    @Bean
+    public Docket payApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("pay")
+                .genericModelSubstitutes(DeferredResult.class)
+                .useDefaultResponseMessages(false)
+                .forCodeGeneration(false)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.rjxx.taxeasy.controller.shouqianba"))
+                .paths(PathSelectors.any())//过滤的接口
+                .build()
+                .apiInfo(payInfo());
+    }
+
+    private ApiInfo payInfo() {
+        return new ApiInfoBuilder()
+                .title("支付接口")
+                .description("收款码支付即开票")
+                .termsOfServiceUrl("https://gitee.com/wyhtoString/projects")
+                .contact("wangyahui")
+                .version("1.0")
+                .build();
+    }
 }

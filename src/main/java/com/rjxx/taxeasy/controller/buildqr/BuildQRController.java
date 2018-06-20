@@ -10,6 +10,7 @@ import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.PasswordUtils;
 import com.rjxx.utils.dwz.ShortUrlUtil;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,34 @@ public class BuildQRController extends BaseController{
     @Autowired
     private CszbService cszbService;
 
+//    @RequestMapping(value = "/login", method = RequestMethod.POST)
+//    @ApiOperation(value = "登录")
+//    public Result login(@RequestParam String user,
+//                        @RequestParam String pass) {
+//        String password;
+//        try {
+//            password = PasswordUtils.encrypt(pass);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResultUtil.error("发生未知错误");
+//        }
+//        String status = buildQRService.login(user, password);
+//        session.setMaxInactiveInterval(45 * 60);
+//        session.setAttribute("username", user);
+//        session.setAttribute("password", password);
+//        if("-1".equals(status)){
+//            return ResultUtil.error("请使用非管理员账户登录");
+//        }else if("0".equals(status)){
+//            return ResultUtil.error("用户名不存在或密码错误");
+//        }else if("-2".equals(status)){
+//            return ResultUtil.error("该账户开票点权限有误");
+//        }else if("-3".equals(status)){
+//            return ResultUtil.error("未获取到默认商品,请确认初始化信息");
+//        }else{
+//            return ResultUtil.success(status);
+//        }
+//    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "登录")
     public Result login(@RequestParam String user,
@@ -40,21 +69,14 @@ public class BuildQRController extends BaseController{
             password = PasswordUtils.encrypt(pass);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtil.error("发生未知错误");
+            return ResultUtil.error("密码MD5加签失败");
         }
-        String status = buildQRService.login(user, password);
-        session.setMaxInactiveInterval(45 * 60);
-        session.setAttribute("username", user);
-        session.setAttribute("password", password);
-        if("-1".equals(status)){
-            return ResultUtil.error("请使用非管理员账户登录");
-        }else if("0".equals(status)){
-            return ResultUtil.error("用户名不存在或密码错误");
-        }else if("-2".equals(status)){
-            return ResultUtil.error("该账户开票点权限有误");
-        }else{
-            return ResultUtil.success(status);
+        Map result = buildQRService.login(user, password);
+        String errorMsg = (String) result.get("errorMsg");
+        if(StringUtils.isNotBlank(errorMsg)){
+            return ResultUtil.error(errorMsg);
         }
+        return ResultUtil.success(result);
     }
 
     @RequestMapping(value = "/create",method = RequestMethod.GET)
