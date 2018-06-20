@@ -152,7 +152,7 @@ public class PayController extends BaseController {
                 }
             }
         } else {
-            errorRedirect("未知的原因");
+            errorRedirect("RECEIVE_UNKNOWN_REASON");
             return;
         }
     }
