@@ -40,7 +40,6 @@ import java.util.Map;
 public class PayController extends BaseController {
 
 
-
     @Value("${pay.url.success}")
     private String succUrl;
 
@@ -54,11 +53,11 @@ public class PayController extends BaseController {
     @Autowired
     private CszbService cszbService;
 
-    @RequestMapping(value = "/start",method = RequestMethod.POST)
+    @RequestMapping(value = "/start", method = RequestMethod.POST)
     @ApiOperation("获取收款码URL")
     public Result getPayUrl(@RequestParam String terminal_sn, @RequestParam String terminal_key,
                             @RequestParam String total_amount, @RequestParam String subject, @RequestParam String oprator,
-                            @RequestParam String orderNo, @RequestParam String gsdm,@RequestParam String storeNo){
+                            @RequestParam String orderNo, @RequestParam String gsdm, @RequestParam String storeNo) {
         Map param = new HashMap();
         param.put("tn", terminal_sn);
         param.put("tk", terminal_key);
@@ -78,15 +77,15 @@ public class PayController extends BaseController {
         }
         Map map = new HashMap<>();
         Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "isStartDWZ");
-        if("是".equals(cszb.getCsz())){
+        if ("是".equals(cszb.getCsz())) {
             try {
                 String dwz = ShortUrlUtil.dwz(HtmlUtils.getBasePath(request) + "pay/" + gsdm + "/" + q);
                 map.put("url", dwz);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return ResultUtil.error("短网址服务错误");
             }
-        }else{
+        } else {
             map.put("url", HtmlUtils.getBasePath(request) + "pay/" + gsdm + "/" + q);
         }
         return ResultUtil.success(map);
@@ -94,18 +93,18 @@ public class PayController extends BaseController {
 
     @RequestMapping(value = "/{gsdm}/{q}", method = RequestMethod.GET)
     @ApiIgnore
-    public void payIn(@PathVariable String gsdm,@PathVariable String q) {
+    public void payIn(@PathVariable String gsdm, @PathVariable String q) {
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
         if (gsxx == null) {
-            errorRedirect("COMPANY_MSG_ERROR");
+            errorRedirect("该公司不存在");
             return;
         }
         String data = "";
         try {
-            data=AESUtil.decrypt(q,gsxx.getSecretKey());
+            data = AESUtil.decrypt(q, gsxx.getSecretKey());
         } catch (Exception e) {
             e.printStackTrace();
-            errorRedirect("DECRYPT_FAIL");
+            errorRedirect("验签失败");
             return;
         }
         JSONObject jsonData = JSON.parseObject(data);
@@ -117,10 +116,10 @@ public class PayController extends BaseController {
         String orderNo = jsonData.getString("on");
         String storeNo = jsonData.getString("sn");
         String returnUtl = HtmlUtils.getBasePath(request) + "pay/receive";
-        Map payResult = payService.payIn(terminal_sn, terminal_key,  total_amount, subject, oprator,
-                returnUtl, orderNo, gsdm,storeNo);
-        String errorMsg= (String) payResult.get("errorMsg");
-        String url= (String) payResult.get("url");
+        Map payResult = payService.payIn(terminal_sn, terminal_key, total_amount, subject, oprator,
+                returnUtl, orderNo, gsdm, storeNo);
+        String errorMsg = (String) payResult.get("errorMsg");
+        String url = (String) payResult.get("url");
         if (StringUtils.isNotBlank(errorMsg)) {
             errorRedirect(errorMsg);
             return;
@@ -133,37 +132,32 @@ public class PayController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "/receive",method = RequestMethod.GET)
+    @RequestMapping(value = "/receive", method = RequestMethod.GET)
     @ApiIgnore
     public void receive(PayResult payResult) {
         Map receive = payService.receive(payResult);
-        if (receive != null) {
-            String errorMsg = (String) receive.get("errorMsg");
-            String gsdm = (String) receive.get("gsdm");
-            String orderNo = (String) receive.get("orderNo");
-            if (errorMsg != null) {
-                errorRedirect(errorMsg);
-                return;
-            } else {
-                try {
-                    response.sendRedirect(succUrl + "?gsdm=" + gsdm +"&orderNo="+orderNo+ "&t=" + System.currentTimeMillis());
-                    return;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            errorRedirect("RECEIVE_UNKNOWN_REASON");
+        String errorMsg = (String) receive.get("errorMsg");
+        String gsdm = (String) receive.get("gsdm");
+        String orderNo = (String) receive.get("orderNo");
+        if (errorMsg != null) {
+            errorRedirect(errorMsg);
             return;
+        } else {
+            try {
+                response.sendRedirect(succUrl + "?gsdm=" + gsdm + "&orderNo=" + orderNo + "&t=" + System.currentTimeMillis());
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
-    @RequestMapping(value = "/getPayOut",method = RequestMethod.POST)
+    @RequestMapping(value = "/getPayOut", method = RequestMethod.POST)
     @ApiOperation("查询结果表")
-    public Result getPayOut(String gsdm,String orderNo){
+    public Result getPayOut(String gsdm, String orderNo) {
         Map payOut = payService.getPayOut(gsdm, orderNo);
-        if(payOut==null){
+        if (payOut == null) {
             return ResultUtil.error("未查询到数据");
         }
         return ResultUtil.success(payOut);
@@ -171,16 +165,16 @@ public class PayController extends BaseController {
 
     public void errorRedirect(String errorName) {
         try {
-            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName)+"?t="+System.currentTimeMillis());
+            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName) + "?t=" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @RequestMapping(value = "/test",method = RequestMethod.GET)
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ApiIgnore
-    public void test(){
-        String clientSn = "test"+System.currentTimeMillis();
+    public void test() {
+        String clientSn = "test" + System.currentTimeMillis();
         String terminal_sn = "100007450004133032";
         String terminal_key = "1e81ddd4878a98461b1b1ccd5b2d0628";
         String returnUrl = "http://kpt.datarj.com/";
@@ -194,7 +188,7 @@ public class PayController extends BaseController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        String url=(String) map.get("url");
+        String url = (String) map.get("url");
         System.out.println(url);
         try {
             response.sendRedirect(url);
