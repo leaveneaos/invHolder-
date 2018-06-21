@@ -63,7 +63,7 @@
             var myurl = "../QR/error.html?msg="+new Date+"="+errorMsg;
             window.location.assign(encodeURI(myurl));
         }
-        var serialOrder =location.href.split('?')[1].split('&')[0].split('=')[1];
+        var serialOrder =decodeURI(location.href).split('?')[1].split('&')[0].split('=')[1];
 		orderNo = null;
 		orderTime = null;
 		price =null;
