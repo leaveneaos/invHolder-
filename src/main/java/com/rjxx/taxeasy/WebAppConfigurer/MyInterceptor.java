@@ -25,7 +25,7 @@ public class MyInterceptor implements HandlerInterceptor {
 //                url.equals("/mb") || url.equals("/dzfp_sqj")||url.equals("/tq")||url.equals("/barcode/beautyfarm")||url.equals("/barcode/phtons")
 //                ||url.contains("/kptService/seaway") ||url.contains("/kptService/bwy")||url.equals("/barcode/yfw")
 //                ||url.contains("/kptService/fujifilm")||url.contains("/kptService/nhsc")||url.contains("/kptService/hirice")){
-        if(!url .contains("/getAlipay")){
+        if(!url .contains("/getAlipay") && !url.contains("/pay")){
             if (AlipayUtils.isAlipayBrowser(request)) {
                 logger.info("---------判断是否是支付宝浏览器------");
                 if (!AlipayUtils.isAlipayAuthorized(session)) {
