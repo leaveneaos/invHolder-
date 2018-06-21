@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -589,7 +590,7 @@ public class CommonController extends BaseController {
     public void errorRedirect(String errorName) {
         try {
 //            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
-            response.sendRedirect(errorUrl + "/" + errorName+"?t="+System.currentTimeMillis());
+            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName)+"?t="+System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
