@@ -330,7 +330,7 @@ public class GvcController extends BaseController {
                                 result.put("msg","出现未知异常，请重试！");
                                 return result;
                             }
-                            String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
+                            String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm,jyxxsqList.get(0).getXfid());
                             if(weixinOrderNo==null){
                                 result.put("num","12");
                                 result.put("msg","出现未知异常，请重试！");

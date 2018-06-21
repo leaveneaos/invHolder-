@@ -48,17 +48,18 @@
             window.location.assign(encodeURI(myurl));
         }
 		$(function () {
-            var thisURL = document.URL;
+            var thisURL = decodeURI(document.URL);
             var  getval =thisURL.split('?')[1];
             gsmc = null
             orderNo= null;
             price=null;
             orderTime=null;
-			storeNo="";
+			storeNo=null;
             gsmc = getval.split("=")[2];
             orderNo = getval.split("=")[3];
             price = getval.split("=")[4];
             orderTime = getval.split("=")[5];
+            storeNo = getval.split("=")[6];
 			$('#order').html(orderNo);
 			$('#orderTime').html(formatDate(orderTime));
 			$('#price').html(RetainedDecimalPlaces(price)+"元");

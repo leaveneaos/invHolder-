@@ -440,6 +440,7 @@ public class TijiaoController extends BaseController {
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 result.put("kprq",sdf.format(kpls.get(0).getKprq()));
                 result.put("price",kpls.get(0).getJshj());
+                result.put("storeNo",kpls.get(0).getKpddm());
                 Jyls jyls = new Jyls();
                 jyls.setGsdm(kpls.get(0).getGsdm());
                 jyls.setDjh((Integer) request.getSession().getAttribute("djh"));

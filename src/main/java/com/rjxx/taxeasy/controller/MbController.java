@@ -328,7 +328,7 @@ public class MbController extends BaseController {
                             xgsdm=gsxx.getXgsdm();
                         }*/
                         response.sendRedirect(request.getContextPath() + "/mbddqr.html?_t=" + System.currentTimeMillis()
-                                      +"=" + gsxx.getGsdm() + "=" + jyxxsq.getDdh() + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq())/*+"="+xgsdm*/);
+                                      +"=" + gsxx.getGsdm() + "=" + jyxxsq.getDdh() + "=" + jyxxsq.getJshj() +"=" + sdf.format(jyxxsq.getDdrq())+"="+jyxxsq.getKpddm());
                         return;
                     }
                 }else {
@@ -669,7 +669,7 @@ public class MbController extends BaseController {
                                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                                     return null;
                                 }
-                                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm);
+                                String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm,jyxxsq.getXfid());
                                 String redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, "","1",access_token,ticket,spappid);
                                 result.put("num","20");
                                 result.put("redirectUrl",redirectUrl);
@@ -971,6 +971,7 @@ public class MbController extends BaseController {
             SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             result.put("kprq",sdf.format(kplsList.get(0).getKprq()));
             result.put("price",kplsList.get(0).getJshj());
+            result.put("storeNo",kplsList.get(0).getKpddm());
             Jyls jyls = new Jyls();
             jyls.setGsdm(kplsList.get(0).getGsdm());
             jyls.setDjh((Integer) request.getSession().getAttribute("djh"));

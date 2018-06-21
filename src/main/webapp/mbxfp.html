@@ -109,6 +109,7 @@
 					orderNo = data.orderNo;
 					price = data.price;
 					orderTime = data.kprq;
+                	storeNo = data.storeNo;
                     if (serialorder != null && serialorder != "") {
                       var  pdfdz = pdfdzs.split(",");
                         $.each(
@@ -139,7 +140,7 @@
                 if(null == orderNo|| null == price || null == orderTime){
                     window.location.href = "smtq/demo.html?time=" + new Date().getTime();
                 }
-                window.location = "common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime;
+                window.location = "common/syncWeiXin?orderNo="+orderNo+"&price="+price+"&orderTime="+orderTime+"&storeNo="+storeNo;
             });
 		}
     })

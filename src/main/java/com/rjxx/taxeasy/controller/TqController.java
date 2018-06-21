@@ -176,6 +176,7 @@ public class TqController extends BaseController{
             }
             result.put("orderNo",orderNo);
             result.put("gsdm",kplsList.get(i).getGsdm());
+            result.put("storeNo",kplsList.get(i).getKpddm());
         }
         return result;
     }
