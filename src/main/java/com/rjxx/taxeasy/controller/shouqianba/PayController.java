@@ -179,9 +179,13 @@ public class PayController extends BaseController {
         String terminal_key = "1e81ddd4878a98461b1b1ccd5b2d0628";
         String returnUrl = "http://kpt.datarj.com/";
         String price = "1";
-        String subject = "test";
+        String subject = null;
+        try {
+            subject = URLEncoder.encode("餐饮费","iso-8859-1");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String oprator = "wyh";
-
         Map map = null;
         try {
             map = PayUtil.payIn(terminal_sn, terminal_key, clientSn, price, subject, oprator, returnUrl, "wyh");
