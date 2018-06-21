@@ -14,7 +14,6 @@ import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.AESUtil;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.dwz.ShortUrlUtil;
-import com.rjxx.utils.shouqianba.PayUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -152,7 +150,6 @@ public class PayController extends BaseController {
         }
     }
 
-
     @RequestMapping(value = "/getPayOut", method = RequestMethod.POST)
     @ApiOperation("查询结果表")
     public Result getPayOut(String gsdm, String orderNo) {
@@ -163,41 +160,22 @@ public class PayController extends BaseController {
         return ResultUtil.success(payOut);
     }
 
-    public void errorRedirect(String errorName) {
-        try {
-            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName) + "?t=" + System.currentTimeMillis());
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    @RequestMapping(value = "/extract",method = RequestMethod.POST)
+    @ApiOperation("根据商户号提票")
+    public Result extract(String tradeNo){
+       Map receive= payService.extract(tradeNo);
+        String errorMsg = (String) receive.get("errorMsg");
+        if (errorMsg != null) {
+            return ResultUtil.error(errorMsg);
+        }else{
+            return ResultUtil.success(receive);
         }
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ApiIgnore
-    public void test() {
-        String clientSn = "test" + System.currentTimeMillis();
-        String terminal_sn = "100007450004133032";
-        String terminal_key = "1e81ddd4878a98461b1b1ccd5b2d0628";
-        String returnUrl = "http://kpt.datarj.com/";
-        String price = "1";
-//        String subject = null;
-//        try {
-//            subject = URLEncoder.encode("餐饮费","UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-
-        String subject = "餐饮费";
-        String oprator = "wyh";
-        Map map = null;
+    public void errorRedirect(String errorName) {
         try {
-            map = PayUtil.payIn(terminal_sn, terminal_key, clientSn, price, subject, oprator, returnUrl, "wyh");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String url = (String) map.get("url");
-        System.out.println(url);
-        try {
-            response.sendRedirect(url);
+            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName) + "?t=" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }
