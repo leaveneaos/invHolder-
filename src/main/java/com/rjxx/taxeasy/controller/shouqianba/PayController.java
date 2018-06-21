@@ -181,7 +181,7 @@ public class PayController extends BaseController {
         String price = "1";
         String subject = null;
         try {
-            subject = URLEncoder.encode("餐饮费","iso-8859-1");
+            subject = URLEncoder.encode("餐饮费","UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
