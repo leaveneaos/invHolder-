@@ -15,6 +15,18 @@
         header{
             background-color: white;
         }
+        .entry{
+            display: flex;
+        }
+        .entry .ll{
+            text-align: left;
+            width: 90px;
+        }
+        .entry .rr{
+            text-align: center;
+            width: 100%;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body onresize="document.activeElement.scrollIntoView(true);">
@@ -22,13 +34,13 @@
     <div class="content">
         <div class="middle">
             <div class="entry" style="text-align: left;border:none;">
-                <span>订单号&nbsp;&nbsp;&nbsp;</span><span id="ddh" style="margin-left: 30.5%;text-align: left">1</span>
+                <span class="ll">订单号&nbsp;&nbsp;&nbsp;</span><span id="ddh" class="rr">1</span>
+            </div>
+            <div class="entry time" style="text-align: left;border:none;">
+                <span class="ll">订单时间</span><span id="ddrq"  class="rr">1</span>
             </div>
             <div class="entry" style="text-align: left;border:none;">
-                <span>订单时间</span><span id="ddrq" style="margin-left: 30%;text-align: left">1</span>
-            </div>
-            <div class="entry" style="text-align: left;border:none;">
-                <span>金额&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="je" style="margin-left: 30.1%;text-align: left">1</span>
+                <span class="ll">金额&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="je"  class="rr">1</span>
             </div>
             <hr style="height:1px;border:none;border-top:1px dashed #ececec;" />
             <div class="type">
