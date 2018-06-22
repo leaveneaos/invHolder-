@@ -483,6 +483,14 @@ public class AdapterController extends BaseController {
                 return ResultUtil.error("开票数据未上传，请稍后再试TP[3]");
             }else if("2".equals(jsonData)){
                 return ResultUtil.error("金额传入有误，金额必须大于零TP[2]");
+            }else if("3".equals(jsonData)){
+                return ResultUtil.error("未找到默认开票点代码TP[2]");
+            }else if("4".equals(jsonData)){
+                return ResultUtil.error("金额与价格数量不一致TP[2]");
+            }else if("5".equals(jsonData)){
+                return ResultUtil.error("未找到默认商品代码TP[2]");
+            }else if("6".equals(jsonData)){
+                return ResultUtil.error("所需参数为空TP[2]");
             }
             JSONObject jsonObject;
             try {
