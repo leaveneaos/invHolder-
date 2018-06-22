@@ -261,7 +261,8 @@ public class AlipayInvoiceController extends BaseController {
                         response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                         return;
                     } else if (status.contains("可开具")) {
-                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo, gsdm);
+                        Integer xfid = wechatFpxxService.getxfid(storeNo, gsdm);
+                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo, gsdm,xfid);
                         logger.info("orderNo---" + orderNo + "传给支付宝的OrderNo" + weixinOrderNo);
                         //可开具 跳转微信授权链接
                         redirectUrl = redirectAlipay(gsdm, weixinOrderNo, price, storeNo, type);

@@ -6,6 +6,9 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="css/common.css">
 	<link rel="stylesheet" type="text/css" href="css/fpxq.css">
+	<link rel="stylesheet" type="text/css" href="../js/swipeslider.css">
+	<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="../js/swipeslider.min.js"></script>
 </head>
 <body>
 	<header>
@@ -71,18 +74,33 @@
 					</svg>
 					<span>支付宝</span>
 				</a>
-				
+				<figure id="full_feature" class="swipslider">
+					<ul class="sw-slides">
+						<li class="sw-slide">
+							<img src="../images/banner/20180601135148.jpg" onclick="window.location.href='https://creditcard.ecitic.com/citiccard/cardshop-h5/wap/initCardInfo.do?pid=CS0002&foot_s=0&head_s=0&sid=SJBDZBL22'" alt="Summer beach concept">
+						</li>
+						<li class="sw-slide">
+							<img src="../images/banner/SJBDZBL22-518.gif" onclick="window.location.href='https://creditcard.ecitic.com/h5/shenqing/?foot_s=0&head_s=0&sid=SJBDZBL22'" alt="Lang from Yie Ar Kung Fu">
+						</li>
+						<li class="sw-slide">
+							<img src="../images/banner/xiaobanner.gif" onclick="window.location.href='http://kpt.datarj.com/#/product'" alt="Lang from Yie Ar Kung Fu">
+						</li>
+					</ul>
+				</figure>
 			</div>
+
 		</div>
 	</section>
 	<footer>
 		<p class="company fl">泰易电子发票云服务平台</p>
 		<p class="help fr"><a href="../bangzhu.html">遇到问题?</a></p>
 	</footer>
-	<script src="../js/jquery.min.js"></script>
+	<!--<script src="../js/jquery.min.js"></script>-->
 	<script src="../js/iconfont.js"></script>
 	<script type="text/javascript">
-
+        $(window).load(function() {
+            $('#full_feature').swipeslider();
+        });
         $(function () {
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
