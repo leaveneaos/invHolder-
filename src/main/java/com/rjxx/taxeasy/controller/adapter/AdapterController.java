@@ -89,6 +89,7 @@ public class AdapterController extends BaseController {
 
     /**
      * 该品牌代码必须全平台唯一
+     *
      * @param ppdm
      */
     @ApiOperation(value = "手输提取码入口")
@@ -99,13 +100,13 @@ public class AdapterController extends BaseController {
             pp = ppJpaDao.findOneByPpdm(ppdm);
             if (pp == null) {
 //                errorRedirect("GET_GRAND_ERROR");
-                errorRedirect("未找到该品牌");
+                errorRedirect("未找到该品牌[TQ]");
                 return;
             }
         } catch (Exception e) {
             e.printStackTrace();
 //            errorRedirect("GET_GRAND_ERROR");
-            errorRedirect("该品牌不是唯一");
+            errorRedirect("该品牌不是唯一[TQ]");
             return;
         }
 
@@ -123,7 +124,7 @@ public class AdapterController extends BaseController {
         } catch (IOException e) {
             e.printStackTrace();
 //            errorRedirect("REDIRECT_ERROR");
-            errorRedirect("重定向到开票发生错误");
+            errorRedirect("重定向到开票发生错误[TQ]");
             return;
         }
     }
@@ -137,18 +138,21 @@ public class AdapterController extends BaseController {
         } else {
             sessionCode = (String) session.getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
         }
-        if (code != null && sessionCode != null && code.equals(sessionCode)) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(sessionCode)) {
+            return ResultUtil.error("会话过期，请重试[TQ]");
+        }
+        if (code.equals(sessionCode)) {
             if (session.getAttribute("gsdm") == null) {
-                return ResultUtil.error("会话超时");
+                return ResultUtil.error("会话超时[TQ]");
             }
             String gsdm = (String) session.getAttribute("gsdm");
             Map apiMsg = adapterService.getApiMsg(gsdm, tq);
             if (apiMsg == null) {
-                return ResultUtil.error("开票数据未上传，请稍后再试");
+                return ResultUtil.error("开票数据未上传，请稍后再试[TQ]");
             }
             String msg = (String) apiMsg.get("msg");
             if (msg != null) {
-                if(!msg.contains("已处理")){
+                if (!msg.contains("已处理")) {
                     return ResultUtil.error(msg);
                 }
             }
@@ -179,7 +183,7 @@ public class AdapterController extends BaseController {
             map.put("url", HtmlUtils.getBasePath(request) + "kptService/" + gsdm + "/" + q);
             return ResultUtil.success(map);
         } else {
-            return ResultUtil.error("验证码输入错误");
+            return ResultUtil.error("验证码输入错误[TQ]");
         }
     }
 
@@ -481,15 +485,15 @@ public class AdapterController extends BaseController {
         if (jsonData != null) {
             if ("1".equals(jsonData)) {
                 return ResultUtil.error("开票数据未上传，请稍后再试TP[3]");
-            }else if("2".equals(jsonData)){
+            } else if ("2".equals(jsonData)) {
                 return ResultUtil.error("金额传入有误，金额必须大于零TP[2]");
-            }else if("3".equals(jsonData)){
+            } else if ("3".equals(jsonData)) {
                 return ResultUtil.error("未找到默认开票点代码TP[2]");
-            }else if("4".equals(jsonData)){
+            } else if ("4".equals(jsonData)) {
                 return ResultUtil.error("金额与价格数量不一致TP[2]");
-            }else if("5".equals(jsonData)){
+            } else if ("5".equals(jsonData)) {
                 return ResultUtil.error("未找到默认商品代码TP[2]");
-            }else if("6".equals(jsonData)){
+            } else if ("6".equals(jsonData)) {
                 return ResultUtil.error("所需参数为空TP[2]");
             }
             JSONObject jsonObject;
@@ -538,9 +542,9 @@ public class AdapterController extends BaseController {
         }
         String status;
         String sjly;
-        if(AlipayUtils.isAlipayBrowser(request)){
+        if (AlipayUtils.isAlipayBrowser(request)) {
             sjly = "5";//支付宝
-        }else{
+        } else {
             sjly = "6";//其他浏览器
         }
         if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
@@ -620,9 +624,9 @@ public class AdapterController extends BaseController {
             return ResultUtil.success(JSON.toJSONString(map));
         } else {
             String sjly;
-            if(AlipayUtils.isAlipayBrowser(request)){
+            if (AlipayUtils.isAlipayBrowser(request)) {
                 sjly = "5";//支付宝
-            }else{
+            } else {
                 sjly = "6";//其他浏览器
             }
             String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
@@ -642,26 +646,26 @@ public class AdapterController extends BaseController {
     @ApiOperation(value = "type4抬头页面直接提交接口)")
     @RequestMapping(value = "/submitFour", method = RequestMethod.POST)
     public Result submitFour(String gfmc, String gfsh, String gfdz,
-                                String gfdh, String gfyhzh, String gfyh,
-                                String gsdm, String email, String jylsh,
-                                String ddh, String ddrq, String je, String kpddm) {
-            String sjly;
-            if(AlipayUtils.isAlipayBrowser(request)){
-                sjly = "5";//支付宝
-            }else{
-                sjly = "6";//接口录入
-            }
-            String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
-            String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
-                    gfdh, gfyhzh, gfyh, email, userId, sjly, "", "");
-            //开票
-            if ("-1".equals(status)) {
-                return ResultUtil.error("开具失败TP[4.0]");
-            } else {
-                JSONObject jsonObject = JSON.parseObject(status);
-                session.setAttribute("serialorder", jsonObject.getString("serialorder"));
-                return ResultUtil.success(status);
-            }
+                             String gfdh, String gfyhzh, String gfyh,
+                             String gsdm, String email, String jylsh,
+                             String ddh, String ddrq, String je, String kpddm) {
+        String sjly;
+        if (AlipayUtils.isAlipayBrowser(request)) {
+            sjly = "5";//支付宝
+        } else {
+            sjly = "6";//接口录入
+        }
+        String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
+        String status = adapterService.makeInvoiceForFour(gsdm, jylsh, gfmc, gfsh, gfdz,
+                gfdh, gfyhzh, gfyh, email, userId, sjly, "", "");
+        //开票
+        if ("-1".equals(status)) {
+            return ResultUtil.error("开具失败TP[4.0]");
+        } else {
+            JSONObject jsonObject = JSON.parseObject(status);
+            session.setAttribute("serialorder", jsonObject.getString("serialorder"));
+            return ResultUtil.success(status);
+        }
     }
 
     @ApiIgnore
@@ -805,7 +809,7 @@ public class AdapterController extends BaseController {
     public void errorRedirect(String errorName) {
         try {
 //            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
-            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName)+"?t="+System.currentTimeMillis());
+            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName) + "?t=" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();
         }

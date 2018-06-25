@@ -13,6 +13,7 @@ import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.AESUtil;
 import com.rjxx.utils.HtmlUtils;
+import com.rjxx.utils.RandomValidateCodeUtil;
 import com.rjxx.utils.dwz.ShortUrlUtil;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -71,7 +72,7 @@ public class PayController extends BaseController {
             q = AESUtil.encrypt(dataJson, gsxx.getSecretKey());
         } catch (Exception e) {
             e.printStackTrace();
-            return ResultUtil.error("生成二维码失败");
+            return ResultUtil.error("生成二维码失败PAY[URL]");
         }
         Map map = new HashMap<>();
         Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "isStartDWZ");
@@ -81,7 +82,7 @@ public class PayController extends BaseController {
                 map.put("url", dwz);
             } catch (Exception e) {
                 e.printStackTrace();
-                return ResultUtil.error("短网址服务错误");
+                return ResultUtil.error("短网址服务错误PAY[URL]");
             }
         } else {
             map.put("url", HtmlUtils.getBasePath(request) + "pay/" + gsdm + "/" + q);
@@ -94,7 +95,7 @@ public class PayController extends BaseController {
     public void payIn(@PathVariable String gsdm, @PathVariable String q) {
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
         if (gsxx == null) {
-            errorRedirect("该公司不存在");
+            errorRedirect("该公司不存在PAY[IN]");
             return;
         }
         String data = "";
@@ -102,7 +103,7 @@ public class PayController extends BaseController {
             data = AESUtil.decrypt(q, gsxx.getSecretKey());
         } catch (Exception e) {
             e.printStackTrace();
-            errorRedirect("验签失败");
+            errorRedirect("验签失败PAY[IN]");
             return;
         }
         JSONObject jsonData = JSON.parseObject(data);
@@ -155,21 +156,29 @@ public class PayController extends BaseController {
     public Result getPayOut(String gsdm, String orderNo) {
         Map payOut = payService.getPayOut(gsdm, orderNo);
         if (payOut == null) {
-            return ResultUtil.error("未查询到数据");
+            return ResultUtil.error("未查询到数据PAY[GET]");
         }
         return ResultUtil.success(payOut);
     }
 
 
-    @RequestMapping(value = "/extract",method = RequestMethod.POST)
+    @RequestMapping(value = "/extract", method = RequestMethod.POST)
     @ApiOperation("根据商户号提票")
-    public Result extract(String tradeNo){
-       Map receive= payService.extract(tradeNo);
-        String errorMsg = (String) receive.get("errorMsg");
-        if (errorMsg != null) {
-            return ResultUtil.error(errorMsg);
+    public Result extract(String tradeNo, @RequestParam String code) {
+        String sessionCode = (String) session.getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
+        if(StringUtils.isBlank(sessionCode)){
+            return ResultUtil.error("会话过期请重试PAY[EX]");
+        }
+        if (code.equals(sessionCode)) {
+            Map receive = payService.extract(tradeNo);
+            String errorMsg = (String) receive.get("errorMsg");
+            if (errorMsg != null) {
+                return ResultUtil.error(errorMsg);
+            } else {
+                return ResultUtil.success(receive);
+            }
         }else{
-            return ResultUtil.success(receive);
+            return ResultUtil.error("验证码错误PAY[EX]");
         }
     }
 
