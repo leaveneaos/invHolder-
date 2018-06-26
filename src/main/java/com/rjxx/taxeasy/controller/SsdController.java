@@ -157,7 +157,8 @@ public class SsdController extends BaseController{
         String ua = request.getHeader("user-agent").toLowerCase();
         logger.info("------------"+ua);
         String openid = (String) session.getAttribute("openid");
-        String gsdm = (String) session.getAttribute(SESSION_KEY_FPTQ_GSDM);
+        //String gsdm = (String) session.getAttribute(SESSION_KEY_FPTQ_GSDM);
+        String gsdm ="shssts";
         Map<String, Object> result = new HashMap<String, Object>();
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
             Map map = new HashMap<>();
