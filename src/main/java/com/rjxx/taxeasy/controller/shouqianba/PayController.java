@@ -163,7 +163,7 @@ public class PayController extends BaseController {
 
 
     @RequestMapping(value = "/extract", method = RequestMethod.POST)
-    @ApiOperation("根据商户号提票")
+    @ApiOperation("根据交易单号提票")
     public Result extract(String tradeNo, @RequestParam String code) {
         String sessionCode = (String) session.getAttribute(RandomValidateCodeUtil.RANDOMCODEKEY);
         if(StringUtils.isBlank(sessionCode)){
