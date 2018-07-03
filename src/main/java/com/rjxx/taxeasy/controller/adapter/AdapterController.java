@@ -220,24 +220,12 @@ public class AdapterController extends BaseController {
                 }
                 session.setAttribute("gsdm", gsdm);
                 session.setAttribute("q", q);
-                String grantOne = isWechat(TYPE_ONE_CALLBACKURL);
-                try {
-                    if (grantOne != null) {
-                        response.sendRedirect(grantOne);
-                        return;
-                    } else {
-                        Map confirmParamOne = new HashMap();
-                        confirmParamOne.put("orderNo", on);
-                        confirmParamOne.put("orderTime", ot);
-                        confirmParamOne.put("price", pr);
-                        confirmParamOne.put("isTitle", "1");
-                        deal(confirmParamOne,gsdm);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    errorRedirect("重定向开票页面发生错误TP[1]");
-                    return;
-                }
+                Map confirmParamOne = new HashMap();
+                confirmParamOne.put("orderNo", on);
+                confirmParamOne.put("orderTime", ot);
+                confirmParamOne.put("price", pr);
+                confirmParamOne.put("isTitle", "1");
+                deal(confirmParamOne, gsdm);
                 break;
             case "2":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
@@ -738,13 +726,25 @@ public class AdapterController extends BaseController {
                             return;
                         } else {
                             if("1".equals(isTitle)) {
-                                response.sendRedirect(
-                                        request.getContextPath() + "/qrcode/input.html?" +
-                                                "t=" + System.currentTimeMillis() +
-                                                "=" + orderNo +
-                                                "=" + orderTime +
-                                                "=" + price);
-                                return;
+                                String grantOne = isWechat(TYPE_ONE_CALLBACKURL);
+                                try {
+                                    if (grantOne != null) {
+                                        response.sendRedirect(grantOne);
+                                        return;
+                                    } else {
+                                        response.sendRedirect(
+                                                request.getContextPath() + "/qrcode/input.html?" +
+                                                        "t=" + System.currentTimeMillis() +
+                                                        "=" + orderNo +
+                                                        "=" + orderTime +
+                                                        "=" + price);
+                                        return;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    errorRedirect("重定向开票页面发生错误TP[1]");
+                                    return;
+                                }
                             }else{
                                 //无品牌
                                 errorRedirect("未找到品牌");
