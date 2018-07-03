@@ -226,19 +226,19 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(grantOne);
                         return;
                     } else {
-                        response.sendRedirect(
-                                request.getContextPath() + "/qrcode/input.html?" +
-                                        "t=" + System.currentTimeMillis() +
-                                        "=" + on +
-                                        "=" + ot +
-                                        "=" + pr);
-                        return;
+                        Map confirmParamOne = new HashMap();
+                        confirmParamOne.put("orderNo", on);
+                        confirmParamOne.put("orderTime", ot);
+                        confirmParamOne.put("price", pr);
+                        confirmParamOne.put("isTitle", "1");
+                        deal(confirmParamOne,gsdm);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     errorRedirect("重定向开票页面发生错误TP[1]");
                     return;
                 }
+                break;
             case "2":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
                     errorRedirect("必须的参数为空TP[2]");
@@ -706,15 +706,24 @@ public class AdapterController extends BaseController {
                 String ppurl = (String) result.get("ppurl");
                 String orderNo = (String) result.get("orderNo");
                 String extractCode = (String) result.get("extractCode");
-                String tqm="";
-                if(org.apache.commons.lang3.StringUtils.isNotBlank(extractCode)){
-                    tqm = extractCode;
-                }else{
-                    tqm = ppdm + orderNo;
-                }
-                session.setAttribute("tqm", tqm);
+                //isTitle==1是type1
+                String isTitle = (String) result.get("isTitle");
+                String orderTime = (String) result.get("orderTime");
+                String price = (String) result.get("price");
                 session.setAttribute("orderNo", orderNo);
-                List<String> status = adapterService.checkStatus(tqm, gsdm);
+                List<String> status = null;
+                if(!"1".equals(isTitle)){
+                    String tqm="";
+                    if(org.apache.commons.lang3.StringUtils.isNotBlank(extractCode)){
+                        tqm = extractCode;
+                    }else{
+                        tqm = ppdm + orderNo;
+                    }
+                    session.setAttribute("tqm", tqm);
+                    status = adapterService.checkStatus(tqm, gsdm,null);
+                }else{
+                    status = adapterService.checkStatus(null, gsdm,orderNo);
+                }
                 if (!status.isEmpty()) {
                     if (status.contains("可开具")) {
                         if (StringUtils.isNotBlank(ppdm)) {
@@ -728,9 +737,19 @@ public class AdapterController extends BaseController {
                             response.sendRedirect(sendUrl);
                             return;
                         } else {
-                            //无品牌
-                            errorRedirect("未找到品牌");
-                            return;
+                            if("1".equals(isTitle)) {
+                                response.sendRedirect(
+                                        request.getContextPath() + "/qrcode/input.html?" +
+                                                "t=" + System.currentTimeMillis() +
+                                                "=" + orderNo +
+                                                "=" + orderTime +
+                                                "=" + price);
+                                return;
+                            }else{
+                                //无品牌
+                                errorRedirect("未找到品牌");
+                                return;
+                            }
                         }
                     } else if (status.contains("开具中")) {
                         //开具中对应的url

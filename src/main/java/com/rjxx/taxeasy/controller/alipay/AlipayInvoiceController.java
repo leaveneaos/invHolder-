@@ -254,7 +254,7 @@ public class AlipayInvoiceController extends BaseController {
                     errorRedirect("根据该订单号未找到该订单!请重试!");
                     return;
                 }
-                List<String> status = adapterService.checkStatus(wxFpxx.getTqm(), wxFpxx.getGsdm());
+                List<String> status = adapterService.checkStatus(wxFpxx.getTqm(), wxFpxx.getGsdm(),null);
                 if (status != null) {
                     if (status.contains("开具中")) {
                         //开具中对应的url
