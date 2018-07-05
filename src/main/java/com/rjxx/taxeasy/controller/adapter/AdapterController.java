@@ -99,13 +99,11 @@ public class AdapterController extends BaseController {
         try {
             pp = ppJpaDao.findOneByPpdm(ppdm);
             if (pp == null) {
-//                errorRedirect("GET_GRAND_ERROR");
                 errorRedirect("未找到该品牌[TQ]");
                 return;
             }
         } catch (Exception e) {
             e.printStackTrace();
-//            errorRedirect("GET_GRAND_ERROR");
             errorRedirect("该品牌不是唯一[TQ]");
             return;
         }
@@ -123,7 +121,6 @@ public class AdapterController extends BaseController {
             return;
         } catch (IOException e) {
             e.printStackTrace();
-//            errorRedirect("REDIRECT_ERROR");
             errorRedirect("重定向到开票发生错误[TQ]");
             return;
         }
@@ -192,13 +189,11 @@ public class AdapterController extends BaseController {
     public void get(@PathVariable String gsdm, @PathVariable String q) {
         Gsxx gsxx = gsxxJpaDao.findOneByGsdm(gsdm);
         if (gsxx == null) {
-//            errorRedirect("COMPANY_MSG_ERROR");
             errorRedirect("未知的公司");
             return;
         }
         Boolean checkResult = RJCheckUtil.checkMD5ForAll(gsxx.getSecretKey(), q);
         if (!checkResult) {
-//            errorRedirect("QRCODE_VALIDATION_FAILED");
             errorRedirect("验签失败");
             return;
         }
@@ -214,42 +209,26 @@ public class AdapterController extends BaseController {
         String type = jsonData.getString("type");
         String mi = jsonData.getString("mi");
         if (!StringUtil.isNotBlankList(type)) {
-//            errorRedirect("MISSING_TYPE");
             errorRedirect("获取开票类型失败");
             return;
         }
         switch (type) {
             case "1":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
-//                    errorRedirect("TYPE_ONE_REQUIRED_PARAMETER_MISSING");
                     errorRedirect("必须的参数为空TP[1]");
                     return;
                 }
                 session.setAttribute("gsdm", gsdm);
                 session.setAttribute("q", q);
-                String grantOne = isWechat(TYPE_ONE_CALLBACKURL);
-                try {
-                    if (grantOne != null) {
-                        response.sendRedirect(grantOne);
-                        return;
-                    } else {
-                        response.sendRedirect(
-                                request.getContextPath() + "/qrcode/input.html?" +
-                                        "t=" + System.currentTimeMillis() +
-                                        "=" + on +
-                                        "=" + ot +
-                                        "=" + pr);
-                        return;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-//                    errorRedirect("REDIRECT_ERROR");
-                    errorRedirect("重定向开票页面发生错误TP[1]");
-                    return;
-                }
+                Map confirmParamOne = new HashMap();
+                confirmParamOne.put("orderNo", on);
+                confirmParamOne.put("orderTime", ot);
+                confirmParamOne.put("price", pr);
+                confirmParamOne.put("isTitle", "1");
+                deal(confirmParamOne, gsdm);
+                break;
             case "2":
                 if (!StringUtil.isNotBlankList(on, ot, pr)) {
-//                    errorRedirect("TYPE_TWO_REQUIRED_PARAMETER_MISSING");
                     errorRedirect("必须的参数为空TP[2]");
                     return;
                 }
@@ -262,7 +241,6 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(grant);
                     } catch (IOException e) {
                         e.printStackTrace();
-//                        errorRedirect("REDIRECT_ERROR");
                         errorRedirect("重定向开票页面发生错误TP[2]");
                     }
                     return;
@@ -273,7 +251,6 @@ public class AdapterController extends BaseController {
                 break;
             case "3":
                 if (StringUtil.isBlankList(on, tq)) {
-//                    errorRedirect("TYPE_THREE_REQUIRED_PARAMETER_MISSING");
                     errorRedirect("必须的参数为空TP[3]");
                     return;
                 }
@@ -300,7 +277,6 @@ public class AdapterController extends BaseController {
                         Skp skp = skpJpaDao.findOneByGsdmAndXfsh(gsdm, xf.getId());
                         storeNo = skp.getKpddm();
                     } catch (Exception e) {
-//                        errorRedirect("TYPE_THREE_SN_PARAMETER_MISSING");
                         errorRedirect("缺少开票点代码TP[3]");
                         return;
                     }
@@ -318,37 +294,31 @@ public class AdapterController extends BaseController {
                         response.sendRedirect(grantThree);
                     } catch (IOException e) {
                         e.printStackTrace();
-//                        errorRedirect("REDIRECT_ERROR");
                         errorRedirect("重定向开票页面发生错误TP[3]");
                         return;
                     }
                     return;
                 } else {
-                    Map result = adapterService.getGrandMsg(gsdm, orderNo, storeNo);
+                    Map result = adapterService.getGrandMsg(gsdm, orderNo,extractCode, storeNo);
                     deal(result, gsdm);
                 }
                 break;
             case "4":
                 if (!StringUtil.isNotBlankList(mi, ot)) {
-//                    errorRedirect("TYPE_FOUR_REQUIRED_PARAMETER_MISSING");
                     errorRedirect("必须的参数为空TP[4]");
                     return;
                 }
                 String confirmMsg = adapterService.getConfirmMsg(gsdm, q);
                 if ("error".equals(confirmMsg)) {
-//                    errorRedirect("GET_CONFIRM_MSG_ERROR");
                     errorRedirect("获取确认信息失败TP[4]");
                     return;
                 } else if ("sn".equals(confirmMsg)) {
-//                    errorRedirect("GET_STORENO_ERROR");
                     errorRedirect("获取开票点失败TP[4]");
                     return;
                 } else if ("jyxxsq".equals(confirmMsg)) {
-//                    errorRedirect("GET_ORDER_ERROR");
                     errorRedirect("获取订单失败TP[4]");
                     return;
                 } else if ("pp".equals(confirmMsg)) {
-//                    errorRedirect("GET_GRAND_ERROR");
                     errorRedirect("获取品牌失败TP[4]");
                     return;
                 } else {
@@ -365,7 +335,6 @@ public class AdapterController extends BaseController {
                     }
                 }
             default:
-//                errorRedirect("UNKNOWN_TYPE");
                 errorRedirect("未知的开票类型");
                 return;
         }
@@ -383,7 +352,6 @@ public class AdapterController extends BaseController {
             session.setAttribute("openid", openid);
         }
         if (session.getAttribute("gsdm") == null) {
-//            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
             errorRedirect("会话已过期TP[1]");
             return;
         }
@@ -397,7 +365,6 @@ public class AdapterController extends BaseController {
         String pr = jsonData.getString("pr");
         boolean b = wechatFpxxService.InFapxx(null, gsdm, on, q, "1", openid, "", null, request, "1");
         if (!b) {
-//            errorRedirect("SAVE_WECAHT_ERROR");
             errorRedirect("保存发票信息失败TP[1]");
             return;
         }
@@ -441,7 +408,6 @@ public class AdapterController extends BaseController {
             session.setAttribute("openid", openid);
         }
         if (session.getAttribute("gsdm") == null) {
-//            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
             errorRedirect("会话已过期TP[2][3]");
             return;
         }
@@ -449,11 +415,12 @@ public class AdapterController extends BaseController {
         String q = session.getAttribute("q").toString();
         String on = (String) session.getAttribute("on");
         String sn = (String) session.getAttribute("sn");
+        String tq = (String) session.getAttribute("tq");
         Map result;
         if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
             result = adapterService.getGrandMsg(gsdm, q);//type2
         } else {
-            result = adapterService.getGrandMsg(gsdm, on, sn);//type3
+            result = adapterService.getGrandMsg(gsdm, on,tq, sn);//type3
         }
         deal(result, gsdm);
     }
@@ -476,7 +443,7 @@ public class AdapterController extends BaseController {
             jsonData = adapterService.getSpxx(gsdm, q);
             apiType = "2";
         } else {
-            if (!StringUtil.isNotBlankList(on, sn, tq)) {
+            if (StringUtil.isBlankList(on, sn, tq)) {
                 return ResultUtil.error("交易信息获取失败TP[3]");
             }
             jsonData = adapterService.getSpxx(gsdm, on, sn, tq);
@@ -599,7 +566,6 @@ public class AdapterController extends BaseController {
     public Result getPDFList(String serialorder) {
         session.setAttribute("serialorder", serialorder);
         Map map = new HashMap();
-//        map.put("url", request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
         map.put("url", makedUrl + "?serialorder=" + serialorder + "&t=" + System.currentTimeMillis());
 
         return ResultUtil.success(JSON.toJSONString(map));
@@ -679,11 +645,6 @@ public class AdapterController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
-//        if (session.getAttribute("gsdm") == null) {
-////            errorRedirect("GET_WECHAT_AUTHORIZED_FAILED");
-//            errorRedirect("会话已过期TP[4]");
-//            return;
-//        }
         if (session.getAttribute("gsdm") == null || session.getAttribute("jylsh") == null) {
 //            errorRedirect("SESSION_MISSING");
             errorRedirect("会话已过期TP[4]");
@@ -698,7 +659,6 @@ public class AdapterController extends BaseController {
         String email = (String) session.getAttribute("email");
         Boolean b = wechatFpxxService.InFapxx(email, gsdm, ddh, jylsh, "1", openid, "", "", request, "4");
         if (!b) {
-//            errorRedirect("SAVE_WECAHT_ERROR");
             errorRedirect("保存发票信息失败TP[4]");
             return;
         }
@@ -710,7 +670,6 @@ public class AdapterController extends BaseController {
         } else if ("否".equals(isC)) {
             wechatAuthType = "0";
         } else {
-//            errorRedirect("UNKNOW_2C_TYPE");
             errorRedirect("未知的参数值TP[4]");
             return;
         }
@@ -731,13 +690,28 @@ public class AdapterController extends BaseController {
     private void deal(Map result, String gsdm) {
         try {
             if (result != null) {
-                String ppdm = result.get("ppdm").toString();
-                String ppurl = result.get("ppurl").toString();
-                String orderNo = result.get("orderNo").toString();
-                String tqm = ppdm + orderNo;
-                session.setAttribute("tqm", tqm);
+                String ppdm = (String) result.get("ppdm");
+                String ppurl = (String) result.get("ppurl");
+                String orderNo = (String) result.get("orderNo");
+                String extractCode = (String) result.get("extractCode");
+                //isTitle==1是type1
+                String isTitle = (String) result.get("isTitle");
+                String orderTime = (String) result.get("orderTime");
+                String price = (String) result.get("price");
                 session.setAttribute("orderNo", orderNo);
-                List<String> status = adapterService.checkStatus(tqm, gsdm);
+                List<String> status = null;
+                if(!"1".equals(isTitle)){
+                    String tqm="";
+                    if(org.apache.commons.lang3.StringUtils.isNotBlank(extractCode)){
+                        tqm = extractCode;
+                    }else{
+                        tqm = ppdm + orderNo;
+                    }
+                    session.setAttribute("tqm", tqm);
+                    status = adapterService.checkStatus(tqm, gsdm,null);
+                }else{
+                    status = adapterService.checkStatus(null, gsdm,orderNo);
+                }
                 if (!status.isEmpty()) {
                     if (status.contains("可开具")) {
                         if (StringUtils.isNotBlank(ppdm)) {
@@ -751,18 +725,37 @@ public class AdapterController extends BaseController {
                             response.sendRedirect(sendUrl);
                             return;
                         } else {
-                            //无品牌
-//                            errorRedirect("GET_GRAND_ERROR");
-                            errorRedirect("未找到品牌");
-                            return;
+                            if("1".equals(isTitle)) {
+                                String grantOne = isWechat(TYPE_ONE_CALLBACKURL);
+                                try {
+                                    if (grantOne != null) {
+                                        response.sendRedirect(grantOne);
+                                        return;
+                                    } else {
+                                        response.sendRedirect(
+                                                request.getContextPath() + "/qrcode/input.html?" +
+                                                        "t=" + System.currentTimeMillis() +
+                                                        "=" + orderNo +
+                                                        "=" + orderTime +
+                                                        "=" + price);
+                                        return;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    errorRedirect("重定向开票页面发生错误TP[1]");
+                                    return;
+                                }
+                            }else{
+                                //无品牌
+                                errorRedirect("未找到品牌");
+                                return;
+                            }
                         }
                     } else if (status.contains("开具中")) {
                         //开具中对应的url
-//                        response.sendRedirect(request.getContextPath() + "/QR/zzkj.html?t=" + System.currentTimeMillis());
                         response.sendRedirect(ticketingUrl);
                         return;
                     } else if (status.contains("红冲")) {
-//                        errorRedirect("ORDER_CANCELLED");
                         errorRedirect("该订单已红冲");
                         return;
                     } else if (status.contains("纸票")) {
@@ -771,7 +764,6 @@ public class AdapterController extends BaseController {
                     } else {
                         String serialOrder = status.get(0).split("[+]")[4];
                         session.setAttribute("serialorder", serialOrder);
-//                        response.sendRedirect(request.getContextPath() + "/CO/dzfpxq.html?_t=" + System.currentTimeMillis());
                         response.sendRedirect(makedUrl + "?serialorder=" + serialOrder + "&t=" + System.currentTimeMillis());
                         return;
                     }
@@ -786,7 +778,6 @@ public class AdapterController extends BaseController {
             }
         } catch (IOException e) {
             e.printStackTrace();
-//            errorRedirect("REDIRECT_ERROR");
             errorRedirect("页面跳转错误");
             return;
         }
@@ -808,7 +799,6 @@ public class AdapterController extends BaseController {
 
     public void errorRedirect(String errorName) {
         try {
-//            response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=" + errorName);
             response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName) + "?t=" + System.currentTimeMillis());
         } catch (IOException e) {
             e.printStackTrace();

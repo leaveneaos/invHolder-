@@ -111,11 +111,7 @@ public class AlipayTask implements Runnable{
                     status = adapterService.makeInvoice(wxFpxx.getGsdm(), orderNo, storeNo, extractCode, gfmc, gfsh, null, gfyh, gfyhzh, gfdz, gfdh, wxFpxx.getTqm(), wxFpxx.getOpenId(), "5", null, null);
                 }else if("4".equals(apiTpye)){
                     String yx;
-//                    if(email!=null){
-//                        yx = email;
-//                    }else{
                         yx = wxFpxx.getTqm();//该字段临时存放邮箱
-//                    }
                     status=adapterService.makeInvoiceForFour(wxFpxx.getGsdm(),wxFpxx.getQ(),gfmc,gfsh,gfdz,gfdh,gfyhzh,gfyh,yx,wxFpxx.getOpenId(),"5",null,null);
                 }
                 if ("-1".equals(status)) {

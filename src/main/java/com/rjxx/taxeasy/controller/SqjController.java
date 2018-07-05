@@ -976,6 +976,8 @@ public class SqjController extends BaseController {
             jymxsq.setXgsj(new Date());
             jymxsq.setSpsl(spvo.getSl());
             jymxsq.setSpje(jymxsq.getJshj());
+            jymxsq.setSpdj(jymxsq.getJshj());
+            jymxsq.setSps(1d);
             jymxsqList.add(jymxsq);
 
             List<Jyzfmx> jyzfmxList = new ArrayList<>();

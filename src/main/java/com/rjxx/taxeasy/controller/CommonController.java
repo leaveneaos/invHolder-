@@ -197,7 +197,7 @@ public class CommonController extends BaseController {
                     errorRedirect("根据微信回传订单号未找到该笔订单");
                     return null;
                 }
-                List<String> status = adapterService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm());
+                List<String> status = adapterService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm(),null);
                 if(status!=null){
                     if(status.contains("开具中")){
                         //开具中对应的url
