@@ -41,7 +41,7 @@ public class InitController {
             @ApiImplicitParam(name = "type", value = "哪个通用模板", required = false, dataType = "String")
     })
     public Result initGsxx(@RequestParam String gsdm, @RequestParam String gsmc,@RequestParam(required = false) String type){
-        String result = initCompanyService.initGsxx(gsdm, gsmc,type);
+        String result = initCompanyService.initGsxx(gsdm, gsmc);
         if(result==null){
             return ResultUtil.success();
         }else{
