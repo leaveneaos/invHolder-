@@ -36,11 +36,10 @@ public class InitController {
     @ApiOperation(value = "测试环境初始化")
     @RequestMapping(value = "/intGsxx",method = RequestMethod.POST)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "gsdm", value = "公司代码", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "gsmc", value = "公司名称（简称）", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "type", value = "哪个通用模板", required = false, dataType = "String")
+            @ApiImplicitParam(name = "gsdm", value = "公司代码", required = true, dataType = "String",paramType = "query"),
+            @ApiImplicitParam(name = "gsmc", value = "公司名称（简称）", required = true, dataType = "String",paramType = "query")
     })
-    public Result initGsxx(@RequestParam String gsdm, @RequestParam String gsmc,@RequestParam(required = false) String type){
+    public Result initGsxx(@RequestParam String gsdm, @RequestParam String gsmc){
         String result = initCompanyService.initGsxx(gsdm, gsmc);
         if(result==null){
             return ResultUtil.success();
