@@ -5,11 +5,14 @@ import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.AppKeySecretUtils;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * @author wangyahui
@@ -34,11 +37,12 @@ public class InitController {
     @ApiOperation(value = "测试环境初始化")
     @RequestMapping(value = "/intGsxx",method = RequestMethod.POST)
     public Result initGsxx(@RequestParam String gsdm){
-        String result = initCompanyService.initGsxx(gsdm);
-        if(result==null){
-            return ResultUtil.success();
+        Map result = initCompanyService.initGsxx(gsdm);
+        String errorMsg = (String) result.get("errorMsg");
+        if(StringUtils.isNotBlank(errorMsg)){
+            return ResultUtil.error(errorMsg);
         }else{
-            return ResultUtil.error(result);
+            return ResultUtil.success(result);
         }
     }
 }

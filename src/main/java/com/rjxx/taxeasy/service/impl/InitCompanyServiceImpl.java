@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author wangyahui
@@ -36,14 +38,16 @@ public class InitCompanyServiceImpl implements InitCompanyService {
     private CszbJpaDao cszbJpaDao;
 
     @Override
-    public String initGsxx(String gsdm) {
+    public Map initGsxx(String gsdm) {
         try {
             Gsxx gsxx = new Gsxx();
             gsxx.setGsmc(gsdm);
             gsxx.setGsdm(gsdm);
             String[] arr = AppKeySecretUtils.generate();
-            gsxx.setAppKey("RJ" + arr[0].substring(0, 12));
-            gsxx.setSecretKey(arr[1]);
+            String appId = "RJ" + arr[0].substring(0, 12);
+            String key = arr[1];
+            gsxx.setAppKey(appId);
+            gsxx.setSecretKey(key);
             gsxx.setGsjc(gsdm);
             gsxx.setYjmbDm(4);
             gsxx.setXfnum(100);
@@ -147,10 +151,21 @@ public class InitCompanyServiceImpl implements InitCompanyService {
             cszb2.setCsid(38);
             cszb2.setCsz("http://datarj.imwork.net:24825/SKServer/SKDo");
             cszbJpaDao.save(cszb2);
-            return null;
+
+            Map succMap = new HashMap();
+            succMap.put("appId", appId);
+            succMap.put("key", key);
+            succMap.put("公司代码", gsdm);
+            succMap.put("开票点代码", gsdm+"_01");
+            succMap.put("销方名称", "上海百旺测试3643");
+            succMap.put("销方税号", "500102010003643");
+            succMap.put("平台账号", gsdm+"_test");
+            return succMap;
         } catch (Exception e) {
             e.printStackTrace();
-            return e.getMessage();
+            Map errorMsg = new HashMap();
+            errorMsg.put("errorMsg", e.getMessage());
+            return errorMsg;
         }
     }
 }

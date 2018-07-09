@@ -1,5 +1,7 @@
 package com.rjxx.taxeasy.service;
 
+import java.util.Map;
+
 /**
  * @author wangyahui
  * @email wangyahui@datarj.com
@@ -7,5 +9,5 @@ package com.rjxx.taxeasy.service;
  * @date 2018/7/9
  */
 public interface InitCompanyService {
-    String initGsxx(String gsdm);
+    Map initGsxx(String gsdm);
 }
