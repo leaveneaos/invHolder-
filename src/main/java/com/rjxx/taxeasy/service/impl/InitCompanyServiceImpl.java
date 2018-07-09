@@ -39,6 +39,12 @@ public class InitCompanyServiceImpl implements InitCompanyService {
 
     @Override
     public Map initGsxx(String gsdm) {
+        Map errorMsg = new HashMap();
+        Gsxx oneByGsdm = gsxxJpaDao.findOneByGsdm(gsdm);
+        if(oneByGsdm!=null){
+            errorMsg.put("errorMsg", "该公司已存在");
+            return errorMsg;
+        }
         try {
             Gsxx gsxx = new Gsxx();
             gsxx.setGsmc(gsdm);
@@ -163,7 +169,6 @@ public class InitCompanyServiceImpl implements InitCompanyService {
             return succMap;
         } catch (Exception e) {
             e.printStackTrace();
-            Map errorMsg = new HashMap();
             errorMsg.put("errorMsg", e.getMessage());
             return errorMsg;
         }
