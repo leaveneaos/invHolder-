@@ -7,5 +7,5 @@ package com.rjxx.taxeasy.service;
  * @date 2018/7/9
  */
 public interface InitCompanyService {
-    String initGsxx(String gsdm, String gsmc);
+    String initGsxx(String gsdm);
 }

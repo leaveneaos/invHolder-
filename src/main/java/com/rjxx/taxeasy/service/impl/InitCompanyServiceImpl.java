@@ -36,17 +36,15 @@ public class InitCompanyServiceImpl implements InitCompanyService {
     private CszbJpaDao cszbJpaDao;
 
     @Override
-    public String initGsxx(String gsdm, String gsmc) {
-        logger.info(gsdm);
-        logger.info(gsmc);
+    public String initGsxx(String gsdm) {
         try {
             Gsxx gsxx = new Gsxx();
-            gsxx.setGsmc(gsmc);
+            gsxx.setGsmc(gsdm);
             gsxx.setGsdm(gsdm);
             String[] arr = AppKeySecretUtils.generate();
             gsxx.setAppKey("RJ" + arr[0].substring(0, 12));
             gsxx.setSecretKey(arr[1]);
-            gsxx.setGsjc(gsmc);
+            gsxx.setGsjc(gsdm);
             gsxx.setYjmbDm(4);
             gsxx.setXfnum(100);
             gsxx.setKpdnum(1000);
@@ -109,7 +107,7 @@ public class InitCompanyServiceImpl implements InitCompanyService {
             yh.setZtbz("1");
             yh.setAdmin("1");
             yh.setZhlxdm("03");
-            yh.setYhmc(gsmc);
+            yh.setYhmc(gsdm);
             yh.setDlyhid(gsdm+"_test");
             yh.setYhmm("88e65665a998784d0eb4dd3ab112a87b");
             yh.setGsdm(gsdm);
