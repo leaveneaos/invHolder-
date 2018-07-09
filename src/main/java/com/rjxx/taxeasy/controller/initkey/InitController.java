@@ -4,6 +4,7 @@ import com.rjxx.taxeasy.service.InitCompanyService;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.AppKeySecretUtils;
+import com.rjxx.utils.StringUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +35,8 @@ public class InitController {
     @ApiOperation(value = "测试环境初始化")
     @RequestMapping(value = "/intGsxx",method = RequestMethod.POST)
     public Result initGsxx(@RequestParam String gsdm, @RequestParam String gsmc){
-        String result = initCompanyService.initGsxx(gsdm, gsmc);
+        String s = StringUtil.changeCharset(gsmc, "utf-8");
+        String result = initCompanyService.initGsxx(gsdm, s);
         if(result==null){
             return ResultUtil.success();
         }else{
