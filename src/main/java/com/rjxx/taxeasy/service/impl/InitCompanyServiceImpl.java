@@ -129,12 +129,26 @@ public class InitCompanyServiceImpl implements InitCompanyService {
             groupJpaDao.save(group);
 
             Cszb cszb = new Cszb();
+            cszb.setYxbz("1");
+            cszb.setLrry(1);
+            cszb.setXgry(1);
+            cszb.setLrsj(new Date());
+            cszb.setXgsj(new Date());
+            cszb.setGsdm(gsdm);
             cszb.setCsid(15);
             cszb.setCsz("03");
             cszbJpaDao.save(cszb);
-            cszb.setCsid(38);
-            cszb.setCsz("http://datarj.imwork.net:24825/SKServer/SKDo");
-            cszbJpaDao.save(cszb);
+
+            Cszb cszb2 = new Cszb();
+            cszb2.setYxbz("1");
+            cszb2.setLrry(1);
+            cszb2.setXgry(1);
+            cszb2.setLrsj(new Date());
+            cszb2.setXgsj(new Date());
+            cszb2.setGsdm(gsdm);
+            cszb2.setCsid(38);
+            cszb2.setCsz("http://datarj.imwork.net:24825/SKServer/SKDo");
+            cszbJpaDao.save(cszb2);
             return null;
         } catch (Exception e) {
             e.printStackTrace();

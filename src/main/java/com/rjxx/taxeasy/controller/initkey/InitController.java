@@ -4,8 +4,6 @@ import com.rjxx.taxeasy.service.InitCompanyService;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.AppKeySecretUtils;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,10 +33,6 @@ public class InitController {
 
     @ApiOperation(value = "测试环境初始化")
     @RequestMapping(value = "/intGsxx",method = RequestMethod.POST)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "gsdm", value = "公司代码", required = true, dataType = "String",paramType = "query"),
-            @ApiImplicitParam(name = "gsmc", value = "公司名称（简称）", required = true, dataType = "String",paramType = "query")
-    })
     public Result initGsxx(@RequestParam String gsdm, @RequestParam String gsmc){
         String result = initCompanyService.initGsxx(gsdm, gsmc);
         if(result==null){
