@@ -93,6 +93,8 @@ body{
     text-align: center;
     display: flex;
     display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
     justify-content:center;
     align-items: center;
     -moz-box-shadow:0px 2px 2px #eee;
@@ -122,6 +124,9 @@ body{
     color:#000000;
     background: url('./../logo/newimg/banner/t00.png');
     display: flex;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
     justify-content:center;
     align-items: center;
 }
@@ -136,8 +141,11 @@ body{
 }
 .main .content .middle ul{
     height: 1.12rem;
-    border-bottom: #E6E8F1 solid 1px ;display: flex;
+    border-bottom: #E6E8F1 solid 1px ;
+    display: flex;
     display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
     flex-wrap: nowrap;
     margin: 0 0.80rem;
 }
@@ -181,6 +189,9 @@ body{
 }
 footer{
     display: flex;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
     justify-content: space-between;
     position: relative;
     color: #000000;
@@ -337,6 +348,9 @@ footer .help {
     height: 0.58rem;
     border-bottom: #E6E8F1 solid 1px;
     display: flex;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
     margin: 0 0.80rem;
     font-size: 0.24rem;
     position: relative;
@@ -373,6 +387,9 @@ footer .help {
 }
 .twoPage .middle .type{
     display: flex;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
     justify-content: center ;
     margin: 0.2rem 0 0.25rem 0;
 }
