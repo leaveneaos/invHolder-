@@ -157,11 +157,11 @@ public class AdapterController extends BaseController {
             adapterGet.setType("3");
             if (apiMsg.get("jyxxsq") != null) {
                 Jyxxsq jyxxsq = (Jyxxsq) apiMsg.get("jyxxsq");
-                adapterGet.setOn(jyxxsq.getDdh());
+                adapterGet.setOn(jyxxsq.getTqm());
                 adapterGet.setSn(jyxxsq.getKpddm());
             } else {
                 AdapterPost post = (AdapterPost) apiMsg.get("post");
-                adapterGet.setOn(post.getData().getOrder().getOrderNo());
+                adapterGet.setOn(post.getData().getOrder().getExtractedCode());
                 adapterGet.setSn(post.getClientNo());
             }
 
