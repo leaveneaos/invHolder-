@@ -26,6 +26,11 @@
             <version>java-ALL20170516175137</version>
         </dependency>
         <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>alipay-sdk-java-3.3.4.ALL</artifactId>
+            <version>3.3.4</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
