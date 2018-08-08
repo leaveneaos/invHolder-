@@ -16,7 +16,7 @@ public interface BarcodeService {
     String chamateYX(String gsdm,String gfmc,
                        String gfsh,String email,String gfyh,
                        String gfyhzh,String gfdz,String gfdh,
-                       String openid,String sjly,String access_token,String weixinOrderNo);
+                       String openid,String sjly,String access_token,String weixinOrderNo,String storeNo);
     /**
      * 拉取数据
      * 封装开具
