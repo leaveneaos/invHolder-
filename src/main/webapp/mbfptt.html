@@ -250,10 +250,13 @@
 
 		function CheckAll(obj) {
 		    if ($(obj).prop("checked")) {
-		      $('.isCheck').html('*');
-		    }else {
-		      $('.isCheck').html('');
-		    }
+                $('.isCheck').html('*');
+                //请输入发票抬头
+                $("#fptt").attr('placeholder','请输入发票抬头')
+            }else {
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
+            }
 		} 	
 
 		// 税号校验

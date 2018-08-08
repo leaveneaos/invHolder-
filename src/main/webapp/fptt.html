@@ -347,8 +347,10 @@
 		function CheckAll(obj) {
 		   if ($(obj).prop("checked")) {
 		      $('.isCheck').html('*');
+               $("#fptt").attr('placeholder','请输入发票抬头')
 		   } else {
 		      $('.isCheck').html('');
+               $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
 		   }
 		} 
 	</script>
