@@ -100,6 +100,7 @@
 				for(var i=0;i<arr.length;i++) {
 					arr[i].parent().css('display','none');
 				}
+				$("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
 
 			})
 			$('#company').on('click',function() {
@@ -107,6 +108,7 @@
 				for(var i=0;i<arr.length;i++) {
 					arr[i].parent().css('display','block');
 				}
+                $("#fptt").attr('placeholder','名称(必填)')
 			})
 			// 获取支付宝默认抬头信息
 			$.post(

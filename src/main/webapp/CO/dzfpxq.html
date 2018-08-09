@@ -78,6 +78,30 @@
 		.content{
 			background-color: #fff;
 			border-radius: 10px;
+			position: relative;
+		}
+		.contentTopBox{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background-color: #ffffff;
+		}
+		.contentTopBox-form{
+			width: 80%;
+			margin: 100px auto;
+		}
+		#sureOk{
+			width: 20%;
+			background-color: #4BB4F7;
+			list-style-type: none;
+			color: #fff;
+			border-radius: 5px;
+			float: right;
+		}
+		#gfmText{
+			width: 70%;
+			height: 38px;
+
 		}
 		.middle{
 			padding: 5%;
@@ -95,6 +119,13 @@
 	<input id="hide"  type="hidden">
 	<section class="main">
 		<div class="content">
+			<div class="contentTopBox">
+				<div class="contentTopBox-form">
+					<input type="text" id="gfmText"  placeholder="请输入购方名称">
+					<button id="sureOk" >确认</button>
+					<p class="contentTopBox-formTitle" style="display: none;color: red;font-size: 12px">您输入的购方名称没有匹配，请重新输入！</p>
+				</div>
+			</div>
 		<div class="middle">
 			<div style="text-align: center;">增值税电子普通发票</div>
 		</div>
@@ -147,6 +178,7 @@
             window.location.assign(encodeURI(myurl));
         }
 		$(function(){
+            var listArry=[];
             $.post(
                 "../tq/fpxx",
                 {},
@@ -155,6 +187,7 @@
                         redirect("没有找到发票信息，请重试！");
 					}else {
                     var items = data.kplsList;
+                        listArry=items;
                     var html='';
                     for(var i = 0; i < items.length; i++){
                         if(i>2){
@@ -172,6 +205,18 @@
                     }
                 }
             )
+            $("#sureOk").click(function(){
+                var textValue=$("#gfmText").val();
+                listArry.forEach(function (value,index) {
+                    if(textValue==value.gfmc){
+                        $(".contentTopBox").css("display",'none');
+                        $(".btoTip").css("display",'block');
+                        return false;
+                    }
+                })
+                $('.contentTopBox-formTitle').css("display",'block')
+
+            })
 		})
         function RetainedDecimalPlaces(num) {
             num = parseFloat(num).toFixed(2);

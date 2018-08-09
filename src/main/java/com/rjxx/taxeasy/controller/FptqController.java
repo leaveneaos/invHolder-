@@ -185,6 +185,7 @@ public class FptqController extends BaseController {
                 tqjlService.save(tqjl);
 				request.getSession().setAttribute("djh",list.get(0).getDjh());
 				request.getSession().setAttribute("serialorder",list.get(0).getSerialorder());
+				result.put("serialOrder",list.get(0).getSerialorder());
             } else {
                 result.put("num", "3");
             }

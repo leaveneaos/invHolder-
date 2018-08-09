@@ -25,12 +25,19 @@
 	</header>
 	<section class="main" style="width: 92%">
 		<div class="content">
+			<div class="contentTopBox">
+				<div class="contentTopBox-form">
+					<input type="text" id="gfmText"  placeholder="请输入购方名称">
+					<button id="sureOk" >确认</button>
+					<p class="contentTopBox-formTitle" style="display: none;color: red;font-size: 12px">您输入的购方名称没有匹配，请重新输入！</p>
+				</div>
+			</div>
 			<div class="middle" style="margin-top: 15px;">
 				<div style="text-align: center;padding: 5%">增值税电子普通发票</div>
 				<div class="fpxq">
 				</div>
 			</div>
-			<div class="bottom btoTip">
+			<div class="bottom btoTip" style="display: none">
 				<a href="../youxiang1.html" class="yx">
 					<svg class="icon" aria-hidden="true">
 						<use xlink:href="#icon-youxiang1"></use>
@@ -70,6 +77,7 @@
         storeNo = null;
 		var gsdms="";
       	$(function () {
+            var listArry=[];
 			  var ua = navigator.userAgent.toLowerCase();
 			  var isWeixin = ua.indexOf('micromessenger') != -1;
 			  var isAlipay = ua.indexOf('alipay') != -1;
@@ -100,6 +108,7 @@
                             $(".help").css('display','none');
                         }
                         var items = data.kplsList;
+                        listArry=items;
                         var html='';
                         for(var i = 0; i < items.length; i++) {
                             html+='<div class="fpxqxx" style="background-color: white;padding-bottom: 20px;"><ul><li class="fl">销方名称</li><li class="fr omit" id="xfmc">'+items[i].xfmc+'</li></ul><ul><li class="fl">购方名称</li><li class="fr omit" id="gfmc">'+items[i].gfmc+'</li></ul> <ul><li class="fl">开票金额</li><li class="fr omit" id="kpje">'+RetainedDecimalPlaces(items[i].jshj)+"元"+'</li></ul><ul><li class="fl">开票日期</li><li class="fr omit" id="kprq">'+items[i].kprq+'</li></ul><ul><li class="fl">发票代码</li><li class="fr omit" id="fpdm">'+items[i].fpdm+'</li></ul> <ul><li class="fl">发票号码</li><li class="fr omit" id="fphm">'+items[i].fphm+'</li></ul><div class="ck"><a id="pdf" href='+items[i].pdfurl+'>查看发票</a></div></div>';
@@ -110,6 +119,19 @@
 
                 }
             )
+            $("#sureOk").click(function(){
+                var textValue=$("#gfmText").val();
+                listArry.forEach(function (value,index) {
+                    if(textValue==value.gfmc){
+                        $(".contentTopBox").css("display",'none');
+                        $(".btoTip").css("display",'block');
+                        return false;
+                    }
+                })
+                $('.contentTopBox-formTitle').css("display",'block')
+
+            })
+
         })
             //归入支付宝发票管家
             $(".zfb").click(function () {
