@@ -31,7 +31,7 @@
 					<form class="" action="" method="">
 						<div class="entry">
 							<span style="color: red;">*</span><label>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
-							<input type="text" name="fptt" id="fptt" placeholder="请输入个人/ 非企业性单位名称(选填)" onkeyup="query()">
+							<input type="text" name="fptt" id="fptt" placeholder="请输入名称(选填)" onkeyup="query()">
 							<select id="getFptt" oninput="changeFptt(this.value)">
 							</select>
 						</div>
@@ -124,12 +124,14 @@
                 for(var i=0;i<arr.length;i++) {
                     arr[i].parent().css('display','none');
                 }
+                $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
             })
             $('#company').on('click',function() {
                 $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
                 for(var i=0;i<arr.length;i++) {
                     arr[i].parent().css('display','block');
                 }
+                $("#fptt").attr('placeholder','名称(必填)')
             })
             // 获取支付宝默认抬头信息
             $.post(
