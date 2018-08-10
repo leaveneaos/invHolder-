@@ -83,7 +83,7 @@ public class ScanController extends BaseController {
             Spvo spvo = spvoService.findOneSpvo(map);
             result.put("orderTime", orderTime);
             result.put("storeNo", request.getSession().getAttribute("type"));
-            result.put("price", "10.0");
+            result.put("price", "30.0");
             result.put("spsl", spvo.getSl().toString());
             result.put("spmc", spvo.getSpmc());
             result.put("kpdmc", skp.getKpdmc());
