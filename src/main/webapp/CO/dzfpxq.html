@@ -179,6 +179,16 @@
         }
 		$(function(){
             var listArry=[];
+            var isPc=false;
+            var ua = navigator.userAgent.toLowerCase();
+            var isWeixin = ua.indexOf('micromessenger') != -1;
+            var isAlipay = ua.indexOf('alipay') != -1;
+            if(isWeixin){
+                isPc=true;
+            }
+            if(isAlipay){
+                isPc=true;
+            }
             $.post(
                 "../tq/fpxx",
                 {},
@@ -205,6 +215,10 @@
                     }
                 }
             )
+            if(!isPc){
+                $(".contentTopBox").css("display",'none');
+                $(".btoTip").css("display",'block');
+            }
             $("#sureOk").click(function(){
                 var textValue=$("#gfmText").val();
                 listArry.forEach(function (value,index) {
