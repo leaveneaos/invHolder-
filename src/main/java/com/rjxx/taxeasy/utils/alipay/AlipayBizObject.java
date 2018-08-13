@@ -15,7 +15,7 @@ public class AlipayBizObject extends AlipayObject {
 
     private List<InvoiceInfo> invoice_info;
 
-    private List<InvoiceInfoList> invoice_info_list;
+   // private List<InvoiceInfoList> invoice_info_list;
 
     public String getM_short_name() {
         return m_short_name;
@@ -41,11 +41,11 @@ public class AlipayBizObject extends AlipayObject {
         this.invoice_info = invoice_info;
     }
 
-    public List<InvoiceInfoList> getInvoice_info_list() {
-        return invoice_info_list;
-    }
-
-    public void setInvoice_info_list(List<InvoiceInfoList> invoice_info_list) {
-        this.invoice_info_list = invoice_info_list;
-    }
+//    public List<InvoiceInfoList> getInvoice_info_list() {
+//        return invoice_info_list;
+//    }
+//
+//    public void setInvoice_info_list(List<InvoiceInfoList> invoice_info_list) {
+//        this.invoice_info_list = invoice_info_list;
+//    }
 }
