@@ -896,7 +896,7 @@ public class BarcodeServiceImpl implements BarcodeService {
         String orderNo = weixinOrderNo;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderTime = sdf.format(new Date());
-        String price = "10.0";
+        String price = "30.0";
 //        String storeNo = "chamate_test";
         String spdm = "";
         if (StringUtils.isNotBlank(orderNo) &&
