@@ -27,11 +27,11 @@ public class InvoiceTitle {
 
     private String open_bank_account;
 
-    private String payer_register_no;
-
-    private String payer_address_tel;
-
-    private String payer_bank_name_account;
+//    private String payer_register_no;
+//
+//    private String payer_address_tel;
+//
+//    private String payer_bank_name_account;
 
 
     public String getUser_id() {
@@ -126,27 +126,27 @@ public class InvoiceTitle {
         return is_default;
     }
 
-    public String getPayer_register_no() {
-        return payer_register_no;
-    }
-
-    public void setPayer_register_no(String payer_register_no) {
-        this.payer_register_no = payer_register_no;
-    }
-
-    public String getPayer_address_tel() {
-        return payer_address_tel;
-    }
-
-    public void setPayer_address_tel(String payer_address_tel) {
-        this.payer_address_tel = payer_address_tel;
-    }
-
-    public String getPayer_bank_name_account() {
-        return payer_bank_name_account;
-    }
-
-    public void setPayer_bank_name_account(String payer_bank_name_account) {
-        this.payer_bank_name_account = payer_bank_name_account;
-    }
+//    public String getPayer_register_no() {
+//        return payer_register_no;
+//    }
+//
+//    public void setPayer_register_no(String payer_register_no) {
+//        this.payer_register_no = payer_register_no;
+//    }
+//
+//    public String getPayer_address_tel() {
+//        return payer_address_tel;
+//    }
+//
+//    public void setPayer_address_tel(String payer_address_tel) {
+//        this.payer_address_tel = payer_address_tel;
+//    }
+//
+//    public String getPayer_bank_name_account() {
+//        return payer_bank_name_account;
+//    }
+//
+//    public void setPayer_bank_name_account(String payer_bank_name_account) {
+//        this.payer_bank_name_account = payer_bank_name_account;
+//    }
 }
