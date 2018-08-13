@@ -333,7 +333,7 @@ public class CommonController extends BaseController {
             result.put("orderTime",sdf.format(kplsList.get(0).getLrsj()));
             Jyls jyls = new Jyls();
             jyls.setGsdm(gsdm);
-            jyls.setDjh((Integer) request.getSession().getAttribute("djh"));
+            jyls.setDjh(kplsList.get(0).getDjh());
             jyls.setJylsh(kplsList.get(0).getJylsh());
             Jyls jylsxx = jylsService.findOneByParams(jyls);
             String orderNo= "";

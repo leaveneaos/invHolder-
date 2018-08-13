@@ -113,16 +113,19 @@
         });
         $(function () {
             var listArry=[];
+            var isPc=false;
             var ua = navigator.userAgent.toLowerCase();
             var isWeixin = ua.indexOf('micromessenger') != -1;
             var isAlipay = ua.indexOf('alipay') != -1;
             if(isWeixin){
                 $(".zfb").css('display','none');
                 $(".wx").css('display',"");
+                isPc=true;
             }
             if(isAlipay){
                 $(".zfb").css('display',"");
                 $(".wx").css('display','none');
+                isPc=true;
             }
             var thisURL = document.URL;
             var getval = thisURL.split('?')[1];
@@ -148,6 +151,11 @@
                     $(".middle").html(html);
                 }
             )
+
+			if(!isPc){
+                $(".contentTopBox").css("display",'none');
+                $("#emilBox").css("display",'block');
+			}
 
             $("#sureOk").click(function(){
                 var textValue=$("#gfmText").val();
