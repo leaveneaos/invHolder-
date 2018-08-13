@@ -65,7 +65,8 @@
 			<div style="width: 100%;float: left" class="kjz1">
 				<p>您将通过以下途径获取电子发票：</p>
 				<li>1、发送至您的个人邮箱。</li>
-				<li>2、关注公众号，及时获取发票通知。</li>
+				<li class="wx1">2、关注公众号，及时获取发票通知。</li>
+				<li class="zfb1">2、查看发票管家，及时获取发票通知。</li>
 				<li class="wdpq" style="display: none">3、发票自动存入微信卡包"我的票券"。</li>
 				<li class="fpgj" style="display: none">3、发票自动存入支付宝"发票管家"。</li>
 			</div>
@@ -89,16 +90,21 @@
         var isAlipay = ua.indexOf('alipay') != -1;
 
         if(isWeixin){
+            $(".wx1").css('display',"");
+            $(".zfb1").css('display',"none");
             $(".wdpq").css('display',"");
             $(".fpgj").css('display','none');
             $("#wechat").css('display',"");
             $("#alipay").css('display','none');
 		}
 		if(isAlipay){
-            $(".wdpq").css('display',"");
-            $(".fpgj").css('display','block');
+            $(".wx1").css('display',"none");
+            $(".zfb1").css('display',"");
+            $(".wdpq").css('display',"none");
+            $(".fpgj").css('display',"");
             $("#wechat").css('display','none');
             $("#alipay").css('display',"");
+            $(".ewm").css('display',"none");
 		}
 
 	</script>
