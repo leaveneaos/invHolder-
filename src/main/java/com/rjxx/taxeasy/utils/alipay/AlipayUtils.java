@@ -5,9 +5,11 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.InvoiceTitleModel;
+import com.alipay.api.request.AlipayEbppInvoiceInfoSendRequest;
 import com.alipay.api.request.AlipayEbppInvoiceSycnRequest;
 import com.alipay.api.request.AlipayEbppInvoiceTitleListGetRequest;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
+import com.alipay.api.response.AlipayEbppInvoiceInfoSendResponse;
 import com.alipay.api.response.AlipayEbppInvoiceSycnResponse;
 import com.alipay.api.response.AlipayEbppInvoiceTitleListGetResponse;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
@@ -17,6 +19,7 @@ import com.rjxx.taxeasy.domains.Kpspmx;
 import com.rjxx.taxeasy.vo.InvoiceTitleVo;
 import com.rjxx.utils.HtmlUtils;
 import com.rjxx.utils.StringUtils;
+import com.rjxx.utils.alipay.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -240,6 +243,100 @@ public class AlipayUtils {
         result = result.replace("_default", "is_default");
         alipayEbppInvoiceSycnRequest.setBizContent(result);
         AlipayEbppInvoiceSycnResponse response = alipayClient.execute(alipayEbppInvoiceSycnRequest);
+        if (response.isSuccess()) {
+            return response.getUrl();
+        } else {
+            return null;
+        }
+    }
+
+
+
+    //新接口 --支付宝发票管家
+    public static String syncInvoice2AlipayNew(String userId, Kpls kpls, List<Kpspmx> kpspmxList, String mShortName, String subMShortName) throws Exception {
+//        String accessToken = (String) session.getAttribute(AlipayConstants.ALIPAY_ACCESS_TOKEN);
+//        if (StringUtils.isBlank(accessToken)) {
+//            throw new Exception("alipay not authorized!!!");
+//        }
+//        String userId = (String) session.getAttribute(AlipayConstants.ALIPAY_USER_ID);
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConstants.GATEWAY_URL, AlipayConstants.APP_ID, AlipayConstants.PRIVATE_KEY,AlipayConstants.FORMAT,AlipayConstants.CHARSET, AlipayConstants.ALIPAY_PUBLIC_KEY,AlipayConstants.SIGN_TYPE);
+        AlipayEbppInvoiceInfoSendRequest alipayEbppInvoiceSycnRequest = new AlipayEbppInvoiceInfoSendRequest();
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        AlipayBizObject alipayBizObject = new AlipayBizObject();
+        alipayBizObject.setM_short_name(mShortName);
+        alipayBizObject.setSub_m_short_name(subMShortName);
+        InvoiceInfoList invoiceInfo = new InvoiceInfoList();
+        List<InvoiceInfoList> invoiceInfoList = new ArrayList<>();
+        invoiceInfoList.add(invoiceInfo);
+        alipayBizObject.setInvoice_info_list(invoiceInfoList);
+        invoiceInfo.setUser_id(userId);
+        //invoiceInfo.setApply_id();
+        invoiceInfo.setInvoice_code(kpls.getFpdm());
+        invoiceInfo.setInvoice_no(kpls.getFphm());
+        invoiceInfo.setInvoice_date(DateFormatUtils.format(kpls.getKprq(), "yyyy-MM-dd"));
+        invoiceInfo.setSum_amount(decimalFormat.format(kpls.getJshj()));
+        invoiceInfo.setEx_tax_amount(decimalFormat.format(kpls.getHjse()));
+        invoiceInfo.setTax_amount(decimalFormat.format(kpls.getHjse()));
+        invoiceInfo.setOut_trade_no(kpls.getJylsh());
+        if(kpls.getFpczlxdm().equals("12")){
+            invoiceInfo.setInvoice_type("RED");
+        }else {
+            invoiceInfo.setInvoice_type("BLUE");
+        }
+        if ("12".equals(kpls.getFpzldm())) {
+            invoiceInfo.setInvoice_kind("PLAIN");
+        } else if ("01".equals(kpls.getFpzldm())) {
+            invoiceInfo.setInvoice_kind("SPECIAL");
+        } else if ("02".equals(kpls.getFpzldm())) {
+            invoiceInfo.setInvoice_kind("PLAIN_INVOICE");
+        }
+        invoiceInfo.setPayee_register_no(kpls.getXfsh());
+        invoiceInfo.setPayee_register_name(kpls.getXfmc());
+        invoiceInfo.setPayee_address_tel(kpls.getXfdz()+" "+kpls.getXfdh());
+        invoiceInfo.setPayee_bank_name_account(kpls.getXfyh()+" "+kpls.getXfyhzh());
+        invoiceInfo.setCheck_code(kpls.getJym());
+        invoiceInfo.setOut_invoice_id(kpls.getKplsh().toString());
+        invoiceInfo.setOri_blue_inv_code(kpls.getHzyfpdm());
+        invoiceInfo.setOri_blue_inv_no(kpls.getHzyfphm());
+        invoiceInfo.setFile_download_type("PDF");
+        invoiceInfo.setFile_download_url(kpls.getPdfurl());
+        invoiceInfo.setPayee(kpls.getSkr());
+        invoiceInfo.setChecker(kpls.getFhr());
+        invoiceInfo.setClerk(kpls.getKpr());
+        invoiceInfo.setInvoice_memo(kpls.getBz());
+
+        List<InvoiceContent> invoiceContentList = new ArrayList<>();
+        invoiceInfo.setInvoice_content(invoiceContentList);
+        for (Kpspmx kpspmx : kpspmxList) {
+            InvoiceContent invoiceContent = new InvoiceContent();
+            invoiceContent.setItem_name(kpspmx.getSpmc());
+            invoiceContent.setItem_no(kpspmx.getSpdm());
+            invoiceContent.setItem_spec(kpspmx.getSpggxh());
+            invoiceContent.setItem_unit(kpspmx.getSpdw());
+            if (kpspmx.getSps() != null) {
+                invoiceContent.setItem_quantity(kpspmx.getSps());
+            }
+            if (kpspmx.getSpdj() != null) {
+                invoiceContent.setItem_price(decimalFormat.format(kpspmx.getSpdj()));
+            }
+            invoiceContent.setItem_ex_tax_amount(decimalFormat.format(kpspmx.getSpje()));//不含税金额
+            invoiceContent.setItem_tax_rate(decimalFormat.format(kpspmx.getSpsl()));//税率
+            invoiceContent.setItem_tax_amount(decimalFormat.format(kpspmx.getSpse()));//税额
+            invoiceContent.setItem_sum_amount(decimalFormat.format((kpspmx.getSpje() + kpspmx.getSpse())));//价税合计
+            invoiceContent.setRow_type(Integer.valueOf(kpspmx.getFphxz()));
+            invoiceContentList.add(invoiceContent);
+        }
+        InvoiceTitle invoiceTitle = new InvoiceTitle();
+        invoiceInfo.setInvoice_title(invoiceTitle);
+        invoiceTitle.setTitle_name(kpls.getGfmc());
+        invoiceTitle.setPayer_register_no(kpls.getGfsh());
+        invoiceTitle.setPayer_address_tel(kpls.getGfdz()+" "+kpls.getGfdh());
+        invoiceTitle.setPayer_bank_name_account(kpls.getGfyh()+" "+kpls.getGfyhzh());
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result = objectMapper.writeValueAsString(alipayBizObject);
+        result = result.replace("_default", "is_default");
+        alipayEbppInvoiceSycnRequest.setBizContent(result);
+        AlipayEbppInvoiceInfoSendResponse response = alipayClient.execute(alipayEbppInvoiceSycnRequest);
         if (response.isSuccess()) {
             return response.getUrl();
         } else {

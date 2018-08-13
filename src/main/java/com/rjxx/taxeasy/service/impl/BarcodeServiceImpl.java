@@ -891,12 +891,13 @@ public class BarcodeServiceImpl implements BarcodeService {
     }
     @Override
     public String chamateYX(String gsdm, String gfmc, String gfsh, String email,
-                              String gfyh, String gfyhzh, String gfdz, String gfdh,String openid,String sjly,String access_token,String weixinOrderNo) {
+                              String gfyh, String gfyhzh, String gfdz, String gfdh,String openid,
+                            String sjly,String access_token,String weixinOrderNo,String storeNo) {
         String orderNo = weixinOrderNo;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String orderTime = sdf.format(new Date());
         String price = "10.0";
-        String storeNo = "chamate_test";
+//        String storeNo = "chamate_test";
         String spdm = "";
         if (StringUtils.isNotBlank(orderNo) &&
                 StringUtils.isNotBlank(orderTime) &&

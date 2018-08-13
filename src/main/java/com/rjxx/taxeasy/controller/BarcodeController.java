@@ -48,9 +48,9 @@ public class BarcodeController extends BaseController {
         if (ua.indexOf("micromessenger") > 0) {
             //session.setAttribute("gsdm", gsdm);
             //session.setAttribute("q", q);
-            if(type!=null){
-                session.setAttribute("type", type);
-            }
+//            if(type!=null){
+//                session.setAttribute("type", type);
+//            }
             String url = HtmlUtils.getBasePath(request);
                 String ul = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + WeiXinConstants.APP_ID + "&redirect_uri="
                         + url + "scan/getOpenid&" + "response_type=code&scope=snsapi_base&state=" +"state"
@@ -62,7 +62,7 @@ public class BarcodeController extends BaseController {
                     e.printStackTrace();
                 }
         }
-        if(type!=null&&type.equals("test")){
+        if(StringUtils.isNotBlank(type)){
             try {
                 logger.info("进入测试盘开票----");
                 String redirectUrl = request.getContextPath() + "/dicos/ddqr.html?_t=" + System.currentTimeMillis()

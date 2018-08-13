@@ -3,9 +3,16 @@ package com.rjxx.taxeasy.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.comm.BaseController;
+import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
+import com.rjxx.taxeasy.domains.Cszb;
+import com.rjxx.taxeasy.domains.Skp;
 import com.rjxx.taxeasy.service.BarcodeService;
+import com.rjxx.taxeasy.service.CszbService;
+import com.rjxx.taxeasy.service.SkpService;
+import com.rjxx.taxeasy.service.SpvoService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
+import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.dto.Result;
 import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.weixin.HttpClientUtil;
@@ -37,6 +44,12 @@ public class ScanController extends BaseController {
     private WxfpxxJpaDao wxfpxxJpaDao;
     @Autowired
     private wechatFpxxServiceImpl wechateFpxxService;
+    @Autowired
+    private SkpJpaDao skpJpaDao;
+    @Autowired
+    private CszbService cszbService;
+    @Autowired
+    private SpvoService spvoService;
 
     /**
      * 确认扫码中传递的信息
@@ -54,19 +67,26 @@ public class ScanController extends BaseController {
         if (gsdm == null || q == null ) {
             return ResultUtil.error("session过期,请重新扫码");
         }
-        if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
+        if(request.getSession().getAttribute("type")!=null&&!"".equals(request.getSession().getAttribute("type"))){
             Map result = new HashMap();
             orderNo="RJ"+System.currentTimeMillis();
+            session.setAttribute("orderNo",orderNo);
             String tqm="ycyz"+orderNo;
-            result.put("orderNo",orderNo );
+            result.put("orderNo",orderNo);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String orderTime = sdf.format(new Date());
+            Skp skp = skpJpaDao.findOneByKpddmAndGsdm(request.getSession().getAttribute("type").toString(),gsdm);
+            Cszb cszb = cszbService.getSpbmbbh(gsdm, null, null, "dyspbmb");
+            Map map = new HashMap();
+            map.put("gsdm", gsdm);
+            map.put("spdm", cszb.getCsz());
+            Spvo spvo = spvoService.findOneSpvo(map);
             result.put("orderTime", orderTime);
-            result.put("storeNo", "chamate_test");
-            result.put("price", "10.0");
-            result.put("spsl", "0.06");
-            result.put("spmc", "餐饮服务");
-            result.put("kpdmc", "一茶一坐店");
+            result.put("storeNo", request.getSession().getAttribute("type"));
+            result.put("price", "30.0");
+            result.put("spsl", spvo.getSl().toString());
+            result.put("spmc", spvo.getSpmc());
+            result.put("kpdmc", skp.getKpdmc());
             boolean b = wechateFpxxService.InFapxx(tqm, gsdm, orderNo,q, "1", openid,
                     (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID), "", request);
             if(!b){
@@ -101,9 +121,12 @@ public class ScanController extends BaseController {
     public Result submit(@RequestParam String gfmc, @RequestParam String gfsh, @RequestParam String email) {
         String gsdm = (String) session.getAttribute("gsdm");
         String q = (String) session.getAttribute("q");
+        String type = (String) session.getAttribute("type");
+        String orderNo = (String) session.getAttribute("orderNo");
         if (gsdm == null || q == null) {
             return ResultUtil.error("redirect");
         }
+
         String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
         //非必须参数
         String gfdz = request.getParameter("gfdz");
@@ -111,7 +134,13 @@ public class ScanController extends BaseController {
         String gfyhzh = request.getParameter("gfyhzh");
         String gfyh = request.getParameter("gfyh");
         String tqm = request.getParameter("tqm");
-
+        if(StringUtils.isNotBlank(type)){
+            String status = barcodeService.chamateYX(gsdm,gfmc, (String) gfsh,
+                    email,gfyh,gfyhzh,gfdz,gfdh,userId,"5","",orderNo,type);
+            JSONObject jsonObject = JSON.parseObject(status);
+            session.setAttribute("serialorder", jsonObject.getString("serialorder"));
+            return ResultUtil.success(status);
+        }
         String status = barcodeService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm,userId,"5","","");
         //开票
         if ("-1".equals(status)) {
@@ -149,7 +178,7 @@ public class ScanController extends BaseController {
                 e.printStackTrace();
             }
         }
-        if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
+        if(request.getSession().getAttribute("type")!=null){
             try {
                 if(!WeixinUtils.isWeiXinBrowser(request)){
                     response.sendRedirect(request.getContextPath() + "/QR/error.html?t=" + System.currentTimeMillis() + "=请用支付宝扫码");

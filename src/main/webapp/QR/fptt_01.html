@@ -135,6 +135,7 @@
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','none');
             }
+            $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
         })
         $('#company').on('click',function() {
             $('#company').addClass('pageBtnColor'+pageIndex);
@@ -143,6 +144,7 @@
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','flex');
             }
+            $("#fptt").attr('placeholder','请填写准确的抬头名称(必填)')
         })
         // 获取支付宝默认抬头信息
         $.post(
