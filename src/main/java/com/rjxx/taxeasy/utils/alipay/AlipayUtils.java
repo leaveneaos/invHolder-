@@ -241,6 +241,7 @@ public class AlipayUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         String result = objectMapper.writeValueAsString(alipayBizObject);
         result = result.replace("_default", "is_default");
+        logger.info("--开票"+kpls.getKplsh()+"-------支付宝插卡参数-----"+JSON.toJSONString(result));
         alipayEbppInvoiceSycnRequest.setBizContent(result);
         AlipayEbppInvoiceSycnResponse response = alipayClient.execute(alipayEbppInvoiceSycnRequest);
         if (response.isSuccess()) {
