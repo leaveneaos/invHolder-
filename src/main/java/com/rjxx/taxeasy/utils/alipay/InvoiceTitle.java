@@ -122,9 +122,9 @@ public class InvoiceTitle {
         this.open_bank_account = open_bank_account;
     }
 
-    public Boolean getIs_default() {
-        return is_default;
-    }
+//    public Boolean getIs_default() {
+//        return is_default;
+//    }
 
 //    public String getPayer_register_no() {
 //        return payer_register_no;
