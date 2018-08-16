@@ -78,6 +78,11 @@ public class BarcodeController extends BaseController {
         Map result = barcodeService.sm(gsdm, q);
         try {
             if (result != null) {
+                if(result.get("msg")!=null){
+                    request.getSession().setAttribute("msg", result.get("msg"));
+                    response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                    return;
+                }
                 //session.setAttribute("gsdm", gsdm);
                 //session.setAttribute("q", q);
                 String ppdm = result.get("ppdm").toString();
