@@ -1,5 +1,6 @@
 package com.rjxx.taxeasy.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjxx.taxeasy.bizcomm.utils.FpclService;
 import com.rjxx.taxeasy.bizcomm.utils.GetXmlUtil;
@@ -10,6 +11,7 @@ import com.rjxx.taxeasy.dao.SkpJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.dao.XfJpaDao;
 import com.rjxx.taxeasy.domains.*;
+import com.rjxx.taxeasy.dto.AdapterGet;
 import com.rjxx.taxeasy.service.*;
 import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
@@ -20,6 +22,7 @@ import com.rjxx.utils.weixin.WeiXinConstants;
 import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -28,6 +31,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -96,6 +101,8 @@ public class SqjController extends BaseController {
     private GsxxJpaDao gsxxJpaDao;
     @Autowired
     private wechatFpxxServiceImpl wechatFpxxService;
+    @Value("${web.url.error}")
+    private String errorUrl;
 
     //public static final String APP_ID = "wx9abc729e2b4637ee";
 
@@ -106,11 +113,43 @@ public class SqjController extends BaseController {
     @RequestMapping
     @ResponseBody
     public void index() throws Exception {
+
+
         String str = request.getParameter("q");
         request.getSession().setAttribute("q",str);
         Map<String, Object> params = new HashMap<>();
         params.put("gsdm", "sqj");
         Gsxx gsxx = gsxxservice.findOneByParams(params);
+        //扫码开票归入通用模板
+        if(StringUtils.isNotBlank(str)){
+            Boolean checkResult = RJCheckUtil.checkMD5ForAll(gsxx.getSecretKey(), str);
+            if (!checkResult) {
+                errorRedirect("验签失败");
+                return;
+            }
+            Map map = RJCheckUtil.decodeForAll(str);
+            String orderNo = (String) map.get("A0");
+            String orderTime = (String) map.get("A1");
+            String price = (String) map.get("A2");
+            String sn = (String) map.get("A3");
+//            String sign =(String) map.get("A4");
+            AdapterGet adapterGet = new AdapterGet();
+            adapterGet.setType("2");
+            adapterGet.setOn(orderNo);
+            adapterGet.setOt(orderTime);
+            adapterGet.setPr(price);
+            adapterGet.setSn(sn);
+            String key = gsxx.getSecretKey();
+
+            String dataJson = JSON.toJSONString(adapterGet);
+            String sign = DigestUtils.md5Hex("data=" + dataJson + "&key=" + key);
+            String signature = "data=" + dataJson + "&si=" + sign;
+            String encode = Base64Util.encode(signature);
+            System.out.println(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode);
+            response.sendRedirect(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode);
+            return;
+        }
+        //下面所有都不走
         if (null == gsxx) {
             request.getSession().setAttribute("msg", "出现未知错误!请重试!");
             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
@@ -138,7 +177,13 @@ public class SqjController extends BaseController {
             sendHtml(str, gsxx);
         }
     }
-
+    public void errorRedirect(String errorName) {
+        try {
+            response.sendRedirect(errorUrl + "/" + URLEncoder.encode(errorName) + "?t=" + System.currentTimeMillis());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @RequestMapping(value = "/getWx")
     @ResponseBody
     public void getWx(String state, String code) throws IOException {
