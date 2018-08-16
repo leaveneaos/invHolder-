@@ -32,6 +32,9 @@
     <link rel="stylesheet" type="text/css" href="../css/app.css"/>
     <link rel="stylesheet" type="text/css" href="../css/common.css">
     <style type="text/css">
+        body{
+            font-size: 15px;
+        }
         h5 {
             margin: 5px 7px;
         }
@@ -124,18 +127,23 @@
             
             <form class="mui-input-group">
                 <div class="cbox">
-                    <input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
-                    <label for="choose">用于报销</label>
+                    <!--<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">-->
+                    <!--<label for="choose">用于报销</label>-->
+
+                    <input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
+                    <input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
+                    <input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
+
                 </div>    
                 <div class="mui-input-row">
-                    <label><font color="red">*</font>购方名称</label>
+                    <label><font color="red">*</font><span class="gfmcText">购方名称</span></label>
                     <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称" onkeyup="query()">
                     <select id="getFptt" oninput="changeFptt(this.value)">
                        <!-- <option value="getFptt"> -->
                     </select>
                 </div>
                 <div class="mui-input-row">
-                    <label><font color="red" class="isCheck">*</font>纳税人识别号</label> 
+                    <label><font color="red" class="isCheck">*</font><span class="nsrsbhtext">纳税人识别号</span></label>
                     <input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20" name="nsrsbh" placeholder="请输入纳税人识别号">
                 </div>
 
@@ -463,14 +471,26 @@
             }
         }
         function CheckAll(obj) {
-           if ($(obj).prop("checked")) {
-              $('.isCheck').html('*');
-               $("#fptt").attr('placeholder','请输入购方名称')
-           } else {
-              $('.isCheck').html('');
-               $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
-           }
-        }
+            if ($("#company").prop("checked")) {
+                $('.isCheck').html('*');
+                $("#fptt").attr('placeholder','请输入购方名称');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('购方名称');
+                $('.nsrsbhtext').html('纳税人识别号');
+            } else if($("#personal").prop("checked")) {
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入个人名称');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('购方名称');
+                $('.nsrsbhtext').html('纳税人识别号');
+            }else{
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入组织机构名称');
+                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $('.gfmcText').html('组织机构名称');
+                $('.nsrsbhtext').html('组织机构代码');
+            }
+        };
         //模糊查询
         function query(){
             $("#fptt").autocomplete({

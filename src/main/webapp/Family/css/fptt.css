@@ -12,7 +12,7 @@
 .entry label {
 	width: 40%;
 	color: #7B7F87;
-	font-size: 14px;
+	font-size: 12px;
 	margin-right: 20px;
 }
 .entry input {
@@ -31,18 +31,21 @@
 	font-weight: bold;
     margin: 5px 0px;
 }
-#company,#personal {
-	width: 45%;
+#company,#personal,#enterprise {
+	width: 30%;
 	height: 30px;
 	line-height: 26px;
 	box-sizing: border-box;
-	font-size: 14px;
+	font-size: 12px;
 	border: 1px solid #ccc;
 }
-#company {
-	margin-right: 5%;
-}
+/*#company {*/
+	/*margin-right: 5%;*/
+/*}*/
 #personal {
+	margin-left: 5%;
+}
+#enterprise{
 	margin-left: 5%;
 }
 .checkStyle {
