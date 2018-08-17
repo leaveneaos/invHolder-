@@ -285,9 +285,15 @@
     function CheckSocialCreditCode() {
         var Code = $('#nsrsbh').val();
         var patrn = /^[0-9A-Z]+$/;
-        if (((Code.length != 15) && (Code.length != 18) && (Code.length != 20)) || (patrn.test(Code) == false)) {
+        if (((Code.length != 15) && (Code.length != 18) && (Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)) {
             var btnArray = ['是'];
-            firm = "税号必须是15,18或20位数字与大写字母组合!";
+            var btntype=$('.type').find('button').not('.checkStyle').attr('id');
+            //company//personal//enterprise
+            if(btntype=='enterprise'){
+                firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+            }else{
+                firm = "税号必须是9，15,18或20位数字与大写字母组合!";
+            }
             title = "提示";
             alert(firm, title);
             return false;
@@ -368,14 +374,27 @@
 
         var firm;
         var title;
-        if (null == fptt || "" == fptt) {
-            var btnArray = ['是'];
+        var btntype=$('.type').find('button').not('.checkStyle').attr('id');
+        if(btntype=='company' &&(null == fptt || "" == fptt)){
+            var btnArray = [ '是' ];
             firm = "请输入发票抬头!";
             title = "提示";
             alert(firm, title);
             return;
-        } else if ((null == nsrsbh || nsrsbh == '') && ($('#personal').hasClass('checkStyle'))) {
-            var btnArray = ['是'];
+        }else if(btntype=='personal' &&(null == fptt || "" == fptt)){
+            var btnArray = [ '是' ];
+            firm = "请输入个人名称!";
+            title = "提示";
+            alert(firm, title);
+            return;
+        }else if(btntype=='enterprise' &&(null == fptt || "" == fptt)){
+            var btnArray = [ '是' ];
+            firm = "请输入组织机构名称!";
+            title = "提示";
+            alert(firm, title);
+            return;
+        }else if ( (null==nsrsbh || nsrsbh=='') && btntype=='company' ) {
+            var btnArray = [ '是' ];
             firm = "请输入购方税号!";
             title = "提示";
             alert(firm, title);
