@@ -26,19 +26,20 @@
 				<div class="type">
 					<div class="checkType">抬头类型</div>
 					<button id="company">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
-					<button id="personal" class="checkStyle" type="submit">个人/其他</button>
+					<button id="personal" class="checkStyle" type="submit">个人</button>
+					<button id="enterprise" class="checkStyle" type="submit">非企业性单位</button>
 				</div>
 		     	<div class="main-msg">
 					<form class="" action="" method="">
 						<div class="entry">
-							<span style="color: red;">*</span><label>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+							<span style="color: red;">*</span><label class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
 							<input type="text" name="fptt" id="fptt" placeholder="名称(必填)">
 							<select id="getFptt" oninput="changeFptt(this.value)">
 							  <!-- <option value="getFptt"> -->
 							</select>
 						</div>
 						<div class="entry">
-							<span style="color: red;">*</span><label>购方税号</label>
+							<span class="shisCheck" style="color: red;">*</span><label><span class="nsrsbhtext">购方税号</span></label>
 							<input id="nsrsbh" maxlength="20"
 							name="nsrsbh" type="text" class="" placeholder="15,18或20位(必填)">
 						</div>
@@ -96,20 +97,45 @@
 				$yx = $('#yx');
 			var arr = [$nsrsbh,$dz,$khh,$yhzh];
 			$('#personal').on('click',function() {
-				$('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
+				$('#personal').removeClass('checkStyle').siblings('button').addClass('checkStyle');
 				for(var i=0;i<arr.length;i++) {
 					arr[i].parent().css('display','none');
 				}
-				$("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
+                $dh.parent().css('display','block');
+				$("#fptt").attr('placeholder','请输入个人名称')
+                $('.shisCheck').html('*');
+                $("#nsrsbh").attr('placeholder','请输入购方税号');
+                $('.gfmcText').html('名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称');
+                $('.nsrsbhtext').html('购方税号');
 
 			})
 			$('#company').on('click',function() {
-				$('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
+				$('#company').removeClass('checkStyle').siblings('button').addClass('checkStyle');
 				for(var i=0;i<arr.length;i++) {
 					arr[i].parent().css('display','block');
 				}
                 $("#fptt").attr('placeholder','名称(必填)')
-			})
+                $('.shisCheck').html('*');
+                $("#nsrsbh").attr('placeholder','请输入购方税号');
+                $('.gfmcText').html('名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称');
+                $('.nsrsbhtext').html('购方税号');
+			});
+            var arr1 = [$dh,$dz,$khh,$yhzh];
+            $('#enterprise').on('click',function() {
+                $('#enterprise').removeClass('checkStyle').siblings('button').addClass('checkStyle');
+                for(var i=0;i<arr1.length;i++) {
+                    arr1[i].parent().css('display','none');
+                }
+                $nsrsbh.parent().css('display','block');
+                $("#fptt").attr('placeholder','请输入组织机构名称')
+				//shisCheck
+
+                $('.shisCheck').html('');
+                $("#fptt").attr('placeholder','请输入组织机构名称');
+                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $('.gfmcText').html('组织机构名称');
+                $('.nsrsbhtext').html('组织机构代码');
+            });
 			// 获取支付宝默认抬头信息
 			$.post(
 	            '../getInvoiceTitle',

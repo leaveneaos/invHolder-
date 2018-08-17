@@ -11,6 +11,7 @@ import com.rjxx.taxeasy.dao.WxTokenJpaDao;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
@@ -106,6 +107,8 @@ public class MbController extends BaseController {
 
     @Autowired
     private SendEmailNewService sendEmailNewService;
+    @Autowired
+    private AdapterService adapterService;
 
     public static final String APP_ID ="wx9abc729e2b4637ee";
 
@@ -284,13 +287,12 @@ public class MbController extends BaseController {
                             Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
                             resultMap = getDataService.getDataForBqw(tqm, gsxx.getGsdm(),zb1.getCsz());
                         }
-
                         List<Jyxxsq> jyxxsqList = (List) resultMap.get("jyxxsqList");
                         List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
                         request.getSession().setAttribute(gsxx.getGsdm()+tqm+"resultMap",resultMap);
                         String error = (String) resultMap.get("error");
                         if(error!=null){
-                            logger.info("---------错误信息------------"+error);
+                            //logger.info("---------错误信息------------"+error);
                             request.getSession().setAttribute("msg", error);
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
@@ -300,7 +302,7 @@ public class MbController extends BaseController {
 
                         String msg = (String) resultMap.get("msg");
                         if(null!= msg && !"".equals(resultMap.get("msg"))){
-                            logger.info("---------校验信息------------"+msg);
+                            //logger.info("---------校验信息------------"+msg);
                             request.getSession().setAttribute("msg", msg);
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
@@ -315,10 +317,24 @@ public class MbController extends BaseController {
                         request.getSession().setAttribute("jymxsqList", jymxsqList);
                         request.getSession().setAttribute("tqm", tqm);
                         result.put("num", "5");
-                        logger.info("订单编号"+jyxxsq.getDdh()+"金额"+jyxxsq.getJshj()+"日期"+sdf.format(jyxxsq.getDdrq()));
+                        //开票限期判断
+                        Boolean isInvoiceDateRestriction = adapterService.isInvoiceDateRestriction(gsxx.getGsdm(),jyxxsq.getXfid(),jyxxsq.getSkpid(),sdf.format(jyxxsq.getDdrq()));
+                        if (isInvoiceDateRestriction == null) {
+                            request.getSession().setAttribute("msg", "开票期限格式错误TP[2][3]!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return;
+                        } else {
+                            if (isInvoiceDateRestriction) {
+                                logger.info("超过开票期限");
+                                request.getSession().setAttribute("msg", "已超过开票截止日期，请联系商家TP[2][3]");
+                                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                                return;
+                            }
+                        }
+                        //logger.info("订单编号"+jyxxsq.getDdh()+"金额"+jyxxsq.getJshj()+"日期"+sdf.format(jyxxsq.getDdrq()));
                         boolean b1 = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), jyxxsq.getDdh(), q, "1", opendid, userId, "", request);
                         if(!b1){
-                            logger.info("保存发票信息失败-------");
+                            //logger.info("保存发票信息失败-------");
                             request.getSession().setAttribute("msg", "发票信息保存失败，请重试!");
                             response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                             return;
