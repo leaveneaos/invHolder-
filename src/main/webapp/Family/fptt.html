@@ -8,6 +8,20 @@
 	<link rel="stylesheet" type="text/css" href="css/fptt.css">
 	<link rel="stylesheet" type="text/css" href="../css/jquery.alerts.css">
 </head>
+<style>
+	.entry input{
+		float: right;
+		height: 31px;
+		width: 60%;
+		overflow: hidden;
+	}
+	.entry label{
+		display: inline-block;
+		width: 28%;
+		text-align: right;
+		overflow: hidden;
+	}
+</style>
 <body onresize="document.activeElement.scrollIntoView(true);">
 	<header>
 		<img src="../images/nav.png">
@@ -32,14 +46,14 @@
 		     	<div class="main-msg">
 					<form class="" action="" method="">
 						<div class="entry">
-							<span style="color: red;">*</span><label class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+							<label ><span style="color: red;">*</span><span class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</span></label>
 							<input type="text" name="fptt" id="fptt" placeholder="名称(必填)">
 							<select id="getFptt" oninput="changeFptt(this.value)">
 							  <!-- <option value="getFptt"> -->
 							</select>
 						</div>
 						<div class="entry">
-							<span class="shisCheck" style="color: red;">*</span><label><span class="nsrsbhtext">购方税号</span></label>
+							<label><span class="shisCheck" style="color: red;">*</span><span class="nsrsbhtext">购方税号</span></label>
 							<input id="nsrsbh" maxlength="20"
 							name="nsrsbh" type="text" class="" placeholder="15,18或20位(必填)">
 						</div>
@@ -51,7 +65,7 @@
 						</div>
 						<div class="entry">
 							<label>电话号码</label>
-							<input id="dh" maxlength="30" name="dh" type="text" class="" placeholder="请输入公司电话号码">
+							<input id="dh" maxlength="30" name="dh" type="text" class="" placeholder="请输入电话号码">
 						</div>
 						<div class="entry">
 							<label>开户银行</label>
