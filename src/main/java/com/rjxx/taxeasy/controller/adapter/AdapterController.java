@@ -691,6 +691,7 @@ public class AdapterController extends BaseController {
     private void deal(Map result, String gsdm) {
         try {
             if (result != null) {
+                logger.info("---校验数据"+JSON.toJSONString(result));
                 String ppdm = (String) result.get("ppdm");
                 String ppurl = (String) result.get("ppurl");
                 String orderNo = (String) result.get("orderNo");
