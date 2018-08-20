@@ -27,6 +27,19 @@
             width: 100%;
             overflow: hidden;
         }
+        .entry input{
+            float: right;
+            height: 31px;
+            width: 50%;
+            overflow: hidden;
+        }
+        .entry label{
+            display: inline-block;
+            width: 40%;
+            text-align: right;
+            overflow: hidden;
+        }
+
     </style>
 </head>
 <body onresize="document.activeElement.scrollIntoView(true);">
@@ -51,13 +64,13 @@
             <div class="main-msg">
                 <form class="" action="" method="">
                     <div class="entry">
-                        <span style="color: red;">*</span><label class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+                        <label ><span style="color: red;">*</span><span  class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</span></label>
                         <input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称(必填)" onkeyup="query()">
                         <select id="getFptt" oninput="changeFptt(this.value)">
                         </select>
                     </div>
                     <div class="entry">
-                        <span class="shisCheck" style="color: red;">*</span><label><span class="nsrsbhtext">购方税号</span></label>
+                        <label><span class="shisCheck" style="color: red;">*</span><span class="nsrsbhtext">购方税号</span></label>
                         <input id="nsrsbh" maxlength="20" name="nsrsbh" type="text" class=""
                                placeholder="15,18或20位(必填)">
                     </div>
@@ -175,13 +188,13 @@
                 arr1[i].parent().css('display','none');
             }
             $nsrsbh.parent().css('display','block');
-            $("#fptt").attr('placeholder','请输入组织机构名称')
+            $("#fptt").attr('placeholder','请输入非企业性单位名称')
             //shisCheck
 
             $('.shisCheck').html('');
-            $("#fptt").attr('placeholder','请输入组织机构名称');
+            $("#fptt").attr('placeholder','请输入非企业性单位名称');
             $("#nsrsbh").attr('placeholder','请输入组织机构代码');
-            $('.gfmcText').html('组织机构名称');
+            $('.gfmcText').html('非企业性单位名称');
             $('.nsrsbhtext').html('组织机构代码');
         });
         // 获取支付宝默认抬头信息
@@ -352,7 +365,7 @@
             return;
         }else if(btntype=='enterprise' &&(null == fptt || "" == fptt)){
             var btnArray = [ '是' ];
-            firm = "请输入组织机构名称!";
+            firm = "请输入非企业性单位名称!";
             title = "提示";
             alert(firm, title);
             return;

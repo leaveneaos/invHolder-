@@ -234,6 +234,7 @@ public class AdapterController extends BaseController {
                 }
                 session.setAttribute("q", q);
                 session.setAttribute("gsdm", gsdm);
+                logger.info("type2存入session的q--"+session.getAttribute("q"));
                 String grant = isWechat(TYPE_TWO_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grant != null) {
