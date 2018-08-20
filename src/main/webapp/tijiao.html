@@ -313,7 +313,7 @@
 				}else if(inputType=='personal'){
                     firm = "请输入个人名称!";
 				}else{
-                    firm = "请输入组织机构名称!";
+                    firm = "请输入非企业性机构名称!";
 				}
 
 				title = "提示";
@@ -440,9 +440,9 @@
                 $('.nsrsbhtext').html('纳税人识别号');
             }else{
                 $('.isCheck').html('');
-                $("#fptt").attr('placeholder','请输入组织机构名称');
+                $("#fptt").attr('placeholder','请输入非企业性机构名称');
                 $("#nsrsbh").attr('placeholder','请输入组织机构代码');
-                $('.gfmcText').html('组织机构名称');
+                $('.gfmcText').html('非企业性机构名称');
                 $('.nsrsbhtext').html('组织机构代码');
             }
         };

@@ -12,12 +12,12 @@
 	.entry input{
 		float: right;
 		height: 31px;
-		width: 60%;
+		width: 50%;
 		overflow: hidden;
 	}
 	.entry label{
 		display: inline-block;
-		width: 28%;
+		width: 40%;
 		text-align: right;
 		overflow: hidden;
 	}
@@ -144,13 +144,13 @@
                     arr1[i].parent().css('display','none');
                 }
                 $nsrsbh.parent().css('display','block');
-                $("#fptt").attr('placeholder','请输入组织机构名称')
+                $("#fptt").attr('placeholder','请输入非企业性机构名称')
 				//shisCheck
 
                 $('.shisCheck').html('');
-                $("#fptt").attr('placeholder','请输入组织机构名称');
+                $("#fptt").attr('placeholder','请输入非企业性机构名称');
                 $("#nsrsbh").attr('placeholder','请输入组织机构代码');
-                $('.gfmcText').html('组织机构名称');
+                $('.gfmcText').html('非企业性机构名称');
                 $('.nsrsbhtext').html('组织机构代码');
             });
 			// 获取支付宝默认抬头信息
@@ -318,7 +318,7 @@
                 return;
 			}else if(btntype=='enterprise' &&(null == fptt || "" == fptt)){
                 var btnArray = [ '是' ];
-                firm = "请输入组织机构名称!";
+                firm = "请输入非企业性机构名称!";
                 title = "提示";
                 alert(firm, title);
                 return;
