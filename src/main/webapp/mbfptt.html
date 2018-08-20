@@ -250,6 +250,7 @@
 		};
 
         function CheckAll(obj) {
+            $('.mui-input-row>input').val('');
             if ($("#company").prop("checked")) {
                 $('.isCheck').html('*');
                 $("#fptt").attr('placeholder','请输入发票抬头');

@@ -129,6 +129,7 @@
             $yx = $('#yx');
         var arr = [$nsrsbh,$dz,$khh,$yhzh];
         $('#personal').on('click',function() {
+            $('.entry>input').val('');
             $('#company').removeClass('pageBtnColor'+pageIndex);
             $('#personal').addClass('pageBtnColor'+pageIndex);
             console.log(111)
@@ -144,6 +145,7 @@
             $('.nsrsbhtext').html('购方税号');
         })
         $('#company').on('click',function() {
+            $('.entry>input').val('');
             $('#company').addClass('pageBtnColor'+pageIndex);
             $('#personal').removeClass('pageBtnColor'+pageIndex);
             $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
@@ -158,6 +160,7 @@
         })
         var arr1 = [$dh,$dz,$khh,$yhzh];
         $('#enterprise').on('click',function() {
+            $('.entry>input').val('');
             $('#enterprise').removeClass('checkStyle').siblings('button').addClass('checkStyle');
             for(var i=0;i<arr1.length;i++) {
                 arr1[i].parent().css('display','none');
