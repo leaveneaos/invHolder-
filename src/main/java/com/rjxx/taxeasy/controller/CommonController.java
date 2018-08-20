@@ -177,7 +177,7 @@ public class CommonController extends BaseController {
         Map resultMap = new HashMap();
         if(weixinUtils.isWeiXinBrowser(request)){
             try {
-                logger.info("------orderNo---------"+orderNo);
+                logger.info("------orderNo---------"+orderNo+"=-----------type"+type);
                 if(null==orderNo || "".equals(orderNo)){
                     errorRedirect("订单号为空,获取微信授权失败!请重试!");
                     return null;
