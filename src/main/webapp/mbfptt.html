@@ -273,13 +273,18 @@
 
 
         // 税号校验
-		function CheckSocialCreditCode() { 
+		function CheckSocialCreditCode() {
+            var inputType=$('.cbox').find('input:checked').attr('id');
 			var Code = $('#nsrsbh').val();
 　　　　	var patrn = /^[0-9A-Z]+$/;
 			//15，18，20位校验及大写校验
-			if ( ((Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) { 
+			if ( ((Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)) {
 				var btnArray = [ '是' ];
-				firm = "税号必须是15,18或20位数字与大写字母组合!";
+                if(inputType=='enterprise'){
+                    firm = "组织机构代码必须是9,15,18或20位数字与大写字母组合!";
+                }else{
+                    firm = "税号必须是9,15,18或20位数字与大写字母组合!";
+                }
 				title = "提示";
 	　　　　　　alert(firm, title);
 				return;
@@ -321,6 +326,7 @@
 		};
 
 		function kp() {
+            var inputType=$('.cbox').find('input:checked').attr('id');
             var tqm = $('#tqm').val();
             var gsdm =   $('#gsdm').val();
 			var info = document.getElementById("info");
@@ -333,8 +339,15 @@
 
 			if (null == fptt || "" == fptt) {
 				var btnArray = [ '是' ];
-				firm = "请输入发票抬头!";
-				title = "提示";
+                if(inputType=='company'){
+                    firm = "请输入发票抬头!";
+                }else if(inputType=='personal'){
+                    firm = "请输入个人名称!";
+                }else{
+                    firm = "请输入组织机构名称!";
+                }
+
+                title = "提示";
 				alert(firm, title);
 				return;
 			}else if (null == yx || "" == yx) {
@@ -345,7 +358,11 @@
 				return;
 			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
 				var btnArray = [ '是' ];
-				firm = "请输入购方税号!";
+                if(inputType=='enterprise'){
+                    firm = "请输入组织机构代码!";
+                }else{
+                    firm = "请输购方税号!";
+                }
 				title = "提示";
 				alert(firm, title);
 				return;
