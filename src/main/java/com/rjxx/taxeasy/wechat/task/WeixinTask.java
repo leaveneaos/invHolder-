@@ -152,7 +152,7 @@ public class WeixinTask implements Runnable{
                     e.printStackTrace();
                 }
                 return ;
-            }else if(null!=gsdm && gsdm.equals("sqj")){
+            }/*else if(null!=gsdm && gsdm.equals("sqj")){
                 logger.info("食其家微信开票----");
                 try {
                     barcodeService.sqjInvioce(q,"sqj",(String) resultMap.get("title"), (String) resultMap.get("tax_no"),(String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
@@ -164,7 +164,7 @@ public class WeixinTask implements Runnable{
                 }
 
             //新接口
-            }else if(wxFpxx.getApitype()!=null){
+            }*/else if(wxFpxx.getApitype()!=null){
                 String apiTpye = wxFpxx.getApitype();
                 String gfyh=(String) resultMap.get("bank_type");
                 String gfyhzh=(String) resultMap.get("bank_no");
