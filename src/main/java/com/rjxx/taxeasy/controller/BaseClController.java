@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.comm.BaseController;
 import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.alipay.AlipayConstants;
 import com.rjxx.taxeasy.utils.alipay.AlipayUtils;
 import com.rjxx.utils.*;
@@ -89,6 +90,8 @@ public class BaseClController extends BaseController {
 
     @Autowired
     private wechatFpxxServiceImpl wechatFpxxService;
+    @Autowired
+    private AdapterService adapterService;
 
     //正式
     //public static final String APP_ID ="wx9abc729e2b4637ee";
@@ -154,8 +157,8 @@ public class BaseClController extends BaseController {
             /**
              * 如果q参数为空则跳转到发票提取页面
              */
-            if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
-                logger.info("全家测试盘test开票----");
+            /*if(request.getSession().getAttribute("type")!=null&&request.getSession().getAttribute("type").equals("test")){
+                //logger.info("全家测试盘test开票----");
                 String opendid = (String) session.getAttribute("openid");
                 String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
                 if(!WeixinUtils.isWeiXinBrowser(request)){
@@ -195,11 +198,11 @@ public class BaseClController extends BaseController {
                     }
                     String redirectUrl = request.getContextPath() + "/Family/ddqr.html?_t=" + System.currentTimeMillis()
                             + "=" + mdh + "=" + orderNo + "=" + price + "=" + orderTime + "=" + tqm;
-                    logger.info("---测试跳转地址"+redirectUrl);
+                    //logger.info("---测试跳转地址"+redirectUrl);
                     response.sendRedirect(redirectUrl);
                     return;
                 }
-            }
+            }*/
             if (null==state) {
                 response.sendRedirect(request.getContextPath() + "/Family/qj.html?_t=" + System.currentTimeMillis());
                 return;
@@ -334,7 +337,7 @@ public class BaseClController extends BaseController {
                     List<Jymxsq> jymxsqList = (List) resultMap.get("jymxsqList");
                     String error = (String) resultMap.get("error");
                     if (error != null) {
-                        logger.info("---------错误信息111111222222------------" + error);
+                        //logger.info("---------错误信息111111222222------------" + error);
                         request.getSession().setAttribute("msg", error);
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return;
@@ -343,7 +346,7 @@ public class BaseClController extends BaseController {
                     }
                     String temp = (String) resultMap.get("tmp");
                     if (!"".equals(temp)) {
-                        logger.info("---------校验信息11111------------" + temp);
+                        //logger.info("---------校验信息11111------------" + temp);
                         request.getSession().setAttribute("msg", temp);
                         response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                         return;
@@ -359,6 +362,21 @@ public class BaseClController extends BaseController {
                         request.getSession().setAttribute("jymxsqList", jymxsqList);
                         request.getSession().setAttribute("tqm", tqm);
                         result.put("num", "5");
+                       //开票限期判断
+                        Boolean isInvoiceDateRestriction = adapterService.isInvoiceDateRestriction(gsxx.getGsdm(),jyxxsq.getXfid(),jyxxsq.getSkpid(),sdf.format(jyxxsq.getDdrq()));
+                        if (isInvoiceDateRestriction == null) {
+                            request.getSession().setAttribute("msg", "开票期限格式错误TP[2][3]!");
+                            response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                            return;
+                        } else {
+                            if (isInvoiceDateRestriction) {
+                                logger.info("超过开票期限");
+                                request.getSession().setAttribute("msg", "已超过开票截止日期，请联系商家TP[2][3]");
+                                response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
+                                return;
+                            }
+                        }
+                        //保存wx_fpxx表
                         boolean b = wechatFpxxService.InFapxx(tqm, gsxx.getGsdm(), tqm, state, "1", opendid, userId, "", request);
                         if (!b) {
                             request.getSession().setAttribute("msg", "保存发票信息失败，请重试!");

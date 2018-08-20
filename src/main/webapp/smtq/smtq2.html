@@ -93,17 +93,18 @@
             
             <form class="mui-input-group">
                 <div class="cbox">
-                    <input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
-                    <label for="choose">用于报销</label>
+                    <input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
+                    <input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
+                    <input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
                 </div>    
                 <div class="mui-input-row">
-                    <label><font color="red">*</font>购方名称</label>
+                    <label><font color="red">*</font><span class="gfmcText">购方名称</span></label>
                     <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
                     <select id="getFptt" oninput="changeFptt(this.value)">
                     </select>
                 </div>
                 <div class="mui-input-row">
-                    <label><font color="red" class="isCheck">*</font>纳税人识别号</label> 
+                    <label><font color="red" class="isCheck">*</font><span class="nsrsbhtext">纳税人识别号</span></label>
                     <input type="text" class="mui-input-clear" id="nsrsbh" maxlength="20" name="nsrsbh" placeholder="请输入纳税人识别号">
                 </div>
 
@@ -276,6 +277,7 @@
             }
         };
         function tk() {
+            var inputType=$('.cbox').find('input:checked').attr('id');
             var info = document.getElementById("info");
             var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             var fptt = $('#fptt').val();
@@ -285,7 +287,13 @@
             var title;
             if (null == fptt || "" == fptt) {
                 var btnArray = ['是'];
-                firm = "请输入发票抬头!";
+                if(inputType=='company'){
+                    firm = "请输入发票抬头!";
+                }else if(inputType=='personal'){
+                    firm = "请输入个人名称!";
+                }else{
+                    firm = "请输入非企业性单位名称!";
+                }
                 title = "提示";
                 alert(firm, title);
                 return;
@@ -297,7 +305,11 @@
                 return;
             }else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
                 var btnArray = [ '是' ];
-                firm = "请输纳税人识别号!";
+                if(inputType=='enterprise'){
+                    firm = "请输入组织机构代码!";
+                }else{
+                    firm = "请输购方税号!";
+                }
                 title = "提示";
                 alert(firm, title);
                 return;
@@ -380,12 +392,27 @@
             }
         }
         function CheckAll(obj) {
-           if ($(obj).prop("checked")) {
-              $('.isCheck').html('*');
-           } else {
-              $('.isCheck').html('');
-           }
-        }
+            $('.mui-input-row>input').val('');
+            if ($("#company").prop("checked")) {
+                $('.isCheck').html('*');
+                $("#fptt").attr('placeholder','请输入购方名称');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('购方名称');
+                $('.nsrsbhtext').html('纳税人识别号');
+            } else if($("#personal").prop("checked")) {
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入个人名称');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('购方名称');
+                $('.nsrsbhtext').html('纳税人识别号');
+            }else{
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入非企业性单位名称');
+                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $('.gfmcText').html('非企业性单位名称');
+                $('.nsrsbhtext').html('组织机构代码');
+            }
+        };
     </script>
 </body>
 </html>

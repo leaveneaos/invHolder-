@@ -6,7 +6,7 @@ header{
 	background-color: #67481b;
 }
 .entry {
-	width: 90%;
+	width: 95%;
 	height: 35px;
 	line-height: 35px;
 	margin: 0px auto;
@@ -38,19 +38,19 @@ header{
 	font-weight: bold;
     margin: 5px 0px;
 }
-#company,#personal {
-	width: 45%;
+#enterprise,#company,#personal {
+	width: 32%;
 	height: 30px;
 	line-height: 26px;
 	box-sizing: border-box;
-	font-size: 14px;
+	font-size: 12px;
 	border: 1px solid #ccc;
 }
-#company {
-	margin-right: 5%;
+#enterprise {
+	margin-left: 2%;
 }
 #personal {
-	margin-left: 5%;
+	margin-left: 2%;
 }
 .checkStyle {
 	background-color: #fff;

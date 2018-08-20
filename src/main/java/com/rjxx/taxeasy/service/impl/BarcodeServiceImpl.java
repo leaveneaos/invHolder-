@@ -8,6 +8,7 @@ import com.rjxx.taxeasy.bizcomm.utils.HttpUtils;
 import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.service.*;
+import com.rjxx.taxeasy.service.adapter.AdapterService;
 import com.rjxx.taxeasy.utils.ResponseUtil;
 import com.rjxx.taxeasy.vo.Spvo;
 import com.rjxx.taxeasy.wechat.util.TaxUtil;
@@ -74,6 +75,8 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     @Autowired
     private ResponseUtil responseUtil;
+    @Autowired
+    private AdapterService adapterService;
 
     @Override
     public Map sm(String gsdm, String q) {
@@ -91,6 +94,19 @@ public class BarcodeServiceImpl implements BarcodeService {
                 Integer kpdid = skp.getId();//税控盘id(开票点id)
                 String ppdm = "";
                 String ppurl = "";
+                //开票限期判断
+                Boolean isInvoiceDateRestriction = adapterService.isInvoiceDateRestriction(gsdm, xfid, kpdid, decode.get("A1").toString());
+                if (isInvoiceDateRestriction == null) {
+                    Map map = new HashMap();
+                    map.put("msg", "开票期限格式错误TP[2][3]");
+                    return map;
+                } else {
+                    if (isInvoiceDateRestriction) {
+                        Map map = new HashMap();
+                        map.put("msg", "已超过开票截止日期，请联系商家TP[2][3]");
+                        return map;
+                    }
+                }
                 if (pid != null) {
                     Pp pp = ppJpaDao.findOneById(pid);
                     ppdm = pp.getPpdm();

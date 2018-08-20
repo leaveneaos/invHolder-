@@ -8,6 +8,20 @@
 	<link rel="stylesheet" type="text/css" href="css/fptt.css">
 	<link rel="stylesheet" type="text/css" href="../css/jquery.alerts.css">
 </head>
+<style>
+	.entry input{
+		float: right;
+		height: 31px;
+		width: 50%;
+		overflow: hidden;
+	}
+	.entry label{
+		display: inline-block;
+		width: 40%;
+		text-align: right;
+		overflow: hidden;
+	}
+</style>
 <body onresize="document.activeElement.scrollIntoView(true);">
 	<header>
 		<img id="logo" class="logo" src="logo/dicos.png"/>
@@ -25,18 +39,19 @@
 			<div class="middle">
 				<div class="type">
 					<button id="company">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
-					<button id="personal" class="checkStyle" type="submit">个人/其他</button>
+					<button id="personal" class="checkStyle" type="submit">个人</button>
+					<button id="enterprise" class="checkStyle" type="submit">非企业性单位</button>
 				</div>
 		     	<div class="main-msg">
 					<form class="" action="" method="">
 						<div class="entry">
-							<span style="color: red;">*</span><label>名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</label>
+							<label ><span style="color: red;">*</span><span  class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</span></label>
 							<input type="text" name="fptt" id="fptt" placeholder="名称(必填)" onkeyup="query()">
 							<select id="getFptt" oninput="changeFptt(this.value)">
 							</select>
 						</div>
 						<div class="entry">
-							<span style="color: red;">*</span><label>购方税号</label>
+							<label><span class="shisCheck" style="color: red;">*</span><span class="nsrsbhtext">购方税号</span></label>
 							<input id="nsrsbh" maxlength="20" name="nsrsbh" type="text" class="" placeholder="15,18或20位(必填)">
 						</div>
 						<div class="entry">
@@ -45,7 +60,7 @@
 						</div>
 						<div class="entry">
 							<label>电话号码</label>
-							<input id="dh" maxlength="30" name="dh" type="text" class="" placeholder="请输入公司电话号码(选填)">
+							<input id="dh" maxlength="30" name="dh" type="text" class="" placeholder="请输入电话号码(选填)">
 						</div>
 						<div class="entry">
 							<label>开户银行</label>
@@ -120,19 +135,48 @@
                 $yx = $('#yx');
             var arr = [$nsrsbh,$dz,$khh,$yhzh];
             $('#personal').on('click',function() {
-                $('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
+                $('.entry>input').val('');
+                $('#personal').removeClass('checkStyle').siblings('button').addClass('checkStyle');
                 for(var i=0;i<arr.length;i++) {
                     arr[i].parent().css('display','none');
                 }
-                $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称(必填)')
+                $dh.parent().css('display','block');
+                $("#fptt").attr('placeholder','请输入个人名称')
+                $('.shisCheck').html('*');
+                $("#nsrsbh").attr('placeholder','请输入购方税号');
+                $('.gfmcText').html('名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称');
+                $('.nsrsbhtext').html('购方税号');
+
             })
             $('#company').on('click',function() {
-                $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
+                $('.entry>input').val('');
+                $('#company').removeClass('checkStyle').siblings('button').addClass('checkStyle');
                 for(var i=0;i<arr.length;i++) {
                     arr[i].parent().css('display','block');
                 }
                 $("#fptt").attr('placeholder','名称(必填)')
-            })
+                $('.shisCheck').html('*');
+                $("#nsrsbh").attr('placeholder','请输入购方税号');
+                $('.gfmcText').html('名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称');
+                $('.nsrsbhtext').html('购方税号');
+            });
+            var arr1 = [$dh,$dz,$khh,$yhzh];
+            $('#enterprise').on('click',function() {
+                $('.entry>input').val('');
+                $('#enterprise').removeClass('checkStyle').siblings('button').addClass('checkStyle');
+                for(var i=0;i<arr1.length;i++) {
+                    arr1[i].parent().css('display','none');
+                }
+                $nsrsbh.parent().css('display','block');
+                $("#fptt").attr('placeholder','请输入非企业性单位名称')
+                //shisCheck
+
+                $('.shisCheck').html('');
+                $("#fptt").attr('placeholder','请输入非企业性单位名称');
+                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $('.gfmcText').html('非企业性单位名称');
+                $('.nsrsbhtext').html('组织机构代码');
+            });
             // 获取支付宝默认抬头信息
             $.post(
                 '../getInvoiceTitle',
@@ -189,9 +233,17 @@
         };
         // 税号校验
         function CheckSocialCreditCode() {
+            var btntype=$('.type').find('button').not('.checkStyle').attr('id');
             var Code = $('#nsrsbh').val();
             var patrn = /^[0-9A-Z]+$/;
-            if ( ((Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) {
+            if(((btntype=='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)){
+                var btnArray = [ '是' ];
+                firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+                title = "提示";
+                alert(firm, title);
+                return false;
+
+            }else if ( ((btntype!='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) {
                 var btnArray = [ '是' ];
                 firm = "税号必须是15,18或20位数字与大写字母组合!";
                 title = "提示";
@@ -272,13 +324,26 @@
 
             var firm;
             var title;
-            if (null == fptt || "" == fptt) {
+            var btntype=$('.type').find('button').not('.checkStyle').attr('id');
+            if(btntype=='company' &&(null == fptt || "" == fptt)){
                 var btnArray = [ '是' ];
                 firm = "请输入发票抬头!";
                 title = "提示";
                 alert(firm, title);
                 return;
-            }else if ( (null==nsrsbh || nsrsbh=='') && ($('#personal').hasClass('checkStyle')) ) {
+            }else if(btntype=='personal' &&(null == fptt || "" == fptt)){
+                var btnArray = [ '是' ];
+                firm = "请输入个人名称!";
+                title = "提示";
+                alert(firm, title);
+                return;
+            }else if(btntype=='enterprise' &&(null == fptt || "" == fptt)){
+                var btnArray = [ '是' ];
+                firm = "请输入非企业性单位名称!";
+                title = "提示";
+                alert(firm, title);
+                return;
+            }else if ( (null==nsrsbh || nsrsbh=='') && btntype=='company' ) {
                 var btnArray = [ '是' ];
                 firm = "请输入购方税号!";
                 title = "提示";

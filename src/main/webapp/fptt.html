@@ -71,11 +71,12 @@
 		<section class="mui-content-padded data-dtc">
 			<form class="mui-input-group" action="sqkp/fpxx" method="post">
 				<div class="cbox">
-					<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
-					<label for="choose">用于报销</label>
+					<input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
+					<input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
+					<input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
 				</div>
 				<div class="mui-input-row">
-					<label id="fptt2"><span  style="color: red;">*</span>发票抬头</label>
+					<label id="fptt2"><span  style="color: red;">*</span><span class="gfmcText">发票抬头</span></label>
 					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头" list="getFptt" oninput="changeFptt(this.value)">
 					<datalist id="getFptt" >
 					  <!-- <option value="getFptt"> -->
@@ -86,7 +87,7 @@
 					<input name="yx" id="yx" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
 				</div>
 				<div class="mui-input-row">
-					<label><span  style="color: red;" class="isCheck">*</span>购方税号</label>
+					<label><span  style="color: red;" class="isCheck">*</span><span class="nsrsbhtext">购方税号</span></label>
 					<input id="nsrsbh" maxlength="20"
 					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请输入购方税号">
 				</div>
@@ -344,15 +345,28 @@
 				});
 			}
 		};
-		function CheckAll(obj) {
-		   if ($(obj).prop("checked")) {
-		      $('.isCheck').html('*');
-               $("#fptt").attr('placeholder','请输入发票抬头')
-		   } else {
-		      $('.isCheck').html('');
-               $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
-		   }
-		} 
+        function CheckAll(obj) {
+            $('.mui-input-row>input').val('');
+            if ($("#company").prop("checked")) {
+                $('.isCheck').html('*');
+                $("#fptt").attr('placeholder','请输入发票抬头');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('发票抬头');
+                $('.nsrsbhtext').html('纳税人识别号');
+            } else if($("#personal").prop("checked")) {
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入个人名称');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('发票抬头');
+                $('.nsrsbhtext').html('纳税人识别号');
+            }else{
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入非企业性单位名称');
+                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $('.gfmcText').html('非企业性单位名称');
+                $('.nsrsbhtext').html('组织机构代码');
+            }
+        };
 	</script>
 </body>
 </html>

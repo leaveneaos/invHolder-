@@ -170,6 +170,97 @@ public class CommonController extends BaseController {
         return resultMap;
     }
 
+    //拉取微信授权type 0、没有抬头授权 1、微信抬头授权 2、领取发票
+    @RequestMapping(value = "/weiXin")
+    public Map weiXin(String storeNo, String orderNo, String orderTime, String price,String gsdm,String type){
+        String redirectUrl ="";
+        Map resultMap = new HashMap();
+        if(weixinUtils.isWeiXinBrowser(request)){
+            try {
+                logger.info("------orderNo---------"+orderNo+"=-----------type"+type);
+                if(null==orderNo || "".equals(orderNo)){
+                    errorRedirect("订单号为空,获取微信授权失败!请重试!");
+                    return null;
+                }
+                if(null == orderTime || "".equals(orderTime)){
+                    errorRedirect("订单时间为空,获取微信授权失败!请重试!");
+                    return null;
+                }
+                if(null == price || "".equals(price)){
+                    errorRedirect("金额为空,获取微信授权失败!请重试!");
+                    return null;
+                }
+                if("0.0".equals(price)){
+                    errorRedirect("该订单可开票金额为0");
+                    return null;
+                }
+                WxFpxx wxFpxx = wxfpxxJpaDao.selsetByOrderNo(orderNo,gsdm);
+                if(null==wxFpxx){
+                    errorRedirect("根据微信回传订单号未找到该笔订单");
+                    return null;
+                }
+                List<String> status = adapterService.checkStatus(wxFpxx.getTqm(),wxFpxx.getGsdm(),null);
+                if(status!=null){
+                    if(status.contains("开具中")){
+                        response.sendRedirect(ticketingUrl);
+                        return null;
+                    }else if(status.contains("可开具")){
+                        String access_token ="";
+                        String ticket = "";
+                        WxToken wxToken = wxTokenJpaDao.findByFlag("01");
+                        if(wxToken==null){
+                            access_token= (String) weixinUtils.hqtk().get("access_token");
+                            ticket = weixinUtils.getTicket(access_token);
+                        }else {
+                            access_token = wxToken.getAccessToken();
+                            ticket= wxToken.getTicket();
+                        }
+                        if(ticket==null){
+                            //获取授权失败
+                            errorRedirect("获取ticket失败!请重试");
+                            return null;
+                        }
+                        String spappid = weixinUtils.getSpappid(access_token);//获取平台开票信息
+                        if(null==spappid ||"".equals(spappid)){
+                            //获取授权失败
+                            errorRedirect("获取spappid失败!请重试");
+                            return null;
+                        }
+                        Integer xfid = wechatFpxxService.getxfid(storeNo, gsdm);
+                        String weixinOrderNo = wechatFpxxService.getweixinOrderNo(orderNo,gsdm,xfid);
+                        logger.info("orderNo---"+orderNo+"传给微信的weixinOrderNo"+weixinOrderNo);
+                        //可开具 跳转微信授权链接
+                        redirectUrl = weixinUtils.getTiaoURL(gsdm,weixinOrderNo,price,orderTime, storeNo,type,access_token,ticket,spappid);
+                        if(null==redirectUrl||redirectUrl.equals("")){
+                            //获取授权失败
+                            errorRedirect("获取微信授权页失败!请重试");
+                            return null;
+                        }else {
+                            //成功跳转
+                            response.sendRedirect(redirectUrl);
+                            return null;
+                        }
+                    }else if(status.contains("纸票")){
+                        errorRedirect("该订单已开具纸质发票，不能重复开具");
+                        return null;
+                    }else if(status.contains("红冲")){
+                        errorRedirect("该订单已红冲");
+                        return null;
+                    }else {
+                        errorRedirect("获取微信授权失败!请重试!");
+                        return null;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            resultMap.put("num" ,"1");
+        }
+        return resultMap;
+    }
+
+
     public Map isWeiXin(String storeNo, String orderNo, String orderTime, String price,String gsdm,String type){
         String redirectUrl ="";
         Map resultMap = new HashMap();

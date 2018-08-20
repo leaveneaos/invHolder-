@@ -63,11 +63,12 @@
 		<section class="mui-content-padded data-dtc">
 			<form class="mui-input-group" action="sqkp/fpxx" method="post">
 				<div class="cbox">
-					<input type="checkbox" id="choose" name="" checked onclick="CheckAll(this);">
-					<label for="choose">用于报销</label>
+					<input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
+					<input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
+					<input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
 				</div>
 				<div class="mui-input-row">
-					<label id="fptt2"><span  style="color: red;">*</span>发票抬头</label>
+					<label id="fptt2"><span  style="color: red;">*</span><span class="gfmcText">发票抬头</span></label>
 					<input type="text" name="fptt" id="fptt" placeholder="请输入发票抬头">
 					<!--选择支付宝抬头-->
 					<select id="getFptt" oninput="changeFptt(this.value)">
@@ -78,7 +79,7 @@
 					<input name="yx" id="yx" type="text" class="mui-input-clear" placeholder="收票人电子邮箱">
 				</div>
 				<div class="mui-input-row">
-					<label><span  style="color: red;" class="isCheck">*</span>购方税号</label>
+					<label><span  style="color: red;" class="isCheck">*</span><span class="nsrsbhtext">购方税号</span></label>
 					<input id="nsrsbh" maxlength="20"
 					name="nsrsbh" type="text" class="mui-input-clear" placeholder="请在半角字符下输入">
 				</div>
@@ -248,28 +249,49 @@
 			}
 		};
 
-		function CheckAll(obj) {
-		    if ($(obj).prop("checked")) {
+        function CheckAll(obj) {
+            $('.mui-input-row>input').val('');
+            if ($("#company").prop("checked")) {
                 $('.isCheck').html('*');
-                //请输入发票抬头
-                $("#fptt").attr('placeholder','请输入发票抬头')
-            }else {
+                $("#fptt").attr('placeholder','请输入发票抬头');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('发票抬头');
+                $('.nsrsbhtext').html('纳税人识别号');
+            } else if($("#personal").prop("checked")) {
                 $('.isCheck').html('');
-                $("#fptt").attr('placeholder','请输入个人/ 非企业性单位名称')
+                $("#fptt").attr('placeholder','请输入个人名称');
+                $("#nsrsbh").attr('placeholder','请输入纳税人识别号');
+                $('.gfmcText').html('发票抬头');
+                $('.nsrsbhtext').html('纳税人识别号');
+            }else{
+                $('.isCheck').html('');
+                $("#fptt").attr('placeholder','请输入非企业性单位名称');
+                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $('.gfmcText').html('非企业性单位名称');
+                $('.nsrsbhtext').html('组织机构代码');
             }
-		} 	
+        };
 
-		// 税号校验
-		function CheckSocialCreditCode() { 
+
+        // 税号校验
+		function CheckSocialCreditCode() {
+            var inputType=$('.cbox').find('input:checked').attr('id');
 			var Code = $('#nsrsbh').val();
 　　　　	var patrn = /^[0-9A-Z]+$/;
 			//15，18，20位校验及大写校验
-			if ( ((Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) { 
-				var btnArray = [ '是' ];
-				firm = "税号必须是15,18或20位数字与大写字母组合!";
-				title = "提示";
-	　　　　　　alert(firm, title);
-				return;
+            if(((inputType=='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)){
+                var btnArray = [ '是' ];
+                firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+                title = "提示";
+                alert(firm, title);
+                return false;
+
+            }else if ( ((inputType!='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)) || (patrn.test(Code) == false)) {
+                var btnArray = [ '是' ];
+                firm = "税号必须是15,18或20位数字与大写字母组合!";
+                title = "提示";
+                alert(firm, title);
+                return false;
 	　　　　}else if (Code.substring(0,1).indexOf(0) == 0) {
 				var btnArray = [ '是' ];
 				firm = "购方税号不符合规定";
@@ -308,6 +330,7 @@
 		};
 
 		function kp() {
+            var inputType=$('.cbox').find('input:checked').attr('id');
             var tqm = $('#tqm').val();
             var gsdm =   $('#gsdm').val();
 			var info = document.getElementById("info");
@@ -320,8 +343,15 @@
 
 			if (null == fptt || "" == fptt) {
 				var btnArray = [ '是' ];
-				firm = "请输入发票抬头!";
-				title = "提示";
+                if(inputType=='company'){
+                    firm = "请输入发票抬头!";
+                }else if(inputType=='personal'){
+                    firm = "请输入个人名称!";
+                }else{
+                    firm = "请输入非企业性单位名称!";
+                }
+
+                title = "提示";
 				alert(firm, title);
 				return;
 			}else if (null == yx || "" == yx) {
@@ -332,7 +362,11 @@
 				return;
 			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
 				var btnArray = [ '是' ];
-				firm = "请输入购方税号!";
+                if(inputType=='enterprise'){
+                    firm = "请输入组织机构代码!";
+                }else{
+                    firm = "请输购方税号!";
+                }
 				title = "提示";
 				alert(firm, title);
 				return;
