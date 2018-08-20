@@ -142,6 +142,7 @@
             $yx = $('#yx');
         var arr = [$nsrsbh, $dz, $khh, $yhzh];
         $('#personal').on('click',function() {
+            $('.entry>input').val('');
             $('#personal').removeClass('checkStyle').siblings('button').addClass('checkStyle');
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','none');
@@ -155,6 +156,7 @@
 
         })
         $('#company').on('click',function() {
+            $('.entry>input').val('');
             $('#company').removeClass('checkStyle').siblings('button').addClass('checkStyle');
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','block');
@@ -167,6 +169,7 @@
         });
         var arr1 = [$dh,$dz,$khh,$yhzh];
         $('#enterprise').on('click',function() {
+            $('.entry>input').val('');
             $('#enterprise').removeClass('checkStyle').siblings('button').addClass('checkStyle');
             for(var i=0;i<arr1.length;i++) {
                 arr1[i].parent().css('display','none');
