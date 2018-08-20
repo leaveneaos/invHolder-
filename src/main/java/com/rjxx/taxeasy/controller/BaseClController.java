@@ -222,11 +222,11 @@ public class BaseClController extends BaseController {
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
                     return;
                 }
-                //logger.info("---------提取码参数值-----"+cssz[0]+"---------");
-                //logger.info("---------签名参数值-----"+cssz[1]+"---------");
+                logger.info("---------提取码参数值-----"+cssz[0]+"---------");
+                logger.info("---------签名参数值-----"+cssz[1]+"---------");
                 String newsign = cssz[0]+"&key=" + gsxx.getSecretKey();
                 String key1 = DigestUtils.md5Hex(newsign);
-                //logger.info("---------"+cssz[0]+"------------"+sign+"---------"+gsxx.getSecretKey()+"---------"+key1);
+                logger.info("---------"+cssz[0]+"------------"+sign+"---------"+gsxx.getSecretKey()+"---------"+key1);
                 if (!sign.equals(key1.toLowerCase())) {
                     request.getSession().setAttribute("msg", "秘钥不匹配!");
                     response.sendRedirect(request.getContextPath() + "/smtq/demo.html?_t=" + System.currentTimeMillis());
