@@ -145,8 +145,8 @@ public class SqjController extends BaseController {
             String sign = DigestUtils.md5Hex("data=" + dataJson + "&key=" + key);
             String signature = "data=" + dataJson + "&si=" + sign;
             String encode = Base64Util.encode(signature);
-            System.out.println(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode);
-            response.sendRedirect(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"/"+ System.currentTimeMillis());
+            logger.info(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"?_t="+ System.currentTimeMillis());
+            response.sendRedirect(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"?_t="+ System.currentTimeMillis());
             return;
         }
         //下面所有都不走
