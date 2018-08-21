@@ -14,6 +14,8 @@
 	color: #7B7F87;
 	font-size: 14px;
 	margin-right: 20px;
+	height: 31px;
+	overflow: hidden;
 }
 .entry input {
 	width: 60%;
