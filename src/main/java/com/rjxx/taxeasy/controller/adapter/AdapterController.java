@@ -207,6 +207,8 @@ public class AdapterController extends BaseController {
         String sp = jsonData.getString("sp");
         String tq = jsonData.getString("tq");
         String type = jsonData.getString("type");
+        logger.warn("sessionId", session.getId());
+        session.setAttribute("type", type);
         String mi = jsonData.getString("mi");
         if (!StringUtil.isNotBlankList(type)) {
             errorRedirect("获取开票类型失败");
@@ -234,7 +236,6 @@ public class AdapterController extends BaseController {
                 }
                 session.setAttribute("q", q);
                 session.setAttribute("gsdm", gsdm);
-                logger.info("type2存入session的q--"+session.getAttribute("q"));
                 String grant = isWechat(TYPE_TWO_CALLBACKURL);
                 //如果是微信浏览器，则拉取授权
                 if (grant != null) {
@@ -408,7 +409,8 @@ public class AdapterController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
-        if (session.getAttribute("gsdm") == null) {
+        String type = (String)session.getAttribute("type");
+        if (session.getAttribute("gsdm") == null || type==null) {
             errorRedirect("会话已过期TP[2][3]");
             return;
         }
@@ -417,15 +419,15 @@ public class AdapterController extends BaseController {
         String on = (String) session.getAttribute("on");
         String sn = (String) session.getAttribute("sn");
         String tq = (String) session.getAttribute("tq");
-        Map result;
-        logger.info("-"+session.getId());
-        logger.info("on"+(String) session.getAttribute("on"));
-        logger.info("sn"+(String) session.getAttribute("sn"));
-        logger.info("tq"+(String) session.getAttribute("tq"));
-        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+        Map result=null;
+//        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+        if("2".equals(type)){
             result = adapterService.getGrandMsg(gsdm, q);//type2
-        } else {
+        }
+        else if("3".equals(type)){
             result = adapterService.getGrandMsg(gsdm, on,tq, sn);//type3
+        }else {
+            errorRedirect("未知的类型[2][3]");
         }
         deal(result, gsdm);
     }
