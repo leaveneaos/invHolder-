@@ -207,7 +207,7 @@ public class AdapterController extends BaseController {
         String sp = jsonData.getString("sp");
         String tq = jsonData.getString("tq");
         String type = jsonData.getString("type");
-//        session.setAttribute("type", type);
+        session.setAttribute("type", type);
         String mi = jsonData.getString("mi");
         if (!StringUtil.isNotBlankList(type)) {
             errorRedirect("获取开票类型失败");
@@ -408,7 +408,6 @@ public class AdapterController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
-        //String type = (String)session.getAttribute("type");
         if (session.getAttribute("gsdm") == null) {
             errorRedirect("会话已过期TP[2][3]");
             return;
@@ -419,15 +418,14 @@ public class AdapterController extends BaseController {
         String on = (String) session.getAttribute("on");
         String sn = (String) session.getAttribute("sn");
         String tq = (String) session.getAttribute("tq");
+        String type = (String)session.getAttribute("type");
         Map result=null;
-        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
-        //if("2".equals(type)){
+//        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+        if("2".equals(type)){
             result = adapterService.getGrandMsg(gsdm, q);//type2
+//        else {
         }else {
-        //else if("3".equals(type)){
             result = adapterService.getGrandMsg(gsdm, on,tq, sn);//type3
-       // }else {
-         //   errorRedirect("未知的类型[2][3]");
         }
         deal(result, gsdm);
     }
@@ -441,12 +439,14 @@ public class AdapterController extends BaseController {
         String on = (String) session.getAttribute("on");
         String sn = (String) session.getAttribute("sn");
         String tq = (String) session.getAttribute("tq");
+        String type = (String)session.getAttribute("type");
         if (!StringUtil.isNotBlankList(gsdm)) {
             return ResultUtil.error("session过期,请重新扫码TP[2][3]");
         }
         String jsonData;
         String apiType;
-        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+//        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+        if("2".equalsIgnoreCase(type)){
             jsonData = adapterService.getSpxx(gsdm, q);
             apiType = "2";
         } else {
@@ -510,6 +510,7 @@ public class AdapterController extends BaseController {
         String on = (String) session.getAttribute("on");
         String sn = (String) session.getAttribute("sn");
         String tq = (String) session.getAttribute("tq");
+        String type = (String) session.getAttribute("type");
         String userId = (String) request.getSession().getAttribute(AlipayConstants.ALIPAY_USER_ID);
         if (gsdm == null) {
             return ResultUtil.error("session过期,请重新扫码TP[2][3]");
@@ -521,7 +522,8 @@ public class AdapterController extends BaseController {
         } else {
             sjly = "6";//其他浏览器
         }
-        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+//        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+        if("2".equals(type)){
             status = adapterService.makeInvoice(gsdm, q, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, sjly, "", "");
         } else {
             status = adapterService.makeInvoice(gsdm, on, sn, tq, gfmc, gfsh, email, gfyh, gfyhzh, gfdz, gfdh, tqm, userId, sjly, "", "");
