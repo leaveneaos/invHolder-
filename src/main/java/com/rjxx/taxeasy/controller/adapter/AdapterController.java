@@ -408,8 +408,8 @@ public class AdapterController extends BaseController {
         if (openid != null) {
             session.setAttribute("openid", openid);
         }
-        String type = (String)session.getAttribute("type");
-        if (session.getAttribute("gsdm") == null || type==null) {
+        //String type = (String)session.getAttribute("type");
+        if (session.getAttribute("gsdm") == null) {
             errorRedirect("会话已过期TP[2][3]");
             return;
         }
