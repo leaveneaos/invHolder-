@@ -207,7 +207,7 @@ public class AdapterController extends BaseController {
         String sp = jsonData.getString("sp");
         String tq = jsonData.getString("tq");
         String type = jsonData.getString("type");
-        session.setAttribute("type", type);
+//        session.setAttribute("type", type);
         String mi = jsonData.getString("mi");
         if (!StringUtil.isNotBlankList(type)) {
             errorRedirect("获取开票类型失败");
@@ -420,14 +420,14 @@ public class AdapterController extends BaseController {
         String sn = (String) session.getAttribute("sn");
         String tq = (String) session.getAttribute("tq");
         Map result=null;
-//        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
-        if("2".equals(type)){
+        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
+        //if("2".equals(type)){
             result = adapterService.getGrandMsg(gsdm, q);//type2
-        }
-        else if("3".equals(type)){
-            result = adapterService.getGrandMsg(gsdm, on,tq, sn);//type3
         }else {
-            errorRedirect("未知的类型[2][3]");
+        //else if("3".equals(type)){
+            result = adapterService.getGrandMsg(gsdm, on,tq, sn);//type3
+       // }else {
+         //   errorRedirect("未知的类型[2][3]");
         }
         deal(result, gsdm);
     }
