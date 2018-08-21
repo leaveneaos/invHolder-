@@ -207,7 +207,6 @@ public class AdapterController extends BaseController {
         String sp = jsonData.getString("sp");
         String tq = jsonData.getString("tq");
         String type = jsonData.getString("type");
-        logger.warn("sessionId", session.getId());
         session.setAttribute("type", type);
         String mi = jsonData.getString("mi");
         if (!StringUtil.isNotBlankList(type)) {
@@ -414,6 +413,7 @@ public class AdapterController extends BaseController {
             errorRedirect("会话已过期TP[2][3]");
             return;
         }
+        logger.warn("sessionId", session.getId());
         String gsdm = session.getAttribute("gsdm").toString();
         String q = session.getAttribute("q").toString();
         String on = (String) session.getAttribute("on");
