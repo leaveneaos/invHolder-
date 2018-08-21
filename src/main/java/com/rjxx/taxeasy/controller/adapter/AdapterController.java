@@ -418,6 +418,10 @@ public class AdapterController extends BaseController {
         String sn = (String) session.getAttribute("sn");
         String tq = (String) session.getAttribute("tq");
         Map result;
+        logger.info("-"+session.getId());
+        logger.info("on"+(String) session.getAttribute("on"));
+        logger.info("sn"+(String) session.getAttribute("sn"));
+        logger.info("tq"+(String) session.getAttribute("tq"));
         if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
             result = adapterService.getGrandMsg(gsdm, q);//type2
         } else {
