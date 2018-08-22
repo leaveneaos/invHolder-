@@ -333,6 +333,18 @@
             var firm;
             var title;
             var btntype=$('.type').find('button').not('.checkStyle').attr('id');
+            var fistTitle='';
+            var secendTitle='';
+            if(btntype=='company'){
+                fistTitle='发票抬头:';
+                secendTitle='购方税号:';
+			}else if(btntype=='personal'){
+                fistTitle='发票抬头:';
+                secendTitle='购方税号:';
+			}else{
+                fistTitle='非企业性单位名称';
+                secendTitle='统一社会信用代码';
+			}
             if(btntype=='company' &&(null == fptt || "" == fptt)){
                 var btnArray = [ '是' ];
                 firm = "请输入发票抬头!";
@@ -373,10 +385,12 @@
                         return;
                     }
                 }
-                firm = "发票抬头:" + fptt + "</br>";
+
+
+                firm = fistTitle + fptt + "</br>";
                 var btnArray = ['否', '是'];
                 if (null != nsrsbh && "" != nsrsbh) {
-                    firm += "纳税人识别号:" + nsrsbh + "</br>";
+                    firm += secendTitle + nsrsbh + "</br>";
                 }
                 if (null != dz && "" != dz) {
                     firm += "地址:" + dz + "</br>";
