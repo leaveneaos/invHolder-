@@ -238,9 +238,9 @@
 
             $('.shisCheck').html('');
             $("#fptt").attr('placeholder','请输入非企业性单位名称');
-            $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+            $("#nsrsbh").attr('placeholder','请输入统一社会信用代码');
             $('.gfmcText').html('非企业性单位名称');
-            $('.nsrsbhtext').html('组织机构代码');
+            $('.nsrsbhtext').html('统一社会信用代码');
         });
         // 获取支付宝默认抬头信息
         $.post(
@@ -307,7 +307,7 @@
         var patrn = /^[0-9A-Z]+$/;
         if(((btntype=='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)){
             var btnArray = [ '是' ];
-            firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+            firm = "统一社会信用代码必须是9，15,18或20位数字与大写字母组合!";
             title = "提示";
             alert(firm, title);
             return false;
