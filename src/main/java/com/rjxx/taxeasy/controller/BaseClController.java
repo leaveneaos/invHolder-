@@ -494,22 +494,22 @@ public class BaseClController extends BaseController {
         String sessionCode = (String) session.getAttribute("rand");
         String opendid = (String) session.getAttribute("openid");
         String gsdm = (String) session.getAttribute("gsdm");
-        String type = (String) session.getAttribute("type");
+        //String type = (String) session.getAttribute("type");
         Map<String, Object> result = new HashMap<String, Object>();
         if(tqm==null){
             result.put("num","3");
             return result;
         }
         if (code != null && sessionCode != null && code.equals(sessionCode)) {
-            if(type!=null){
-                tqm = type+tqm+IMEIGenUtils.genCode(tqm);
-                logger.info("type=001--------的提取码"+tqm);
-            }else {
+//            if(type!=null){
+//                tqm = type+tqm+IMEIGenUtils.genCode(tqm);
+//                logger.info("type=001--------的提取码"+tqm);
+//            }else {
                 if(!tqm.equals((tqm.substring(0,tqm.length()-1))+IMEIGenUtils.genCode(tqm.substring(0,tqm.length()-1)))){
                     result.put("num","3");
                     return result;
                 }
-            }
+//            }
             Map map = new HashMap<>();
             map.put("tqm", tqm);
             map.put("gsdm", gsdm);
