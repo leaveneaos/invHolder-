@@ -26,7 +26,8 @@ a {
 }
 footer {
 	position: fixed;
-	padding: 0px 20px;
+	padding: 0px 10px;
+	font-size: 13px;
 	width: 100%;
 	bottom: 0;
     box-sizing: border-box;
@@ -71,7 +72,7 @@ button {
 }
 .main {
 	margin: 15px auto 30px;
-	width: 85%;
+	width: 95%;
 }
 .content {
 	background-color: #fff;
