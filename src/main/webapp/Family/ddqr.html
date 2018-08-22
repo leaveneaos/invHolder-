@@ -186,10 +186,12 @@
 				var urlinfo = window.location.href; //获取当前页面的url
             if(isAlipay || urlinfo.indexOf("isAlipay=true") != -1){
                 window.location.href = "../Family/ddmx.html?time=" + new Date();
-            }else {
+            }else if(isWeixin){
                 window.location = "../common/isBrowser?orderNo=" + tqm + "&orderTime=" + orderTime +
                     "&storeNo=" + storeNo + "&price=" + pricese+"&gsdm="+gsmc;
-            }
+            }else {
+                window.location.href = "../Family/ddmx.html?time=" + new Date();
+			}
         }
 	</script>
 </body>
