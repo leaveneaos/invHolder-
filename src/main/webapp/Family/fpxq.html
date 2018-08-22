@@ -158,9 +158,9 @@
 			}
 
             $("#sureOk").click(function(){
-                var textValue=$("#gfmText").val();
+                var textValue=$("#gfmText").val().trim();
                 listArry.forEach(function (value,index) {
-					if(textValue==value.gfmc){
+					if(textValue==value.gfmc.trim()){
 					    $(".contentTopBox").css("display",'none');
                         $("#emilBox").css("display",'block');
 						return false;
