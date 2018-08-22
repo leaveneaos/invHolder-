@@ -715,7 +715,11 @@ public class AdapterController extends BaseController {
                     if(org.apache.commons.lang3.StringUtils.isNotBlank(extractCode)){
                         tqm = extractCode;
                     }else{
-                        tqm = ppdm + orderNo;
+                        if(gsdm.equals("sqj")){
+                            tqm =  orderNo;
+                        }else {
+                            tqm = ppdm + orderNo;
+                        }
                     }
                     session.setAttribute("tqm", tqm);
                     status = adapterService.checkStatus(tqm, gsdm,null);
