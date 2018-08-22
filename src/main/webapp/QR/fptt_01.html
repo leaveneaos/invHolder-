@@ -30,9 +30,9 @@
 		</div>
 		<div class="middle">
 			<div class="type">
-				<button id="company">企&nbsp;&nbsp;业</button>
-				<button id="personal" class="checkStyle" type="submit">个&nbsp;&nbsp;人</button>
-				<button id="enterprise" class="checkStyle" type="submit">非企业性单位</button>
+				<button id="company" >企&nbsp;&nbsp;业</button>
+				<button id="personal" class="checkStyle">个&nbsp;&nbsp;人</button>
+				<button id="enterprise" class="checkStyle" >非企业性单位</button>
 			</div>
 			<div class="main-msg">
 				<form class="" action="" method="">
@@ -132,12 +132,13 @@
             $('.entry>input').val('');
             $('#company').removeClass('pageBtnColor'+pageIndex);
             $('#personal').addClass('pageBtnColor'+pageIndex);
-            console.log(111)
+            $('#enterprise').removeClass('pageBtnColor'+pageIndex);
             $('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','none');
             }
-            $dh.parent().css('display','block');
+             $dh.parent().css('display','none');
+
             $("#fptt").attr('placeholder','请输入个人名称')
             $('.shisCheck').html('*');
             $("#nsrsbh").attr('placeholder','请输入购方税号');
@@ -148,6 +149,7 @@
             $('.entry>input').val('');
             $('#company').addClass('pageBtnColor'+pageIndex);
             $('#personal').removeClass('pageBtnColor'+pageIndex);
+            $('#enterprise').removeClass('pageBtnColor'+pageIndex);
             $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','flex');
@@ -161,11 +163,14 @@
         var arr1 = [$dh,$dz,$khh,$yhzh];
         $('#enterprise').on('click',function() {
             $('.entry>input').val('');
+            $('#company').removeClass('pageBtnColor'+pageIndex);
+            $('#personal').removeClass('pageBtnColor'+pageIndex);
+            $('#enterprise').addClass('pageBtnColor'+pageIndex);
             $('#enterprise').removeClass('checkStyle').siblings('button').addClass('checkStyle');
             for(var i=0;i<arr1.length;i++) {
                 arr1[i].parent().css('display','none');
             }
-            $nsrsbh.parent().css('display','block');
+            $nsrsbh.parent().css('display','flex');
             $("#fptt").attr('placeholder','请输入非企业性单位名称')
             //shisCheck
 

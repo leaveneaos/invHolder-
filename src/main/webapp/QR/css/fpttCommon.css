@@ -401,8 +401,8 @@ footer .help {
     font-size: 0.24rem;
 }
 #enterprise{
-    margin-left: 0.3rem;
-    width: 2rem;
+    margin-left: 0.1rem;
+    width: 2.5rem;
     height: 0.63rem;
     border-radius:0.1rem;
     border:0.03rem solid  #F0F0F0 ;
@@ -411,10 +411,11 @@ footer .help {
 .twoPage .middle .type #personal{
     background: white;
 }
+
 .twoPage .middle .type #company{
     background: white;
     color: #333333;
-    margin-right: 0.3rem;
+    margin-right: 0.1rem;
 }
 .twoPage .middle .type #enterprise{
     background: white;
