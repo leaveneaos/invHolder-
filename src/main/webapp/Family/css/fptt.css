@@ -32,8 +32,8 @@
     margin: 5px 0px;
 }
 #company,#personal,#enterprise {
-	width: 30%;
-	height: 30px;
+	width: 32%;
+	height: 32px;
 	line-height: 26px;
 	box-sizing: border-box;
 	font-size: 12px;
@@ -43,10 +43,10 @@
 	/*margin-right: 5%;*/
 /*}*/
 #personal {
-	margin-left: 5%;
+	margin-left: 2%;
 }
 #enterprise{
-	margin-left: 5%;
+	margin-left: 2%;
 }
 .checkStyle {
 	background-color: #fff;

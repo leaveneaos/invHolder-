@@ -19,6 +19,7 @@ header img{
 }*/
 body {
 	background-color: #4AA6E6;
+	padding-bottom: 50px;
 }
 ul, ol, li, a{
 	list-style: none;
@@ -33,6 +34,7 @@ footer {
 	bottom: 0;
     box-sizing: border-box;
     max-width: 800px;
+	background-color: #ffffff;
 }
 button,input {
 	border: none;
@@ -73,7 +75,7 @@ button {
 }
 .main {
 	margin: 15px auto 30px;
-	width: 85%;
+	width: 95%;
 }
 .content {
 	background-color: #fff;
