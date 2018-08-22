@@ -158,7 +158,8 @@
 			}
 
             $("#sureOk").click(function(){
-                var textValue=$("#gfmText").val().trim();
+                var textValue=document.getElementById('gfmText').value.trim();
+                // var textValue=$("#gfmText").val().trim();
                 listArry.forEach(function (value,index) {
 					if(textValue==value.gfmc.trim()){
 					    $(".contentTopBox").css("display",'none');
