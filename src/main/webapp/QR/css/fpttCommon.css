@@ -351,7 +351,7 @@ footer .help {
     display: -webkit-flex;
     display: -moz-box;
     display: -ms-flexbox;
-    margin: 0 0.80rem;
+    margin: 0 0.20rem;
     font-size: 0.24rem;
     position: relative;
 }
