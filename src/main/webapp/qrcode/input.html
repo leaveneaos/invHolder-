@@ -350,13 +350,12 @@
         var khh = $('#khh').val();
         var yhzh = $('#yhzh').val();
         var yx = $('#yx').val().trim();
-
         var firm;
         var title;
         var btntype=$('.type').find('button').not('.checkStyle').attr('id');
         if(btntype=='company' &&(null == fptt || "" == fptt)){
             var btnArray = [ '是' ];
-            firm = "请输入发票抬头!";
+            firm = "请输入名称!";
             title = "提示";
             alert(firm, title);
             return;
@@ -374,7 +373,7 @@
             return;
         }else if ( (null==nsrsbh || nsrsbh=='') && btntype=='company' ) {
             var btnArray = [ '是' ];
-            firm = "请输入购方税号!";
+            firm = "请输入名称！";
             title = "提示";
             alert(firm, title);
             return;
