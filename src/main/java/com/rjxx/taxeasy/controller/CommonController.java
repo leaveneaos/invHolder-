@@ -165,7 +165,9 @@ public class CommonController extends BaseController {
             }
         }else {
             logger.info("不是微信浏览器-------------");
-            resultMap.put("num" ,"1");
+            //resultMap.put("num" ,"1");
+            errorRedirect("请使用微信或者支付宝扫码！");
+            return null;
         }
         return resultMap;
     }
@@ -255,7 +257,8 @@ public class CommonController extends BaseController {
                 e.printStackTrace();
             }
         }else {
-            resultMap.put("num" ,"1");
+            errorRedirect("请使用微信或者支付宝扫码！");
+            return null;
         }
         return resultMap;
     }
