@@ -49,6 +49,23 @@
     		right: 20px;
     		background-color: #ccc;
 		}*/
+		.mui-input-row label {
+			font-size: 13px;
+			font-family: 'Helvetica Neue',Helvetica,sans-serif;
+			line-height: 1.1;
+			float: left;
+			width: 50%;
+			padding: 17px 13px;
+
+		}
+		.mui-input-row label~input{
+			font-size: 13px;
+			float: right;
+			width: 50%;
+			margin-bottom: 0;
+			padding-left: 0;
+			border: 0;
+		}
 	</style>
 </head>
 <body>
@@ -61,8 +78,8 @@
 	<div class="mui-content">
 		<section class="mui-content-padded data-dtc">
 			<form class="mui-input-group" action="sqkp/fpxx" method="post">
-				<div class="cbox">
-					<input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="2"><label for="company">企业</label>
+				<div class="cbox" style=" cursor:pointer;">
+					<input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
 					<input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
 					<input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
 				</div>
