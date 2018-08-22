@@ -95,8 +95,7 @@
                 <div class="cbox">
                     <input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
                     <input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
-                    <input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
-                </div>    
+                    <input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>                  </div>
                 <div class="mui-input-row">
                     <label><font color="red">*</font><span class="gfmcText">购方名称</span></label>
                     <input type="text" id="fptt" name="gfmc" maxlength="100" class="mui-input-clear" placeholder="请输入购方名称">
@@ -306,7 +305,7 @@
             }else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
                 var btnArray = [ '是' ];
                 if(inputType=='enterprise'){
-                    firm = "请输入组织机构代码!";
+                    firm = "请输入统一社会信用代码!";
                 }else{
                     firm = "请输购方税号!";
                 }
@@ -408,9 +407,9 @@
             }else{
                 $('.isCheck').html('');
                 $("#fptt").attr('placeholder','请输入非企业性单位名称');
-                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $("#nsrsbh").attr('placeholder','请输入统一社会信用代码');
                 $('.gfmcText').html('非企业性单位名称');
-                $('.nsrsbhtext').html('组织机构代码');
+                $('.nsrsbhtext').html('统一社会信用代码');
             }
         };
     </script>

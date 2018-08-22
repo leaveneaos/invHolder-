@@ -109,6 +109,23 @@
             background-color: #ccc;
             display: none;
         }
+        .mui-input-row label {
+            font-size: 13px;
+            font-family: 'Helvetica Neue',Helvetica,sans-serif;
+            line-height: 1.1;
+            float: left;
+            width: 50%;
+            padding: 17px 13px;
+
+        }
+        .mui-input-row label~input{
+            font-size: 13px;
+            float: right;
+            width: 50%;
+            margin-bottom: 0;
+            padding-left: 0;
+            border: 0;
+        }
 
     </style>
 </head>
@@ -270,7 +287,7 @@
             var patrn = /^[0-9A-Z]+$/;
             if(((inputType=='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)){
                 var btnArray = [ '是' ];
-                firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+                firm = "统一社会信用代码必须是9，15,18或20位数字与大写字母组合!";
                 title = "提示";
                 alert(firm, title);
                 return false;
@@ -352,7 +369,7 @@
             } else if ((null == nsrsbh || nsrsbh == '') && ($('#choose').prop("checked"))) {
                 var btnArray = ['是'];
                 if(inputType=='enterprise'){
-                    firm = "请输入组织机构代码!";
+                    firm = "请输入统一社会信用代码!";
                 }else{
                     firm = "请输购方税号!";
                 }
@@ -465,9 +482,9 @@
         }else{
             $('.isCheck').html('');
             $("#fptt").attr('placeholder','请输入非企业性单位名称');
-            $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+            $("#nsrsbh").attr('placeholder','请输入统一社会信用代码');
             $('.gfmcText').html('非企业性单位名称');
-            $('.nsrsbhtext').html('组织机构代码');
+            $('.nsrsbhtext').html('统一社会信用代码');
         }
     };
 </script>

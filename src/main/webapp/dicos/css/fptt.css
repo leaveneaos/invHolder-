@@ -41,17 +41,22 @@ header{
     margin: 5px 0px;
 }
 #enterprise,#company,#personal {
-	width: 32%;
 	height: 30px;
 	line-height: 26px;
 	box-sizing: border-box;
 	font-size: 12px;
 	border: 1px solid #ccc;
 }
-#enterprise {
-	margin-left: 2%;
+#company {
+	width: 25%;
+	margin-left: 3%;
 }
 #personal {
+	width: 25%;
+	margin-left: 2%;
+}
+#enterprise{
+	width: 40%;
 	margin-left: 2%;
 }
 .checkStyle {

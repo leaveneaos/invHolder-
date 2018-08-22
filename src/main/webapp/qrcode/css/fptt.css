@@ -49,7 +49,7 @@ header img {
     margin: 5px 0px;
 }
 #enterprise,#company,#personal {
-	width: 32%;
+	/*width: 31%;*/
 	height: 43px;
 	line-height: 36px;
 	box-sizing: border-box;
@@ -57,11 +57,15 @@ header img {
 	/*border: 1px solid #ccc;*/
 }
 #company {
+	width: 25%;
+	margin-left: 3%;
 }
 #personal {
+	width: 25%;
 	margin-left: 2%;
 }
-#enterprise {
+#enterprise{
+	width: 40%;
 	margin-left: 2%;
 }
 .checkStyle {

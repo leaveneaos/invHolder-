@@ -351,7 +351,7 @@ footer .help {
     display: -webkit-flex;
     display: -moz-box;
     display: -ms-flexbox;
-    margin: 0 0.80rem;
+    margin: 0 0.20rem;
     font-size: 0.24rem;
     position: relative;
 }
@@ -361,21 +361,21 @@ footer .help {
 }
 .twoPage .entry input{
     border-width:0; width: 100%;
-    flex: 3;font-size: 0.24rem;overflow: hidden;
+    flex: 2;font-size: 0.24rem;overflow: hidden;
     height: 0.4rem;
     line-height: 0.54rem;
 }
 .twoPage .entry span{
     border-width:0;
-    position: absolute;
-    left: -0.12rem;
+    /*position: absolute;*/
+    /*left: -0.12rem;*/
     top: 0.12rem;
-    font-size: 0.1rem;
+    font-size: 100%;
 
 }
 .twoPage .entry label{
     line-height: 0.58rem;
-    flex: 1;
+    flex:2;
 }
 .twoPage input::-webkit-input-placeholder {
     /* placeholder颜色  */
@@ -394,7 +394,15 @@ footer .help {
     margin: 0.2rem 0 0.25rem 0;
 }
 .twoPage .middle .type button{
-    width: 1.98rem;
+    width: 1.2rem;
+    height: 0.63rem;
+    border-radius:0.1rem;
+    border:0.03rem solid  #F0F0F0 ;
+    font-size: 0.24rem;
+}
+#enterprise{
+    margin-left: 0.1rem;
+    width: 2.5rem;
     height: 0.63rem;
     border-radius:0.1rem;
     border:0.03rem solid  #F0F0F0 ;
@@ -403,13 +411,19 @@ footer .help {
 .twoPage .middle .type #personal{
     background: white;
 }
+
 .twoPage .middle .type #company{
     background: white;
     color: #333333;
+    margin-right: 0.1rem;
 }
-.twoPage  #company{
-    margin-right: 1.2rem;
+.twoPage .middle .type #enterprise{
+    background: white;
+    color: #333333;
 }
+/*.twoPage  #company{*/
+    /*margin-right: 1.2rem;*/
+/*}*/
 .twoPage .main {
     padding: .44rem .44rem .62rem .44rem;
 }

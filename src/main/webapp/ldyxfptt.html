@@ -49,6 +49,23 @@
     		right: 20px;
     		background-color: #ccc;
 		}*/
+		.mui-input-row label {
+			font-size: 13px;
+			font-family: 'Helvetica Neue',Helvetica,sans-serif;
+			line-height: 1.1;
+			float: left;
+			width: 50%;
+			padding: 17px 13px;
+
+		}
+		.mui-input-row label~input{
+			font-size: 13px;
+			float: right;
+			width: 50%;
+			margin-bottom: 0;
+			padding-left: 0;
+			border: 0;
+		}
 	</style>
 </head>
 <body>
@@ -59,9 +76,9 @@
 
 
 	<div class="mui-content">
-		<section class="mui-content-padded data-dtc">
+		<div class="mui-content-padded" style="margin: 5px;">
 			<form class="mui-input-group" action="sqkp/fpxx" method="post">
-				<div class="cbox">
+				<div class="cbox" style=" cursor:pointer;">
 					<input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
 					<input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
 					<input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
@@ -99,7 +116,7 @@
 					<input id="yhzh" maxlength="50" name="yhzh" type="text" class="mui-input-clear" placeholder="收票单位银行帐号">
 				</div>
     		</form>
-		</section>
+		</div>
 		<section class="mui-content-padded" style="margin: 0 5px">
 			<form class="mui-input-group" id="tab">
 				<div class="mui-input-row">
@@ -248,9 +265,9 @@
             }else{
                 $('.isCheck').html('');
                 $("#fptt").attr('placeholder','请输入非企业性单位名称');
-                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $("#nsrsbh").attr('placeholder','请输入统一社会信用代码');
                 $('.gfmcText').html('非企业性单位名称');
-                $('.nsrsbhtext').html('组织机构代码');
+                $('.nsrsbhtext').html('统一社会信用代码');
             }
         };
 
@@ -262,7 +279,7 @@
 			//15，18，20位校验及大写校验
             if(((inputType=='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)){
                 var btnArray = [ '是' ];
-                firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+                firm = "统一社会信用代码必须是9，15,18或20位数字与大写字母组合!";
                 title = "提示";
                 alert(firm, title);
                 return false;
@@ -342,7 +359,7 @@
 			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
 				var btnArray = [ '是' ];
                 if(inputType=='enterprise'){
-                    firm = "请输入组织机构代码!";
+                    firm = "请输入统一社会信用代码!";
                 }else{
                     firm = "请输购方税号!";
                 }

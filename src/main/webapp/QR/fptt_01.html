@@ -30,20 +30,20 @@
 		</div>
 		<div class="middle">
 			<div class="type">
-				<button id="company">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
-				<button id="personal" class="checkStyle" type="submit">个人</button>
-				<button id="enterprise" class="checkStyle" type="submit">非企业性单位</button>
+				<button id="company" >企&nbsp;&nbsp;业</button>
+				<button id="personal" class="checkStyle">个&nbsp;&nbsp;人</button>
+				<button id="enterprise" class="checkStyle" >非企业性单位</button>
 			</div>
 			<div class="main-msg">
 				<form class="" action="" method="">
-					<div class="entry firstInput">
-						<label ><span style="color: red;">*</span><span  class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</span></label>
+					<div class="entry">
+						<label ><span style="color: red;">*</span><span  class="gfmcText">名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</span></label>
 						<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称(必填)" onkeyup="query()">
 						<select  class="hide" id="getFptt" oninput="changeFptt(this.value)">
 						</select>
 					</div>
 					<div class="entry">
-						<span style="color: red;">*</span><label><span class="nsrsbhtext">购方税号</span></label>
+						<label><span style="color: red;">*</span><span class="nsrsbhtext">购方税号</span></label>
 						<input id="nsrsbh" maxlength="20" name="nsrsbh" type="text" class="" placeholder="15,18或20位(必填)">
 					</div>
 					<div class="entry">
@@ -132,22 +132,24 @@
             $('.entry>input').val('');
             $('#company').removeClass('pageBtnColor'+pageIndex);
             $('#personal').addClass('pageBtnColor'+pageIndex);
-            console.log(111)
+            $('#enterprise').removeClass('pageBtnColor'+pageIndex);
             $('#personal').removeClass('checkStyle').siblings($('#company')).addClass('checkStyle');
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','none');
             }
-            $dh.parent().css('display','block');
+             $dh.parent().css('display','none');
+
             $("#fptt").attr('placeholder','请输入个人名称')
             $('.shisCheck').html('*');
             $("#nsrsbh").attr('placeholder','请输入购方税号');
             $('.gfmcText').html('名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称');
             $('.nsrsbhtext').html('购方税号');
-        })
+        });
         $('#company').on('click',function() {
             $('.entry>input').val('');
             $('#company').addClass('pageBtnColor'+pageIndex);
             $('#personal').removeClass('pageBtnColor'+pageIndex);
+            $('#enterprise').removeClass('pageBtnColor'+pageIndex);
             $('#company').removeClass('checkStyle').siblings($('#personal')).addClass('checkStyle');
             for(var i=0;i<arr.length;i++) {
                 arr[i].parent().css('display','flex');
@@ -161,19 +163,22 @@
         var arr1 = [$dh,$dz,$khh,$yhzh];
         $('#enterprise').on('click',function() {
             $('.entry>input').val('');
+            $('#company').removeClass('pageBtnColor'+pageIndex);
+            $('#personal').removeClass('pageBtnColor'+pageIndex);
+            $('#enterprise').addClass('pageBtnColor'+pageIndex);
             $('#enterprise').removeClass('checkStyle').siblings('button').addClass('checkStyle');
             for(var i=0;i<arr1.length;i++) {
                 arr1[i].parent().css('display','none');
             }
-            $nsrsbh.parent().css('display','block');
+            $nsrsbh.parent().css('display','flex');
             $("#fptt").attr('placeholder','请输入非企业性单位名称')
             //shisCheck
 
             $('.shisCheck').html('');
             $("#fptt").attr('placeholder','请输入非企业性单位名称');
-            $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+            $("#nsrsbh").attr('placeholder','请输入统一社会信用代码');
             $('.gfmcText').html('非企业性单位名称');
-            $('.nsrsbhtext').html('组织机构代码');
+            $('.nsrsbhtext').html('统一社会信用代码');
         });
         // 获取支付宝默认抬头信息
         $.post(
@@ -236,7 +241,7 @@
         var patrn = /^[0-9A-Z]+$/;
         if(((btntype=='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)){
             var btnArray = [ '是' ];
-            firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+            firm = "统一社会信用代码必须是9，15,18或20位数字与大写字母组合!";
             title = "提示";
             alert(firm, title);
             return false;

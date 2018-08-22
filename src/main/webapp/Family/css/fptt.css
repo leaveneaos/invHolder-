@@ -31,21 +31,27 @@
 	font-weight: bold;
     margin: 5px 0px;
 }
+
+
+
 #company,#personal,#enterprise {
-	width: 32%;
+	width: 31%;
 	height: 32px;
 	line-height: 26px;
 	box-sizing: border-box;
 	font-size: 12px;
 	border: 1px solid #ccc;
 }
-/*#company {*/
-	/*margin-right: 5%;*/
-/*}*/
+#company {
+	width: 25%;
+	margin-left: 3%;
+}
 #personal {
+	width: 25%;
 	margin-left: 2%;
 }
 #enterprise{
+	width: 40%;
 	margin-left: 2%;
 }
 .checkStyle {

@@ -46,13 +46,12 @@
 
 
 	<div class="mui-content">
-		<section class="mui-content-padded data-dtc">
+		<div class="mui-content-padded" style="margin: 5px;">
 			<form class="mui-input-group" action="sqkp/fpxx" method="post">
 				<div class="cbox">
 					<input type="radio" name="radio" id="company"  checked ="checked"  onclick="CheckAll(this);" value="1"><label for="company">企业</label>
 					<input type="radio" name="radio" id="personal" onclick="CheckAll(this);"  value="2"><label for="personal">个人</label>
-					<input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>
-				</div>
+					<input type="radio" name="radio" id="enterprise" onclick="CheckAll(this);"  value="2"><label for="enterprise">非企业性单位</label>  				</div>
 				<div class="mui-input-row">
 					<label ><span  style="color: red;">*</span><span class="gfmcText">购方名称</span></label>
 					<input type="text" name="fptt" id="fptt" placeholder="请填写准确的抬头名称">
@@ -83,7 +82,7 @@
 					<input id="yhzh" maxlength="50" name="yhzh" type="text" class="mui-input-clear" placeholder="收票单位银行帐号">
 				</div>
     		</form>
-		</section>
+		</div>
 		<section class="mui-content-padded">
 			<form class="mui-input-group" id="tab">
 				<div class="mui-input-row">
@@ -174,7 +173,7 @@
 			}else if ( (null==nsrsbh || nsrsbh=='') && ($('#choose').prop("checked")) ) {
 				var btnArray = [ '是' ];
                 if(inputType=='enterprise'){
-                    firm = "请输入组织机构代码!";
+                    firm = "请输入统一社会信用代码!";
                 }else{
                     firm = "请输购方税号!";
                 }
@@ -273,9 +272,9 @@
             }else{
                 $('.isCheck').html('');
                 $("#fptt").attr('placeholder','请输入非企业性单位名称');
-                $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+                $("#nsrsbh").attr('placeholder','请输入统一社会信用代码');
                 $('.gfmcText').html('非企业性单位名称');
-                $('.nsrsbhtext').html('组织机构代码');
+                $('.nsrsbhtext').html('统一社会信用代码');
             }
         };
 

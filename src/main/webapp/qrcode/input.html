@@ -28,14 +28,17 @@
             overflow: hidden;
         }
         .entry input{
+            font-size: 12px;
+            display: inline-block;
             float: right;
             height: 25px;
             width: 50%;
             overflow: hidden;
         }
         .entry label{
+            font-size: 12px;
             display: inline-block;
-            width: 40%;
+            width: 36%;
             text-align: right;
             overflow: hidden;
         }
@@ -57,8 +60,8 @@
             </div>
             <hr style="height:1px;border:none;border-top:1px dashed #ececec;" />
             <div class="type">
-                <button id="company">企&nbsp;&nbsp;&nbsp;&nbsp;业</button>
-                <button id="personal" class="checkStyle" type="submit">个人</button>
+                <button id="company">企&nbsp;&nbsp;业</button>
+                <button id="personal" class="checkStyle" type="submit">个&nbsp;&nbsp;人</button>
                 <button id="enterprise" class="checkStyle" type="submit">非企业性单位</button>
             </div>
             <div class="main-msg">
@@ -193,9 +196,9 @@
 
             $('.shisCheck').html('');
             $("#fptt").attr('placeholder','请输入非企业性单位名称');
-            $("#nsrsbh").attr('placeholder','请输入组织机构代码');
+            $("#nsrsbh").attr('placeholder','请输入统一社会信用代码');
             $('.gfmcText').html('非企业性单位名称');
-            $('.nsrsbhtext').html('组织机构代码');
+            $('.nsrsbhtext').html('统一社会信用代码');
         });
         // 获取支付宝默认抬头信息
         $.post(
@@ -262,7 +265,7 @@
         var patrn = /^[0-9A-Z]+$/;
         if(((btntype=='enterprise')&&(Code.length != 15)&&(Code.length != 18)&&(Code.length != 20)&&(Code.length != 9)) || (patrn.test(Code) == false)){
             var btnArray = [ '是' ];
-            firm = "组织机构代码必须是9，15,18或20位数字与大写字母组合!";
+            firm = "统一社会信用代码必须是9，15,18或20位数字与大写字母组合!";
             title = "提示";
             alert(firm, title);
             return false;
@@ -347,13 +350,12 @@
         var khh = $('#khh').val();
         var yhzh = $('#yhzh').val();
         var yx = $('#yx').val().trim();
-
         var firm;
         var title;
         var btntype=$('.type').find('button').not('.checkStyle').attr('id');
         if(btntype=='company' &&(null == fptt || "" == fptt)){
             var btnArray = [ '是' ];
-            firm = "请输入发票抬头!";
+            firm = "请输入名称!";
             title = "提示";
             alert(firm, title);
             return;
@@ -371,7 +373,7 @@
             return;
         }else if ( (null==nsrsbh || nsrsbh=='') && btntype=='company' ) {
             var btnArray = [ '是' ];
-            firm = "请输入购方税号!";
+            firm = "请输入名称！";
             title = "提示";
             alert(firm, title);
             return;
