@@ -311,6 +311,18 @@
 
             //company//personal//enterprise
 			var btntype=$('.type').find('button').not('.checkStyle').attr('id');
+            var fistTitle='';
+            var secendTitle='';
+            if(btntype=='company'){
+                fistTitle='发票抬头:';
+                secendTitle='购方税号:';
+            }else if(btntype=='personal'){
+                fistTitle='发票抬头:';
+                secendTitle='购方税号:';
+            }else{
+                fistTitle='非企业性单位名称';
+                secendTitle='统一社会信用代码';
+            }
 			if(btntype=='company' &&(null == fptt || "" == fptt)){
                 var btnArray = [ '是' ];
                 firm = "请输入发票抬头!";
