@@ -22,46 +22,50 @@
 		<div class="shadow2"></div>
 		<div class="content">
 			<div class="contentTopBox">
-				<div class="contentTopBox-form">
+				<div class="contentTopBox-form" style="margin: 30px auto">
+					<img width="100%" height="50px"  src="../images/headcover.gif" alt="">
 					<input type="text" id="gfmText"  placeholder="请输入购方名称">
-					<button id="sureOk" >确认</button>
 					<p class="contentTopBox-formTitle" style="display: none;color: red;font-size: 12px">您输入的购方名称没有匹配，请重新输入！</p>
+					<p style="color: #999999;font-size: 12px">友情提示：尊敬的电票用户为了您的信息安全，如需再次扫描二维码提取已开具的电子发票，请输入首次开票时所填入的购方名称验证。</p>
+						<button id="sureOk" style="margin: 40px auto" >确认</button>
 				</div>
 			</div>
 			<div class="topName">
 				电子发票
 			</div>
 			<div class="middle" >
-		       <!-- <ul>
-		            <li class="fl">销方名称</li>
-		            <li class="fr omit" id="xfmc"></li>
-		        </ul>
-		         <ul>
-		            <li class="fl">购方名称</li>
-		            <li class="fr omit" id="gfmc"></li>
-		        </ul>
-		        <ul>
-		            <li class="fl">发票金额</li>
-		            <li class="fr omit" id="fpje"></li>
-		        </ul>
-		        <ul class="kprq">
-		            <li class="fl">开票日期</li>
-		            <li class="fr omit" id="kprq"></li>
-		        </ul>
-		        <ul>
-		            <li class="fl">发票代码</li>
-		            <li class="fr omit" id="fpdm"></li>
-		        </ul>
-		        <ul>
-		            <li class="fl">发票号码</li>
-		            <li class="fr omit" id="fphm"></li>
-		        </ul>
-		        <div  class="ck">
-					<a id="pdf" >查看发票</a>
-		        </div>-->
+				<!--************************************************************************************-->
+		       <!--<ul>-->
+		            <!--<li class="fl">销方名称</li>-->
+		            <!--<li class="fr omit" id="xfmc"></li>-->
+		        <!--</ul>-->
+		         <!--<ul>-->
+		            <!--<li class="fl">购方名称</li>-->
+		            <!--<li class="fr omit" id="gfmc"></li>-->
+		        <!--</ul>-->
+		        <!--<ul>-->
+		            <!--<li class="fl">发票金额</li>-->
+		            <!--<li class="fr omit" id="fpje"></li>-->
+		        <!--</ul>-->
+		        <!--<ul class="kprq">-->
+		            <!--<li class="fl">开票日期</li>-->
+		            <!--<li class="fr omit" id="kprq"></li>-->
+		        <!--</ul>-->
+		        <!--<ul>-->
+		            <!--<li class="fl">发票代码</li>-->
+		            <!--<li class="fr omit" id="fpdm"></li>-->
+		        <!--</ul>-->
+		        <!--<ul>-->
+		            <!--<li class="fl">发票号码</li>-->
+		            <!--<li class="fr omit" id="fphm"></li>-->
+		        <!--</ul>-->
+		        <!--<div  class="ck">-->
+					<!--<a id="pdf" >查看发票</a>-->
+		        <!--</div>-->
+				<!--************************************************************************************-->
 			</div>
 			<div class="bottom btoTip">
-				<div id="emilBox" style="display: none">
+				<div id="emilBox" >
 					<h4 class="save">您还可以通过以下方式保存发票：</h4>
 
 					<a href="../youxiang1.html" class="yx">
@@ -158,9 +162,10 @@
 			}
 
             $("#sureOk").click(function(){
-                var textValue=$("#gfmText").val();
+                var textValue=document.getElementById('gfmText').value.trim();
+                // var textValue=$("#gfmText").val().trim();
                 listArry.forEach(function (value,index) {
-					if(textValue==value.gfmc){
+					if(textValue==value.gfmc.trim()){
 					    $(".contentTopBox").css("display",'none');
                         $("#emilBox").css("display",'block');
 						return false;

@@ -120,10 +120,12 @@
 	<section class="main">
 		<div class="content">
 			<div class="contentTopBox">
-				<div class="contentTopBox-form">
+				<div class="contentTopBox-form" style="margin: 30px auto">
+					<img width="100%" height="50px"  src="../images/headcover.gif" alt="">
 					<input type="text" id="gfmText"  placeholder="请输入购方名称">
-					<button id="sureOk" >确认</button>
 					<p class="contentTopBox-formTitle" style="display: none;color: red;font-size: 12px">您输入的购方名称没有匹配，请重新输入！</p>
+					<p style="color: #999999;font-size: 12px">友情提示：尊敬的电票用户为了您的信息安全，如需再次扫描二维码提取已开具的电子发票，请输入首次开票时所填入的购方名称验证。</p>
+					<button id="sureOk" style="margin: 40px auto" >确认</button>
 				</div>
 			</div>
 		<div class="middle">
@@ -220,9 +222,9 @@
                 $(".btoTip").css("display",'block');
             }
             $("#sureOk").click(function(){
-                var textValue=$("#gfmText").val();
+                var textValue=document.getElementById('gfmText').value.trim();
                 listArry.forEach(function (value,index) {
-                    if(textValue==value.gfmc){
+                    if(textValue==value.gfmc.trim()){
                         $(".contentTopBox").css("display",'none');
                         $(".btoTip").css("display",'block');
                         return false;

@@ -83,34 +83,40 @@ button {
 	border-radius: 10px;
 	box-shadow: 0 0 50px 5px rgb(74,166,229);
 	position: relative;
+	min-height: 400px;
 }
 .contentTopBox{
 	position: absolute;
 	width: 100%;
 	height: 100%;
 	background-color: #ffffff;
+	z-index: 100;
+	min-height: 400px;
 }
 .contentTopBox-form{
 	width: 80%;
 	margin: 100px auto;
 }
 #sureOk{
-	width: 20%;
+	width: 80%;
 	height: 30px;
 	line-height: 30px;
 	background-color: #4BB4F7;
 	list-style-type: none;
 	color: #fff;
-	border-radius: 5px;
-	float: right;
-	/*margin-right: 10px;*/
+	border-radius: 50px;
+	margin: 10px auto;
+	text-align: center;
+	display: block;
+
 }
 #gfmText{
-	width: 70%;
+	width: 95%;
 	height: 30px;
 	border: 1px solid #CCCCCC;
 	border-radius: 3px;
 	padding-left: 10px;
+	margin-top:40px;
 }
 .top {
 	text-align: center;

@@ -79,6 +79,7 @@ button {
 	background-color: #fff;
 	border-radius: 10px;
 	box-shadow: 0 0 50px 5px rgb(74,166,229);
+	min-height: 400px;
 }
 .top {
 	text-align: center;
