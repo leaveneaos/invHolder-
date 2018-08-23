@@ -142,8 +142,10 @@ public class SqjController extends BaseController {
             String key = gsxx.getSecretKey();
 
             String dataJson = JSON.toJSONString(adapterGet);
+            logger.info("dataJson={}",dataJson);
             String sign = DigestUtils.md5Hex("data=" + dataJson + "&key=" + key);
             String signature = "data=" + dataJson + "&si=" + sign;
+            logger.info("signature={}",signature);
             String encode = Base64Util.encode(signature);
             logger.info(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"?_t="+ System.currentTimeMillis());
             response.sendRedirect(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"?_t="+ System.currentTimeMillis());
