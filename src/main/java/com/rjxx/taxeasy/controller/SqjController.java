@@ -129,9 +129,13 @@ public class SqjController extends BaseController {
             }
             Map map = RJCheckUtil.decodeForAll(str);
             String orderNo = (String) map.get("A0");
+            logger.info("orderNo",orderNo);
             String orderTime = (String) map.get("A1");
+            logger.info("orderTime",orderTime);
             String price = (String) map.get("A2");
+            logger.info("price",price);
             String sn = (String) map.get("A3");
+            logger.info("sn",sn);
 //            String sign =(String) map.get("A4");
             AdapterGet adapterGet = new AdapterGet();
             adapterGet.setType("2");
