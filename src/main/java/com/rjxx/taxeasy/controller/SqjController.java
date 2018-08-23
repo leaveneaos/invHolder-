@@ -129,13 +129,13 @@ public class SqjController extends BaseController {
             }
             Map map = RJCheckUtil.decodeForAll(str);
             String orderNo = (String) map.get("A0");
-            logger.info("orderNo",orderNo);
+//            logger.info("orderNo",orderNo);
             String orderTime = (String) map.get("A1");
-            logger.info("orderTime",orderTime);
+//            logger.info("orderTime",orderTime);
             String price = (String) map.get("A2");
-            logger.info("price",price);
+//            logger.info("price",price);
             String sn = (String) map.get("A3");
-            logger.info("sn",sn);
+//            logger.info("sn",sn);
 //            String sign =(String) map.get("A4");
             AdapterGet adapterGet = new AdapterGet();
             adapterGet.setType("2");
@@ -146,12 +146,12 @@ public class SqjController extends BaseController {
             String key = gsxx.getSecretKey();
 
             String dataJson = JSON.toJSONString(adapterGet);
-            logger.info("dataJson={}",dataJson);
+//            logger.info("dataJson={}",dataJson);
             String sign = DigestUtils.md5Hex("data=" + dataJson + "&key=" + key);
             String signature = "data=" + dataJson + "&si=" + sign;
-            logger.info("signature={}",signature);
+//            logger.info("signature={}",signature);
             String encode = Base64Util.encode(signature);
-            logger.info(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"?_t="+ System.currentTimeMillis());
+//            logger.info(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"?_t="+ System.currentTimeMillis());
             response.sendRedirect(request.getContextPath() +"/kptService/" + gsxx.getGsdm() + "/" + encode+"?_t="+ System.currentTimeMillis());
             return;
         }
