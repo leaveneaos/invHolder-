@@ -398,7 +398,7 @@ public class WeixinTask implements Runnable{
                                 return ;
                             }
                             Map params2 = new HashMap();
-                            params2.put("kplsh", wxFpxxIncard.getKplsh());
+                            params2.put("kplsh",kpls.getKplsh());
                             List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
                             if (null == kpspmxList) {
                                 String re = "商品明细为空，插入卡包失败！";
