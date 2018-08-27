@@ -89,6 +89,12 @@ public class WeiXinController extends BaseController {
     @Autowired
     private SkpJpaDao skpJpaDao;
 
+    @Autowired
+    private JylsJpaDao jylsJpaDao;
+
+    @Autowired
+    private KplsJpaDao kplsJpaDao;
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${rjxx.pdf_file_url:}")
@@ -185,6 +191,8 @@ public class WeiXinController extends BaseController {
                     weixinTask.setXfJpaDao(xfJpaDao);
                     weixinTask.setAdapterService(adapterService);
                     weixinTask.setSkpJpaDao(skpJpaDao);
+                    weixinTask.setJylsJpaDao(jylsJpaDao);
+                    weixinTask.setKplsJpaDao(kplsJpaDao);
                     Thread thread = new Thread(weixinTask);
                     thread.start();
                     return "";
@@ -229,6 +237,8 @@ public class WeiXinController extends BaseController {
                     weixinTask.setXfJpaDao(xfJpaDao);
                     weixinTask.setAdapterService(adapterService);
                     weixinTask.setSkpJpaDao(skpJpaDao);
+                    weixinTask.setJylsJpaDao(jylsJpaDao);
+                    weixinTask.setKplsJpaDao(kplsJpaDao);
                     Thread thread = new Thread(weixinTask);
                     thread.start();
                     return "";
