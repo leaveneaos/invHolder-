@@ -383,12 +383,12 @@ public class WeixinTask implements Runnable{
                 }else {
                     djhs = jylsJpaDao.findDjhByDdhAndGsdm(wxFpxxIncard.getOrderNo(), wxFpxxIncard.getGsdm());
                 }
-                logger.info("单据号---",JSON.toJSONString(djhs));
+                logger.info("单据号---"+JSON.toJSONString(djhs));
                 if(!djhs.isEmpty()){
                     for (Integer djh : djhs) {
                         if (djh != null) {
                             Kpls kpls = kplsJpaDao.findOneByDjh(djh);
-                            logger.info("进入插卡方法的开票流水号",kpls.getKplsh());
+                            logger.info("进入插卡方法的开票流水号"+kpls.getKplsh());
                             if (null == kpls || StringUtils.isBlank(kpls.getFpdm())
                                     || StringUtils.isBlank(kpls.getFphm())
                                     || StringUtils.isBlank(kpls.getPdfurl())) {
