@@ -66,9 +66,6 @@ public class WeiXinController extends BaseController {
     private CszbService cszbService;
 
     @Autowired
-    private JyxxService jyxxService;
-
-    @Autowired
     private XfService xfService;
 
     @Autowired
@@ -242,117 +239,6 @@ public class WeiXinController extends BaseController {
                     Thread thread = new Thread(weixinTask);
                     thread.start();
                     return "";
-                   /*if(null!=wxFpxx.getWxtype() && "1".equals(wxFpxx.getWxtype())){
-                        logger.info("进入申请开票类型------------开始开票");
-                            if (null != gsdm && (gsdm.equals("Family")|| "bqw".equals(gsdm) || "ldyx".equals(gsdm)||"gvc".equals(gsdm))) {
-                                    Map parms = new HashMap();
-                                    parms.put("gsdm", gsdm);
-                                    Gsxx gsxx = gsxxService.findOneByParams(parms);
-                                    Map resultSjMap = new HashMap();
-                                    if("Family".equals(gsdm)){
-                                        logger.info("进入全家开票处理---------");
-                                        resultSjMap = getDataService.getData(tqm, "Family");
-                                    }else if("bqw".equals(gsdm)){
-                                        logger.info("波奇网开票-------");
-                                        Cszb  zb1 =  cszbService.getSpbmbbh(gsxx.getGsdm(), null,null, "sfhhurl");
-                                        resultSjMap = getDataService.getDataForBqw(tqm, gsxx.getGsdm(),zb1.getCsz());
-                                    }else if("ldyx".equals(gsdm)){
-                                        logger.info("绿地优鲜微信开票-------");
-                                        Map MapldyxToken = getDataService.getldyxFirData(tqm,gsdm);
-                                        String accessToken = (String) MapldyxToken.get("accessToken");
-                                        if(null == accessToken){
-                                            String re = "发票开具失败，请重试！";
-                                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                            return "";
-                                        }
-                                        resultSjMap = getDataService.getldyxSecData(tqm,gsdm,accessToken);
-                                    }else if("gvc".equals(gsdm)){
-                                        logger.info("进入光唯尚微信开票---------");
-                                        Cszb  csz =  cszbService.getSpbmbbh(gsdm, null,null, "sfhhurl");
-                                        resultSjMap = getDataService.getDataForGvc(tqm, gsdm, csz.getCsz());
-                                        String msg = (String) resultSjMap.get("msg");
-                                        if(msg!=null){
-                                            String re = msg;
-                                            weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                            return "";
-                                        }
-                                    }
-                                    try {
-                                        barcodeService.pullInvioce(resultSjMap, gsdm, (String) resultMap.get("title"),
-                                               (String) resultMap.get("tax_no"), (String) resultMap.get("email"), (String) resultMap.get("bank_type")
-                                               , (String) resultMap.get("bank_no"), (String) resultMap.get("addr"), (String) resultMap.get("phone"),
-                                               tqm, openid, "4", access_token, gsxx.getAppKey(), gsxx.getSecretKey(),SuccOrderId);
-                                    } catch (Exception e) {
-                                        String re = "发票开具失败，请重试！";
-                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                        e.printStackTrace();
-                                    }
-                                    return "";
-                                }else if (null != gsdm && (gsdm.equals("chamate") || "dicos".equals(gsdm))) {
-                                    logger.info("一茶一坐开票---------");
-                                    try {
-                                        barcodeService.makeInvoice(gsdm, q, (String) resultMap.get("title"), (String) resultMap.get("tax_no"),
-                                                (String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
-                                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
-                                    } catch (Exception e) {
-                                        String re = "发票开具失败，请重试！";
-                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                        e.printStackTrace();
-                                    }
-                                    return "";
-                                }else if(null!=gsdm && gsdm.equals("sqj")){
-                                    logger.info("食其家微信开票----");
-                                    try {
-                                        barcodeService.sqjInvioce(q,"sqj",(String) resultMap.get("title"), (String) resultMap.get("tax_no"),(String) resultMap.get("email"), (String) resultMap.get("bank_type"), (String) resultMap.get("bank_no"),
-                                                (String) resultMap.get("addr"), (String) resultMap.get("phone"), tqm, openid, "4",access_token,SuccOrderId);
-                                    } catch (Exception e) {
-                                        String re = "发票开具失败，请重试！";
-                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                        e.printStackTrace();
-                                    }
-                            }else {
-                                    logger.info("------没有该公司的开票处理，---------公司为"+gsdm);
-                                    String re = "发票开具异常,请联系商家！";
-                                    weixinUtils.jujuekp(FailOrderId,re,access_token);
-                                }
-                        }else if(null!=wxFpxx.getWxtype() && "2".equals(wxFpxx.getWxtype())) {
-                            logger.info("进入领取发票类型------------直接插入卡包");
-                            WxFpxx wxFpxxIncard = wxfpxxJpaDao.selsetByOrderNo(SuccOrderId);
-                            if (null == wxFpxxIncard) {
-                                String re = "插入卡包失败！";
-                                weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                            } else {
-                                if (null == wxFpxxIncard.getCode() || "".equals(wxFpxxIncard.getCode())) {
-                                    logger.info("进入插卡方法-----");
-                                    //没有插入过卡包
-                                    Map kplsMap = new HashMap();
-                                    kplsMap.put("kplsh", wxFpxxIncard.getKplsh());
-                                    Kpls kpls = kplsService.findOneByParams(kplsMap);
-                                    if (null == kpls) {
-                                        String re = "开票数据为空，插入卡包失败！";
-                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                        return "";
-                                    }
-                                    Map params2 = new HashMap();
-                                    params2.put("kplsh", wxFpxxIncard.getKplsh());
-                                    List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
-                                    if (null == kpspmxList) {
-                                        String re = "商品明细为空，插入卡包失败！";
-                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                        return "";
-                                    }
-                                    try {
-                                        //插入卡包
-                                        weixinUtils.fpInsertCardBox(SuccOrderId, pdf_file_url, kpspmxList, kpls);
-                                    } catch (Exception e) {
-                                        String re = "插入卡包失败！";
-                                        weixinUtils.jujuekp(SuccOrderId, re, access_token);
-                                        e.printStackTrace();
-                                    }
-                                    return "";
-                                }
-                            }
-                        }*/
                 }
                 if(null!=FailOrderId && !FailOrderId.equals("")){
                     String re = "订单"+FailOrderId+"的发票开具异常,请联系商家！";

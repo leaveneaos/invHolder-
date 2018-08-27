@@ -520,11 +520,9 @@ public class AdapterController extends BaseController {
         String sjly;
         if (AlipayUtils.isAlipayBrowser(request)) {
             sjly = "5";//支付宝
-            logger.info("支付宝浏览器---"+userId);
         } else if(WeixinUtils.isWeiXinBrowser(request)){
             userId = (String) request.getSession().getAttribute("openid");
             sjly = "4";//微信
-            logger.info("微信浏览器---"+userId);
         }else {
             sjly = "6";//其他浏览器
         }
@@ -705,7 +703,6 @@ public class AdapterController extends BaseController {
     private void deal(Map result, String gsdm) {
         try {
             if (result != null) {
-                logger.info("---校验数据"+JSON.toJSONString(result));
                 String ppdm = (String) result.get("ppdm");
                 String ppurl = (String) result.get("ppurl");
                 String orderNo = (String) result.get("orderNo");
