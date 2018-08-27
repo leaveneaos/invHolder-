@@ -131,10 +131,31 @@
             $("#sureOk").click(function(){
                 // var textValue=$("#gfmText").val();
                 var textValue=document.getElementById('gfmText').value.trim();
+                var str='';
+                for(var i=0;i<textValue.length;i++){
+                    if(textValue.substring(i,i+1)=='（'){
+                        str=str+'(';
+                    }else if(textValue.substring(i,i+1)=='）'){
+                        str=str+')';
+                    }else{
+                        str=str+textValue.substring(i,i+1);
+                    }
+                }
                 listArry.forEach(function (value,index) {
-                    if(textValue==value.gfmc.trim()){
+                    var str2='';
+                    var mc=value.gfmc;
+                    for(var i=0;i<mc.length;i++){
+                        if(mc.substring(i,i+1)=='（'){
+                            str=str+'(';
+                        }else if(mc.substring(i,i+1)=='）'){
+                            str=str+')';
+                        }else{
+                            str=str+mc.substring(i,i+1);
+                        }
+                    }
+                    if(str==str2){
                         $(".contentTopBox").css("display",'none');
-                        $(".btoTip").css("display",'block');
+                        $("#emilBox").css("display",'block');
                         return false;
                     }
                 })

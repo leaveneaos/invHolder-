@@ -3,10 +3,7 @@ package com.rjxx.taxeasy.wechat.task;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rjxx.taxeasy.bizcomm.utils.GetDataService;
-import com.rjxx.taxeasy.dao.PpJpaDao;
-import com.rjxx.taxeasy.dao.SkpJpaDao;
-import com.rjxx.taxeasy.dao.WxfpxxJpaDao;
-import com.rjxx.taxeasy.dao.XfJpaDao;
+import com.rjxx.taxeasy.dao.*;
 import com.rjxx.taxeasy.domains.*;
 import com.rjxx.taxeasy.dto.AdapterDataOrderBuyer;
 import com.rjxx.taxeasy.service.*;
@@ -15,6 +12,7 @@ import com.rjxx.utils.RJCheckUtil;
 import com.rjxx.utils.StringUtil;
 import com.rjxx.utils.weixin.WechatBatchCard;
 import com.rjxx.utils.weixin.WeixinUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +75,10 @@ public class WeixinTask implements Runnable{
     private AdapterService adapterService;
 
     private SkpJpaDao skpJpaDao;
+
+    private JylsJpaDao jylsJpaDao;
+
+    private KplsJpaDao kplsJpaDao;
 
     @Override
     public void run() {
@@ -368,6 +370,54 @@ public class WeixinTask implements Runnable{
                     return ;
                 }
             }
+        }else if(null!=wxFpxx.getWxtype() && "0".equals(wxFpxx.getWxtype())){
+            logger.info("进入申请开票类型0---只授权，直接插卡");
+            WxFpxx wxFpxxIncard = wxfpxxJpaDao.selectByWeiXinOrderNo(SuccOrderId);
+            if (null == wxFpxxIncard) {
+                String re = "插入卡包失败！";
+                weixinUtils.jujuekp(SuccOrderId, re, access_token);
+            } else {
+                List<Integer> djhs = null;
+                if(StringUtils.isNotBlank(wxFpxxIncard.getTqm())){
+                    djhs = jylsJpaDao.findDjhByTqmAndGsdm(tqm, gsdm);
+                }else {
+                    djhs = jylsJpaDao.findDjhByDdhAndGsdm(wxFpxxIncard.getOrderNo(), wxFpxxIncard.getGsdm());
+                }
+                logger.info("单据号---",JSON.toJSONString(djhs));
+                if(!djhs.isEmpty()){
+                    for (Integer djh : djhs) {
+                        if (djh != null) {
+                            Kpls kpls = kplsJpaDao.findOneByDjh(djh);
+                            logger.info("进入插卡方法的开票流水号",kpls.getKplsh());
+                            if (null == kpls || StringUtils.isBlank(kpls.getFpdm())
+                                    || StringUtils.isBlank(kpls.getFphm())
+                                    || StringUtils.isBlank(kpls.getPdfurl())) {
+                               // String re = "开票数据为空，插入卡包失败！";
+                                //weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                logger.info("发票没有开具成功或没有生成pdf");
+                                return ;
+                            }
+                            Map params2 = new HashMap();
+                            params2.put("kplsh", wxFpxxIncard.getKplsh());
+                            List<Kpspmx> kpspmxList = kpspmxService.findMxNewList(params2);
+                            if (null == kpspmxList) {
+                                String re = "商品明细为空，插入卡包失败！";
+                                weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                return ;
+                            }
+                            try {
+                                //插入卡包
+                                weixinUtils.fpInsertCardBox(SuccOrderId, pdf_file_url, kpspmxList, kpls);
+                            } catch (Exception e) {
+                                String re = "插入卡包失败！";
+                                weixinUtils.jujuekp(SuccOrderId, re, access_token);
+                                e.printStackTrace();
+                            }
+                            return ;
+                        }
+                    }
+                }
+            }
         }
         return;
     }
@@ -564,7 +614,23 @@ public class WeixinTask implements Runnable{
         this.skpJpaDao = skpJpaDao;
     }
 
-    //    private Map sj (String str){
+    public JylsJpaDao getJylsJpaDao() {
+        return jylsJpaDao;
+    }
+
+    public void setJylsJpaDao(JylsJpaDao jylsJpaDao) {
+        this.jylsJpaDao = jylsJpaDao;
+    }
+
+    public KplsJpaDao getKplsJpaDao() {
+        return kplsJpaDao;
+    }
+
+    public void setKplsJpaDao(KplsJpaDao kplsJpaDao) {
+        this.kplsJpaDao = kplsJpaDao;
+    }
+
+//    private Map sj (String str){
 //        Map resultSjMap = new HashMap();
 //        List<Jyxxsq> jyxxsqList = new ArrayList();
 //        List<Jymxsq> jymxsqList = new ArrayList();

@@ -21,6 +21,7 @@ import com.rjxx.taxeasy.wechat.util.ResultUtil;
 import com.rjxx.utils.*;
 import com.rjxx.utils.weixin.HttpClientUtil;
 import com.rjxx.utils.weixin.WeiXinConstants;
+import com.rjxx.utils.weixin.WeixinUtils;
 import com.rjxx.utils.weixin.wechatFpxxServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -519,7 +520,12 @@ public class AdapterController extends BaseController {
         String sjly;
         if (AlipayUtils.isAlipayBrowser(request)) {
             sjly = "5";//支付宝
-        } else {
+            logger.info("支付宝浏览器---"+userId);
+        } else if(WeixinUtils.isWeiXinBrowser(request)){
+            userId = (String) request.getSession().getAttribute("openid");
+            sjly = "4";//微信
+            logger.info("微信浏览器---"+userId);
+        }else {
             sjly = "6";//其他浏览器
         }
 //        if (StringUtil.isNotBlankList(q) && StringUtil.isBlankList(on, sn)) {
